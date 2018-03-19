@@ -129,5 +129,5 @@ class ICMPv6RPL : public cSimpleModule, public ILifecycle
 
 } // namespace rpl
 
-#endif // ifndef __INET_ICMPV6_H
+#endif // ifndef _RPL_SRC_NETWORKLAYER_ICMPV6_ICMPV6RPL_H
 
