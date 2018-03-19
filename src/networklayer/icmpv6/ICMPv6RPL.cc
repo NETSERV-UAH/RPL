@@ -24,10 +24,8 @@
 
 #include "inet/common/INETDefs.h"
 
-#include "inet/networklayer/icmpv6/ICMPv6.h"
 #include "inet/networklayer/ipv6/IPv6InterfaceData.h"
 
-#include "inet/networklayer/icmpv6/ICMPv6Message_m.h"
 #include "inet/networklayer/common/IPSocket.h"
 #include "inet/networklayer/contract/ipv6/IPv6ControlInfo.h"
 #include "inet/networklayer/ipv6/IPv6Datagram.h"
@@ -38,12 +36,19 @@
 #include "inet/common/lifecycle/NodeStatus.h"
 
 #include "inet/applications/pingapp/PingPayload_m.h"
+//EXTRA
+#include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
+#include "src/networklayer/icmpv6/ICMPv6RPL.h"
 
-namespace inet {
 
-Define_Module(ICMPv6);
 
-void ICMPv6::initialize(int stage)
+namespace rpl {
+using namespace inet;
+
+
+Define_Module(ICMPv6RPL);
+
+void ICMPv6RPL::initialize(int stage)
 {
     cSimpleModule::initialize(stage);
 
@@ -60,7 +65,7 @@ void ICMPv6::initialize(int stage)
     }
 }
 
-void ICMPv6::handleMessage(cMessage *msg)
+void ICMPv6RPL::handleMessage(cMessage *msg)
 {
     ASSERT(!msg->isSelfMessage());    // no timers in ICMPv6
 
@@ -76,9 +81,16 @@ void ICMPv6::handleMessage(cMessage *msg)
         sendEchoRequest(check_and_cast<PingPayload *>(msg));
         return;
     }
+
+    //EXTRA
+    // request from RPL
+    if (msg->getArrivalGate()->isName("RPLIn")) {
+        send(msg, "ipv6Out");
+        return;
+    }
 }
 
-void ICMPv6::processICMPv6Message(ICMPv6Message *icmpv6msg)
+void ICMPv6RPL::processICMPv6Message(ICMPv6Message *icmpv6msg)
 {
     ASSERT(dynamic_cast<ICMPv6Message *>(icmpv6msg));
     if (dynamic_cast<ICMPv6DestUnreachableMsg *>(icmpv6msg)) {
@@ -104,6 +116,9 @@ void ICMPv6::processICMPv6Message(ICMPv6Message *icmpv6msg)
     else if (dynamic_cast<ICMPv6EchoReplyMsg *>(icmpv6msg)) {
         EV_INFO << "ICMPv6 Echo Reply Message Received." << endl;
         processEchoReply((ICMPv6EchoReplyMsg *)icmpv6msg);
+    } //EXTRA
+    else if ((dynamic_cast<ICMPv6DISMsg *>(icmpv6msg)) || (dynamic_cast<ICMPv6DIOMsg *>(icmpv6msg))){
+        sendToRPL(icmpv6msg);
     }
     else
         throw cRuntimeError("Unknown message type received: (%s)%s.\n", icmpv6msg->getClassName(),icmpv6msg->getName());
@@ -130,7 +145,7 @@ void ICMPv6::processICMPv6Message(ICMPv6Message *icmpv6msg)
  * The data received in the ICMPv6 Echo Request message MUST be returned
  * entirely and unmodified in the ICMPv6 Echo Reply message.
  */
-void ICMPv6::processEchoRequest(ICMPv6EchoRequestMsg *request)
+void ICMPv6RPL::processEchoRequest(ICMPv6EchoRequestMsg *request)
 {
     //Create an ICMPv6 Reply Message
     ICMPv6EchoReplyMsg *reply = new ICMPv6EchoReplyMsg("Echo Reply");
@@ -160,7 +175,7 @@ void ICMPv6::processEchoRequest(ICMPv6EchoRequestMsg *request)
     sendToIP(reply);
 }
 
-void ICMPv6::processEchoReply(ICMPv6EchoReplyMsg *reply)
+void ICMPv6RPL::processEchoReply(ICMPv6EchoReplyMsg *reply)
 {
     IPv6ControlInfo *ctrl = check_and_cast<IPv6ControlInfo *>(reply->removeControlInfo());
     PingPayload *payload = check_and_cast<PingPayload *>(reply->decapsulate());
@@ -176,7 +191,7 @@ void ICMPv6::processEchoReply(ICMPv6EchoReplyMsg *reply)
     }
 }
 
-void ICMPv6::sendEchoRequest(PingPayload *msg)
+void ICMPv6RPL::sendEchoRequest(PingPayload *msg)
 {
     cGate *arrivalGate = msg->getArrivalGate();
     int i = arrivalGate->getIndex();
@@ -191,7 +206,7 @@ void ICMPv6::sendEchoRequest(PingPayload *msg)
     sendToIP(request);
 }
 
-void ICMPv6::sendErrorMessage(IPv6Datagram *origDatagram, ICMPv6Type type, int code)
+void ICMPv6RPL::sendErrorMessage(IPv6Datagram *origDatagram, ICMPv6Type type, int code)
 {
     Enter_Method("sendErrorMessage(datagram, type=%d, code=%d)", type, code);
 
@@ -247,7 +262,7 @@ void ICMPv6::sendErrorMessage(IPv6Datagram *origDatagram, ICMPv6Type type, int c
     }
 }
 
-void ICMPv6::sendErrorMessage(cPacket *transportPacket, IPv6ControlInfo *ctrl, ICMPv6Type type, int code)
+void ICMPv6RPL::sendErrorMessage(cPacket *transportPacket, IPv6ControlInfo *ctrl, ICMPv6Type type, int code)
 {
     Enter_Method("sendErrorMessage(transportPacket, ctrl, type=%d, code=%d)", type, code);
 
@@ -259,7 +274,7 @@ void ICMPv6::sendErrorMessage(cPacket *transportPacket, IPv6ControlInfo *ctrl, I
     sendErrorMessage(datagram, type, code);
 }
 
-void ICMPv6::sendToIP(ICMPv6Message *msg, const IPv6Address& dest)
+void ICMPv6RPL::sendToIP(ICMPv6Message *msg, const IPv6Address& dest)
 {
     IPv6ControlInfo *ctrlInfo = new IPv6ControlInfo();
     ctrlInfo->setDestAddr(dest);
@@ -269,13 +284,19 @@ void ICMPv6::sendToIP(ICMPv6Message *msg, const IPv6Address& dest)
     send(msg, "ipv6Out");
 }
 
-void ICMPv6::sendToIP(ICMPv6Message *msg)
+//EXTRA
+void ICMPv6RPL::sendToRPL(ICMPv6Message *msg)
+{
+    send(msg, "RPLOut");
+}
+
+void ICMPv6RPL::sendToIP(ICMPv6Message *msg)
 {
     // assumes IPv6ControlInfo is already attached
     send(msg, "ipv6Out");
 }
 
-ICMPv6Message *ICMPv6::createDestUnreachableMsg(int code)
+ICMPv6Message *ICMPv6RPL::createDestUnreachableMsg(int code)
 {
     ICMPv6DestUnreachableMsg *errorMsg = new ICMPv6DestUnreachableMsg("Dest Unreachable");
     errorMsg->setType(ICMPv6_DESTINATION_UNREACHABLE);
@@ -283,7 +304,7 @@ ICMPv6Message *ICMPv6::createDestUnreachableMsg(int code)
     return errorMsg;
 }
 
-ICMPv6Message *ICMPv6::createPacketTooBigMsg(int mtu)
+ICMPv6Message *ICMPv6RPL::createPacketTooBigMsg(int mtu)
 {
     ICMPv6PacketTooBigMsg *errorMsg = new ICMPv6PacketTooBigMsg("Packet Too Big");
     errorMsg->setType(ICMPv6_PACKET_TOO_BIG);
@@ -292,7 +313,7 @@ ICMPv6Message *ICMPv6::createPacketTooBigMsg(int mtu)
     return errorMsg;
 }
 
-ICMPv6Message *ICMPv6::createTimeExceededMsg(int code)
+ICMPv6Message *ICMPv6RPL::createTimeExceededMsg(int code)
 {
     ICMPv6TimeExceededMsg *errorMsg = new ICMPv6TimeExceededMsg("Time Exceeded");
     errorMsg->setType(ICMPv6_TIME_EXCEEDED);
@@ -300,7 +321,7 @@ ICMPv6Message *ICMPv6::createTimeExceededMsg(int code)
     return errorMsg;
 }
 
-ICMPv6Message *ICMPv6::createParamProblemMsg(int code)
+ICMPv6Message *ICMPv6RPL::createParamProblemMsg(int code)
 {
     ICMPv6ParamProblemMsg *errorMsg = new ICMPv6ParamProblemMsg("Parameter Problem");
     errorMsg->setType(ICMPv6_PARAMETER_PROBLEM);
@@ -309,7 +330,7 @@ ICMPv6Message *ICMPv6::createParamProblemMsg(int code)
     return errorMsg;
 }
 
-bool ICMPv6::validateDatagramPromptingError(IPv6Datagram *origDatagram)
+bool ICMPv6RPL::validateDatagramPromptingError(IPv6Datagram *origDatagram)
 {
     // don't send ICMP error messages for multicast messages
     if (origDatagram->getDestAddress().isMulticast()) {
@@ -330,16 +351,16 @@ bool ICMPv6::validateDatagramPromptingError(IPv6Datagram *origDatagram)
     return true;
 }
 
-void ICMPv6::errorOut(ICMPv6Message *icmpv6msg)
+void ICMPv6RPL::errorOut(ICMPv6Message *icmpv6msg)
 {
     send(icmpv6msg, "errorOut");
 }
 
-bool ICMPv6::handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback)
+bool ICMPv6RPL::handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback)
 {
     //pingMap.clear();
     throw cRuntimeError("Lifecycle operation support not implemented");
 }
 
-} // namespace inet
+} // namespace rpl
 

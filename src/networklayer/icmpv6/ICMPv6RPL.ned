@@ -37,7 +37,7 @@ package rpl.src.networklayer.icmpv6;
 simple ICMPv6RPL
 {
     parameters:
-        @class(rpl::ICMPv6RPL);
+        @class(rpl::ICMPv6RPL); //EXTRA
         string interfaceTableModule;   // The path to the InterfaceTable module
         @display("i=block/control");
     gates:

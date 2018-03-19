@@ -22,26 +22,29 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef __INET_ICMPV6_H
-#define __INET_ICMPV6_H
+#ifndef _RPL_SRC_NETWORKLAYER_ICMPV6_ICMPV6RPL_H
+#define _RPL_SRC_NETWORKLAYER_ICMPV6_ICMPV6RPL_H
 
 #include "inet/common/INETDefs.h"
 
-#include "inet/networklayer/icmpv6/ICMPv6Message_m.h"
 #include "inet/common/lifecycle/ILifecycle.h"
+//EXTRA
+#include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
 
-namespace inet {
+
+namespace rpl {
+using namespace inet;
 
 //foreign declarations:
-class IPv6Address;
-class IPv6ControlInfo;
-class IPv6Datagram;
-class PingPayload;
+class inet::IPv6Address;
+class inet::IPv6ControlInfo;
+class inet::IPv6Datagram;
+class inet::PingPayload;
 
 /**
  * ICMPv6 implementation.
  */
-class INET_API ICMPv6 : public cSimpleModule, public ILifecycle
+class ICMPv6RPL : public cSimpleModule, public ILifecycle
 {
   public:
     /**
@@ -72,6 +75,8 @@ class INET_API ICMPv6 : public cSimpleModule, public ILifecycle
     // internal helper functions
     virtual void sendToIP(ICMPv6Message *msg, const IPv6Address& dest);
     virtual void sendToIP(ICMPv6Message *msg);    // FIXME check if really needed
+    //EXTRA
+    virtual void sendToRPL(ICMPv6Message *msg);
 
     virtual ICMPv6Message *createDestUnreachableMsg(int code);
     virtual ICMPv6Message *createPacketTooBigMsg(int mtu);
@@ -122,7 +127,7 @@ class INET_API ICMPv6 : public cSimpleModule, public ILifecycle
     PingMap pingMap;
 };
 
-} // namespace inet
+} // namespace rpl
 
 #endif // ifndef __INET_ICMPV6_H
 
