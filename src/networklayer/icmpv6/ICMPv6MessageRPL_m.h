@@ -5,8 +5,8 @@
 #if defined(__clang__)
 #  pragma clang diagnostic ignored "-Wreserved-id-macro"
 #endif
-#ifndef __INET_ICMPV6MESSAGERPL_M_H
-#define __INET_ICMPV6MESSAGERPL_M_H
+#ifndef __RPL_ICMPV6MESSAGERPL_M_H
+#define __RPL_ICMPV6MESSAGERPL_M_H
 
 #include <omnetpp.h>
 
@@ -23,10 +23,15 @@
 // }}
 
 
-namespace inet {
+namespace rpl {
+
+// cplusplus {{
+using namespace inet;
+class inet::IPv6Address;
+// }}
 
 /**
- * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:38</tt> by nedtool.
+ * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:50</tt> by nedtool.
  * <pre>
  * enum ICMPv6Type
  * {
@@ -81,7 +86,25 @@ enum ICMPv6Type {
 };
 
 /**
- * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:70</tt> by nedtool.
+ * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:83</tt> by nedtool.
+ * <pre>
+ * //EXTRA
+ * //values of code field
+ * enum ICMPv6_RPL_CONTROL_MSG
+ * {
+ * 
+ *     DIS = 0x00;
+ *     DIO = 0x01;
+ * }
+ * </pre>
+ */
+enum ICMPv6_RPL_CONTROL_MSG {
+    DIS = 0x00,
+    DIO = 0x01
+};
+
+/**
+ * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:91</tt> by nedtool.
  * <pre>
  * //EXTRA
  * //DIS options
@@ -101,7 +124,7 @@ enum RPL_DIS_OPTIONS {
 };
 
 /**
- * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:80</tt> by nedtool.
+ * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:101</tt> by nedtool.
  * <pre>
  * //
  * // ICMPv6 "codes" for type ICMPv6_DESTINATION_UNREACHABLE
@@ -125,7 +148,7 @@ enum ICMPv6DEST_UN {
 };
 
 /**
- * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:94</tt> by nedtool.
+ * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:115</tt> by nedtool.
  * <pre>
  * //
  * // ICMPv6 "codes" for type ICMPv6_TIME_EXCEEDED
@@ -144,7 +167,7 @@ enum ICMPv6_TIME_EX {
 };
 
 /**
- * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:104</tt> by nedtool.
+ * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:125</tt> by nedtool.
  * <pre>
  * //
  * // ICMPv6 "codes" for type ICMPv6_PARAMETER_PROBLEM
@@ -165,7 +188,7 @@ enum ICMPv6_PARAMETER_PROB {
 };
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:122</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:143</tt> by nedtool.
  * <pre>
  * //
  * // Represents an ICMPv6 packet.
@@ -213,7 +236,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6Message& obj) {
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6Message& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:132</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:153</tt> by nedtool.
  * <pre>
  * //
  * // Notes:
@@ -225,7 +248,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6Message& obj) {obj.
  * }
  * </pre>
  */
-class ICMPv6DestUnreachableMsg : public ::inet::ICMPv6Message
+class ICMPv6DestUnreachableMsg : public ::rpl::ICMPv6Message
 {
   protected:
     int code;
@@ -255,7 +278,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6DestUnreachable
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6DestUnreachableMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:137</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:158</tt> by nedtool.
  * <pre>
  * packet ICMPv6PacketTooBigMsg extends ICMPv6Message
  * {
@@ -264,7 +287,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6DestUnreachableMsg&
  * }
  * </pre>
  */
-class ICMPv6PacketTooBigMsg : public ::inet::ICMPv6Message
+class ICMPv6PacketTooBigMsg : public ::rpl::ICMPv6Message
 {
   protected:
     int code;
@@ -297,7 +320,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6PacketTooBigMsg
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6PacketTooBigMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:143</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:164</tt> by nedtool.
  * <pre>
  * packet ICMPv6TimeExceededMsg extends ICMPv6Message
  * {
@@ -305,7 +328,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6PacketTooBigMsg& ob
  * }
  * </pre>
  */
-class ICMPv6TimeExceededMsg : public ::inet::ICMPv6Message
+class ICMPv6TimeExceededMsg : public ::rpl::ICMPv6Message
 {
   protected:
     int code;
@@ -335,7 +358,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6TimeExceededMsg
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6TimeExceededMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:148</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:169</tt> by nedtool.
  * <pre>
  * packet ICMPv6ParamProblemMsg extends ICMPv6Message
  * {
@@ -343,7 +366,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6TimeExceededMsg& ob
  * }
  * </pre>
  */
-class ICMPv6ParamProblemMsg : public ::inet::ICMPv6Message
+class ICMPv6ParamProblemMsg : public ::rpl::ICMPv6Message
 {
   protected:
     int code;
@@ -373,7 +396,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6ParamProblemMsg
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6ParamProblemMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:157</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:178</tt> by nedtool.
  * <pre>
  * //
  * // ICMPv6 Echo Request packet (RFC2463: Section 4).
@@ -388,7 +411,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6ParamProblemMsg& ob
  * }
  * </pre>
  */
-class ICMPv6EchoRequestMsg : public ::inet::ICMPv6Message
+class ICMPv6EchoRequestMsg : public ::rpl::ICMPv6Message
 {
   protected:
     int code;
@@ -424,7 +447,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6EchoRequestMsg&
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6EchoRequestMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:168</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:189</tt> by nedtool.
  * <pre>
  * //
  * // ICMPv6 Echo Reply packet. Data is attached through encapsulation (see ICMPv6.cc)
@@ -437,7 +460,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6EchoRequestMsg& obj
  * }
  * </pre>
  */
-class ICMPv6EchoReplyMsg : public ::inet::ICMPv6Message
+class ICMPv6EchoReplyMsg : public ::rpl::ICMPv6Message
 {
   protected:
     int code;
@@ -473,26 +496,42 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6EchoReplyMsg& o
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6EchoReplyMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:177</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:198</tt> by nedtool.
  * <pre>
  * //EXTRA 
  * //DIS control message for RPL
  * packet ICMPv6DISMsg extends ICMPv6Message
  * {
- *     int code = 0x00; // RFC 6550, section 6
+ *     int code \@enum(ICMPv6_RPL_CONTROL_MSG); // RFC 6550, section 6: set to 0x00
  *     // TODO: checksum 
- *     int flags = 0; // RFC 6550, section 6.2.1
- *     int reserved = 0; // RFC 6550, section 6.2.1
+ *     int flags; // RFC 6550, section 6.2.1: set to 0
+ *     int reserved; // RFC 6550, section 6.2.1 set to 0
+ * 
+ *     int RPLInstanceID;          // The ID of the RPL instance
+ *     int VersionNumber;          // DODAG version number
+ *     int V;                      // Node's rank
+ *     int I;                      // Type of the DODAG, Grounded or Flooding
+ *     int D;                      // Destination Advertisement Trigger Sequence Number       
+ *     int Flag;                   // The size of Imin in Trcikle algorithm
+ *     IPv6Address DODAGID;   // IPv6 address set by DODAG root  
+ * 
  *     int options \@enum(RPL_DIS_OPTIONS); //RFC 6550, section 6.2.1
  * }
  * </pre>
  */
-class ICMPv6DISMsg : public ::inet::ICMPv6Message
+class ICMPv6DISMsg : public ::rpl::ICMPv6Message
 {
   protected:
     int code;
     int flags;
     int reserved;
+    int RPLInstanceID;
+    int VersionNumber;
+    int V;
+    int I;
+    int D;
+    int Flag;
+    IPv6Address DODAGID;
     int options;
 
   private:
@@ -518,6 +557,21 @@ class ICMPv6DISMsg : public ::inet::ICMPv6Message
     virtual void setFlags(int flags);
     virtual int getReserved() const;
     virtual void setReserved(int reserved);
+    virtual int getRPLInstanceID() const;
+    virtual void setRPLInstanceID(int RPLInstanceID);
+    virtual int getVersionNumber() const;
+    virtual void setVersionNumber(int VersionNumber);
+    virtual int getV() const;
+    virtual void setV(int V);
+    virtual int getI() const;
+    virtual void setI(int I);
+    virtual int getD() const;
+    virtual void setD(int D);
+    virtual int getFlag() const;
+    virtual void setFlag(int Flag);
+    virtual IPv6Address& getDODAGID();
+    virtual const IPv6Address& getDODAGID() const {return const_cast<ICMPv6DISMsg*>(this)->getDODAGID();}
+    virtual void setDODAGID(const IPv6Address& DODAGID);
     virtual int getOptions() const;
     virtual void setOptions(int options);
 };
@@ -526,13 +580,13 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6DISMsg& obj) {o
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6DISMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:188</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:218</tt> by nedtool.
  * <pre>
  * //EXTRA 
- * //DIS control message for RPL
+ * //DIO control message for RPL
  * packet ICMPv6DIOMsg extends ICMPv6Message
  * {
- *     int code = 0x01; // RFC 6550, section 6
+ *     int code \@enum(ICMPv6_RPL_CONTROL_MSG); // RFC 6550, section 6: set to 0x01
  *     // TODO: checksum 
  *     //int rplInstanceId = 0; // RFC 6550, section 6.3.1
  *     int versionNumber = 0; // RFC 6550, section 6.3.1
@@ -555,7 +609,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6DISMsg& obj) {obj.p
  * }
  * </pre>
  */
-class ICMPv6DIOMsg : public ::inet::ICMPv6Message
+class ICMPv6DIOMsg : public ::rpl::ICMPv6Message
 {
   protected:
     int code;
@@ -612,7 +666,7 @@ class ICMPv6DIOMsg : public ::inet::ICMPv6Message
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6DIOMsg& obj) {obj.parsimPack(b);}
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6DIOMsg& obj) {obj.parsimUnpack(b);}
 
-} // namespace inet
+} // namespace rpl
 
-#endif // ifndef __INET_ICMPV6MESSAGERPL_M_H
+#endif // ifndef __RPL_ICMPV6MESSAGERPL_M_H
 

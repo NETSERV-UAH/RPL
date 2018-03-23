@@ -27,7 +27,7 @@
 #include "inet/networklayer/ipv6/IPv6InterfaceData.h"
 
 #include "inet/networklayer/common/IPSocket.h"
-#include "inet/networklayer/contract/ipv6/IPv6ControlInfo.h"
+//#include "inet/networklayer/contract/ipv6/IPv6ControlInfo.h"
 #include "inet/networklayer/ipv6/IPv6Datagram.h"
 
 #include "inet/networklayer/contract/IInterfaceTable.h"
@@ -35,13 +35,15 @@
 #include "inet/common/ModuleAccess.h"
 #include "inet/common/lifecycle/NodeStatus.h"
 
-#include "inet/applications/pingapp/PingPayload_m.h"
+//#include "inet/applications/pingapp/PingPayload_m.h"
 //EXTRA
-#include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
 #include "src/networklayer/icmpv6/ICMPv6RPL.h"
 
 
-
+namespace inet {
+//foreign declarations:
+class IPv6Address;
+}
 namespace rpl {
 using namespace inet;
 
@@ -274,7 +276,7 @@ void ICMPv6RPL::sendErrorMessage(cPacket *transportPacket, IPv6ControlInfo *ctrl
     sendErrorMessage(datagram, type, code);
 }
 
-void ICMPv6RPL::sendToIP(ICMPv6Message *msg, const IPv6Address& dest)
+void ICMPv6RPL::sendToIP(ICMPv6Message *msg, const inet::IPv6Address& dest)
 {
     IPv6ControlInfo *ctrlInfo = new IPv6ControlInfo();
     ctrlInfo->setDestAddr(dest);
@@ -287,6 +289,7 @@ void ICMPv6RPL::sendToIP(ICMPv6Message *msg, const IPv6Address& dest)
 //EXTRA
 void ICMPv6RPL::sendToRPL(ICMPv6Message *msg)
 {
+    // assumes IPv6ControlInfo is already attached
     send(msg, "RPLOut");
 }
 

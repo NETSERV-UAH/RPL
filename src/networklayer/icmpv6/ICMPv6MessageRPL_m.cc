@@ -148,7 +148,7 @@ void doParsimUnpacking(omnetpp::cCommBuffer *, T& t)
 
 }  // namespace omnetpp
 
-namespace inet {
+namespace rpl {
 
 // forward
 template<typename T, typename A>
@@ -179,8 +179,8 @@ inline std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec)
 }
 
 EXECUTE_ON_STARTUP(
-    omnetpp::cEnum *e = omnetpp::cEnum::find("inet::ICMPv6Type");
-    if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("inet::ICMPv6Type"));
+    omnetpp::cEnum *e = omnetpp::cEnum::find("rpl::ICMPv6Type");
+    if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("rpl::ICMPv6Type"));
     e->insert(ICMPv6_UNSPECIFIED, "ICMPv6_UNSPECIFIED");
     e->insert(ICMPv6_DESTINATION_UNREACHABLE, "ICMPv6_DESTINATION_UNREACHABLE");
     e->insert(ICMPv6_PACKET_TOO_BIG, "ICMPv6_PACKET_TOO_BIG");
@@ -202,16 +202,23 @@ EXECUTE_ON_STARTUP(
 )
 
 EXECUTE_ON_STARTUP(
-    omnetpp::cEnum *e = omnetpp::cEnum::find("inet::RPL_DIS_OPTIONS");
-    if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("inet::RPL_DIS_OPTIONS"));
+    omnetpp::cEnum *e = omnetpp::cEnum::find("rpl::ICMPv6_RPL_CONTROL_MSG");
+    if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("rpl::ICMPv6_RPL_CONTROL_MSG"));
+    e->insert(DIS, "DIS");
+    e->insert(DIO, "DIO");
+)
+
+EXECUTE_ON_STARTUP(
+    omnetpp::cEnum *e = omnetpp::cEnum::find("rpl::RPL_DIS_OPTIONS");
+    if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("rpl::RPL_DIS_OPTIONS"));
     e->insert(PAD1, "PAD1");
     e->insert(PADN, "PADN");
     e->insert(Solicited_Information, "Solicited_Information");
 )
 
 EXECUTE_ON_STARTUP(
-    omnetpp::cEnum *e = omnetpp::cEnum::find("inet::ICMPv6DEST_UN");
-    if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("inet::ICMPv6DEST_UN"));
+    omnetpp::cEnum *e = omnetpp::cEnum::find("rpl::ICMPv6DEST_UN");
+    if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("rpl::ICMPv6DEST_UN"));
     e->insert(NO_ROUTE_TO_DEST, "NO_ROUTE_TO_DEST");
     e->insert(COMM_WITH_DEST_PROHIBITED, "COMM_WITH_DEST_PROHIBITED");
     e->insert(ADDRESS_UNREACHABLE, "ADDRESS_UNREACHABLE");
@@ -219,15 +226,15 @@ EXECUTE_ON_STARTUP(
 )
 
 EXECUTE_ON_STARTUP(
-    omnetpp::cEnum *e = omnetpp::cEnum::find("inet::ICMPv6_TIME_EX");
-    if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("inet::ICMPv6_TIME_EX"));
+    omnetpp::cEnum *e = omnetpp::cEnum::find("rpl::ICMPv6_TIME_EX");
+    if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("rpl::ICMPv6_TIME_EX"));
     e->insert(ND_HOP_LIMIT_EXCEEDED, "ND_HOP_LIMIT_EXCEEDED");
     e->insert(ND_FRAGMENT_REASSEMBLY_TIME, "ND_FRAGMENT_REASSEMBLY_TIME");
 )
 
 EXECUTE_ON_STARTUP(
-    omnetpp::cEnum *e = omnetpp::cEnum::find("inet::ICMPv6_PARAMETER_PROB");
-    if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("inet::ICMPv6_PARAMETER_PROB"));
+    omnetpp::cEnum *e = omnetpp::cEnum::find("rpl::ICMPv6_PARAMETER_PROB");
+    if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("rpl::ICMPv6_PARAMETER_PROB"));
     e->insert(ERROREOUS_HDR_FIELD, "ERROREOUS_HDR_FIELD");
     e->insert(UNRECOGNIZED_NEXT_HDR_TYPE, "UNRECOGNIZED_NEXT_HDR_TYPE");
     e->insert(UNRECOGNIZED_IPV6_OPTION, "UNRECOGNIZED_IPV6_OPTION");
@@ -314,7 +321,7 @@ class ICMPv6MessageDescriptor : public omnetpp::cClassDescriptor
 
 Register_ClassDescriptor(ICMPv6MessageDescriptor)
 
-ICMPv6MessageDescriptor::ICMPv6MessageDescriptor() : omnetpp::cClassDescriptor("inet::ICMPv6Message", "omnetpp::cPacket")
+ICMPv6MessageDescriptor::ICMPv6MessageDescriptor() : omnetpp::cClassDescriptor("rpl::ICMPv6Message", "omnetpp::cPacket")
 {
     propertynames = nullptr;
 }
@@ -429,7 +436,7 @@ const char *ICMPv6MessageDescriptor::getFieldProperty(int field, const char *pro
     }
     switch (field) {
         case 0:
-            if (!strcmp(propertyname,"enum")) return "inet::ICMPv6Type";
+            if (!strcmp(propertyname,"enum")) return "rpl::ICMPv6Type";
             return nullptr;
         default: return nullptr;
     }
@@ -473,7 +480,7 @@ std::string ICMPv6MessageDescriptor::getFieldValueAsString(void *object, int fie
     }
     ICMPv6Message *pp = (ICMPv6Message *)object; (void)pp;
     switch (field) {
-        case 0: return enum2string(pp->getType(), "inet::ICMPv6Type");
+        case 0: return enum2string(pp->getType(), "rpl::ICMPv6Type");
         default: return "";
     }
 }
@@ -488,7 +495,7 @@ bool ICMPv6MessageDescriptor::setFieldValueAsString(void *object, int field, int
     }
     ICMPv6Message *pp = (ICMPv6Message *)object; (void)pp;
     switch (field) {
-        case 0: pp->setType((inet::ICMPv6Type)string2enum(value, "inet::ICMPv6Type")); return true;
+        case 0: pp->setType((rpl::ICMPv6Type)string2enum(value, "rpl::ICMPv6Type")); return true;
         default: return false;
     }
 }
@@ -522,12 +529,12 @@ void *ICMPv6MessageDescriptor::getFieldStructValuePointer(void *object, int fiel
 
 Register_Class(ICMPv6DestUnreachableMsg)
 
-ICMPv6DestUnreachableMsg::ICMPv6DestUnreachableMsg(const char *name, short kind) : ::inet::ICMPv6Message(name,kind)
+ICMPv6DestUnreachableMsg::ICMPv6DestUnreachableMsg(const char *name, short kind) : ::rpl::ICMPv6Message(name,kind)
 {
     this->code = 0;
 }
 
-ICMPv6DestUnreachableMsg::ICMPv6DestUnreachableMsg(const ICMPv6DestUnreachableMsg& other) : ::inet::ICMPv6Message(other)
+ICMPv6DestUnreachableMsg::ICMPv6DestUnreachableMsg(const ICMPv6DestUnreachableMsg& other) : ::rpl::ICMPv6Message(other)
 {
     copy(other);
 }
@@ -539,7 +546,7 @@ ICMPv6DestUnreachableMsg::~ICMPv6DestUnreachableMsg()
 ICMPv6DestUnreachableMsg& ICMPv6DestUnreachableMsg::operator=(const ICMPv6DestUnreachableMsg& other)
 {
     if (this==&other) return *this;
-    ::inet::ICMPv6Message::operator=(other);
+    ::rpl::ICMPv6Message::operator=(other);
     copy(other);
     return *this;
 }
@@ -551,13 +558,13 @@ void ICMPv6DestUnreachableMsg::copy(const ICMPv6DestUnreachableMsg& other)
 
 void ICMPv6DestUnreachableMsg::parsimPack(omnetpp::cCommBuffer *b) const
 {
-    ::inet::ICMPv6Message::parsimPack(b);
+    ::rpl::ICMPv6Message::parsimPack(b);
     doParsimPacking(b,this->code);
 }
 
 void ICMPv6DestUnreachableMsg::parsimUnpack(omnetpp::cCommBuffer *b)
 {
-    ::inet::ICMPv6Message::parsimUnpack(b);
+    ::rpl::ICMPv6Message::parsimUnpack(b);
     doParsimUnpacking(b,this->code);
 }
 
@@ -601,7 +608,7 @@ class ICMPv6DestUnreachableMsgDescriptor : public omnetpp::cClassDescriptor
 
 Register_ClassDescriptor(ICMPv6DestUnreachableMsgDescriptor)
 
-ICMPv6DestUnreachableMsgDescriptor::ICMPv6DestUnreachableMsgDescriptor() : omnetpp::cClassDescriptor("inet::ICMPv6DestUnreachableMsg", "inet::ICMPv6Message")
+ICMPv6DestUnreachableMsgDescriptor::ICMPv6DestUnreachableMsgDescriptor() : omnetpp::cClassDescriptor("rpl::ICMPv6DestUnreachableMsg", "rpl::ICMPv6Message")
 {
     propertynames = nullptr;
 }
@@ -716,7 +723,7 @@ const char *ICMPv6DestUnreachableMsgDescriptor::getFieldProperty(int field, cons
     }
     switch (field) {
         case 0:
-            if (!strcmp(propertyname,"enum")) return "inet::ICMPv6DEST_UN";
+            if (!strcmp(propertyname,"enum")) return "rpl::ICMPv6DEST_UN";
             return nullptr;
         default: return nullptr;
     }
@@ -760,7 +767,7 @@ std::string ICMPv6DestUnreachableMsgDescriptor::getFieldValueAsString(void *obje
     }
     ICMPv6DestUnreachableMsg *pp = (ICMPv6DestUnreachableMsg *)object; (void)pp;
     switch (field) {
-        case 0: return enum2string(pp->getCode(), "inet::ICMPv6DEST_UN");
+        case 0: return enum2string(pp->getCode(), "rpl::ICMPv6DEST_UN");
         default: return "";
     }
 }
@@ -775,7 +782,7 @@ bool ICMPv6DestUnreachableMsgDescriptor::setFieldValueAsString(void *object, int
     }
     ICMPv6DestUnreachableMsg *pp = (ICMPv6DestUnreachableMsg *)object; (void)pp;
     switch (field) {
-        case 0: pp->setCode((inet::ICMPv6DEST_UN)string2enum(value, "inet::ICMPv6DEST_UN")); return true;
+        case 0: pp->setCode((rpl::ICMPv6DEST_UN)string2enum(value, "rpl::ICMPv6DEST_UN")); return true;
         default: return false;
     }
 }
@@ -809,13 +816,13 @@ void *ICMPv6DestUnreachableMsgDescriptor::getFieldStructValuePointer(void *objec
 
 Register_Class(ICMPv6PacketTooBigMsg)
 
-ICMPv6PacketTooBigMsg::ICMPv6PacketTooBigMsg(const char *name, short kind) : ::inet::ICMPv6Message(name,kind)
+ICMPv6PacketTooBigMsg::ICMPv6PacketTooBigMsg(const char *name, short kind) : ::rpl::ICMPv6Message(name,kind)
 {
     this->code = 0;
     this->MTU = 0;
 }
 
-ICMPv6PacketTooBigMsg::ICMPv6PacketTooBigMsg(const ICMPv6PacketTooBigMsg& other) : ::inet::ICMPv6Message(other)
+ICMPv6PacketTooBigMsg::ICMPv6PacketTooBigMsg(const ICMPv6PacketTooBigMsg& other) : ::rpl::ICMPv6Message(other)
 {
     copy(other);
 }
@@ -827,7 +834,7 @@ ICMPv6PacketTooBigMsg::~ICMPv6PacketTooBigMsg()
 ICMPv6PacketTooBigMsg& ICMPv6PacketTooBigMsg::operator=(const ICMPv6PacketTooBigMsg& other)
 {
     if (this==&other) return *this;
-    ::inet::ICMPv6Message::operator=(other);
+    ::rpl::ICMPv6Message::operator=(other);
     copy(other);
     return *this;
 }
@@ -840,14 +847,14 @@ void ICMPv6PacketTooBigMsg::copy(const ICMPv6PacketTooBigMsg& other)
 
 void ICMPv6PacketTooBigMsg::parsimPack(omnetpp::cCommBuffer *b) const
 {
-    ::inet::ICMPv6Message::parsimPack(b);
+    ::rpl::ICMPv6Message::parsimPack(b);
     doParsimPacking(b,this->code);
     doParsimPacking(b,this->MTU);
 }
 
 void ICMPv6PacketTooBigMsg::parsimUnpack(omnetpp::cCommBuffer *b)
 {
-    ::inet::ICMPv6Message::parsimUnpack(b);
+    ::rpl::ICMPv6Message::parsimUnpack(b);
     doParsimUnpacking(b,this->code);
     doParsimUnpacking(b,this->MTU);
 }
@@ -902,7 +909,7 @@ class ICMPv6PacketTooBigMsgDescriptor : public omnetpp::cClassDescriptor
 
 Register_ClassDescriptor(ICMPv6PacketTooBigMsgDescriptor)
 
-ICMPv6PacketTooBigMsgDescriptor::ICMPv6PacketTooBigMsgDescriptor() : omnetpp::cClassDescriptor("inet::ICMPv6PacketTooBigMsg", "inet::ICMPv6Message")
+ICMPv6PacketTooBigMsgDescriptor::ICMPv6PacketTooBigMsgDescriptor() : omnetpp::cClassDescriptor("rpl::ICMPv6PacketTooBigMsg", "rpl::ICMPv6Message")
 {
     propertynames = nullptr;
 }
@@ -1109,12 +1116,12 @@ void *ICMPv6PacketTooBigMsgDescriptor::getFieldStructValuePointer(void *object, 
 
 Register_Class(ICMPv6TimeExceededMsg)
 
-ICMPv6TimeExceededMsg::ICMPv6TimeExceededMsg(const char *name, short kind) : ::inet::ICMPv6Message(name,kind)
+ICMPv6TimeExceededMsg::ICMPv6TimeExceededMsg(const char *name, short kind) : ::rpl::ICMPv6Message(name,kind)
 {
     this->code = 0;
 }
 
-ICMPv6TimeExceededMsg::ICMPv6TimeExceededMsg(const ICMPv6TimeExceededMsg& other) : ::inet::ICMPv6Message(other)
+ICMPv6TimeExceededMsg::ICMPv6TimeExceededMsg(const ICMPv6TimeExceededMsg& other) : ::rpl::ICMPv6Message(other)
 {
     copy(other);
 }
@@ -1126,7 +1133,7 @@ ICMPv6TimeExceededMsg::~ICMPv6TimeExceededMsg()
 ICMPv6TimeExceededMsg& ICMPv6TimeExceededMsg::operator=(const ICMPv6TimeExceededMsg& other)
 {
     if (this==&other) return *this;
-    ::inet::ICMPv6Message::operator=(other);
+    ::rpl::ICMPv6Message::operator=(other);
     copy(other);
     return *this;
 }
@@ -1138,13 +1145,13 @@ void ICMPv6TimeExceededMsg::copy(const ICMPv6TimeExceededMsg& other)
 
 void ICMPv6TimeExceededMsg::parsimPack(omnetpp::cCommBuffer *b) const
 {
-    ::inet::ICMPv6Message::parsimPack(b);
+    ::rpl::ICMPv6Message::parsimPack(b);
     doParsimPacking(b,this->code);
 }
 
 void ICMPv6TimeExceededMsg::parsimUnpack(omnetpp::cCommBuffer *b)
 {
-    ::inet::ICMPv6Message::parsimUnpack(b);
+    ::rpl::ICMPv6Message::parsimUnpack(b);
     doParsimUnpacking(b,this->code);
 }
 
@@ -1188,7 +1195,7 @@ class ICMPv6TimeExceededMsgDescriptor : public omnetpp::cClassDescriptor
 
 Register_ClassDescriptor(ICMPv6TimeExceededMsgDescriptor)
 
-ICMPv6TimeExceededMsgDescriptor::ICMPv6TimeExceededMsgDescriptor() : omnetpp::cClassDescriptor("inet::ICMPv6TimeExceededMsg", "inet::ICMPv6Message")
+ICMPv6TimeExceededMsgDescriptor::ICMPv6TimeExceededMsgDescriptor() : omnetpp::cClassDescriptor("rpl::ICMPv6TimeExceededMsg", "rpl::ICMPv6Message")
 {
     propertynames = nullptr;
 }
@@ -1303,7 +1310,7 @@ const char *ICMPv6TimeExceededMsgDescriptor::getFieldProperty(int field, const c
     }
     switch (field) {
         case 0:
-            if (!strcmp(propertyname,"enum")) return "inet::ICMPv6_TIME_EX";
+            if (!strcmp(propertyname,"enum")) return "rpl::ICMPv6_TIME_EX";
             return nullptr;
         default: return nullptr;
     }
@@ -1347,7 +1354,7 @@ std::string ICMPv6TimeExceededMsgDescriptor::getFieldValueAsString(void *object,
     }
     ICMPv6TimeExceededMsg *pp = (ICMPv6TimeExceededMsg *)object; (void)pp;
     switch (field) {
-        case 0: return enum2string(pp->getCode(), "inet::ICMPv6_TIME_EX");
+        case 0: return enum2string(pp->getCode(), "rpl::ICMPv6_TIME_EX");
         default: return "";
     }
 }
@@ -1362,7 +1369,7 @@ bool ICMPv6TimeExceededMsgDescriptor::setFieldValueAsString(void *object, int fi
     }
     ICMPv6TimeExceededMsg *pp = (ICMPv6TimeExceededMsg *)object; (void)pp;
     switch (field) {
-        case 0: pp->setCode((inet::ICMPv6_TIME_EX)string2enum(value, "inet::ICMPv6_TIME_EX")); return true;
+        case 0: pp->setCode((rpl::ICMPv6_TIME_EX)string2enum(value, "rpl::ICMPv6_TIME_EX")); return true;
         default: return false;
     }
 }
@@ -1396,12 +1403,12 @@ void *ICMPv6TimeExceededMsgDescriptor::getFieldStructValuePointer(void *object, 
 
 Register_Class(ICMPv6ParamProblemMsg)
 
-ICMPv6ParamProblemMsg::ICMPv6ParamProblemMsg(const char *name, short kind) : ::inet::ICMPv6Message(name,kind)
+ICMPv6ParamProblemMsg::ICMPv6ParamProblemMsg(const char *name, short kind) : ::rpl::ICMPv6Message(name,kind)
 {
     this->code = 0;
 }
 
-ICMPv6ParamProblemMsg::ICMPv6ParamProblemMsg(const ICMPv6ParamProblemMsg& other) : ::inet::ICMPv6Message(other)
+ICMPv6ParamProblemMsg::ICMPv6ParamProblemMsg(const ICMPv6ParamProblemMsg& other) : ::rpl::ICMPv6Message(other)
 {
     copy(other);
 }
@@ -1413,7 +1420,7 @@ ICMPv6ParamProblemMsg::~ICMPv6ParamProblemMsg()
 ICMPv6ParamProblemMsg& ICMPv6ParamProblemMsg::operator=(const ICMPv6ParamProblemMsg& other)
 {
     if (this==&other) return *this;
-    ::inet::ICMPv6Message::operator=(other);
+    ::rpl::ICMPv6Message::operator=(other);
     copy(other);
     return *this;
 }
@@ -1425,13 +1432,13 @@ void ICMPv6ParamProblemMsg::copy(const ICMPv6ParamProblemMsg& other)
 
 void ICMPv6ParamProblemMsg::parsimPack(omnetpp::cCommBuffer *b) const
 {
-    ::inet::ICMPv6Message::parsimPack(b);
+    ::rpl::ICMPv6Message::parsimPack(b);
     doParsimPacking(b,this->code);
 }
 
 void ICMPv6ParamProblemMsg::parsimUnpack(omnetpp::cCommBuffer *b)
 {
-    ::inet::ICMPv6Message::parsimUnpack(b);
+    ::rpl::ICMPv6Message::parsimUnpack(b);
     doParsimUnpacking(b,this->code);
 }
 
@@ -1475,7 +1482,7 @@ class ICMPv6ParamProblemMsgDescriptor : public omnetpp::cClassDescriptor
 
 Register_ClassDescriptor(ICMPv6ParamProblemMsgDescriptor)
 
-ICMPv6ParamProblemMsgDescriptor::ICMPv6ParamProblemMsgDescriptor() : omnetpp::cClassDescriptor("inet::ICMPv6ParamProblemMsg", "inet::ICMPv6Message")
+ICMPv6ParamProblemMsgDescriptor::ICMPv6ParamProblemMsgDescriptor() : omnetpp::cClassDescriptor("rpl::ICMPv6ParamProblemMsg", "rpl::ICMPv6Message")
 {
     propertynames = nullptr;
 }
@@ -1590,7 +1597,7 @@ const char *ICMPv6ParamProblemMsgDescriptor::getFieldProperty(int field, const c
     }
     switch (field) {
         case 0:
-            if (!strcmp(propertyname,"enum")) return "inet::ICMPv6_PARAMETER_PROB";
+            if (!strcmp(propertyname,"enum")) return "rpl::ICMPv6_PARAMETER_PROB";
             return nullptr;
         default: return nullptr;
     }
@@ -1634,7 +1641,7 @@ std::string ICMPv6ParamProblemMsgDescriptor::getFieldValueAsString(void *object,
     }
     ICMPv6ParamProblemMsg *pp = (ICMPv6ParamProblemMsg *)object; (void)pp;
     switch (field) {
-        case 0: return enum2string(pp->getCode(), "inet::ICMPv6_PARAMETER_PROB");
+        case 0: return enum2string(pp->getCode(), "rpl::ICMPv6_PARAMETER_PROB");
         default: return "";
     }
 }
@@ -1649,7 +1656,7 @@ bool ICMPv6ParamProblemMsgDescriptor::setFieldValueAsString(void *object, int fi
     }
     ICMPv6ParamProblemMsg *pp = (ICMPv6ParamProblemMsg *)object; (void)pp;
     switch (field) {
-        case 0: pp->setCode((inet::ICMPv6_PARAMETER_PROB)string2enum(value, "inet::ICMPv6_PARAMETER_PROB")); return true;
+        case 0: pp->setCode((rpl::ICMPv6_PARAMETER_PROB)string2enum(value, "rpl::ICMPv6_PARAMETER_PROB")); return true;
         default: return false;
     }
 }
@@ -1683,14 +1690,14 @@ void *ICMPv6ParamProblemMsgDescriptor::getFieldStructValuePointer(void *object, 
 
 Register_Class(ICMPv6EchoRequestMsg)
 
-ICMPv6EchoRequestMsg::ICMPv6EchoRequestMsg(const char *name, short kind) : ::inet::ICMPv6Message(name,kind)
+ICMPv6EchoRequestMsg::ICMPv6EchoRequestMsg(const char *name, short kind) : ::rpl::ICMPv6Message(name,kind)
 {
     this->code = 0;
     this->identifier = 0;
     this->seqNumber = 0;
 }
 
-ICMPv6EchoRequestMsg::ICMPv6EchoRequestMsg(const ICMPv6EchoRequestMsg& other) : ::inet::ICMPv6Message(other)
+ICMPv6EchoRequestMsg::ICMPv6EchoRequestMsg(const ICMPv6EchoRequestMsg& other) : ::rpl::ICMPv6Message(other)
 {
     copy(other);
 }
@@ -1702,7 +1709,7 @@ ICMPv6EchoRequestMsg::~ICMPv6EchoRequestMsg()
 ICMPv6EchoRequestMsg& ICMPv6EchoRequestMsg::operator=(const ICMPv6EchoRequestMsg& other)
 {
     if (this==&other) return *this;
-    ::inet::ICMPv6Message::operator=(other);
+    ::rpl::ICMPv6Message::operator=(other);
     copy(other);
     return *this;
 }
@@ -1716,7 +1723,7 @@ void ICMPv6EchoRequestMsg::copy(const ICMPv6EchoRequestMsg& other)
 
 void ICMPv6EchoRequestMsg::parsimPack(omnetpp::cCommBuffer *b) const
 {
-    ::inet::ICMPv6Message::parsimPack(b);
+    ::rpl::ICMPv6Message::parsimPack(b);
     doParsimPacking(b,this->code);
     doParsimPacking(b,this->identifier);
     doParsimPacking(b,this->seqNumber);
@@ -1724,7 +1731,7 @@ void ICMPv6EchoRequestMsg::parsimPack(omnetpp::cCommBuffer *b) const
 
 void ICMPv6EchoRequestMsg::parsimUnpack(omnetpp::cCommBuffer *b)
 {
-    ::inet::ICMPv6Message::parsimUnpack(b);
+    ::rpl::ICMPv6Message::parsimUnpack(b);
     doParsimUnpacking(b,this->code);
     doParsimUnpacking(b,this->identifier);
     doParsimUnpacking(b,this->seqNumber);
@@ -1790,7 +1797,7 @@ class ICMPv6EchoRequestMsgDescriptor : public omnetpp::cClassDescriptor
 
 Register_ClassDescriptor(ICMPv6EchoRequestMsgDescriptor)
 
-ICMPv6EchoRequestMsgDescriptor::ICMPv6EchoRequestMsgDescriptor() : omnetpp::cClassDescriptor("inet::ICMPv6EchoRequestMsg", "inet::ICMPv6Message")
+ICMPv6EchoRequestMsgDescriptor::ICMPv6EchoRequestMsgDescriptor() : omnetpp::cClassDescriptor("rpl::ICMPv6EchoRequestMsg", "rpl::ICMPv6Message")
 {
     propertynames = nullptr;
 }
@@ -2003,14 +2010,14 @@ void *ICMPv6EchoRequestMsgDescriptor::getFieldStructValuePointer(void *object, i
 
 Register_Class(ICMPv6EchoReplyMsg)
 
-ICMPv6EchoReplyMsg::ICMPv6EchoReplyMsg(const char *name, short kind) : ::inet::ICMPv6Message(name,kind)
+ICMPv6EchoReplyMsg::ICMPv6EchoReplyMsg(const char *name, short kind) : ::rpl::ICMPv6Message(name,kind)
 {
     this->code = 0;
     this->identifier = 0;
     this->seqNumber = 0;
 }
 
-ICMPv6EchoReplyMsg::ICMPv6EchoReplyMsg(const ICMPv6EchoReplyMsg& other) : ::inet::ICMPv6Message(other)
+ICMPv6EchoReplyMsg::ICMPv6EchoReplyMsg(const ICMPv6EchoReplyMsg& other) : ::rpl::ICMPv6Message(other)
 {
     copy(other);
 }
@@ -2022,7 +2029,7 @@ ICMPv6EchoReplyMsg::~ICMPv6EchoReplyMsg()
 ICMPv6EchoReplyMsg& ICMPv6EchoReplyMsg::operator=(const ICMPv6EchoReplyMsg& other)
 {
     if (this==&other) return *this;
-    ::inet::ICMPv6Message::operator=(other);
+    ::rpl::ICMPv6Message::operator=(other);
     copy(other);
     return *this;
 }
@@ -2036,7 +2043,7 @@ void ICMPv6EchoReplyMsg::copy(const ICMPv6EchoReplyMsg& other)
 
 void ICMPv6EchoReplyMsg::parsimPack(omnetpp::cCommBuffer *b) const
 {
-    ::inet::ICMPv6Message::parsimPack(b);
+    ::rpl::ICMPv6Message::parsimPack(b);
     doParsimPacking(b,this->code);
     doParsimPacking(b,this->identifier);
     doParsimPacking(b,this->seqNumber);
@@ -2044,7 +2051,7 @@ void ICMPv6EchoReplyMsg::parsimPack(omnetpp::cCommBuffer *b) const
 
 void ICMPv6EchoReplyMsg::parsimUnpack(omnetpp::cCommBuffer *b)
 {
-    ::inet::ICMPv6Message::parsimUnpack(b);
+    ::rpl::ICMPv6Message::parsimUnpack(b);
     doParsimUnpacking(b,this->code);
     doParsimUnpacking(b,this->identifier);
     doParsimUnpacking(b,this->seqNumber);
@@ -2110,7 +2117,7 @@ class ICMPv6EchoReplyMsgDescriptor : public omnetpp::cClassDescriptor
 
 Register_ClassDescriptor(ICMPv6EchoReplyMsgDescriptor)
 
-ICMPv6EchoReplyMsgDescriptor::ICMPv6EchoReplyMsgDescriptor() : omnetpp::cClassDescriptor("inet::ICMPv6EchoReplyMsg", "inet::ICMPv6Message")
+ICMPv6EchoReplyMsgDescriptor::ICMPv6EchoReplyMsgDescriptor() : omnetpp::cClassDescriptor("rpl::ICMPv6EchoReplyMsg", "rpl::ICMPv6Message")
 {
     propertynames = nullptr;
 }
@@ -2323,15 +2330,21 @@ void *ICMPv6EchoReplyMsgDescriptor::getFieldStructValuePointer(void *object, int
 
 Register_Class(ICMPv6DISMsg)
 
-ICMPv6DISMsg::ICMPv6DISMsg(const char *name, short kind) : ::inet::ICMPv6Message(name,kind)
+ICMPv6DISMsg::ICMPv6DISMsg(const char *name, short kind) : ::rpl::ICMPv6Message(name,kind)
 {
-    this->code = 0x00;
+    this->code = 0;
     this->flags = 0;
     this->reserved = 0;
+    this->RPLInstanceID = 0;
+    this->VersionNumber = 0;
+    this->V = 0;
+    this->I = 0;
+    this->D = 0;
+    this->Flag = 0;
     this->options = 0;
 }
 
-ICMPv6DISMsg::ICMPv6DISMsg(const ICMPv6DISMsg& other) : ::inet::ICMPv6Message(other)
+ICMPv6DISMsg::ICMPv6DISMsg(const ICMPv6DISMsg& other) : ::rpl::ICMPv6Message(other)
 {
     copy(other);
 }
@@ -2343,7 +2356,7 @@ ICMPv6DISMsg::~ICMPv6DISMsg()
 ICMPv6DISMsg& ICMPv6DISMsg::operator=(const ICMPv6DISMsg& other)
 {
     if (this==&other) return *this;
-    ::inet::ICMPv6Message::operator=(other);
+    ::rpl::ICMPv6Message::operator=(other);
     copy(other);
     return *this;
 }
@@ -2353,24 +2366,45 @@ void ICMPv6DISMsg::copy(const ICMPv6DISMsg& other)
     this->code = other.code;
     this->flags = other.flags;
     this->reserved = other.reserved;
+    this->RPLInstanceID = other.RPLInstanceID;
+    this->VersionNumber = other.VersionNumber;
+    this->V = other.V;
+    this->I = other.I;
+    this->D = other.D;
+    this->Flag = other.Flag;
+    this->DODAGID = other.DODAGID;
     this->options = other.options;
 }
 
 void ICMPv6DISMsg::parsimPack(omnetpp::cCommBuffer *b) const
 {
-    ::inet::ICMPv6Message::parsimPack(b);
+    ::rpl::ICMPv6Message::parsimPack(b);
     doParsimPacking(b,this->code);
     doParsimPacking(b,this->flags);
     doParsimPacking(b,this->reserved);
+    doParsimPacking(b,this->RPLInstanceID);
+    doParsimPacking(b,this->VersionNumber);
+    doParsimPacking(b,this->V);
+    doParsimPacking(b,this->I);
+    doParsimPacking(b,this->D);
+    doParsimPacking(b,this->Flag);
+    doParsimPacking(b,this->DODAGID);
     doParsimPacking(b,this->options);
 }
 
 void ICMPv6DISMsg::parsimUnpack(omnetpp::cCommBuffer *b)
 {
-    ::inet::ICMPv6Message::parsimUnpack(b);
+    ::rpl::ICMPv6Message::parsimUnpack(b);
     doParsimUnpacking(b,this->code);
     doParsimUnpacking(b,this->flags);
     doParsimUnpacking(b,this->reserved);
+    doParsimUnpacking(b,this->RPLInstanceID);
+    doParsimUnpacking(b,this->VersionNumber);
+    doParsimUnpacking(b,this->V);
+    doParsimUnpacking(b,this->I);
+    doParsimUnpacking(b,this->D);
+    doParsimUnpacking(b,this->Flag);
+    doParsimUnpacking(b,this->DODAGID);
     doParsimUnpacking(b,this->options);
 }
 
@@ -2402,6 +2436,76 @@ int ICMPv6DISMsg::getReserved() const
 void ICMPv6DISMsg::setReserved(int reserved)
 {
     this->reserved = reserved;
+}
+
+int ICMPv6DISMsg::getRPLInstanceID() const
+{
+    return this->RPLInstanceID;
+}
+
+void ICMPv6DISMsg::setRPLInstanceID(int RPLInstanceID)
+{
+    this->RPLInstanceID = RPLInstanceID;
+}
+
+int ICMPv6DISMsg::getVersionNumber() const
+{
+    return this->VersionNumber;
+}
+
+void ICMPv6DISMsg::setVersionNumber(int VersionNumber)
+{
+    this->VersionNumber = VersionNumber;
+}
+
+int ICMPv6DISMsg::getV() const
+{
+    return this->V;
+}
+
+void ICMPv6DISMsg::setV(int V)
+{
+    this->V = V;
+}
+
+int ICMPv6DISMsg::getI() const
+{
+    return this->I;
+}
+
+void ICMPv6DISMsg::setI(int I)
+{
+    this->I = I;
+}
+
+int ICMPv6DISMsg::getD() const
+{
+    return this->D;
+}
+
+void ICMPv6DISMsg::setD(int D)
+{
+    this->D = D;
+}
+
+int ICMPv6DISMsg::getFlag() const
+{
+    return this->Flag;
+}
+
+void ICMPv6DISMsg::setFlag(int Flag)
+{
+    this->Flag = Flag;
+}
+
+IPv6Address& ICMPv6DISMsg::getDODAGID()
+{
+    return this->DODAGID;
+}
+
+void ICMPv6DISMsg::setDODAGID(const IPv6Address& DODAGID)
+{
+    this->DODAGID = DODAGID;
 }
 
 int ICMPv6DISMsg::getOptions() const
@@ -2444,7 +2548,7 @@ class ICMPv6DISMsgDescriptor : public omnetpp::cClassDescriptor
 
 Register_ClassDescriptor(ICMPv6DISMsgDescriptor)
 
-ICMPv6DISMsgDescriptor::ICMPv6DISMsgDescriptor() : omnetpp::cClassDescriptor("inet::ICMPv6DISMsg", "inet::ICMPv6Message")
+ICMPv6DISMsgDescriptor::ICMPv6DISMsgDescriptor() : omnetpp::cClassDescriptor("rpl::ICMPv6DISMsg", "rpl::ICMPv6Message")
 {
     propertynames = nullptr;
 }
@@ -2479,7 +2583,7 @@ const char *ICMPv6DISMsgDescriptor::getProperty(const char *propertyname) const
 int ICMPv6DISMsgDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 4+basedesc->getFieldCount() : 4;
+    return basedesc ? 11+basedesc->getFieldCount() : 11;
 }
 
 unsigned int ICMPv6DISMsgDescriptor::getFieldTypeFlags(int field) const
@@ -2495,8 +2599,15 @@ unsigned int ICMPv6DISMsgDescriptor::getFieldTypeFlags(int field) const
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISCOMPOUND,
+        FD_ISEDITABLE,
     };
-    return (field>=0 && field<4) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<11) ? fieldTypeFlags[field] : 0;
 }
 
 const char *ICMPv6DISMsgDescriptor::getFieldName(int field) const
@@ -2511,9 +2622,16 @@ const char *ICMPv6DISMsgDescriptor::getFieldName(int field) const
         "code",
         "flags",
         "reserved",
+        "RPLInstanceID",
+        "VersionNumber",
+        "V",
+        "I",
+        "D",
+        "Flag",
+        "DODAGID",
         "options",
     };
-    return (field>=0 && field<4) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<11) ? fieldNames[field] : nullptr;
 }
 
 int ICMPv6DISMsgDescriptor::findField(const char *fieldName) const
@@ -2523,7 +2641,14 @@ int ICMPv6DISMsgDescriptor::findField(const char *fieldName) const
     if (fieldName[0]=='c' && strcmp(fieldName, "code")==0) return base+0;
     if (fieldName[0]=='f' && strcmp(fieldName, "flags")==0) return base+1;
     if (fieldName[0]=='r' && strcmp(fieldName, "reserved")==0) return base+2;
-    if (fieldName[0]=='o' && strcmp(fieldName, "options")==0) return base+3;
+    if (fieldName[0]=='R' && strcmp(fieldName, "RPLInstanceID")==0) return base+3;
+    if (fieldName[0]=='V' && strcmp(fieldName, "VersionNumber")==0) return base+4;
+    if (fieldName[0]=='V' && strcmp(fieldName, "V")==0) return base+5;
+    if (fieldName[0]=='I' && strcmp(fieldName, "I")==0) return base+6;
+    if (fieldName[0]=='D' && strcmp(fieldName, "D")==0) return base+7;
+    if (fieldName[0]=='F' && strcmp(fieldName, "Flag")==0) return base+8;
+    if (fieldName[0]=='D' && strcmp(fieldName, "DODAGID")==0) return base+9;
+    if (fieldName[0]=='o' && strcmp(fieldName, "options")==0) return base+10;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -2540,8 +2665,15 @@ const char *ICMPv6DISMsgDescriptor::getFieldTypeString(int field) const
         "int",
         "int",
         "int",
+        "int",
+        "int",
+        "int",
+        "int",
+        "int",
+        "IPv6Address",
+        "int",
     };
-    return (field>=0 && field<4) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<11) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **ICMPv6DISMsgDescriptor::getFieldPropertyNames(int field) const
@@ -2553,7 +2685,11 @@ const char **ICMPv6DISMsgDescriptor::getFieldPropertyNames(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 3: {
+        case 0: {
+            static const char *names[] = { "enum",  nullptr };
+            return names;
+        }
+        case 10: {
             static const char *names[] = { "enum",  nullptr };
             return names;
         }
@@ -2570,8 +2706,11 @@ const char *ICMPv6DISMsgDescriptor::getFieldProperty(int field, const char *prop
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 3:
-            if (!strcmp(propertyname,"enum")) return "inet::RPL_DIS_OPTIONS";
+        case 0:
+            if (!strcmp(propertyname,"enum")) return "rpl::ICMPv6_RPL_CONTROL_MSG";
+            return nullptr;
+        case 10:
+            if (!strcmp(propertyname,"enum")) return "rpl::RPL_DIS_OPTIONS";
             return nullptr;
         default: return nullptr;
     }
@@ -2615,10 +2754,17 @@ std::string ICMPv6DISMsgDescriptor::getFieldValueAsString(void *object, int fiel
     }
     ICMPv6DISMsg *pp = (ICMPv6DISMsg *)object; (void)pp;
     switch (field) {
-        case 0: return long2string(pp->getCode());
+        case 0: return enum2string(pp->getCode(), "rpl::ICMPv6_RPL_CONTROL_MSG");
         case 1: return long2string(pp->getFlags());
         case 2: return long2string(pp->getReserved());
-        case 3: return enum2string(pp->getOptions(), "inet::RPL_DIS_OPTIONS");
+        case 3: return long2string(pp->getRPLInstanceID());
+        case 4: return long2string(pp->getVersionNumber());
+        case 5: return long2string(pp->getV());
+        case 6: return long2string(pp->getI());
+        case 7: return long2string(pp->getD());
+        case 8: return long2string(pp->getFlag());
+        case 9: {std::stringstream out; out << pp->getDODAGID(); return out.str();}
+        case 10: return enum2string(pp->getOptions(), "rpl::RPL_DIS_OPTIONS");
         default: return "";
     }
 }
@@ -2633,10 +2779,16 @@ bool ICMPv6DISMsgDescriptor::setFieldValueAsString(void *object, int field, int 
     }
     ICMPv6DISMsg *pp = (ICMPv6DISMsg *)object; (void)pp;
     switch (field) {
-        case 0: pp->setCode(string2long(value)); return true;
+        case 0: pp->setCode((rpl::ICMPv6_RPL_CONTROL_MSG)string2enum(value, "rpl::ICMPv6_RPL_CONTROL_MSG")); return true;
         case 1: pp->setFlags(string2long(value)); return true;
         case 2: pp->setReserved(string2long(value)); return true;
-        case 3: pp->setOptions((inet::RPL_DIS_OPTIONS)string2enum(value, "inet::RPL_DIS_OPTIONS")); return true;
+        case 3: pp->setRPLInstanceID(string2long(value)); return true;
+        case 4: pp->setVersionNumber(string2long(value)); return true;
+        case 5: pp->setV(string2long(value)); return true;
+        case 6: pp->setI(string2long(value)); return true;
+        case 7: pp->setD(string2long(value)); return true;
+        case 8: pp->setFlag(string2long(value)); return true;
+        case 10: pp->setOptions((rpl::RPL_DIS_OPTIONS)string2enum(value, "rpl::RPL_DIS_OPTIONS")); return true;
         default: return false;
     }
 }
@@ -2650,6 +2802,7 @@ const char *ICMPv6DISMsgDescriptor::getFieldStructName(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
+        case 9: return omnetpp::opp_typename(typeid(IPv6Address));
         default: return nullptr;
     };
 }
@@ -2664,15 +2817,16 @@ void *ICMPv6DISMsgDescriptor::getFieldStructValuePointer(void *object, int field
     }
     ICMPv6DISMsg *pp = (ICMPv6DISMsg *)object; (void)pp;
     switch (field) {
+        case 9: return (void *)(&pp->getDODAGID()); break;
         default: return nullptr;
     }
 }
 
 Register_Class(ICMPv6DIOMsg)
 
-ICMPv6DIOMsg::ICMPv6DIOMsg(const char *name, short kind) : ::inet::ICMPv6Message(name,kind)
+ICMPv6DIOMsg::ICMPv6DIOMsg(const char *name, short kind) : ::rpl::ICMPv6Message(name,kind)
 {
-    this->code = 0x01;
+    this->code = 0;
     this->versionNumber = 0;
     this->rank = 0;
     this->grounded = 0;
@@ -2683,7 +2837,7 @@ ICMPv6DIOMsg::ICMPv6DIOMsg(const char *name, short kind) : ::inet::ICMPv6Message
     this->options = 0;
 }
 
-ICMPv6DIOMsg::ICMPv6DIOMsg(const ICMPv6DIOMsg& other) : ::inet::ICMPv6Message(other)
+ICMPv6DIOMsg::ICMPv6DIOMsg(const ICMPv6DIOMsg& other) : ::rpl::ICMPv6Message(other)
 {
     copy(other);
 }
@@ -2695,7 +2849,7 @@ ICMPv6DIOMsg::~ICMPv6DIOMsg()
 ICMPv6DIOMsg& ICMPv6DIOMsg::operator=(const ICMPv6DIOMsg& other)
 {
     if (this==&other) return *this;
-    ::inet::ICMPv6Message::operator=(other);
+    ::rpl::ICMPv6Message::operator=(other);
     copy(other);
     return *this;
 }
@@ -2716,7 +2870,7 @@ void ICMPv6DIOMsg::copy(const ICMPv6DIOMsg& other)
 
 void ICMPv6DIOMsg::parsimPack(omnetpp::cCommBuffer *b) const
 {
-    ::inet::ICMPv6Message::parsimPack(b);
+    ::rpl::ICMPv6Message::parsimPack(b);
     doParsimPacking(b,this->code);
     doParsimPacking(b,this->versionNumber);
     doParsimPacking(b,this->rank);
@@ -2731,7 +2885,7 @@ void ICMPv6DIOMsg::parsimPack(omnetpp::cCommBuffer *b) const
 
 void ICMPv6DIOMsg::parsimUnpack(omnetpp::cCommBuffer *b)
 {
-    ::inet::ICMPv6Message::parsimUnpack(b);
+    ::rpl::ICMPv6Message::parsimUnpack(b);
     doParsimUnpacking(b,this->code);
     doParsimUnpacking(b,this->versionNumber);
     doParsimUnpacking(b,this->rank);
@@ -2874,7 +3028,7 @@ class ICMPv6DIOMsgDescriptor : public omnetpp::cClassDescriptor
 
 Register_ClassDescriptor(ICMPv6DIOMsgDescriptor)
 
-ICMPv6DIOMsgDescriptor::ICMPv6DIOMsgDescriptor() : omnetpp::cClassDescriptor("inet::ICMPv6DIOMsg", "inet::ICMPv6Message")
+ICMPv6DIOMsgDescriptor::ICMPv6DIOMsgDescriptor() : omnetpp::cClassDescriptor("rpl::ICMPv6DIOMsg", "rpl::ICMPv6Message")
 {
     propertynames = nullptr;
 }
@@ -3007,6 +3161,10 @@ const char **ICMPv6DIOMsgDescriptor::getFieldPropertyNames(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
+        case 0: {
+            static const char *names[] = { "enum",  nullptr };
+            return names;
+        }
         case 9: {
             static const char *names[] = { "enum",  nullptr };
             return names;
@@ -3024,8 +3182,11 @@ const char *ICMPv6DIOMsgDescriptor::getFieldProperty(int field, const char *prop
         field -= basedesc->getFieldCount();
     }
     switch (field) {
+        case 0:
+            if (!strcmp(propertyname,"enum")) return "rpl::ICMPv6_RPL_CONTROL_MSG";
+            return nullptr;
         case 9:
-            if (!strcmp(propertyname,"enum")) return "inet::RPL_DIS_OPTIONS";
+            if (!strcmp(propertyname,"enum")) return "rpl::RPL_DIS_OPTIONS";
             return nullptr;
         default: return nullptr;
     }
@@ -3069,7 +3230,7 @@ std::string ICMPv6DIOMsgDescriptor::getFieldValueAsString(void *object, int fiel
     }
     ICMPv6DIOMsg *pp = (ICMPv6DIOMsg *)object; (void)pp;
     switch (field) {
-        case 0: return long2string(pp->getCode());
+        case 0: return enum2string(pp->getCode(), "rpl::ICMPv6_RPL_CONTROL_MSG");
         case 1: return long2string(pp->getVersionNumber());
         case 2: return long2string(pp->getRank());
         case 3: return long2string(pp->getGrounded());
@@ -3078,7 +3239,7 @@ std::string ICMPv6DIOMsgDescriptor::getFieldValueAsString(void *object, int fiel
         case 6: return long2string(pp->getNofDoub());
         case 7: return long2string(pp->getK());
         case 8: {std::stringstream out; out << pp->getDODAGID(); return out.str();}
-        case 9: return enum2string(pp->getOptions(), "inet::RPL_DIS_OPTIONS");
+        case 9: return enum2string(pp->getOptions(), "rpl::RPL_DIS_OPTIONS");
         default: return "";
     }
 }
@@ -3093,7 +3254,7 @@ bool ICMPv6DIOMsgDescriptor::setFieldValueAsString(void *object, int field, int 
     }
     ICMPv6DIOMsg *pp = (ICMPv6DIOMsg *)object; (void)pp;
     switch (field) {
-        case 0: pp->setCode(string2long(value)); return true;
+        case 0: pp->setCode((rpl::ICMPv6_RPL_CONTROL_MSG)string2enum(value, "rpl::ICMPv6_RPL_CONTROL_MSG")); return true;
         case 1: pp->setVersionNumber(string2long(value)); return true;
         case 2: pp->setRank(string2long(value)); return true;
         case 3: pp->setGrounded(string2long(value)); return true;
@@ -3101,7 +3262,7 @@ bool ICMPv6DIOMsgDescriptor::setFieldValueAsString(void *object, int field, int 
         case 5: pp->setIMin(string2double(value)); return true;
         case 6: pp->setNofDoub(string2long(value)); return true;
         case 7: pp->setK(string2long(value)); return true;
-        case 9: pp->setOptions((inet::RPL_DIS_OPTIONS)string2enum(value, "inet::RPL_DIS_OPTIONS")); return true;
+        case 9: pp->setOptions((rpl::RPL_DIS_OPTIONS)string2enum(value, "rpl::RPL_DIS_OPTIONS")); return true;
         default: return false;
     }
 }
@@ -3135,5 +3296,5 @@ void *ICMPv6DIOMsgDescriptor::getFieldStructValuePointer(void *object, int field
     }
 }
 
-} // namespace inet
+} // namespace rpl
 

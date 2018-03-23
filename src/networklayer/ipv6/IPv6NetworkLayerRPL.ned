@@ -27,12 +27,16 @@ package rpl.src.networklayer.ipv6;
 import inet.networklayer.contract.IIPv6Tunneling;
 import rpl.src.networklayer.contract.INetworkLayerRPL;
 import inet.networklayer.contract.IxMIPv6Support;
-import inet.networklayer.icmpv6.IPv6NeighbourDiscovery;
+//import inet.networklayer.icmpv6.IPv6NeighbourDiscovery;
+//import inet.networklayer.icmpv6.ICMPv6; 
+
 
 //EXTRA
 import rpl.src.networklayer.icmpv6.ICMPv6RPL; 
-import inet.networklayer.ipv6.IPv6;
+//import rpl.src.networklayer.ipv6.IPv6RPL;
 import inet.networklayer.ipv6.IPv6ErrorHandling;
+import rpl.src.networklayer.icmpv6.IPv6NeighbourDiscoveryRPL;
+
 
 
 
@@ -69,7 +73,7 @@ module IPv6NetworkLayerRPL like INetworkLayerRPL
         
     submodules:
         // TODO: rename to ip
-        ipv6: IPv6 {
+        ipv6: IPv6RPL {
             parameters:
                 @display("p=117,129");
             gates:
@@ -84,7 +88,7 @@ module IPv6NetworkLayerRPL like INetworkLayerRPL
             parameters:
                 @display("p=280,79");
         }
-        neighbourDiscovery: IPv6NeighbourDiscovery {
+        neighbourDiscovery: IPv6NeighbourDiscoveryRPL {
             parameters:
                 @display("p=257,149");
         }

@@ -26,11 +26,21 @@ cplusplus {{
 #include "inet/common/INETDefs.h"
 #include "inet/networklayer/contract/ipv6/IPv6Address.h"
 #define ICMPv6_HEADER_BYTES  8
+
 }}
 
-namespace inet;
+
+    
+namespace rpl;
+
+cplusplus {{
+using namespace inet;
+class inet::IPv6Address;
+}}
+
 //class noncobject ::IPv6Address;
-class noncobject ::IPv6Address;
+class noncobject inet::IPv6Address;
+
 
 //
 //# TODO consolidate this file's contents with ICMPMessage.msg
@@ -65,6 +75,15 @@ enum ICMPv6Type
 //cplusplus {{
 //typedef int ICMPv6Code;
 //}}
+
+
+//EXTRA
+//values of code field
+enum ICMPv6_RPL_CONTROL_MSG
+{
+    DIS = 0x00;
+    DIO = 0x01;
+}
 
 //EXTRA
 //DIS options
@@ -177,18 +196,27 @@ packet ICMPv6EchoReplyMsg extends ICMPv6Message
 //DIS control message for RPL
 packet ICMPv6DISMsg extends ICMPv6Message
 {
-    int code = 0x00; // RFC 6550, section 6
+    int code @enum(ICMPv6_RPL_CONTROL_MSG); // RFC 6550, section 6: set to 0x00
     // TODO: checksum 
-    int flags = 0; // RFC 6550, section 6.2.1
-    int reserved = 0; // RFC 6550, section 6.2.1
+    int flags; // RFC 6550, section 6.2.1: set to 0
+    int reserved; // RFC 6550, section 6.2.1 set to 0
+    
+        int RPLInstanceID;          // The ID of the RPL instance
+    int VersionNumber;          // DODAG version number
+    int V;                      // Node's rank
+    int I;                      // Type of the DODAG, Grounded or Flooding
+    int D;                      // Destination Advertisement Trigger Sequence Number       
+    int Flag;                   // The size of Imin in Trcikle algorithm
+    IPv6Address DODAGID;   // IPv6 address set by DODAG root  
+    
     int options @enum(RPL_DIS_OPTIONS); //RFC 6550, section 6.2.1
 }
 
 //EXTRA 
-//DIS control message for RPL
+//DIO control message for RPL
 packet ICMPv6DIOMsg extends ICMPv6Message
 {
-    int code = 0x01; // RFC 6550, section 6
+    int code @enum(ICMPv6_RPL_CONTROL_MSG); // RFC 6550, section 6: set to 0x01
     // TODO: checksum 
     //int rplInstanceId = 0; // RFC 6550, section 6.3.1
     int versionNumber = 0; // RFC 6550, section 6.3.1

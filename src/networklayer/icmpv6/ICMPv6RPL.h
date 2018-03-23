@@ -30,16 +30,22 @@
 #include "inet/common/lifecycle/ILifecycle.h"
 //EXTRA
 #include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
+#include "inet/networklayer/contract/ipv6/IPv6Address.h"
+#include "inet/networklayer/contract/ipv6/IPv6ControlInfo.h"
+#include "inet/applications/pingapp/PingPayload_m.h"
+
 
 
 namespace rpl {
 using namespace inet;
 
-//foreign declarations:
 class inet::IPv6Address;
 class inet::IPv6ControlInfo;
 class inet::IPv6Datagram;
 class inet::PingPayload;
+
+class ICMPv6Message;
+
 
 /**
  * ICMPv6 implementation.
