@@ -28,7 +28,7 @@ simple RPLRouting
         @display("i=block/network2");
         string routingTableModule = default("^.routingTable");
         string interfaceTableModule = default("^.interfaceTable");
-        string networkProtocolModule = default("^.networkLayer.ip");
+        string networkProtocolModule = default("^.networkLayer.ipv6");
         
         int DIOheaderLength = default(10);
 
