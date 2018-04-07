@@ -91,7 +91,10 @@ void IPv6RPL::initialize(int stage)
 
         ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
         rt = getModuleFromPar<IPv6RoutingTable>(par("routingTableModule"), this);
-        nd = getModuleFromPar<IPv6NeighbourDiscovery>(par("ipv6NeighbourDiscoveryModule"), this);
+        //nd = getModuleFromPar<IPv6NeighbourDiscovery>(par("ipv6NeighbourDiscoveryModule"), this);
+        //nd = getModuleFromPar<IPv6NeighbourDiscoveryRPL>(par("ipv6NeighbourDiscoveryModule"), this);  //EXTRA
+        nd = check_and_cast<IPv6NeighbourDiscoveryRPL *>(this->getParentModule()->getSubmodule("neighbourDiscovery")); //EXTRA
+
         //icmp = getModuleFromPar<ICMPv6RPL>(par("icmpv6Module"), this);  //EXTRA
         icmp = check_and_cast<ICMPv6RPL *>(this->getParentModule()->getSubmodule("icmpv6")); //EXTRA
         tunneling = getModuleFromPar<IPv6Tunneling>(par("ipv6TunnelingModule"), this);

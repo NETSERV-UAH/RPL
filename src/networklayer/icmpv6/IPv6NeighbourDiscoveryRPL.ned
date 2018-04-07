@@ -34,6 +34,7 @@ package rpl.src.networklayer.icmpv6;
 simple IPv6NeighbourDiscoveryRPL
 {
     parameters:
+        @class(rpl::IPv6NeighbourDiscoveryRPL); //EXTRA
         string interfaceTableModule;   // The path to the InterfaceTable module
         string icmpv6Module;
         string xmipv6Module;

@@ -34,13 +34,14 @@
 
 #include "inet/networklayer/contract/ipv6/IPv6Address.h"
 #include "inet/networklayer/icmpv6/IPv6NDMessage_m.h"
-#include "inet/networklayer/icmpv6/IPv6NeighbourCache.h"
+//#include "inet/networklayer/icmpv6/IPv6NeighbourCache.h"
 #include "inet/common/lifecycle/ILifecycle.h"
 
 //EXTRA
 //#include "src/networklayer/icmpv6/ICMPv6RPL.h"
 #include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
 #include "inet/networklayer/xmipv6/xMIPv6.h"
+#include "src/networklayer/icmpv6/IPv6NeighbourCacheRPL.h"
 
 
 
@@ -68,9 +69,9 @@ class IPv6NeighbourDiscoveryRPL : public cSimpleModule, public ILifecycle
 {
   public:
     typedef std::vector<cMessage *> MsgPtrVector;
-    typedef IPv6NeighbourCache::Key Key;    //for convenience
-    typedef IPv6NeighbourCache::Neighbour Neighbour;    // for convenience
-    typedef IPv6NeighbourCache::DefaultRouterList DefaultRouterList;    // for convenience
+    typedef IPv6NeighbourCacheRPL::Key Key;    //for convenience
+    typedef IPv6NeighbourCacheRPL::Neighbour Neighbour;    // for convenience
+    typedef IPv6NeighbourCacheRPL::DefaultRouterList DefaultRouterList;    // for convenience
 
   public:
     IPv6NeighbourDiscoveryRPL();
@@ -122,7 +123,7 @@ class IPv6NeighbourDiscoveryRPL : public cSimpleModule, public ILifecycle
     xMIPv6 *mipv6 = nullptr;    // in case the node has MIP support
 #endif /* WITH_xMIPv6 */
 
-    IPv6NeighbourCache neighbourCache;
+    IPv6NeighbourCacheRPL neighbourCache;
     typedef std::set<cMessage *> RATimerList;    //FIXME add comparator for stable fingerprints!
 
     // stores information about a pending Duplicate Address Detection for
@@ -395,9 +396,9 @@ class IPv6NeighbourDiscoveryRPL : public cSimpleModule, public ILifecycle
     virtual void processNAPacket(IPv6NeighbourAdvertisement *na, IPv6ControlInfo *naCtrlInfo);
     virtual bool validateNAPacket(IPv6NeighbourAdvertisement *na, IPv6ControlInfo *naCtrlInfo);
     virtual void processNAForIncompleteNCEState(IPv6NeighbourAdvertisement *na,
-            IPv6NeighbourCache::Neighbour *nce);
+            IPv6NeighbourCacheRPL::Neighbour *nce);
     virtual void processNAForOtherNCEStates(IPv6NeighbourAdvertisement *na,
-            IPv6NeighbourCache::Neighbour *nce);
+            IPv6NeighbourCacheRPL::Neighbour *nce);
     /************End Of Neighbour Advertisement Stuff**********************/
 
     /************Redirect Message Stuff************************************/

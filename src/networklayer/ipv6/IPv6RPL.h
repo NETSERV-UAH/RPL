@@ -30,7 +30,7 @@
 #include "inet/common/queue/QueueBase.h"
 #include "inet/networklayer/ipv6/IPv6RoutingTable.h"
 //#include "inet/networklayer/icmpv6/ICMPv6.h"
-#include "inet/networklayer/icmpv6/IPv6NeighbourDiscovery.h"
+//#include "inet/networklayer/icmpv6/IPv6NeighbourDiscovery.h"
 
 #include "inet/networklayer/ipv6tunneling/IPv6Tunneling.h"
 
@@ -40,8 +40,9 @@
 
 //EXTRA
 #include "src/networklayer/icmpv6/ICMPv6RPL.h"
-#include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
+//#include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
 #include "src/networklayer/ipv6/IPv6FragBufRPL.h"
+#include "src/networklayer/icmpv6/IPv6NeighbourDiscoveryRPL.h"
 
 
 
@@ -49,7 +50,7 @@ namespace rpl {
 using namespace inet;
 
 
-class ICMPv6MessageRPL;  //EXTRA
+class inet::ICMPv6Message;  //EXTRA
 
 /**
  * IPv6 implementation.
@@ -77,7 +78,7 @@ class IPv6RPL : public QueueBase, public ILifecycle, public INetfilter, public I
   protected:
     IInterfaceTable *ift = nullptr;
     IPv6RoutingTable *rt = nullptr;
-    IPv6NeighbourDiscovery *nd = nullptr;
+    IPv6NeighbourDiscoveryRPL *nd = nullptr;  //EXTRA
     ICMPv6RPL *icmp = nullptr;  //EXTRA
 
     IPv6Tunneling *tunneling = nullptr;

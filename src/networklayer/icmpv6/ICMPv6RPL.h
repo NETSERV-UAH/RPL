@@ -29,6 +29,7 @@
 
 #include "inet/common/lifecycle/ILifecycle.h"
 //EXTRA
+#include "inet/networklayer/icmpv6/ICMPv6Message_m.h"
 #include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
 #include "inet/networklayer/contract/ipv6/IPv6Address.h"
 #include "inet/networklayer/contract/ipv6/IPv6ControlInfo.h"
@@ -44,7 +45,7 @@ class inet::IPv6ControlInfo;
 class inet::IPv6Datagram;
 class inet::PingPayload;
 
-class ICMPv6Message;
+class inet::ICMPv6Message;
 
 
 /**

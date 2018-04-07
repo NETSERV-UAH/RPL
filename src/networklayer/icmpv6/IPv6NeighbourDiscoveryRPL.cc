@@ -298,27 +298,27 @@ void IPv6NeighbourDiscoveryRPL::processIPv6Datagram(IPv6Datagram *msg)
      * queued pending completion of address resolution.
      */
     switch (nce->reachabilityState) {
-    case IPv6NeighbourCache::INCOMPLETE:
+    case IPv6NeighbourCacheRPL::INCOMPLETE:
         EV_INFO << "Reachability State is INCOMPLETE. Address Resolution already initiated.\n";
         EV_INFO << "Add packet to entry's queue until Address Resolution is complete.\n";
         bubble("Packet added to queue until Address Resolution is complete.");
         nce->pendingPackets.push_back(msg);
         pendingQueue.insert(msg);
         break;
-    case IPv6NeighbourCache::STALE:
+    case IPv6NeighbourCacheRPL::STALE:
         EV_INFO << "Reachability State is STALE.\n";
         send(msg, "ipv6Out");
         initiateNeighbourUnreachabilityDetection(nce);
         break;
-    case IPv6NeighbourCache::REACHABLE:
+    case IPv6NeighbourCacheRPL::REACHABLE:
         EV_INFO << "Next hop is REACHABLE, sending packet to next-hop address.";
         send(msg, "ipv6Out");
         break;
-    case IPv6NeighbourCache::DELAY:
+    case IPv6NeighbourCacheRPL::DELAY:
         EV_INFO << "Next hop is in DELAY state, sending packet to next-hop address.";
         send(msg, "ipv6Out");
         break;
-    case IPv6NeighbourCache::PROBE:
+    case IPv6NeighbourCacheRPL::PROBE:
         EV_INFO << "Next hop is in PROBE state, sending packet to next-hop address.";
         send(msg, "ipv6Out");
         break;
@@ -356,22 +356,22 @@ const MACAddress& IPv6NeighbourDiscoveryRPL::resolveNeighbour(const IPv6Address&
     Neighbour *nce = neighbourCache.lookup(nextHop, interfaceId);
     //InterfaceEntry *ie = ift->getInterfaceById(interfaceId);
 
-    if (!nce || nce->reachabilityState == IPv6NeighbourCache::INCOMPLETE)
+    if (!nce || nce->reachabilityState == IPv6NeighbourCacheRPL::INCOMPLETE)
         return MACAddress::UNSPECIFIED_ADDRESS;
 
-    if (nce->reachabilityState == IPv6NeighbourCache::STALE) {
+    if (nce->reachabilityState == IPv6NeighbourCacheRPL::STALE) {
         initiateNeighbourUnreachabilityDetection(nce);
     }
-    else if (nce->reachabilityState == IPv6NeighbourCache::REACHABLE &&
+    else if (nce->reachabilityState == IPv6NeighbourCacheRPL::REACHABLE &&
              simTime() > nce->reachabilityExpires)
     {
-        nce->reachabilityState = IPv6NeighbourCache::STALE;
+        nce->reachabilityState = IPv6NeighbourCacheRPL::STALE;
         initiateNeighbourUnreachabilityDetection(nce);
     }
-    else if (nce->reachabilityState != IPv6NeighbourCache::REACHABLE) {
+    else if (nce->reachabilityState != IPv6NeighbourCacheRPL::REACHABLE) {
         //reachability state must be either in DELAY or PROBE
-        ASSERT(nce->reachabilityState == IPv6NeighbourCache::DELAY ||
-                nce->reachabilityState == IPv6NeighbourCache::PROBE);
+        ASSERT(nce->reachabilityState == IPv6NeighbourCacheRPL::DELAY ||
+                nce->reachabilityState == IPv6NeighbourCacheRPL::PROBE);
         EV_INFO << "NUD in progress.\n";
     }
 
@@ -498,7 +498,7 @@ IPv6Address IPv6NeighbourDiscoveryRPL::determineNextHop(const IPv6Address& destA
 
 void IPv6NeighbourDiscoveryRPL::initiateNeighbourUnreachabilityDetection(Neighbour *nce)
 {
-    ASSERT(nce->reachabilityState == IPv6NeighbourCache::STALE);
+    ASSERT(nce->reachabilityState == IPv6NeighbourCacheRPL::STALE);
     ASSERT(nce->nudTimeoutEvent == nullptr);
     const Key *nceKey = nce->nceKey;
     EV_INFO << "Initiating Neighbour Unreachability Detection";
@@ -506,7 +506,7 @@ void IPv6NeighbourDiscoveryRPL::initiateNeighbourUnreachabilityDetection(Neighbo
     EV_INFO << "Setting NCE state to DELAY.\n";
     /*The first time a node sends a packet to a neighbor whose entry is
        STALE, the sender changes the state to DELAY*/
-    nce->reachabilityState = IPv6NeighbourCache::DELAY;
+    nce->reachabilityState = IPv6NeighbourCacheRPL::DELAY;
 
     /*and sets a timer to expire in DELAY_FIRST_PROBE_TIME seconds.*/
     cMessage *msg = new cMessage("NUDTimeout", MK_NUD_TIMEOUT);
@@ -527,13 +527,13 @@ void IPv6NeighbourDiscoveryRPL::processNUDTimeout(cMessage *timeoutMsg)
 
     InterfaceEntry *ie = ift->getInterfaceById(nceKey->interfaceID);
 
-    if (nce->reachabilityState == IPv6NeighbourCache::DELAY) {
+    if (nce->reachabilityState == IPv6NeighbourCacheRPL::DELAY) {
         /*If the entry is still in the DELAY state when the timer expires, the
            entry's state changes to PROBE. If reachability confirmation is received,
            the entry's state changes to REACHABLE.*/
         EV_DETAIL << "Neighbour Entry is still in DELAY state.\n";
         EV_DETAIL << "Entering PROBE state. Sending NS probe.\n";
-        nce->reachabilityState = IPv6NeighbourCache::PROBE;
+        nce->reachabilityState = IPv6NeighbourCacheRPL::PROBE;
         nce->numProbesSent = 0;
     }
 
@@ -594,7 +594,7 @@ IPv6Address IPv6NeighbourDiscoveryRPL::selectDefaultRouter(int& outIfID)
             neighbourCache.remove(nce.nceKey->address, nce.nceKey->interfaceID);
             continue;
         }
-        if (nce.reachabilityState != IPv6NeighbourCache::INCOMPLETE) {
+        if (nce.reachabilityState != IPv6NeighbourCacheRPL::INCOMPLETE) {
             EV_INFO << "Found a probably reachable router in the default router list.\n";
             defaultRouters.setHead(*nce.nextDefaultRouter);
             outIfID = nce.nceKey->interfaceID;
@@ -670,7 +670,7 @@ void IPv6NeighbourDiscoveryRPL::initiateAddressResolution(const IPv6Address& dgS
     //resolution.  For multicast-capable interfaces this entails creating a
     //Neighbor Cache entry in the INCOMPLETE state(already created if not done yet)
     //WEI-If entry already exists, we still have to ensure that its state is INCOMPLETE.
-    nce->reachabilityState = IPv6NeighbourCache::INCOMPLETE;
+    nce->reachabilityState = IPv6NeighbourCacheRPL::INCOMPLETE;
 
     //and transmitting a Neighbor Solicitation message targeted at the
     //neighbor.  The solicitation is sent to the solicited-node multicast
@@ -2013,7 +2013,7 @@ void IPv6NeighbourDiscoveryRPL::processNSWithSpecifiedSrcAddr(IPv6NeighbourSolic
             //the cached address should be replaced by the received address
             entry->macAddress = nsMacAddr;
             //and the entry's reachability state MUST be set to STALE.
-            entry->reachabilityState = IPv6NeighbourCache::STALE;
+            entry->reachabilityState = IPv6NeighbourCacheRPL::STALE;
         }
     }
 
@@ -2217,7 +2217,7 @@ void IPv6NeighbourDiscoveryRPL::processNAPacket(IPv6NeighbourAdvertisement *na,
     //Target Address has entry in Neighbour Cache
     EV_INFO << "NA received. Target Address found in Neighbour Cache\n";
 
-    if (neighbourEntry->reachabilityState == IPv6NeighbourCache::INCOMPLETE)
+    if (neighbourEntry->reachabilityState == IPv6NeighbourCacheRPL::INCOMPLETE)
         processNAForIncompleteNCEState(na, neighbourEntry);
     else
         processNAForOtherNCEStates(na, neighbourEntry);
@@ -2291,12 +2291,12 @@ void IPv6NeighbourDiscoveryRPL::processNAForIncompleteNCEState(IPv6NeighbourAdve
         //- If the advertisement's Solicited flag is set, the state of the
         //  entry is set to REACHABLE, otherwise it is set to STALE.
         if (naSolicitedFlag == true) {
-            nce->reachabilityState = IPv6NeighbourCache::REACHABLE;
+            nce->reachabilityState = IPv6NeighbourCacheRPL::REACHABLE;
             EV_INFO << "Reachability confirmed through successful Addr Resolution.\n";
             nce->reachabilityExpires = simTime() + ie->ipv6Data()->_getReachableTime();
         }
         else
-            nce->reachabilityState = IPv6NeighbourCache::STALE;
+            nce->reachabilityState = IPv6NeighbourCacheRPL::STALE;
 
         //- It sets the IsRouter flag in the cache entry based on the Router
         //  flag in the received advertisement.
@@ -2335,10 +2335,10 @@ void IPv6NeighbourDiscoveryRPL::processNAForOtherNCEStates(IPv6NeighbourAdvertis
         //   differs from that in the cache, then one of two actions takes place:
         //(Note: An unspecified MAC should not be compared with the NCE's mac!)
         //a. If the state of the entry is REACHABLE,
-        if (nce->reachabilityState == IPv6NeighbourCache::REACHABLE) {
+        if (nce->reachabilityState == IPv6NeighbourCacheRPL::REACHABLE) {
             EV_INFO << "NA mac is different. Change NCE state from REACHABLE to STALE\n";
             //set it to STALE, but do not update the entry in any other way.
-            nce->reachabilityState = IPv6NeighbourCache::STALE;
+            nce->reachabilityState = IPv6NeighbourCacheRPL::STALE;
         }
         else
             //b. Otherwise, the received advertisement should be ignored and
@@ -2367,7 +2367,7 @@ void IPv6NeighbourDiscoveryRPL::processNAForOtherNCEStates(IPv6NeighbourAdvertis
         if (naSolicitedFlag == true) {
             EV_INFO << "Solicited Flag is TRUE. Set NCE state to REACHABLE.\n";
             //the state of the entry MUST be set to REACHABLE.
-            nce->reachabilityState = IPv6NeighbourCache::REACHABLE;
+            nce->reachabilityState = IPv6NeighbourCacheRPL::REACHABLE;
             //We have to cancel the NUD self timer message if there is one.
 
             cMessage *msg = nce->nudTimeoutEvent;
@@ -2387,7 +2387,7 @@ void IPv6NeighbourDiscoveryRPL::processNAForOtherNCEStates(IPv6NeighbourAdvertis
             if (!(naMacAddr.equals(nce->macAddress))) {
                 EV_INFO << "NA's MAC is different from NCE's.Set NCE state to STALE\n";
                 //the state MUST be set to STALE.
-                nce->reachabilityState = IPv6NeighbourCache::STALE;
+                nce->reachabilityState = IPv6NeighbourCacheRPL::STALE;
             }
             else
                 //Otherwise, the entry's state remains unchanged.
