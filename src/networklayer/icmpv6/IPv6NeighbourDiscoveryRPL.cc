@@ -135,7 +135,8 @@ void IPv6NeighbourDiscoveryRPL::initialize(int stage)
            }*/
 #endif /* WITH_xMIPv6 */
 
-        for (int i = 0; i < ift->getNumInterfaces(); i++) {
+        //EXTRA BEGIN
+/*        for (int i = 0; i < ift->getNumInterfaces(); i++) {
             InterfaceEntry *ie = ift->getInterface(i);
 
             if (ie->ipv6Data()->getAdvSendAdvertisements() && !(ie->isLoopback())) {
@@ -146,8 +147,7 @@ void IPv6NeighbourDiscoveryRPL::initialize(int stage)
         //This simulates random node bootup time. Link local address assignment
         //takes place during this time.
 
-        //EXTRA BEGIN
-/*        cMessage *msg = new cMessage("assignLinkLocalAddr", MK_ASSIGN_LINKLOCAL_ADDRESS);
+        cMessage *msg = new cMessage("assignLinkLocalAddr", MK_ASSIGN_LINKLOCAL_ADDRESS);
 
         //We want routers to boot up faster!
         if (rt6->isRouter())
