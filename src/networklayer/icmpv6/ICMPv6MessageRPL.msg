@@ -1,8 +1,4 @@
 //
-// Copyright (C) 2001 CTIE, Monash University
-// Copyright (C) 2005 Andras Varga
-// Copyright (C) 2005 Wei Yang, Ng
-//
 // Copyright (C) 2018 Elisa Rojas(1), Hedayat Hosseini(2);
 //                    (1) GIST, University of Alcala, Spain.
 //                    (2) CEIT, Amirkabir University of Technology (Tehran Polytechnic), Iran.
@@ -69,7 +65,7 @@ packet ICMPv6DISMsg extends ICMPv6Message
     int flags; // RFC 6550, section 6.2.1: set to 0
     int reserved; // RFC 6550, section 6.2.1 set to 0
     
-        int RPLInstanceID;          // The ID of the RPL instance
+    int RPLInstanceID;          // The ID of the RPL instance
     int VersionNumber;          // DODAG version number
     int V;                      // Node's rank
     int I;                      // Type of the DODAG, Grounded or Flooding
