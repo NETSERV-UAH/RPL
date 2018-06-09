@@ -1,4 +1,9 @@
 //
+// Copyright (C) 2018 Elisa Rojas(1), Hedayat Hosseini(2);
+//                    (1) GIST, University of Alcala, Spain.
+//                    (2) CEIT, Amirkabir University of Technology (Tehran Polytechnic), Iran.
+//                    OMNeT++ 5.2.1 & INET 3.6.3
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -13,13 +18,15 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package rpl.simulations.test1;
+package rpl.simulations.flowGen;
 
 import inet.networklayer.configurator.ipv6.FlatNetworkConfigurator6;
 import inet.physicallayer.ieee802154.packetlevel.Ieee802154NarrowbandScalarRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
+import rpl.src.simulationManager.managerRPL;
 
 import rpl.src.node.rpl.RPLRouter;
+//import rpl.src.simulationmodels.flowmodels.UDPFlowGenerator;
 
 
 network Net802154
@@ -29,18 +36,26 @@ network Net802154
     submodules:
         visualizer: <default("IntegratedCanvasVisualizer")> like IIntegratedVisualizer if hasVisualizer() {
             parameters:
-                @display("p=100,50");
+                @display("p=100,10");
         }
+    //    generator: UDPFlowGenerator {
+      //      @display("p=100,20");
+       // }
         configurator: FlatNetworkConfigurator6 {
             parameters:
-                @display("p=100,150");
+                @display("p=100,20");
         }
+        managerRPL: managerRPL {
+            parameters:
+                @display("p=100,30");
+        }
+
         radioMedium: Ieee802154NarrowbandScalarRadioMedium {
             parameters:
-                @display("p=100,250");
+                @display("p=100,40");
         }
         host[numHosts]: RPLRouter {
             parameters:
-                @display("r=,,#707070;p=250,58");
+                @display("r=,,#707070;p=146,58");
         }
 }
