@@ -119,6 +119,8 @@ class IPv6NeighbourDiscoveryRPL : public cSimpleModule, public ILifecycle
     IPv6RoutingTable *rt6 = nullptr;
     ICMPv6RPL *icmpv6 = nullptr;  //EXTRA
 
+    bool staticLLAddressAssignment; //EXTRA : assume that Link Local address is assigned statically
+
 #ifdef WITH_xMIPv6
     xMIPv6 *mipv6 = nullptr;    // in case the node has MIP support
 #endif /* WITH_xMIPv6 */

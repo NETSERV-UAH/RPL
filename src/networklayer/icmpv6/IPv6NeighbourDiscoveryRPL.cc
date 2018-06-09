@@ -41,9 +41,9 @@
 #ifdef WITH_xMIPv6
 #include "inet/networklayer/xmipv6/xMIPv6.h"
 #endif /* WITH_xMIPv6 */
-//EXTRA
-namespace rpl {
-using namespace inet;
+
+namespace rpl {  //EXTRA
+using namespace inet;  //EXTRA
 
 #define MK_ASSIGN_LINKLOCAL_ADDRESS    0
 #define MK_SEND_PERIODIC_RTRADV        1
@@ -59,7 +59,9 @@ Define_Module(IPv6NeighbourDiscoveryRPL);
 simsignal_t IPv6NeighbourDiscoveryRPL::startDADSignal = registerSignal("startDAD");
 
 IPv6NeighbourDiscoveryRPL::IPv6NeighbourDiscoveryRPL()
-    : neighbourCache(*this)
+    : neighbourCache(*this),
+      staticLLAddressAssignment(true) //EXTRA
+
 {
 }
 
@@ -96,6 +98,8 @@ IPv6NeighbourDiscoveryRPL::~IPv6NeighbourDiscoveryRPL()
 
 void IPv6NeighbourDiscoveryRPL::initialize(int stage)
 {
+    EV << "->IPv6NeighbourDiscoveryRPL::initialize()" << endl;  //EXTRA
+
     cSimpleModule::initialize(stage);
 
     if (stage == INITSTAGE_NETWORK_LAYER) {
@@ -141,7 +145,9 @@ void IPv6NeighbourDiscoveryRPL::initialize(int stage)
 
         //This simulates random node bootup time. Link local address assignment
         //takes place during this time.
-        cMessage *msg = new cMessage("assignLinkLocalAddr", MK_ASSIGN_LINKLOCAL_ADDRESS);
+
+        //EXTRA BEGIN
+/*        cMessage *msg = new cMessage("assignLinkLocalAddr", MK_ASSIGN_LINKLOCAL_ADDRESS);
 
         //We want routers to boot up faster!
         if (rt6->isRouter())
@@ -149,6 +155,46 @@ void IPv6NeighbourDiscoveryRPL::initialize(int stage)
         else
             scheduleAt(simTime() + uniform(0.4, 1), msg); //Random Host bootup time
     }
+*/
+        if (staticLLAddressAssignment){
+            for (int i = 0; i < ift->getNumInterfaces(); i++) {
+                InterfaceEntry *ie = ift->getInterface(i);
+
+                //Skip the loopback interface.
+                if (ie->isLoopback())
+                    continue;
+
+                IPv6Address linkLocalAddr = ie->ipv6Data()->getLinkLocalAddress();
+                EV << "Assigned link local address is: " << linkLocalAddr << endl;
+                if (linkLocalAddr.isUnspecified()) {
+                    //if no link local address exists for this interface, we assign one to it.
+                    EV_INFO << "No link local address exists. Forming one" << endl;
+                    linkLocalAddr = IPv6Address().formLinkLocalAddress(ie->getInterfaceToken());
+                    ie->ipv6Data()->assignAddress(linkLocalAddr, true, SIMTIME_ZERO, SIMTIME_ZERO);
+                    EV << "Assigned link local address is: " << linkLocalAddr << endl;
+                }
+
+                //Before we can use this address, an error is generated.
+                if (ie->ipv6Data()->isTentativeAddress(linkLocalAddr)) {
+                    EV << "The tentative link local address is changed to the permanent link local address." << endl;
+                    ie->ipv6Data()->permanentlyAssign(linkLocalAddr);
+                }
+            }
+
+        }
+        else{
+            cMessage *msg = new cMessage("assignLinkLocalAddr", MK_ASSIGN_LINKLOCAL_ADDRESS);
+
+            //We want routers to boot up faster!
+            if (rt6->isRouter())
+                scheduleAt(simTime() + uniform(0, 0.3), msg); //Random Router bootup time
+            else
+                scheduleAt(simTime() + uniform(0.4, 1), msg); //Random Host bootup time
+        }
+        //EXTRA END
+
+    }
+    EV << "<-IPv6NeighbourDiscoveryRPL::initialize()" << endl;  //EXTRA
 }
 
 void IPv6NeighbourDiscoveryRPL::handleMessage(cMessage *msg)
@@ -795,6 +841,7 @@ void IPv6NeighbourDiscoveryRPL::sendQueuedPacketsToIPv6Module(Neighbour *nce)
 
 void IPv6NeighbourDiscoveryRPL::assignLinkLocalAddress(cMessage *timerMsg)
 {
+    EV << "-> IPv6NeighbourDiscoveryRPL::assignLinkLocalAddress()" << endl;  //EXTRA
     //Node has booted up. Start assigning a link-local address for each
     //interface in this node.
     for (int i = 0; i < ift->getNumInterfaces(); i++) {
@@ -805,6 +852,8 @@ void IPv6NeighbourDiscoveryRPL::assignLinkLocalAddress(cMessage *timerMsg)
             continue;
 
         IPv6Address linkLocalAddr = ie->ipv6Data()->getLinkLocalAddress();
+        EV << "Link local address is: " << linkLocalAddr << endl;  //EXTRA
+
         if (linkLocalAddr.isUnspecified()) {
             //if no link local address exists for this interface, we assign one to it.
             EV_INFO << "No link local address exists. Forming one" << endl;
@@ -821,6 +870,7 @@ void IPv6NeighbourDiscoveryRPL::assignLinkLocalAddress(cMessage *timerMsg)
         }
     }
     delete timerMsg;
+    EV << "<- IPv6NeighbourDiscoveryRPL::assignLinkLocalAddress()" << endl;  //EXTRA
 }
 
 void IPv6NeighbourDiscoveryRPL::initiateDAD(const IPv6Address& tentativeAddr, InterfaceEntry *ie)
@@ -1830,6 +1880,8 @@ bool IPv6NeighbourDiscoveryRPL::validateRAPacket(IPv6RouterAdvertisement *ra,
 IPv6NeighbourSolicitation *IPv6NeighbourDiscoveryRPL::createAndSendNSPacket(const IPv6Address& nsTargetAddr, const IPv6Address& dgDestAddr,
         const IPv6Address& dgSrcAddr, InterfaceEntry *ie)
 {
+    EV << "->IPv6NeighbourDiscoveryRPL::createAndSendNSPacket()" << endl;  //EXTRA
+
 #ifdef WITH_xMIPv6
     Enter_Method_Silent();
 #endif /* WITH_xMIPv6 */
@@ -1839,10 +1891,12 @@ IPv6NeighbourSolicitation *IPv6NeighbourDiscoveryRPL::createAndSendNSPacket(cons
     //Construct a Neighbour Solicitation message
     IPv6NeighbourSolicitation *ns = new IPv6NeighbourSolicitation("NSpacket");
     ns->setType(ICMPv6_NEIGHBOUR_SOL);
+    EV << "NSpacket: Type is " << ICMPv6_NEIGHBOUR_SOL ;  //EXTRA
 
     //Neighbour Solicitation Specific Information
     ns->setTargetAddress(nsTargetAddr);
     ns->setByteLength(ICMPv6_HEADER_BYTES + IPv6_ADDRESS_SIZE);      // RFC 2461, Section 4.3.
+    EV << " , TargetAddress is " << nsTargetAddr << ", ByteLength is " << ICMPv6_HEADER_BYTES + IPv6_ADDRESS_SIZE << endl;  //EXTRA
 
     /*If the solicitation is being sent to a solicited-node multicast
        address, the sender MUST include its link-layer address (if it has
@@ -1851,10 +1905,13 @@ IPv6NeighbourSolicitation *IPv6NeighbourDiscoveryRPL::createAndSendNSPacket(cons
             !dgSrcAddr.isUnspecified()) {
         ns->setSourceLinkLayerAddress(myMacAddr);
         ns->addByteLength(IPv6ND_LINK_LAYER_ADDRESS_OPTION_LENGTH);
+        EV << "NSpacket: dgSrcAddr(" << dgSrcAddr <<") is not unspecified and FF02::1:FF00:0 / 104 is the prefix of dgDestAddr(" << dgDestAddr << "), then SourceLinkLayerAddress is " << myMacAddr << ", ByteLength += " << IPv6ND_LINK_LAYER_ADDRESS_OPTION_LENGTH << endl;  //EXTRA
+
     }
 
     sendPacketToIPv6Module(ns, dgDestAddr, dgSrcAddr, ie->getInterfaceId());
 
+    EV << "<-IPv6NeighbourDiscoveryRPL::createAndSendNSPacket()" << endl;  //EXTRA
     return ns;
 }
 
@@ -1986,6 +2043,8 @@ void IPv6NeighbourDiscoveryRPL::processNSForNonTentativeAddress(IPv6NeighbourSol
 void IPv6NeighbourDiscoveryRPL::processNSWithSpecifiedSrcAddr(IPv6NeighbourSolicitation *ns,
         IPv6ControlInfo *nsCtrlInfo, InterfaceEntry *ie)
 {
+    EV << "->IPv6NeighbourDiscoveryRPL::processNSWithSpecifiedSrcAddr()" << endl; //EXTRA
+
     //RFC 2461, Section 7.2.3
     /*If the Source Address is not the unspecified address and, on link layers
        that have addresses, the solicitation includes a Source Link-Layer Address
@@ -2020,11 +2079,15 @@ void IPv6NeighbourDiscoveryRPL::processNSWithSpecifiedSrcAddr(IPv6NeighbourSolic
     /*After any updates to the Neighbor Cache, the node sends a Neighbor
        Advertisement response as described in the next section.*/
     sendSolicitedNA(ns, nsCtrlInfo, ie);
+    EV << "<-IPv6NeighbourDiscoveryRPL::processNSWithSpecifiedSrcAddr()" << endl; //EXTRA
+
 }
 
 void IPv6NeighbourDiscoveryRPL::sendSolicitedNA(IPv6NeighbourSolicitation *ns,
         IPv6ControlInfo *nsCtrlInfo, InterfaceEntry *ie)
 {
+    EV << "->IPv6NeighbourDiscoveryRPL::sendSolicitedNA()" << endl; //EXTRA
+
     IPv6NeighbourAdvertisement *na = new IPv6NeighbourAdvertisement("NApacket");
     na->setByteLength(ICMPv6_HEADER_BYTES + IPv6_ADDRESS_SIZE);      // FIXME set correct length
 
@@ -2099,6 +2162,8 @@ void IPv6NeighbourDiscoveryRPL::sendSolicitedNA(IPv6NeighbourSolicitation *ns,
     //off the respective ones.
     IPv6Address myIPv6Addr = ie->ipv6Data()->getPreferredAddress();
     sendPacketToIPv6Module(na, naDestAddr, myIPv6Addr, ie->getInterfaceId());
+    EV << "<-IPv6NeighbourDiscoveryRPL::sendSolicitedNA()" << endl; //EXTRA
+
 }
 
 void IPv6NeighbourDiscoveryRPL::sendUnsolicitedNA(InterfaceEntry *ie)

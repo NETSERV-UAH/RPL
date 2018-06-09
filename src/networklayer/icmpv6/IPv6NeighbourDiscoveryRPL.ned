@@ -34,7 +34,10 @@ package rpl.src.networklayer.icmpv6;
 simple IPv6NeighbourDiscoveryRPL
 {
     parameters:
-        @class(rpl::IPv6NeighbourDiscoveryRPL); //EXTRA
+        //EXTRA BEGIN
+        @class(rpl::IPv6NeighbourDiscoveryRPL);
+        bool staticLLAddressAssignment = default(true);  // assume that Link Local address is assigned statically
+        //EXTRA END
         string interfaceTableModule;   // The path to the InterfaceTable module
         string icmpv6Module;
         string xmipv6Module;
