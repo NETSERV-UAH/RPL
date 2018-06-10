@@ -226,7 +226,7 @@ void RPLRouting::initialize(int stage)
         }
         //EXTRA BEGIN
         //NodesAddress[getParentModule()->getIndex()] = this;
-        NodesAddress[pManagerRPL->getIndexFromAddress(myNetwAddr)] = this;
+        //NodesAddress[pManagerRPL->getIndexFromAddress(myNetwAddr)] = this; this edition of previos line must be in "INITSTAGE_NETWORK_LAYER_3" and after initializing "myNetwAddr" stage because the stage of managerRPL module is "INITSTAGE_NETWORK_LAYER_3"
     }
     else if (stage == INITSTAGE_NETWORK_LAYER_3){
         int nInterfaces = interfaceTable->getNumInterfaces();
@@ -244,6 +244,9 @@ void RPLRouting::initialize(int stage)
 
             }
         }
+        NodesAddress[pManagerRPL->getIndexFromAddress(myNetwAddr)] = this;
+        EV << "my address is " << myNetwAddr <<"; my index in the topology is " << pManagerRPL->getIndexFromAddress(myNetwAddr) << endl;
+
 
     }
      else if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
@@ -294,6 +297,7 @@ void RPLRouting::initialize(int stage)
                 VersionNember=1;
                 Version=VersionNember;
                 NodeCounter[VersionNember]++;
+                EV << "NodeCounter[" << VersionNember << "] = " << NodeCounter[VersionNember] << endl;  //EXTRA
                 DIOStatusNew = CreateNewVersionDIO();
                 DIOStatusLast = DIOStatusNew;
                 DIOStatusHeader = DIOStatusNew;
@@ -378,6 +382,8 @@ void RPLRouting::ScheduleNextGlobalRepair()
     VersionNember++;
     Version=VersionNember;
     NodeCounter[Version]++;
+    EV << "NodeCounter[" << VersionNember << "] = " << NodeCounter[VersionNember] << endl;  //EXTRA
+
 
     DIOStatusNew = CreateNewVersionDIO();
     DIOStatusLast->link = DIOStatusNew;
@@ -435,6 +441,7 @@ void RPLRouting::ScheduleNextGlobalRepair()
 void RPLRouting::DeleteScheduledNextGlobalRepair()
 {
     Enter_Method("DeleteScheduledNextGlobalRepair()");
+
     cancelEvent(GRepairTimer);
     scheduleAt(simTime(),GRepairTimer );
 }
@@ -685,10 +692,9 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
     if(msg->getKind()==DIO)
     {
         //EXTRA BEGIN
-        EV << "Received message is ICMPv6 DIO message" << endl;
-
         ICMPv6DIOMsg* netwMsg = check_and_cast<ICMPv6DIOMsg*>(msg);
         ctrlInfo = check_and_cast<IPv6ControlInfo *>(netwMsg->removeControlInfo());
+        EV << "Received message is ICMPv6 DIO message, DODAGID address is " << netwMsg->getDODAGID() << ", src address is " << ctrlInfo->getSrcAddr() << endl;
 
         //pCtrlInfo = netwMsg->removeControlInfo();
         //EXTRA END
@@ -728,6 +734,7 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                }
 
                NodeCounter[VersionNember]++;
+               EV << "NodeCounter[" << VersionNember << "] = " << NodeCounter[VersionNember] << endl;  //EXTRA
 
                DODAGJoinTimeNew = CreateNewVersionJoiningTime();
                DODAGJoinTimeNew->TimetoJoinDODAG=netwMsg->getArrivalTime();
@@ -802,6 +809,7 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                     }
 
                     NodeCounter[VersionNember]++;
+                    EV << "NodeCounter[" << VersionNember << "] = " << NodeCounter[VersionNember] << endl;  //EXTRA
 
                     DODAGJoinTimeNew = CreateNewVersionJoiningTime();
                     DODAGJoinTimeNew->TimetoJoinDODAG=netwMsg->getArrivalTime();
@@ -890,7 +898,7 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                     {
                         // The sender of this DIO should be updated.
                         host->bubble("DIO deleted!!\nThe sender node should be updated.!!! ");
-                        delete msg;
+                        //delete msg;  //EXTRA because msg is deleted bellow
                     }
                     else
                     {
@@ -902,7 +910,7 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                         //EXTRA END
                         host->getDisplayString().setTagArg("t", 0, buf4);
                         host->bubble("DIO deleted!!");
-                        delete msg;
+                        //delete msg;  //EXTRA because msg is deleted below
                     }
             if((NodeCounter[Version]==NodesNumber)&&(!IsDODAGFormed))
             {
@@ -915,6 +923,7 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                 AvgAllDIOsReceived+=NodeStateLast->DIO.Received;
                 AvgAllDIOsSuppressed+=NodeStateLast->DIO.Suppressed;
                 NodeCounter[Version]++;
+                EV << "NodeCounter[" << VersionNember << "] = " << NodeCounter[VersionNember] << endl;  //EXTRA
 //                EV<<"\n\n\n\nDODAG["<<VersionNember<<"] formed in "<<NodeStateLast->DODAGsFormationTimeRecords<<"s. \n\n\n\n";
                 //EXTRA BEGIN
                 //NodeStateLast->Collision = GetnbFramesWithInterferenceDropped();
@@ -925,6 +934,8 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                     //NodeStateLast->PowerConsumption[i] = battery->CalculateRemainenergy(i)-NodeStateLast->PowerConsumption[i] ;
 
                 NofDODAGformationNormal++;
+                EV << "Number of DODAGformationNormal is " << NofDODAGformationNormal << endl;  //EXTRA
+
                 if(NodeStateLast->DODAGsFormationTimeRecords!=0)
                 {
                     FileRecord.Collosion[FileRecordCounter] = NodeStateLast->Collision;

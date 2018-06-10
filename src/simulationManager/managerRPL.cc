@@ -101,7 +101,7 @@ void managerRPL::extractTopology()
                     //If all WSN host have not RPL, an error will occur in next line
                     //newWSN.pRPLRouting = check_and_cast<RPLRouting *>(mod->getSubmodule("rpl"));
                     newWSN.moduleIndex = mod->getIndex();
-                    EV << "        " << newWSN.fullName << "-> IP: " << newWSN.ipAddress << "; MAC: " << newWSN.macAddress << "; Index: " << newWSN.moduleIndex <<endl;
+                    EV << "        " << newWSN.fullName << "-> IP: " << newWSN.ipAddress << "; MAC: " << newWSN.macAddress << "; Module Index: " << newWSN.moduleIndex << "; Vector index: " << i <<endl;
                     nWSN++;
                 }
             }
@@ -131,13 +131,16 @@ int managerRPL::getIndexFromAddress(IPv6Address address)
     EV << "->managerRPL::getIndexFromAddress()" << endl;
 
     Enter_Method("managerRPL::getIndexFromAddress()");
+    EV << "Vector size is " << wSNInfo.size() << endl;
 
     for (int i=0; i<wSNInfo.size(); i++){
         if (wSNInfo.at(i).ipAddress == address)
             return i;
     }
 
-    return -1;
+    //return -1;
+    throw cRuntimeError("managerRPL::getIndexFromAddress(): Address not found!");
+
 
     EV << "<-managerRPL::getIndexFromAddress()" << endl;
 }
