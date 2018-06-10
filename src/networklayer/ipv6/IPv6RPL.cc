@@ -571,6 +571,8 @@ void IPv6RPL::routeMulticastPacket(IPv6Datagram *datagram, const InterfaceEntry 
 
 void IPv6RPL::localDeliver(IPv6Datagram *datagram)
 {
+    EV << "->IPv6RPL::localDeliver()" << endl;  //EXTRA
+
     // Defragmentation. skip defragmentation if datagram is not fragmented
     IPv6FragmentHeader *fh = dynamic_cast<IPv6FragmentHeader *>(datagram->findExtensionHeaderByType(IP_PROT_IPv6EXT_FRAGMENT));
     if (fh) {
@@ -664,10 +666,12 @@ void IPv6RPL::localDeliver(IPv6Datagram *datagram)
         packet = nullptr;
     }
     ASSERT(packet == nullptr);
+    EV << "<-IPv6RPL::localDeliver()" << endl;  //EXTRA
 }
 
 void IPv6RPL::handleReceivedICMP(ICMPv6Message *msg)
 {
+    EV << "->IPv6RPL::handleReceivedICMP()" << endl;  //EXTRA
     int type = msg->getType();
     if (type < 128) {
         // ICMP errors are delivered to the appropriate higher layer protocols
@@ -682,10 +686,12 @@ void IPv6RPL::handleReceivedICMP(ICMPv6Message *msg)
         // ICMPv6_ECHO_REQUEST, ICMPv6_ECHO_REPLY, ICMPv6_MLD_QUERY, ICMPv6_MLD_REPORT,
         // ICMPv6_MLD_DONE, ICMPv6_ROUTER_SOL, ICMPv6_ROUTER_AD, ICMPv6_NEIGHBOUR_SOL,
         // ICMPv6_NEIGHBOUR_AD, ICMPv6_MLDv2_REPORT
+        //ICMPv6_DIO, ICMPv6_DIS   EXTRA
         EV_INFO << "ICMPv6 packet: passing it to ICMPv6 module\n";
         int gateindex = mapping.getOutputGateForProtocol(IP_PROT_IPv6_ICMP);
         send(msg, "transportOut", gateindex);
     }
+    EV << "<-IPv6RPL::handleReceivedICMP()" << endl;  //EXTRA
 }
 
 cPacket *IPv6RPL::decapsulate(IPv6Datagram *datagram)

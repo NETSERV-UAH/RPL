@@ -181,17 +181,19 @@ void RPLRouting::initialize(int stage)
 
 
         //macaddress = arp->getMacAddr(myNetwAddr);
-        //sinkAddress = LAddress::L3Type( getParentModule()->getParentModule()->par("SinkNodeAddr").longValue() );
-        isSink = par ("isSink");
+        sinkAddress = IPv6Address(par("sinkAddress"));  //sinkAddress = LAddress::L3Type( getParentModule()->getParentModule()->par("SinkNodeAddr").longValue() );  //EXTRA
+        EV << "sink address is " << sinkAddress << endl;
         //headerLength = par ("headerLength");
         //EXTRA END
         DIOheaderLength = par ("DIOheaderLength");
         DISheaderLength = par ("DISheaderLength");
-        rssiThreshold = par("rssiThreshold");
-        //stats = par("stats");  //EXTRA
-        trace = par("trace");
-        debug = par("debug");
-        useSimTracer = par("useSimTracer");
+        //EXTRA BEGIN
+        //rssiThreshold = par("rssiThreshold");
+        //stats = par("stats");
+        //trace = par("trace");
+        //debug = par("debug");
+        //useSimTracer = par("useSimTracer");
+        //EXTRA END
 
         DIOIntMin = par ("DIOIntMin");
         DIOIntDoubl = par ("DIOIntDoubl");
@@ -280,7 +282,7 @@ void RPLRouting::initialize(int stage)
             DODAGSartTime=simTime();
             DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
 
-           if (isSink)  //if (myNetwAddr==sinkAddress)  //EXTRA
+           if (myNetwAddr==sinkAddress)
             {
                 AvgDODAGFomationTime=simTime();
                 IsJoined=true;
@@ -530,6 +532,8 @@ void RPLRouting::handleSelfMsg(cMessage* msg)
             //EXTRA BEGIN
             //setDownControlInfo(pkt, LAddress::L2BROADCAST);
             //sendDown(pkt);
+            pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
+            controlInfo->setProtocol(IP_PROT_IPv6_ICMP);
             pkt->setControlInfo(controlInfo);
             send(pkt, icmpv6OutGateId);
             //EXTRA END
@@ -622,6 +626,8 @@ void RPLRouting::handleSelfMsg(cMessage* msg)
                         //EXTRA BEGIN
                         //setDownControlInfo(pkt, LAddress::L2BROADCAST);
                         //sendDown(pkt);
+                        pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
+                        controlInfo->setProtocol(IP_PROT_IPv6_ICMP);
                         pkt->setControlInfo(controlInfo);
                         send(pkt, icmpv6OutGateId);
                         //EXTRA END
@@ -666,20 +672,29 @@ void RPLRouting::handleSelfMsg(cMessage* msg)
 void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handleLowerMsg(cMessage* msg)  //EXTRA
 {
     //EXTRA BEGIN
-    /*
-    SimpleBattery* battery;
-    battery = FindModule<SimpleBattery*>::findSubModule(findHost());
-    */
-    //EXTRA END
-    const cObject* pCtrlInfo = NULL;
+    EV << "->RPLRouting::handleIncommingMessage()" << endl;
+    //SimpleBattery* battery;
+    //battery = FindModule<SimpleBattery*>::findSubModule(findHost());
+    //const cObject* pCtrlInfo = NULL;
     //cModule* host=findHost();  //EXTRA host has been initialized in the initialize method
+
+    IPv6ControlInfo *ctrlInfo = nullptr;
+    EV << "ICMPv6 message is received from ICMPv6 module, message name is " << msg->getName() << ", message kind is " << msg->getKind() << endl;
+    //EXTRA END
+
     if(msg->getKind()==DIO)
     {
-        ICMPv6DIOMsg* netwMsg = check_and_cast<ICMPv6DIOMsg*>(msg); //EXTRA
-        pCtrlInfo = netwMsg->removeControlInfo();
+        //EXTRA BEGIN
+        EV << "Received message is ICMPv6 DIO message" << endl;
 
-        if ((NodeCounter[Version]<NodesNumber)&&(!IsDODAGFormed)) NodeStateLast->DIO.Received++;
-        if(myNetwAddr==sinkAddress)
+        ICMPv6DIOMsg* netwMsg = check_and_cast<ICMPv6DIOMsg*>(msg);
+        ctrlInfo = check_and_cast<IPv6ControlInfo *>(netwMsg->removeControlInfo());
+
+        //pCtrlInfo = netwMsg->removeControlInfo();
+        //EXTRA END
+
+       if ((NodeCounter[Version]<NodesNumber)&&(!IsDODAGFormed)) NodeStateLast->DIO.Received++;
+       if(myNetwAddr==sinkAddress)
         {
             DIOStatusLast->nbDIOReceived++;
             char buf2[100];
@@ -696,7 +711,7 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
            if(!IsJoined)
             {
                IsJoined=true;
-               //IsNodeJoined[myNetwAddr] = true;  //EXTRA
+               IsNodeJoined[pManagerRPL->getIndexFromAddress(myNetwAddr)] = true;  //IsNodeJoined[myNetwAddr] = true;  //EXTRA
                VersionNember=netwMsg->getVersionNumber();
 
                DIOStatusNew = CreateNewVersionDIO();
@@ -743,9 +758,8 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                DIORedun=netwMsg->getK();
                DODAGID=netwMsg->getDODAGID();
                //EXTRA BEGIN
-               IPv6ControlInfo *ctrl = check_and_cast<IPv6ControlInfo *>(netwMsg->getControlInfo());
                //AddParent(netwMsg->getSrcAddr(),netwMsg->getRank());
-               AddParent(ctrl->getSrcAddr(),netwMsg->getRank());
+               AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank());
                //NodeStateNew->Rank[myNetwAddr] = Rank;
                NodeStateNew->Rank[pManagerRPL->getIndexFromAddress(myNetwAddr)] = Rank;
                //EXTRA END
@@ -753,7 +767,7 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                char buf0[50];
                //EXTRA BEGIN
                //sprintf(buf0, "I joined DODAG%d via node %d !!", VersionNember,int(netwMsg->getSrcAddr()));
-               sprintf(buf0, "I joined DODAG%d via node %d !!", VersionNember,ctrl->getSrcAddr());
+               sprintf(buf0, "I joined DODAG%d via node %d !!", VersionNember,ctrlInfo->getSrcAddr());
                //EXTRA END
                host->bubble(buf0);
                char buf1[100];
@@ -814,9 +828,8 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                     DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
                     Grounded=netwMsg->getGrounded();
                     //EXTRA BEGIN
-                    IPv6ControlInfo *ctrl = check_and_cast<IPv6ControlInfo *>(netwMsg->getControlInfo());
                     //AddParent(netwMsg->getSrcAddr(),netwMsg->getRank());
-                    AddParent(ctrl->getSrcAddr(),netwMsg->getRank());
+                    AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank());
                     //NodeStateNew->Rank[myNetwAddr] = Rank;
                     NodeStateNew->Rank[pManagerRPL->getIndexFromAddress(myNetwAddr)] = Rank;
                     //EXTRA END
@@ -824,7 +837,7 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                     char buf0[50];
                     //EXTRA BEGIN
                     //sprintf(buf0, "I joined DODAG %d via node %d !!", VersionNember,int(netwMsg->getSrcAddr()));
-                    sprintf(buf0, "I joined DODAG %d via node %d !!", VersionNember,ctrl->getSrcAddr());
+                    sprintf(buf0, "I joined DODAG %d via node %d !!", VersionNember,ctrlInfo->getSrcAddr());
                     //EXTRA END
                     host->bubble(buf0);
                     char buf1[100];
@@ -847,15 +860,14 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                     DIOIntDoubl=netwMsg->getNofDoub();
                     DIOIntMin=netwMsg->getIMin();
                     DIORedun=netwMsg->getK();
-                    IPv6ControlInfo *ctrl = check_and_cast<IPv6ControlInfo *>(netwMsg->getControlInfo());  //EXTRA
-                    switch(IsParent(ctrl->getSrcAddr(),netwMsg->getRank()))  //switch(IsParent(netwMsg->getSrcAddr(),netwMsg->getRank()))  //EXTRA
+                    switch(IsParent(ctrlInfo->getSrcAddr(),netwMsg->getRank()))  //switch(IsParent(netwMsg->getSrcAddr(),netwMsg->getRank()))  //EXTRA
                     {
                         case NOT_EXIST:
-                            AddParent(ctrl->getSrcAddr(),netwMsg->getRank());  //AddParent(netwMsg->getSrcAddr(),netwMsg->getRank());  //EXTRA
+                            AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank());  //AddParent(netwMsg->getSrcAddr(),netwMsg->getRank());  //EXTRA
                             break;
                         case SHOULD_BE_UPDATED:
-                            DeleteParent(ctrl->getSrcAddr());  //DeleteParent(netwMsg->getSrcAddr());  //EXTRA
-                            AddParent(ctrl->getSrcAddr(),netwMsg->getRank());  //AddParent(netwMsg->getSrcAddr(),netwMsg->getRank());  //EXTRA
+                            DeleteParent(ctrlInfo->getSrcAddr());  //DeleteParent(netwMsg->getSrcAddr());  //EXTRA
+                            AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank());  //AddParent(netwMsg->getSrcAddr(),netwMsg->getRank());  //EXTRA
                             break;
                         case EXIST:
                             break;
@@ -863,7 +875,7 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                     char buf2[255];
                     //EXTRA BEGIN
                     //sprintf(buf2, "A DIO received from node %d !", int(netwMsg->getSrcAddr()));
-                    sprintf(buf2, "A DIO received from node %d !", ctrl->getSrcAddr());
+                    sprintf(buf2, "A DIO received from node %d !", ctrlInfo->getSrcAddr());
                     //EXTRA END
                     host->bubble(buf2);
                     char buf3[100];
@@ -965,11 +977,11 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
             DIS_c++;
             NodeStateLast->DIS.Received++;
             ICMPv6DISMsg *netwMsg = check_and_cast<ICMPv6DISMsg *>(msg);  //DISMessage *netwMsg = check_and_cast<DISMessage *>(msg); //EXTRA
-            IPv6ControlInfo *CtrlInfo = check_and_cast<IPv6ControlInfo *> (netwMsg->removeControlInfo());  //pCtrlInfo = netwMsg->removeControlInfo();  //EXTRA
+            ctrlInfo = check_and_cast<IPv6ControlInfo *> (netwMsg->removeControlInfo());  //pCtrlInfo = netwMsg->removeControlInfo();  //EXTRA
             char buf2[255];
             //EXTRA BEGIN
             //sprintf(buf2, "A DIS message received from node %d!\nResetting Trickle timer!", int(netwMsg->getSrcAddr()));
-            sprintf(buf2, "A DIS message received from node %d!\nResetting Trickle timer!", CtrlInfo->getSrcAddr());
+            sprintf(buf2, "A DIS message received from node %d!\nResetting Trickle timer!", ctrlInfo->getSrcAddr());
             //EXTRA END
             host->bubble(buf2);
             TrickleReset();
@@ -983,11 +995,11 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                 DIS_c++;
                 NodeStateLast->DIS.Received++;
                 ICMPv6DISMsg* netwMsg = check_and_cast<ICMPv6DISMsg*>(msg);  //DISMessage* netwMsg = check_and_cast<DISMessage*>(msg);  //EXTRA
-                IPv6ControlInfo *ctrl = check_and_cast<IPv6ControlInfo *>(netwMsg->getControlInfo());  //pCtrlInfo = netwMsg->removeControlInfo();  //EXTRA
+                ctrlInfo = check_and_cast<IPv6ControlInfo *>(netwMsg->removeControlInfo());  //pCtrlInfo = netwMsg->removeControlInfo();  //EXTRA
                 char buf2[255];
                 //EXTRA
                 //sprintf(buf2, "A DIS message received from node %d!\nBut I am not a member of any DODAG!", int(netwMsg->getSrcAddr()));
-                sprintf(buf2, "A DIS message received from node %s!\nBut I am not a member of any DODAG!", ctrl->getSrcAddr());
+                sprintf(buf2, "A DIS message received from node %s!\nBut I am not a member of any DODAG!", ctrlInfo->getSrcAddr());
                 //EXTRA END
                 host->bubble(buf2);
                 delete netwMsg;
@@ -996,11 +1008,10 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
    //EXTRA BEGIN
     //if (pCtrlInfo != NULL)
         //delete pCtrlInfo;
-    //if (controlInfo != NULL)
-        //delete controlInfo;
+    if (ctrlInfo != NULL)
+        delete ctrlInfo;
+    EV << "<-RPLRouting::handleIncommingMessage()" << endl;
     //EXTRA END
-
-
 }
 
 

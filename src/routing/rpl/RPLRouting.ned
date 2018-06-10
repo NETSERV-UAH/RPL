@@ -42,19 +42,20 @@ simple RPLRouting
         string routingTableModule;
         string interfaceTableModule;
         string networkProtocolModule = default("^.networkLayer.ipv6");
-        bool isSink = default(false);
+        string sinkAddress = default("fe80::8aa:ff:fe00:1");
         double RPLStartTime @unit(s) = default(0.03s);
         //EXTRA END
         
         int DIOheaderLength @unit(byte) = default(73 Byte);
         int DISheaderLength @unit(byte) = default(54 Byte);
         // debug switch
-        bool debug = default(false);
-        bool trace = default(false);
-     	bool useSimTracer = default(false);
+        //EXTRA BEGIN
+        //bool debug = default(false);
+        //bool trace = default(false);
+     	//bool useSimTracer = default(false);
         // RSSI threshold for route selection
-        double rssiThreshold @unit(dBm) = default(-50 dBm);
-     	
+        //double rssiThreshold @unit(dBm) = default(-50 dBm);
+     	//EXTRA END
 
         double DIOIntMin @unit(s) = default(0.008 s);
         int DIORedun= default(10);

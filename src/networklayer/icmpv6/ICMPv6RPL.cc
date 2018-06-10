@@ -69,6 +69,8 @@ void ICMPv6RPL::initialize(int stage)
 
 void ICMPv6RPL::handleMessage(cMessage *msg)
 {
+    EV << "->ICMPv6RPL::handleMessage()" << endl;
+
     ASSERT(!msg->isSelfMessage());    // no timers in ICMPv6
 
     // process arriving ICMP message
@@ -87,13 +89,16 @@ void ICMPv6RPL::handleMessage(cMessage *msg)
     //EXTRA
     // request from RPL
     if (msg->getArrivalGate()->isName("RPLIn")) {
+        EV << "Message " << msg->getName() << "received from RPL module is sent to IPv6 module."<< endl;
         send(msg, "ipv6Out");
         return;
     }
+    EV << "<-ICMPv6RPL::handleMessage()" << endl;
 }
 
 void ICMPv6RPL::processICMPv6Message(ICMPv6Message *icmpv6msg)
 {
+    EV << "->ICMPv6RPL::processICMPv6Message()" << endl;
     ASSERT(dynamic_cast<ICMPv6Message *>(icmpv6msg));
     if (dynamic_cast<ICMPv6DestUnreachableMsg *>(icmpv6msg)) {
         EV_INFO << "ICMPv6 Destination Unreachable Message Received." << endl;
@@ -118,12 +123,14 @@ void ICMPv6RPL::processICMPv6Message(ICMPv6Message *icmpv6msg)
     else if (dynamic_cast<ICMPv6EchoReplyMsg *>(icmpv6msg)) {
         EV_INFO << "ICMPv6 Echo Reply Message Received." << endl;
         processEchoReply((ICMPv6EchoReplyMsg *)icmpv6msg);
-    } //EXTRA
+    } //EXTRA BEGIN
     else if ((dynamic_cast<ICMPv6DISMsg *>(icmpv6msg)) || (dynamic_cast<ICMPv6DIOMsg *>(icmpv6msg))){
+        EV << "Message " << icmpv6msg->getName() << " received from IPv6 module is sent to RPL module."<< endl;
         sendToRPL(icmpv6msg);
-    }
+    }//EXTRA END
     else
         throw cRuntimeError("Unknown message type received: (%s)%s.\n", icmpv6msg->getClassName(),icmpv6msg->getName());
+    EV << "<-ICMPv6RPL::processICMPv6Message()" << endl;
 }
 
 /*
