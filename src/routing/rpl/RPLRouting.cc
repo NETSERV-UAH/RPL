@@ -19,9 +19,10 @@
  **************************************************************************/
 
 /*
- * Copyright (C) 2018 Elisa Rojas(1), Hedayat Hosseini(2);
+ * Copyright (C) 2018 Elisa Rojas(1), Hedayat Hosseini(2), Carles Gomez(3);
  *                    (1) GIST, University of Alcala, Spain.
  *                    (2) CEIT, Amirkabir University of Technology (Tehran Polytechnic), Iran.
+ *                    (3) UPC, Castelldefels, Spain.
  *                    adapted for using on INET 3.6.3, and also included some changes such as using ICMPv6 messages
  *                    for transmitting RPL control messages, interface table , and lifesycle modules
 */
@@ -188,6 +189,8 @@ NodeState *CreateNewNodeState(int Index, int VersionNo, simtime_t Time, int Node
     Temp->Link=NULL;
     return Temp;
 }
+//EXTRA BEGIN
+/*
 char * SetPath(char* MainPath,char* FileName,char* KValue)
 {
     char TempPath[100];
@@ -197,6 +200,18 @@ char * SetPath(char* MainPath,char* FileName,char* KValue)
     strcat(TempPath,".txt");
     return TempPath;
 }
+*/
+
+char * SetPath(char* MainPath, const char* FileName, char* KValue)
+{
+    char *TempPath = new char[100];
+    strcpy(TempPath,MainPath);
+    strcat(TempPath,FileName);
+    strcat(TempPath,KValue);
+    strcat(TempPath,".txt");
+    return TempPath;
+}
+//EXTRA END
 
 Define_Module(RPLRouting);
 
@@ -245,7 +260,7 @@ void RPLRouting::initialize(int stage)
         NodesNumber=getParentModule()->getParentModule()->par( "numHosts" );  //NodesNumber=getParentModule()->getParentModule()->par( "numNodes" );  //EXTRA
         NumberofIterations = par ("NumberofIterations");
         itoa(DIORedun, K_value, 10);
-        strcpy(MainPath,par("FilePath"));
+        strcpy(MainPath,par("FilePath").stringValue());  //strcpy(MainPath,par("FilePath"));  //EXTRA
         NofParents = new int[NumberofIterations+2];
         Parents = new ParentStructure* [NumberofIterations+2];
         for( int i = 0 ; i < NumberofIterations+2 ; i++ )
@@ -1296,35 +1311,65 @@ RPLRouting::~RPLRouting()
 void Datasaving(int sinkAddressIndex, bool DISEnable)  //void Datasaving(int sinkAddress, bool DISEnable) //EXTRA
 {
     FileRecord.IterationsNumber = NofDODAGformationNormal;
-    strcpy(Path,SetPath(MainPath,"IterationsNumber_K",K_value));
+    char * temp = SetPath(MainPath,"IterationsNumber_K",K_value);  //EXTRA
+    strcpy(Path, temp);  //strcpy(Path,SetPath(MainPath,"IterationsNumber_K",K_value)); //EXTRA
+    delete[] temp;  //EXTRA
     IterationsNumber = fopen(Path,Mode);
     fprintf(IterationsNumber,"%d\n",NofDODAGformationNormal);
 
 
-    strcpy(Path,SetPath(MainPath,"JoiningTime_K",K_value));
+    temp = SetPath(MainPath,"JoiningTime_K",K_value);  //EXTRA
+    strcpy(Path, temp);  //strcpy(Path,SetPath(MainPath,"JoiningTime_K",K_value));  //EXTRA
+    delete[] temp;  //EXTRA
     JoiningTime = fopen(Path,Mode);
 
-    strcpy(Path,SetPath(MainPath,"Collosion_K",K_value));
+    //EXTRA BEGIN
+    /*
+    temp = SetPath(MainPath,"Collosion_K",K_value);  //EXTRA
+    strcpy(Path, temp);  //strcpy(Path,SetPath(MainPath,"Collosion_K",K_value));  //EXTRA
+    delete[] temp;  //EXTRA
     Collosion = fopen(Path,Mode);
+    */
+    //EXTRA
 
-    strcpy(Path,SetPath(MainPath,"DIOSent_K",K_value));
+    temp = SetPath(MainPath,"DIOSent_K",K_value);  //EXTRA
+    strcpy(Path, temp);  //strcpy(Path,SetPath(MainPath,"DIOSent_K",K_value));  //EXTRA
+    delete[] temp;  //EXTRA
     DIOSent = fopen(Path,Mode);
 
-    strcpy(Path,SetPath(MainPath,"FormationTime_K",K_value));
+    temp = SetPath(MainPath,"FormationTime_K",K_value);  //EXTRA
+    strcpy(Path, temp);  //strcpy(Path,SetPath(MainPath,"FormationTime_K",K_value));  //EXTRA
+    delete[] temp;  //EXTRA
     FormationTime = fopen(Path,Mode);
 
-    strcpy(Path,SetPath(MainPath,"PacketErrors_K",K_value));
+    //EXTRA BEGIN
+    /*
+    temp = SetPath(MainPath,"PacketErrors_K",K_value);  //EXTRA
+    strcpy(Path, temp);  //strcpy(Path,SetPath(MainPath,"PacketErrors_K",K_value));  //EXTRA
+    delete[] temp;  //EXTRA
     PacketLost = fopen(Path,Mode);
+    */
+    //EXTRA END
 
-    strcpy(Path,SetPath(MainPath,"NodesRank_K",K_value));
+    temp = SetPath(MainPath,"NodesRank_K",K_value);  //EXTRA
+    strcpy(Path, temp);  //strcpy(Path,SetPath(MainPath,"NodesRank_K",K_value));  //EXTRA
+    delete[] temp;  //EXTRA
     NodesRank = fopen(Path,Mode);
 
-    strcpy(Path,SetPath(MainPath,"ConsumedPower_K",K_value));
+    //EXTRA BEGIN
+    /*
+    temp = SetPath(MainPath,"ConsumedPower_K",K_value);  //EXTRA
+    strcpy(Path, temp);  //strcpy(Path,SetPath(MainPath,"ConsumedPower_K",K_value));  //EXTRA
+    delete[] temp;  //EXTRA
     ConsumedPower = fopen(Path,Mode);
+    */
+    //EXTRA END
 
     if (DISEnable)
     {
-        strcpy(Path,SetPath(MainPath,"DISSent_K",K_value));
+        temp = SetPath(MainPath,"DISSent_K",K_value);  //EXTRA
+        strcpy(Path, temp);  //strcpy(Path,SetPath(MainPath,"DISSent_K",K_value));  //EXTRA
+        delete[] temp;  //EXTRA
         DISSent = fopen(Path,Mode);
         for(int j=0;j<NofDODAGformationNormal;j++)
             fprintf(DISSent,"%d\n",FileRecord.DISSent[j]);
@@ -1333,9 +1378,9 @@ void Datasaving(int sinkAddressIndex, bool DISEnable)  //void Datasaving(int sin
     for(int j=0;j<NofDODAGformationNormal;j++)
     {
         fprintf(FormationTime,"%f\n",FileRecord.FormationTime[j]);
-        fprintf(Collosion,"%d\n",FileRecord.Collosion[j]);
+        //fprintf(Collosion,"%d\n",FileRecord.Collosion[j]);  //EXTRA
         fprintf(DIOSent,"%d\n",FileRecord.DIOSent[j]);
-        fprintf(PacketLost,"%d\n",FileRecord.PacketLost[j]);
+        //fprintf(PacketLost,"%d\n",FileRecord.PacketLost[j]);  //EXTRA
         for (int i=0; i<NodesNumber;i++)
         {
             if(i != sinkAddressIndex) //if(i!=sinkAddress)  //EXTRA
@@ -1343,18 +1388,18 @@ void Datasaving(int sinkAddressIndex, bool DISEnable)  //void Datasaving(int sin
                 fprintf(JoiningTime,"%f\n",FileRecord.OtherFields[j].JoiningTime[i]);
                 fprintf(NodesRank,"%d\n",FileRecord.OtherFields[j].NodesRank[i]);
             }
-            fprintf(ConsumedPower,"%f\n",FileRecord.OtherFields[j].ConsumedPower[i]);
+            //fprintf(ConsumedPower,"%f\n",FileRecord.OtherFields[j].ConsumedPower[i]); //EXTRA
         }
     }
 
     fclose(JoiningTime);
-    fclose(Collosion);
+    //fclose(Collosion);  //EXTRA
     fclose(DIOSent);
     fclose(DISSent);
     fclose(FormationTime);
-    fclose(PacketLost);
+    //fclose(PacketLost);  //EXTRA
     fclose(NodesRank);
-    fclose(ConsumedPower);
+    //fclose(ConsumedPower);  //EXTRA
     fclose(IterationsNumber);
 }
 

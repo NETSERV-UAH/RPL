@@ -27,7 +27,7 @@
 namespace inet {
 
 /**
- * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:35</tt> by nedtool.
+ * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:36</tt> by nedtool.
  * <pre>
  * enum ICMPv6TypeRPL
  * {
@@ -41,7 +41,7 @@ enum ICMPv6TypeRPL {
 };
 
 /**
- * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:44</tt> by nedtool.
+ * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:45</tt> by nedtool.
  * <pre>
  * //EXTRA
  * //values of code field
@@ -59,7 +59,7 @@ enum ICMPv6_RPL_CONTROL_MSG {
 };
 
 /**
- * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:52</tt> by nedtool.
+ * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:53</tt> by nedtool.
  * <pre>
  * //EXTRA
  * //DIS options
@@ -79,7 +79,7 @@ enum RPL_DIS_OPTIONS {
 };
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:62</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:63</tt> by nedtool.
  * <pre>
  * //EXTRA 
  * //DIS control message for RPL
@@ -164,7 +164,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6DISMsg& obj) {o
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6DISMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:83</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:84</tt> by nedtool.
  * <pre>
  * //EXTRA 
  * //DIO control message for RPL

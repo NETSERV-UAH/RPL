@@ -14,9 +14,10 @@
  *                    INET 3.6.3 adaptation, also adapted for using in the IoTorii(WSN) protocol
 */
 /*
- * Copyright (C) 2018 Elisa Rojas(1), Hedayat Hosseini(2);
+ * Copyright (C) 2018 Elisa Rojas(1), Hedayat Hosseini(2), Carles Gomez(3);
  *                    (1) GIST, University of Alcala, Spain.
  *                    (2) CEIT, Amirkabir University of Technology (Tehran Polytechnic), Iran.
+ *                    (3) UPC, Castelldefels, Spain.
  *                    INET 3.6.3 adaptation, also adapted for using in the RPL protocol as a simulation manager module
 */
 //

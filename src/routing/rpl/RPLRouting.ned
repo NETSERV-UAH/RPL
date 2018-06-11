@@ -19,9 +19,10 @@
 // **************************************************************************/
 
 //
-// Copyright (C) 2018 Elisa Rojas(1), Hedayat Hosseini(2);
+// Copyright (C) 2018 Elisa Rojas(1), Hedayat Hosseini(2), Carles Gomez(3);
 //                    (1) GIST, University of Alcala, Spain.
 //                    (2) CEIT, Amirkabir University of Technology (Tehran Polytechnic), Iran.
+//                    (3) UPC, Castelldefels, Spain.
 //                    adapted for using on INET 3.6.3, and also included some changes such as using ICMPv6 messages
 //                    for transmitting ROL control messages, interface table , and lifesycle modules
 //
@@ -70,7 +71,7 @@ simple RPLRouting
         
         double GlobalRepairTimer @unit(s) = default(10000 s);
         int MaxNofParents= default(5);
-        int NumberofIterations = default(30);
+        int NumberofIterations = default(20);
         string FilePath;
 
  //EXTRA BEGIN       
