@@ -70,7 +70,7 @@ simple RPLRouting
         
         double GlobalRepairTimer @unit(s) = default(10000 s);
         int MaxNofParents= default(5);
-        int NumberofIterations = default(20);
+        int NumberofIterations = default(30);
         string FilePath;
 
  //EXTRA BEGIN       

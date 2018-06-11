@@ -68,7 +68,10 @@ bool NeighboursCalculationFlag=false,IsDODAGFormed=false;
 simtime_t DODAGSartTime,AvgDODAGFomationTime;
 int AllDIOsSent=0,AllDIOsReceived=0,AllDIOsSuppressed=0,AvgAllDIOsSent=0;
 int AvgAllDIOsReceived=0,AvgAllDIOsSuppressed=0;
-int Version,NodesNumber,NumberofIterations,*NodeCounter,GRT_Counter=0;
+//EXTRA BEGIN
+//int Version,NodesNumber,NumberofIterations,*NodeCounter,GRT_Counter=0;
+int Version,NodesNumber,NumberofIterations,*NodeCounter=nullptr,GRT_Counter=0;  //initializing nullptr to deallocate memory
+//EXTRA END
 static int NofDODAGformationNormal=0;
 double AvgAllCollisionNarmal=0;
 FILE *JoiningTime,*Collosion,*DIOSent,*DISSent,*FormationTime,*PacketLost,*NodesRank,*ConsumedPower;
@@ -108,7 +111,8 @@ void FileRecordMemoryAllocation(void)
 }
 void FileRecordMemoryDeallocation(void)
 {
-    for(int i =0;i<NumberofIterations+1;i++)
+    //EXTRA BEGIN
+ /*   for(int i =0;i<NumberofIterations+1;i++)
     {
         delete [] FileRecord.OtherFields[i].NodesRank;
         delete [] FileRecord.OtherFields[i].JoiningTime;
@@ -120,7 +124,39 @@ void FileRecordMemoryDeallocation(void)
     delete [] FileRecord.PacketLost;
     delete [] FileRecord.FormationTime;
     delete [] FileRecord.OtherFields;
+*/
+    if (FileRecord.OtherFields){
+        for(int i =0;i<NumberofIterations+1;i++)
+        {
+            if (!FileRecord.OtherFields[i].NodesRank) delete [] FileRecord.OtherFields[i].NodesRank;
+            if (!FileRecord.OtherFields[i].JoiningTime) delete [] FileRecord.OtherFields[i].JoiningTime;
+            if (!FileRecord.OtherFields[i].ConsumedPower) delete [] FileRecord.OtherFields[i].ConsumedPower;
+        }
+        delete [] FileRecord.OtherFields;
+        FileRecord.OtherFields = nullptr;  //for mutual exclusion
+    }
 
+    if (!FileRecord.Collosion){
+        delete [] FileRecord.Collosion;
+        FileRecord.Collosion = nullptr;  //for mutual exclusion
+    }
+    if (!FileRecord.DIOSent){
+        delete [] FileRecord.DIOSent;
+        FileRecord.DIOSent = nullptr;  //for mutual exclusion
+    }
+    if (!FileRecord.DISSent){
+        delete [] FileRecord.DISSent;
+        FileRecord.DISSent = nullptr;  //for mutual exclusion
+    }
+    if (!FileRecord.PacketLost){
+        delete [] FileRecord.PacketLost;
+        FileRecord.PacketLost = nullptr;  //for mutual exclusion
+    }
+    if (!FileRecord.FormationTime){
+        delete [] FileRecord.FormationTime;
+        FileRecord.FormationTime = nullptr;  //for mutual exclusion
+    }
+    //EXTRA END
 
 }
 void Datasaving(int,bool);
@@ -1188,7 +1224,7 @@ RPLRouting::~RPLRouting()
     cancelAndDelete(GRepairTimer);
     delete [] NofParents;
     for( int i = 0 ; i < NumberofIterations+1 ; i++ )
-         delete [] Parents[i];
+        delete [] Parents[i];
     delete [] Parents;
 
     DIOStatusNew  = DIOStatusHeader;
@@ -1214,7 +1250,9 @@ RPLRouting::~RPLRouting()
         delete DODAGJoinTimeHeader;
         DODAGJoinTimeHeader = DODAGJoinTimeNew;
     }
-    if (pManagerRPL->getIndexFromAddress(myNetwAddr) == NodesNumber - 1) //if (myNetwAddr==NodesNumber-1)  //EXTRA
+
+//EXTRA BEGIN
+/*    if (pManagerRPL->getIndexFromAddress(myNetwAddr) == NodesNumber - 1) //if (myNetwAddr==NodesNumber-1)  //EXTRA
     {
         delete [] NodeCounter;
         FileRecordMemoryDeallocation();
@@ -1230,6 +1268,29 @@ RPLRouting::~RPLRouting()
             NodeStateHeader = NodeStateNew;
         }
     }
+    */
+    if (NodeCounter){
+        delete [] NodeCounter;
+        NodeCounter = nullptr;    //for mutual exclusion
+    }
+
+    FileRecordMemoryDeallocation();
+
+    NodeStateNew = NodeStateHeader;
+    while(NodeStateNew)
+    {
+        NodeStateNew= NodeStateHeader->Link;
+
+        delete [] NodeStateHeader->Rank;
+        delete [] NodeStateHeader->JoiningDODAGTime;
+        delete [] NodeStateHeader->PowerConsumption;
+        delete NodeStateHeader;
+        NodeStateHeader = NodeStateNew;
+    }
+    //EXTRA END
+
+
+
 }
 
 void Datasaving(int sinkAddressIndex, bool DISEnable)  //void Datasaving(int sinkAddress, bool DISEnable) //EXTRA
