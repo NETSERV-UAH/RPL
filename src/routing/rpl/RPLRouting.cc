@@ -78,7 +78,6 @@ double AvgAllCollisionNarmal=0;
 FILE *JoiningTime,*Collosion,*DIOSent,*DISSent,*FormationTime,*PacketLost,*NodesRank,*ConsumedPower;
 FILE *IterationsNumber;
 
-//class RPLRouting;  //EXTRA
 RPLRouting **NodesAddress;
 
 struct SubDataStr
