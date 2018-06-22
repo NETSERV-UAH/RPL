@@ -92,6 +92,10 @@ struct NodeState{
     int *Rank;
     simtime_t *JoiningDODAGTime;
     simtime_t DODAGsFormationTimeRecords;
+    //EXTRA BEGIN, variables for saving the number of table entries in each iteration
+    int numPreferedParents;
+    int numParents;
+    //EXTRA END
     NodeState* Link;
 }*NodeStateHeader=NULL,*NodeStateLast=NULL,*NodeStateNew=NULL;
 
@@ -169,6 +173,7 @@ public:
     managerRPL *pManagerRPL = nullptr;
     INetfilter *networkProtocol = nullptr;
     int interfaceID;
+    bool *hasRoute;
 
     /** @brief Gate ids */
     //@{

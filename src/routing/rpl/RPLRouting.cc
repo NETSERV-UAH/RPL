@@ -77,6 +77,7 @@ static int NofDODAGformationNormal=0;
 double AvgAllCollisionNarmal=0;
 FILE *JoiningTime,*Collosion,*DIOSent,*DISSent,*FormationTime,*PacketLost,*NodesRank,*ConsumedPower;
 FILE *IterationsNumber;
+FILE *preferedParent, *numberOfParents, *numTableEntris;
 
 RPLRouting **NodesAddress;
 
@@ -91,6 +92,10 @@ struct DataStructure
     float *FormationTime;
     int *Collosion,*DIOSent,*DISSent,*PacketLost;
     int IterationsNumber;
+    //EXTRA BEGIN, variables for saving the number of table entries in each iteration
+    int *numPreferedParents = nullptr;
+    int *numParents = nullptr;
+    //EXTRA END
 }FileRecord;
 int FileRecordCounter=-1;
 
@@ -101,6 +106,11 @@ void FileRecordMemoryAllocation(void)
     FileRecord.DISSent          = new int [NumberofIterations+10];
     FileRecord.PacketLost       = new int [NumberofIterations+10];
     FileRecord.FormationTime    = new float [NumberofIterations+10];
+    //EXTRA BEGIN, variables for saving the number of table entries
+    FileRecord.numPreferedParents = new int[NumberofIterations+10];
+    FileRecord.numParents = new int[NumberofIterations+10];
+    //EXTRA END
+
     FileRecord.OtherFields      = new SubDataStr [NumberofIterations+10];
     for(int i =0;i<NumberofIterations+1;i++)
     {
@@ -138,24 +148,36 @@ void FileRecordMemoryDeallocation(void)
 
     if (!FileRecord.Collosion){
         delete [] FileRecord.Collosion;
-        FileRecord.Collosion = nullptr;  //for mutual exclusion
+        FileRecord.Collosion = nullptr;
     }
     if (!FileRecord.DIOSent){
         delete [] FileRecord.DIOSent;
-        FileRecord.DIOSent = nullptr;  //for mutual exclusion
+        FileRecord.DIOSent = nullptr;
     }
     if (!FileRecord.DISSent){
         delete [] FileRecord.DISSent;
-        FileRecord.DISSent = nullptr;  //for mutual exclusion
+        FileRecord.DISSent = nullptr;
     }
     if (!FileRecord.PacketLost){
         delete [] FileRecord.PacketLost;
-        FileRecord.PacketLost = nullptr;  //for mutual exclusion
+        FileRecord.PacketLost = nullptr;
     }
     if (!FileRecord.FormationTime){
         delete [] FileRecord.FormationTime;
-        FileRecord.FormationTime = nullptr;  //for mutual exclusion
+        FileRecord.FormationTime = nullptr;
     }
+    //EXTRA BEGIN
+    if (!FileRecord.numPreferedParents){
+        delete [] FileRecord.numPreferedParents;
+        FileRecord.numPreferedParents = nullptr;  //for mutual exclusion
+    }
+
+    if (!FileRecord.numParents){
+        delete [] FileRecord.numParents;
+        FileRecord.numParents = nullptr;  //for mutual exclusion
+    }
+    //EXTRA END
+
     //EXTRA END
 
 }
@@ -184,6 +206,10 @@ NodeState *CreateNewNodeState(int Index, int VersionNo, simtime_t Time, int Node
     Temp->DODAGsFormationTimeRecords = 0;
     Temp->PowerConsumption[Index] = 0;
 
+    //EXTRA BEGIN
+    Temp->numPreferedParents = 0;
+    Temp->numParents = 0;
+    //EXTRA END
 
     Temp->Link=NULL;
     return Temp;
@@ -305,6 +331,9 @@ void RPLRouting::initialize(int stage)
 
         if (isOperational){
             //RoutingTable = NULL;
+            hasRoute = new bool[NumberofIterations+2];
+            for(int i=0; i<NumberofIterations+2; i++)
+                hasRoute[i] = false;
             //EXTRA END
             NofEntry=0;
             DIOStatusHeader = NULL;
@@ -602,7 +631,7 @@ void RPLRouting::handleSelfMsg(cMessage* msg)
             else
                 //EXTRA BEGIN
                 //sprintf(buf,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %d\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,int(PrParent),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
-                sprintf(buf,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent,DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
+                sprintf(buf,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent.getSuffix(96).str().c_str(),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
             //EXTRA END
             //cModule* host=findHost(); //EXTRA; host has been declared in the initial method
             host->getDisplayString().setTagArg("t", 0, buf);
@@ -626,7 +655,7 @@ void RPLRouting::handleSelfMsg(cMessage* msg)
                 char buf2[100];
                 //EXTRA BEGIN
                 //sprintf(buf2,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %d\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,int(PrParent),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
-                sprintf(buf2,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent,DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
+                sprintf(buf2,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent.getSuffix(96).str().c_str(),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
                 //EXTRA END
                 host->getDisplayString().setTagArg("t", 0, buf2);
                 cancelAndDelete(DIOTimer);
@@ -830,7 +859,7 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                char buf1[100];
                //EXTRA BEGIN
                //sprintf(buf1,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %d\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,int(PrParent),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
-               sprintf(buf1,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent,DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
+               sprintf(buf1,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent.getSuffix(96).str().c_str(),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
                //EXTRA END
                host->getDisplayString().setTagArg("t", 0, buf1);
                cancelAndDelete(DISTimer);
@@ -901,7 +930,7 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                     char buf1[100];
                     //EXTRA BEGIN
                     //sprintf(buf1,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %d\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,int(PrParent),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
-                    sprintf(buf1,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent ,DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
+                    sprintf(buf1,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent.getSuffix(96).str().c_str() ,DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
                     //EXTRA END
                     host->getDisplayString().setTagArg("t", 0, buf1);
                     cancelAndDelete(DISTimer);
@@ -939,7 +968,7 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                     char buf3[100];
                     //EXTRA BEGIN
                     //sprintf(buf3,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %d\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,int(PrParent),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
-                    sprintf(buf3,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent ,DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
+                    sprintf(buf3,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent.getSuffix(96).str().c_str() ,DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
                     //EXTRA END
                     host->getDisplayString().setTagArg("t", 0, buf3);
                 }
@@ -956,7 +985,7 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                         char buf4[100];
                         //EXTRA BEGIN
                         //sprintf(buf4,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %d\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,int(PrParent),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
-                        sprintf(buf4,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent,DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
+                        sprintf(buf4,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent.getSuffix(96).str().c_str(),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
                         //EXTRA END
                         host->getDisplayString().setTagArg("t", 0, buf4);
                         host->bubble("DIO deleted!!");
@@ -993,6 +1022,11 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)  //void RPLRouting::handl
                     FileRecord.DIOSent[FileRecordCounter] = NodeStateLast->DIO.Sent;
                     FileRecord.DISSent[FileRecordCounter] = NodeStateLast->DIS.Sent;
                     FileRecord.PacketLost[FileRecordCounter] = NodeStateLast->PacketLost;
+                    //EXTRA BEGIN
+                    FileRecord.numParents[FileRecordCounter] = NodeStateLast->numParents;
+                    FileRecord.numPreferedParents[FileRecordCounter] = NodeStateLast->numPreferedParents;
+                    //EXTRA END
+
                 }
                 if(NodeStateNew->DODAGsFormationTimeRecords!=0)
                 {
@@ -1114,6 +1148,12 @@ int RPLRouting::IsParent(const IPv6Address& id,int idrank)
 
 void RPLRouting::AddParent(const IPv6Address& id,int idrank)
 {
+    //EXTRA BEGIN
+    if(!hasRoute[VersionNember]){
+        hasRoute[VersionNember] = true;
+        NodeStateLast->numPreferedParents++; // next condition is not a good place for this statement because when deleteParent() increaments NofParents[VersionNember], the condition is true, and numPreferedParents increaments twice or more
+    }
+    //EXTRA END
     if(NofParents[VersionNember]==0)
     {
         Parents[VersionNember][0].ParentId=id;
@@ -1121,13 +1161,20 @@ void RPLRouting::AddParent(const IPv6Address& id,int idrank)
         PrParent=Parents[VersionNember][0].ParentId;
         Rank=Parents[VersionNember][0].ParentRank+1;
         NofParents[VersionNember]++;
+        NodeStateLast->numParents++;     //EXTRA
         return;
     }else
     {
         if (NofParents[VersionNember]==MaxNofParents)
         {
            if (idrank >= Parents[VersionNember][NofParents[VersionNember]-1].ParentRank) return;
-           else NofParents[VersionNember]--;
+           //EXTRA BEGIN
+           //else NofParents[VersionNember]--;
+           else{
+               NofParents[VersionNember]--;
+               NodeStateLast->numParents--;
+           }
+           //EXTRA END
         }
         int i=NofParents[VersionNember]-1;
         while((i>=0)&&(idrank<Parents[VersionNember][i].ParentRank))
@@ -1140,6 +1187,7 @@ void RPLRouting::AddParent(const IPv6Address& id,int idrank)
         PrParent=Parents[VersionNember][0].ParentId;
         Rank=Parents[VersionNember][0].ParentRank+1;
         NofParents[VersionNember]++;
+        NodeStateLast->numParents++;     //EXTRA
     }
     return;
 }
@@ -1153,6 +1201,7 @@ void RPLRouting::DeleteParent(const IPv6Address& id)
             break;
         }
     NofParents[VersionNember]--;
+    NodeStateLast->numParents--;  //EXTRA
 }
 
 RPLRouting::DIOStatus* RPLRouting::CreateNewVersionDIO()
@@ -1341,6 +1390,12 @@ void Datasaving(int sinkAddressIndex, bool DISEnable)  //void Datasaving(int sin
     delete[] temp;  //EXTRA
     FormationTime = fopen(Path,Mode);
 
+
+    temp = SetPath(MainPath,"numTableEntris_K",K_value);  //EXTRA
+    strcpy(Path, temp);  //strcpy(Path,SetPath(MainPath,"FormationTime_K",K_value));  //EXTRA
+    delete[] temp;  //EXTRA
+    numTableEntris = fopen(Path,Mode);
+
     //EXTRA BEGIN
     /*
     temp = SetPath(MainPath,"PacketErrors_K",K_value);  //EXTRA
@@ -1354,6 +1409,18 @@ void Datasaving(int sinkAddressIndex, bool DISEnable)  //void Datasaving(int sin
     strcpy(Path, temp);  //strcpy(Path,SetPath(MainPath,"NodesRank_K",K_value));  //EXTRA
     delete[] temp;  //EXTRA
     NodesRank = fopen(Path,Mode);
+
+    //EXTRA BEGIN
+    temp = SetPath(MainPath,"numPreferedParent_K",K_value);  //EXTRA
+    strcpy(Path, temp);  //strcpy(Path,SetPath(MainPath,"JoiningTime_K",K_value));  //EXTRA
+    delete[] temp;  //EXTRA
+    preferedParent = fopen(Path,Mode);
+
+    temp = SetPath(MainPath,"numParents_K",K_value);  //EXTRA
+    strcpy(Path, temp);  //strcpy(Path,SetPath(MainPath,"JoiningTime_K",K_value));  //EXTRA
+    delete[] temp;  //EXTRA
+    numberOfParents = fopen(Path,Mode);
+    //EXTRA END
 
     //EXTRA BEGIN
     /*
@@ -1380,6 +1447,10 @@ void Datasaving(int sinkAddressIndex, bool DISEnable)  //void Datasaving(int sin
         //fprintf(Collosion,"%d\n",FileRecord.Collosion[j]);  //EXTRA
         fprintf(DIOSent,"%d\n",FileRecord.DIOSent[j]);
         //fprintf(PacketLost,"%d\n",FileRecord.PacketLost[j]);  //EXTRA
+        fprintf(preferedParent,"%d\n",FileRecord.numPreferedParents[j]);  //EXTRA
+        fprintf(numberOfParents,"%d\n",FileRecord.numParents[j]);  //EXTRA
+        fprintf(numTableEntris,"%d\n",FileRecord.numParents[j] + FileRecord.numPreferedParents[j]);  //EXTRA
+
         for (int i=0; i<NodesNumber;i++)
         {
             if(i != sinkAddressIndex) //if(i!=sinkAddress)  //EXTRA
@@ -1400,6 +1471,9 @@ void Datasaving(int sinkAddressIndex, bool DISEnable)  //void Datasaving(int sin
     fclose(NodesRank);
     //fclose(ConsumedPower);  //EXTRA
     fclose(IterationsNumber);
+    fclose(preferedParent);  //EXTRA
+    fclose(numberOfParents);  //EXTRA
+
 }
 
 } // namespace rpl
