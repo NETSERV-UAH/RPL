@@ -24,7 +24,7 @@
 namespace rpl {
 
 /**
- * Class generated from <tt>src/physicallayer/simpleidealradio/SimpleRadioFrame.msg:32</tt> by nedtool.
+ * Class generated from <tt>src/physicallayer/simpleidealradio/SimpleRadioFrame.msg:40</tt> by nedtool.
  * <pre>
  * packet SimpleRadioFrame
  * {
