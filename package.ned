@@ -1,3 +1,0 @@
-package rpl;
-
-@license(LGPL);
