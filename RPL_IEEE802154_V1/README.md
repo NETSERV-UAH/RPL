@@ -56,7 +56,7 @@ To compile and run the project, you can follow the next steps.
 
 8.4) Select "INET" in the right list.
 
-8.5) Click on the "Apply and close".
+8 5) Click on the "Apply and close".
 
 9) Build and run the project.
 
