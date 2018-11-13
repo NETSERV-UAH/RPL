@@ -16,7 +16,7 @@ LAST UPDATE OF THE INET FRAMEWORK: inet3.6.3 @ December 22, 2017
 
 In the simulation, the Mac sub layer and the physical layer in the simulation are unlimited in terms of interference, collision, and simultaneously sending and receiving one/some packet(s). The limitation in receiving messages is only the transmission range of a transmitter node.
 
-The DIS and DIO operations are according to the Implementation of the IPv6 Routing Protocol for Low power and Lossy Networks (RPL) on the MiXim framework [1] written by Hamidreza Kermajani ((C) 2013 UPC, Castelldefels, Spain). We have adapted the Kermajani's simulation for using on the INET 3.6.3 framework, and also included some changes such as using ICMPv6 messages for transmitting the RPL control messages, the DAO message for applying the downward routes, the interface table, and the lifesycle modules. To read more information about the Kermajani's article, you can use [1].
+The DIS and DIO operations are according to the Implementation of the IPv6 Routing Protocol for Low power and Lossy Networks (RPL) [1] on the MiXim framework written by Hamidreza Kermajani ((C) 2013 UPC, Castelldefels, Spain). We have adapted the Kermajani's simulation for using on the INET 3.6.3 framework, and also included some changes such as using ICMPv6 messages for transmitting the RPL control messages, the DAO message for applying the downward routes, the interface table, and the lifesycle modules. To read more information about the Kermajani's article, you can use [1].
 
                     [1] Kermajani, Hamidreza, and Carles Gomez. "On the network convergence process
                     in RPL over IEEE 802.15. 4 multihop networks: Improvement and trade-offs."
