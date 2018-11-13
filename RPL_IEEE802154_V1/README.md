@@ -15,7 +15,7 @@ LAST UPDATE OF THE INET FRAMEWORK: inet3.6.3 @ December 22, 2017
 
 In the simulation, the MAC sub layer, and all of the physical layer are based on the implementation of IEEE802.15.4 over the INET framework. This simulation just implements the Upward routes.
 
-The Upward operation, using DIO and DIS Messages, is according to the Implementation of the IPv6 Routing Protocol for Low power and Lossy Networks (RPL) [1] on the MiXim framework written by Hamidreza Kermajani ((C) 2013 UPC, Castelldefels, Spain). We have adapted the Kermajani's simulation for using on the INET 3.6.3 framework, and also included some changes such as using ICMPv6 messages for transmitting the RPL control messages, the DAO message for applying the downward routes, the interface table, and the lifesycle modules. To read more information about the Kermajani's article, you can use [1].
+The Upward operation, using DIO and DIS Messages, is according to the Implementation of the IPv6 Routing Protocol for Low power and Lossy Networks (RPL) [1] on the MiXim framework written by Hamidreza Kermajani ((C) 2013 UPC, Castelldefels, Spain). We have adapted the Kermajani's simulation for using on the INET 3.6.3 framework, and also included some changes such as using ICMPv6 messages for transmitting the RPL control messages, the DAO message for applying the Downward routes, the interface table, and the lifesycle modules. To read more information about the Kermajani's article, you can use [1].
 
                     [1] Kermajani, Hamidreza, and Carles Gomez. "On the network convergence process
                     in RPL over IEEE 802.15. 4 multihop networks: Improvement and trade-offs."
