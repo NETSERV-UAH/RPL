@@ -348,6 +348,8 @@ public:
     virtual int  IsParent(const IPv6Address& id,int idrank);
     virtual void AddParent(const IPv6Address& id,int idrank, unsigned int dtsn);
     virtual void DeleteParent(const IPv6Address& id);
+    virtual bool IsNeedDAO(const IPv6Address& parent, unsigned char dtsn);
+
 
     //EXTRA END
 

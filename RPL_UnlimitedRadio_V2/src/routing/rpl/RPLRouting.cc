@@ -798,11 +798,12 @@ void RPLRouting::handleIncommingMessage(cMessage* msg)
     } else if(msg->getKind()==DIS_FLOOD)
     {
         handleIncommingDISMessage(msg);
-    }
-    else if(msg->getKind()==DAO)
+    } else if(msg->getKind()==DAO)
     {
         handleIncommingDAOMessage(msg);
-    }
+    } else
+        delete msg;
+
 
     EV << "<-RPLRouting::handleIncommingMessage()" << endl;
 }
@@ -1007,10 +1008,24 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)  //void RPLRouting::ha
                             AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank(), netwMsg->getDTSN());  //AddParent(netwMsg->getSrcAddr(),netwMsg->getRank());  //EXTRA
                             break;
                         case SHOULD_BE_UPDATED:
+                            //EXTRA BEGIN
+                            if (IsNeedDAO(ctrlInfo->getSrcAddr(), netwMsg->getDTSN()))
+                            {
+                                dtsnInstance ++;
+                                scheduleNextDAOTransmission(DelayDAO);
+                            }
+                            //EXTRA END
                             DeleteParent(ctrlInfo->getSrcAddr());  //DeleteParent(netwMsg->getSrcAddr());  //EXTRA
                             AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank(), netwMsg->getDTSN());  //AddParent(netwMsg->getSrcAddr(),netwMsg->getRank());  //EXTRA
                             break;
                         case EXIST:
+                            //EXTRA BEGIN
+                            if (IsNeedDAO(ctrlInfo->getSrcAddr(), netwMsg->getDTSN()))
+                            {
+                                dtsnInstance ++;
+                                scheduleNextDAOTransmission(DelayDAO);
+                            }
+                            //EXTRA END
                             break;
                     }
                     char buf2[255];
@@ -1119,41 +1134,7 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)  //void RPLRouting::ha
             }
         }
     }
-    else
-        //if ((msg->getKind() == DIS_FLOOD)&&(IsNodeJoined[myNetwAddr]))  //EXTRA
-        if ((msg->getKind() == DIS_FLOOD)&&(IsJoined))
-        {
-            DIS_c++;
-            NodeStateLast->DIS.Received++;
-            ICMPv6DISMsg *netwMsg = check_and_cast<ICMPv6DISMsg *>(msg);  //DISMessage *netwMsg = check_and_cast<DISMessage *>(msg); //EXTRA
-            ctrlInfo = check_and_cast<IPv6ControlInfo *> (netwMsg->removeControlInfo());  //pCtrlInfo = netwMsg->removeControlInfo();  //EXTRA
-            char buf2[255];
-            //EXTRA BEGIN
-            //sprintf(buf2, "A DIS message received from node %d!\nResetting Trickle timer!", int(netwMsg->getSrcAddr()));
-            sprintf(buf2, "A DIS message received from node %d!\nResetting Trickle timer!", ctrlInfo->getSrcAddr());
-            //EXTRA END
-            host->bubble(buf2);
-            TrickleReset();
-            delete netwMsg;
-            scheduleNextDIOTransmission();
-        }
-        else
-            //if ((msg->getKind() == DIS_FLOOD)&&(!IsNodeJoined[myNetwAddr]))  //EXTRA
-            if ((msg->getKind() == DIS_FLOOD)&&(!IsJoined))
-            {
-                DIS_c++;
-                NodeStateLast->DIS.Received++;
-                ICMPv6DISMsg* netwMsg = check_and_cast<ICMPv6DISMsg*>(msg);  //DISMessage* netwMsg = check_and_cast<DISMessage*>(msg);  //EXTRA
-                ctrlInfo = check_and_cast<IPv6ControlInfo *>(netwMsg->removeControlInfo());  //pCtrlInfo = netwMsg->removeControlInfo();  //EXTRA
-                char buf2[255];
-                //EXTRA
-                //sprintf(buf2, "A DIS message received from node %d!\nBut I am not a member of any DODAG!", int(netwMsg->getSrcAddr()));
-                sprintf(buf2, "A DIS message received from node %s!\nBut I am not a member of any DODAG!", ctrlInfo->getSrcAddr());
-                //EXTRA END
-                host->bubble(buf2);
-                delete netwMsg;
-            }
-            else delete msg;
+
    //EXTRA BEGIN
     //if (pCtrlInfo != NULL)
         //delete pCtrlInfo;
@@ -1167,16 +1148,53 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)  //void RPLRouting::ha
 void RPLRouting::handleIncommingDISMessage(cMessage* msg) //void RPLRouting::handleLowerMsg(cMessage* msg)  //EXTRA
 {
 
+    //EXTRA BEGIN
     EV << "->RPLRouting::handleIncommingDISMessage()" << endl;
 
     IPv6ControlInfo *ctrlInfo = nullptr;
+    //EXTRA END
 
+    //if ((msg->getKind() == DIS_FLOOD)&&(IsNodeJoined[myNetwAddr]))  //EXTRA
+    if ((msg->getKind() == DIS_FLOOD)&&(IsJoined))
+    {
+        DIS_c++;
+        NodeStateLast->DIS.Received++;
+        ICMPv6DISMsg *netwMsg = check_and_cast<ICMPv6DISMsg *>(msg);  //DISMessage *netwMsg = check_and_cast<DISMessage *>(msg); //EXTRA
+        ctrlInfo = check_and_cast<IPv6ControlInfo *> (netwMsg->removeControlInfo());  //pCtrlInfo = netwMsg->removeControlInfo();  //EXTRA
+        char buf2[255];
+        //EXTRA BEGIN
+        //sprintf(buf2, "A DIS message received from node %d!\nResetting Trickle timer!", int(netwMsg->getSrcAddr()));
+        sprintf(buf2, "A DIS message received from node %d!\nResetting Trickle timer!", ctrlInfo->getSrcAddr());
+        //EXTRA END
+        host->bubble(buf2);
+        TrickleReset();
+        delete netwMsg;
+        scheduleNextDIOTransmission();
+    }
+    else
+        //if ((msg->getKind() == DIS_FLOOD)&&(!IsNodeJoined[myNetwAddr]))  //EXTRA
+        if ((msg->getKind() == DIS_FLOOD)&&(!IsJoined))
+        {
+            DIS_c++;
+            NodeStateLast->DIS.Received++;
+            ICMPv6DISMsg* netwMsg = check_and_cast<ICMPv6DISMsg*>(msg);  //DISMessage* netwMsg = check_and_cast<DISMessage*>(msg);  //EXTRA
+            ctrlInfo = check_and_cast<IPv6ControlInfo *>(netwMsg->removeControlInfo());  //pCtrlInfo = netwMsg->removeControlInfo();  //EXTRA
+            char buf2[255];
+            //EXTRA
+            //sprintf(buf2, "A DIS message received from node %d!\nBut I am not a member of any DODAG!", int(netwMsg->getSrcAddr()));
+            sprintf(buf2, "A DIS message received from node %s!\nBut I am not a member of any DODAG!", ctrlInfo->getSrcAddr());
+            //EXTRA END
+            host->bubble(buf2);
+            delete netwMsg;
+        }
 
-
+    //EXTRA BEGIN
+     //if (pCtrlInfo != NULL)
+         //delete pCtrlInfo;
     if (ctrlInfo != NULL)
         delete ctrlInfo;
     EV << "<-RPLRouting::handleIncommingDISMessage()" << endl;
-
+    //EXTRA END
 }
 
 
@@ -1272,7 +1290,7 @@ void RPLRouting::AddParent(const IPv6Address& id,int idrank, unsigned char dtsn)
         }
         Parents[VersionNember][i+1].ParentId=id;
         Parents[VersionNember][i+1].ParentRank=idrank;
-        Parents[VersionNember][0].dtsn = dtsn; //EXTRA
+        Parents[VersionNember][i+1].dtsn = dtsn; //EXTRA
         PrParent=Parents[VersionNember][0].ParentId;
         Rank=Parents[VersionNember][0].ParentRank+1;
         NofParents[VersionNember]++;
@@ -1293,6 +1311,14 @@ void RPLRouting::DeleteParent(const IPv6Address& id)
     NodeStateLast->numParents--;  //EXTRA
 }
 
+bool RPLRouting::IsNeedDAO(const IPv6Address parent, unsigned char dtsn)
+{
+    // If the new parent is the previous preferred parent, and its dtsn is greater
+    if ((Parents[VersionNember][0].ParentId == parent) && (dtsn > Parents[VersionNember][0].dtsn))
+            return true;
+    return false;
+
+}
 RPLRouting::DIOStatus* RPLRouting::CreateNewVersionDIO()
 {
     DIOStatus* Temp;
