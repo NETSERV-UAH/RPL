@@ -27,6 +27,7 @@
  *                    Adapted for using on INET 3.6.3, and also included some changes such as using ICMPv6 messages
  *                    for transmitting RPL control messages, interface table , and lifesycle modules
  *
+ *
  * To read more information about the Kermajani's article, you can use [1].
  *
  *                    [1] Kermajani, Hamidreza, and Carles Gomez. "On the network convergence process
@@ -268,6 +269,7 @@ void RPLRouting::initialize(int stage)
         //headerLength = par ("headerLength");
         DAOEnable = par ("DAOEnable");
         DelayDAO = par ("DelayDAO");
+        DAOheaderLength = par ("DAOheaderLength");
         //EXTRA END
 
         DIOheaderLength = par ("DIOheaderLength");
@@ -339,6 +341,7 @@ void RPLRouting::initialize(int stage)
         isOperational = !nodeStatus || nodeStatus->getState() == NodeStatus::UP;
 
         if (isOperational){
+            dtsnInstance = 0; //EXTRA
             //RoutingTable = NULL;
             hasRoute = new bool[NumberofIterations+2];
             for(int i=0; i<NumberofIterations+2; i++)
@@ -351,6 +354,7 @@ void RPLRouting::initialize(int stage)
             GRepairTimer = NULL;
             DIOTimer = NULL;
             DISTimer = NULL;
+            DAOTimer = NULL; //EXTRA
             DODAGSartTime=simTime();
             AvgDODAGFomationTime=simTime();
             IsJoined=false;
@@ -470,6 +474,7 @@ void RPLRouting::ScheduleNextGlobalRepair()
     //EXTRA END
     VersionNember++;
     Version=VersionNember;
+    dtsnInstance ++; //EXTRA
     NodeCounter[Version]++;
     EV << "NodeCounter[" << VersionNember << "] = " << NodeCounter[VersionNember] << endl;  //EXTRA
 
@@ -637,6 +642,10 @@ void RPLRouting::handleSelfMsg(cMessage* msg)
             pkt->setIMin(DIOIntMin);
             pkt->setNofDoub(DIOIntDoubl);
             pkt->setK(DIORedun);
+            pkt->setDTSN(dtsnInstance); //EXTRA
+            if (myNetwAddr == sinkAddress && refreshDAORoutes) //EXTRA
+                dtsnInstance ++;  //EXTRA
+
             //EXTRA BEGIN
             //setDownControlInfo(pkt, LAddress::L2BROADCAST);
             //sendDown(pkt);
@@ -889,7 +898,7 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)  //void RPLRouting::ha
                DODAGID=netwMsg->getDODAGID();
                //EXTRA BEGIN
                //AddParent(netwMsg->getSrcAddr(),netwMsg->getRank());
-               AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank());
+               AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank(), netwMsg->getDTSN());
                //NodeStateNew->Rank[myNetwAddr] = Rank;
                NodeStateNew->Rank[pManagerRPL->getIndexFromAddress(myNetwAddr)] = Rank;
                //EXTRA END
@@ -916,6 +925,7 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)  //void RPLRouting::ha
                     IsJoined = true;  //EXTRA
                     DeleteDIOTimer();
                     VersionNember=netwMsg->getVersionNumber();
+                    dtsnInstance ++; //EXTRA
 
                     DIOStatusNew = CreateNewVersionDIO();
                     DIOStatusNew->nbDIOReceived++;
@@ -960,7 +970,7 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)  //void RPLRouting::ha
                     Grounded=netwMsg->getGrounded();
                     //EXTRA BEGIN
                     //AddParent(netwMsg->getSrcAddr(),netwMsg->getRank());
-                    AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank());
+                    AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank(), netwMsg->getDTSN());
                     //NodeStateNew->Rank[myNetwAddr] = Rank;
                     NodeStateNew->Rank[pManagerRPL->getIndexFromAddress(myNetwAddr)] = Rank;
                     //EXTRA END
@@ -994,11 +1004,11 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)  //void RPLRouting::ha
                     switch(IsParent(ctrlInfo->getSrcAddr(),netwMsg->getRank()))  //switch(IsParent(netwMsg->getSrcAddr(),netwMsg->getRank()))  //EXTRA
                     {
                         case NOT_EXIST:
-                            AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank());  //AddParent(netwMsg->getSrcAddr(),netwMsg->getRank());  //EXTRA
+                            AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank(), netwMsg->getDTSN());  //AddParent(netwMsg->getSrcAddr(),netwMsg->getRank());  //EXTRA
                             break;
                         case SHOULD_BE_UPDATED:
                             DeleteParent(ctrlInfo->getSrcAddr());  //DeleteParent(netwMsg->getSrcAddr());  //EXTRA
-                            AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank());  //AddParent(netwMsg->getSrcAddr(),netwMsg->getRank());  //EXTRA
+                            AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank(), netwMsg->getDTSN());  //AddParent(netwMsg->getSrcAddr(),netwMsg->getRank());  //EXTRA
                             break;
                         case EXIST:
                             break;
@@ -1223,7 +1233,7 @@ int RPLRouting::IsParent(const IPv6Address& id,int idrank)
     return(NOT_EXIST);
 }
 
-void RPLRouting::AddParent(const IPv6Address& id,int idrank)
+void RPLRouting::AddParent(const IPv6Address& id,int idrank, unsigned char dtsn)
 {
     //EXTRA BEGIN
     if(!hasRoute[VersionNember]){
@@ -1235,6 +1245,7 @@ void RPLRouting::AddParent(const IPv6Address& id,int idrank)
     {
         Parents[VersionNember][0].ParentId=id;
         Parents[VersionNember][0].ParentRank=idrank;
+        Parents[VersionNember][0].dtsn = dtsn; //EXTRA
         PrParent=Parents[VersionNember][0].ParentId;
         Rank=Parents[VersionNember][0].ParentRank+1;
         NofParents[VersionNember]++;
@@ -1261,6 +1272,7 @@ void RPLRouting::AddParent(const IPv6Address& id,int idrank)
         }
         Parents[VersionNember][i+1].ParentId=id;
         Parents[VersionNember][i+1].ParentRank=idrank;
+        Parents[VersionNember][0].dtsn = dtsn; //EXTRA
         PrParent=Parents[VersionNember][0].ParentId;
         Rank=Parents[VersionNember][0].ParentRank+1;
         NofParents[VersionNember]++;

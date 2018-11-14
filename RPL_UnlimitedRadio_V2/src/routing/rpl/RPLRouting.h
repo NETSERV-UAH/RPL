@@ -136,6 +136,7 @@ public:
         //: BaseNetwLayer() //EXTRA
         : DIOheaderLength(0)
         , DISheaderLength(0)
+        , DAOheaderLength(0) //EXTRA
         , macaddress()
         , sinkAddress()
         , debug(false)
@@ -204,6 +205,7 @@ public:
      **/
     int DIOheaderLength;
     int DISheaderLength;
+    int DAOheaderLength;  //EXTRA
     int headerLength;
 
 
@@ -264,6 +266,7 @@ public:
     //EXTRA BEGIN
     bool DAOEnable;
     simtime_t DelayDAO;
+    unsigned char dtsnInstance;
     //EXTRA END
 
     IPv6Address DODAGID; //LAddress::L3Type DODAGID;
@@ -296,6 +299,7 @@ public:
     struct ParentStructure{
         IPv6Address ParentId; //LAddress::L3Type ParentId;  //EXTRA
         int ParentRank;
+        unsigned char dtsn;  //EXTRA
     }**Parents;
     enum PARENT_TYPES
     {
@@ -342,7 +346,7 @@ public:
     //virtual void DeleteParent(const LAddress::L3Type& id);
 
     virtual int  IsParent(const IPv6Address& id,int idrank);
-    virtual void AddParent(const IPv6Address& id,int idrank);
+    virtual void AddParent(const IPv6Address& id,int idrank, unsigned int dtsn);
     virtual void DeleteParent(const IPv6Address& id);
 
     //EXTRA END

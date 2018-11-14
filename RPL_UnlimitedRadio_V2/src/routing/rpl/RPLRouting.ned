@@ -55,6 +55,7 @@ simple RPLRouting
         
         int DIOheaderLength @unit(byte) = default(73 Byte);
         int DISheaderLength @unit(byte) = default(54 Byte);
+        int DAOheaderLength @unit(byte) = default(0 Byte); //EXTRA
         // debug switch
         //EXTRA BEGIN
         //bool debug = default(false);
