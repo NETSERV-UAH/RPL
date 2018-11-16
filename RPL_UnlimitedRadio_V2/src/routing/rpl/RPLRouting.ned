@@ -79,6 +79,11 @@ simple RPLRouting
         bool DAOEnable = default(false);
         double DEFAULT_DAO_DELAY @unit(s) = 1 s;
         double DelayDAO @unit(s) = default(DEFAULT_DAO_DELAY);
+        
+        double ROUTE_INFINITE_LIFETIME @unit(s) = 10000 s;
+        double defaultLifeTime @unit(s) = default(ROUTE_INFINITE_LIFETIME); // This feature was only implemented for downward routes by DAO messages. Upward routes uses ROUTE_INFINITE_LIFETIME.
+        double lifeTimeUnit @unit(s) = default(1 s);
+        double ZERO_LIFETIME @unit(s) = 0 s;  // This feature is used for No-Path DAO, is not implemented yet.
         //EXTRA END
         
         double GlobalRepairTimer @unit(s) = default(10000 s);

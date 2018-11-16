@@ -267,6 +267,8 @@ void RPLRouting::initialize(int stage)
         sinkAddress = IPv6Address(par("sinkAddress"));  //sinkAddress = LAddress::L3Type( getParentModule()->getParentModule()->par("SinkNodeAddr").longValue() );  //EXTRA
         EV << "sink address is " << sinkAddress << endl;
         //headerLength = par ("headerLength");
+        defaultLifeTime = par ("defaultLifeTime");
+        lifeTimeUnit = par ("lifeTimeUnit");
         DAOEnable = par ("DAOEnable");
         DelayDAO = par ("DelayDAO");
         DAOheaderLength = par ("DAOheaderLength");
@@ -376,7 +378,6 @@ void RPLRouting::initialize(int stage)
             //cModule* host=findHost();  //EXTRA
             DODAGSartTime=simTime();
             DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
-            DAOTimer = new cMessage("DAO-timer", SEND_DAO_TIMER); //EXTRA
 
            if (myNetwAddr==sinkAddress)
             {
@@ -556,9 +557,34 @@ void RPLRouting::scheduleNextDIOTransmission()
 }
 
 //EXTRA BEGIN
-void RPLRouting::scheduleNextDAOTransmission(simtime_t DelayDAO)
+void RPLRouting::scheduleNextDAOTransmission(simtime_t delay)
 {
-    scheduleAt(DelayDAO, DAOTimer);
+    if (DAOTimer){
+        EV << "DAO timer already scheduled." << endl;
+    } else{
+        simtime_t expirationTime;
+        if (delay == 0)
+            expirationTime = 0;
+        else{
+            expirationTime = delay / 2 + (rand() % (delay));
+        }
+        DAOTimer = new cMessage("DAO-timer", SEND_DAO_TIMER);
+        scheduleAt(expirationTime, DAOTimer);
+        scheduleDAOlifetimer(defaultLifeTime, lifeTimeUnit);
+    }
+}
+//EXTRA END
+
+//EXTRA BEGIN
+void RPLRouting::scheduleDAOlifetimer(simtime_t LifeTime, simtime_t unit)
+{
+    if (LifeTime == ROUTE_INFINITE_LIFETIME){
+        EV << "DAO life time is infinit." << endl;
+    } else{
+        simtime_t expirationTime = (LifeTime * unit /2) + (rand() % (LifeTime * unit /4));
+        DAOLifeTimer = new cMessage("DAO-life-timer", DAO_LIFETIME_TIMER);
+        scheduleAt(expirationTime, DAOLifeTimer);
+    }
 }
 //EXTRA END
 
@@ -620,52 +646,92 @@ void RPLRouting::handleMessage(cMessage* msg)
 void RPLRouting::handleSelfMsg(cMessage* msg)
 {
     if (msg->getKind() == SEND_DIO_TIMER)
-    {
-        if(((DIO_c<DIORedun)&&(Version==VersionNember))||(DIORedun==0))
-        {
-            // Broadcast DIO message
-            //EXTRA BEGIN
-            ICMPv6DIOMsg* pkt = new ICMPv6DIOMsg("DIO", DIO);
-            IPv6ControlInfo *controlInfo = new IPv6ControlInfo;
-            controlInfo->setSrcAddr(myNetwAddr);
-            controlInfo->setDestAddr(IPv6Address::ALL_NODES_2); // IPv6Address::ALL_NODES_2 is ff02::2 (scope 2 (link-local)), FIXME: ff02::1a for rpl
-            //pkt->setInitialSrcAddr(myNetwAddr);
-            //pkt->setFinalDestAddr(LAddress::L3BROADCAST);
-            //pkt->setSrcAddr(myNetwAddr);
-            //pkt->setDestAddr(LAddress::L3BROADCAST);
-            //EXTRA END
-            pkt->setByteLength(DIOheaderLength);
-            pkt->setVersionNumber(VersionNember);
-            pkt->setRank(Rank);
-            pkt->setDODAGID(DODAGID);
-            pkt->setGrounded(Grounded);
-            pkt->setIMin(DIOIntMin);
-            pkt->setNofDoub(DIOIntDoubl);
-            pkt->setK(DIORedun);
-            pkt->setDTSN(dtsnInstance); //EXTRA
-            if (myNetwAddr == sinkAddress && refreshDAORoutes) //EXTRA
-                dtsnInstance ++;  //EXTRA
+        handleDIOTimer(msg);
+    else if (msg->getKind() == SEND_DIS_FLOOD_TIMER)
+        handleDISTimer(msg);
+    else if (msg->getKind() == SEND_DAO_TIMER)
+        handleDAOTimer(msg);
+    else if (msg->getKind() == DAO_LIFETIME_TIMER)
+        handleDAOTimer(msg);
+    else if (msg->getKind() == Global_REPAIR_TIMER)
+        handleGlobalRepairTimer(msg);
+    else{
+        EV << "Unknown self message is deleted." << endl;
+        delete msg;
+    }
+}
 
+void RPLRouting::handleDIOTimer(cMessage* msg)
+{
+
+    if(((DIO_c<DIORedun)&&(Version==VersionNember))||(DIORedun==0))
+    {
+        // Broadcast DIO message
+        //EXTRA BEGIN
+        ICMPv6DIOMsg* pkt = new ICMPv6DIOMsg("DIO", DIO);
+        IPv6ControlInfo *controlInfo = new IPv6ControlInfo;
+        controlInfo->setSrcAddr(myNetwAddr);
+        controlInfo->setDestAddr(IPv6Address::ALL_NODES_2); // IPv6Address::ALL_NODES_2 is ff02::2 (scope 2 (link-local)), FIXME: ff02::1a for rpl
+        //pkt->setInitialSrcAddr(myNetwAddr);
+        //pkt->setFinalDestAddr(LAddress::L3BROADCAST);
+        //pkt->setSrcAddr(myNetwAddr);
+        //pkt->setDestAddr(LAddress::L3BROADCAST);
+        //EXTRA END
+        pkt->setByteLength(DIOheaderLength);
+        pkt->setVersionNumber(VersionNember);
+        pkt->setRank(Rank);
+        pkt->setDODAGID(DODAGID);
+        pkt->setGrounded(Grounded);
+        pkt->setIMin(DIOIntMin);
+        pkt->setNofDoub(DIOIntDoubl);
+        pkt->setK(DIORedun);
+        pkt->setDTSN(dtsnInstance); //EXTRA
+        if (myNetwAddr == sinkAddress && refreshDAORoutes) //EXTRA
+            dtsnInstance ++;  //EXTRA
+
+        //EXTRA BEGIN
+        //setDownControlInfo(pkt, LAddress::L2BROADCAST);
+        //sendDown(pkt);
+        pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
+        controlInfo->setProtocol(IP_PROT_IPv6_ICMP);
+        pkt->setControlInfo(controlInfo);
+        send(pkt, icmpv6OutGateId);
+        //EXTRA END
+        if ((NodeCounter[Version]<NodesNumber)&&(!IsDODAGFormed))  NodeStateLast->DIO.Sent++;
+        DIOStatusLast->nbDIOSent++;
+        char buf[100];
+        if(myNetwAddr==sinkAddress)
+             sprintf(buf,"DODAG ROOT\nVerNum = %d\nRank = %d\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
+        else
             //EXTRA BEGIN
-            //setDownControlInfo(pkt, LAddress::L2BROADCAST);
-            //sendDown(pkt);
-            pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
-            controlInfo->setProtocol(IP_PROT_IPv6_ICMP);
-            pkt->setControlInfo(controlInfo);
-            send(pkt, icmpv6OutGateId);
+            //sprintf(buf,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %d\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,int(PrParent),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
+            sprintf(buf,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent.getSuffix(96).str().c_str(),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
+        //EXTRA END
+        //cModule* host=findHost(); //EXTRA; host has been declared in the initial method
+        host->getDisplayString().setTagArg("t", 0, buf);
+        cancelAndDelete(DIOTimer);
+        DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
+        scheduleNextDIOTransmission();
+        return;
+    }
+    else
+    {
+        if((DIO_c>=DIORedun)&&(Version==VersionNember))
+        {
+            if ((NodeCounter[Version]<NodesNumber)&&(!IsDODAGFormed))  NodeStateLast->DIO.Suppressed++;
+
+            DIOStatusLast->nbDIOSuppressed++;
+            char buf1[100];
+            sprintf(buf1, "DIO transmission suppressed!");
+            //cModule* host=findHost();  //EXTRA; host was defined in initiat method
+            host->bubble(buf1);
+            //delete msg;  //EXTRA reason of error cancelAndDelete(DIOTimer);
+            char buf2[100];
+            //EXTRA BEGIN
+            //sprintf(buf2,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %d\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,int(PrParent),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
+            sprintf(buf2,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent.getSuffix(96).str().c_str(),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
             //EXTRA END
-            if ((NodeCounter[Version]<NodesNumber)&&(!IsDODAGFormed))  NodeStateLast->DIO.Sent++;
-            DIOStatusLast->nbDIOSent++;
-            char buf[100];
-            if(myNetwAddr==sinkAddress)
-                 sprintf(buf,"DODAG ROOT\nVerNum = %d\nRank = %d\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
-            else
-                //EXTRA BEGIN
-                //sprintf(buf,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %d\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,int(PrParent),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
-                sprintf(buf,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent.getSuffix(96).str().c_str(),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
-            //EXTRA END
-            //cModule* host=findHost(); //EXTRA; host has been declared in the initial method
-            host->getDisplayString().setTagArg("t", 0, buf);
+            host->getDisplayString().setTagArg("t", 0, buf2);
             cancelAndDelete(DIOTimer);
             DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
             scheduleNextDIOTransmission();
@@ -673,116 +739,113 @@ void RPLRouting::handleSelfMsg(cMessage* msg)
         }
         else
         {
-            if((DIO_c>=DIORedun)&&(Version==VersionNember))
+            if((DIO_c<DIORedun)&&(Version-1==VersionNember))
             {
-                if ((NodeCounter[Version]<NodesNumber)&&(!IsDODAGFormed))  NodeStateLast->DIO.Suppressed++;
-
-                DIOStatusLast->nbDIOSuppressed++;
-                char buf1[100];
-                sprintf(buf1, "DIO transmission suppressed!");
-                //cModule* host=findHost();  //EXTRA; host was defined in initiat method
-                host->bubble(buf1);
-                //delete msg;  //EXTRA reason of error cancelAndDelete(DIOTimer);
-                char buf2[100];
-                //EXTRA BEGIN
-                //sprintf(buf2,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %d\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,int(PrParent),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
-                sprintf(buf2,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent.getSuffix(96).str().c_str(),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
-                //EXTRA END
-                host->getDisplayString().setTagArg("t", 0, buf2);
                 cancelAndDelete(DIOTimer);
                 DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
                 scheduleNextDIOTransmission();
                 return;
-            }
-            else
-            {
-                if((DIO_c<DIORedun)&&(Version-1==VersionNember))
-                {
-                    cancelAndDelete(DIOTimer);
-                    DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
-                    scheduleNextDIOTransmission();
-                    return;
-               }
-            }
+           }
         }
     }
+
+}
+
+void RPLRouting::handleDISTimer(cMessage* msg)
+{
+
+    //if(((!IsNodeJoined[myNetwAddr])&&((DIS_c<DISRedun)||(DISRedun==0)))&&(DISVersion==Version))    //EXTRA
+    if(((!IsJoined)&&((DIS_c<DISRedun)||(DISRedun==0)))&&(DISVersion==Version))
+    {
+        //EXTRA BEGIN
+        ICMPv6DISMsg* pkt = new ICMPv6DISMsg("DIS", DIS_FLOOD);  //DISMessage* pkt = new DISMessage("DIS", DIS_FLOOD);  //EXTRA
+        IPv6ControlInfo *controlInfo = new IPv6ControlInfo;
+        controlInfo->setSrcAddr(myNetwAddr);
+        controlInfo->setDestAddr(IPv6Address::ALL_NODES_2); // IPv6Address::ALL_NODES_2 is ff02::2 (scope 2 (link-local)), FIXME: ff02::1a for rpl
+        //pkt->setInitialSrcAddr(myNetwAddr);
+        //pkt->setFinalDestAddr(LAddress::L3BROADCAST);
+        //pkt->setSrcAddr(myNetwAddr);
+        //pkt->setDestAddr(LAddress::L3BROADCAST);
+        //EXTRA END
+        pkt->setByteLength(DISheaderLength);
+        pkt->setVersionNumber(VersionNember);
+        pkt->setDODAGID(DODAGID);
+        //EXTRA BEGIN
+        //setDownControlInfo(pkt, LAddress::L2BROADCAST);
+        //sendDown(pkt);
+        pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
+        controlInfo->setProtocol(IP_PROT_IPv6_ICMP);
+        pkt->setControlInfo(controlInfo);
+        send(pkt, icmpv6OutGateId);
+        //EXTRA END
+
+        if ((NodeCounter[Version]<NodesNumber)&&(!IsDODAGFormed))  NodeStateLast->DIS.Sent++;
+        DISStatusLast->nbDISSent++;
+        cancelAndDelete(DISTimer);
+        DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
+        scheduleNextDISTransmission();
+        return;
+    }
     else
-        if(msg->getKind() == Global_REPAIR_TIMER)
+        //if(((!IsNodeJoined[myNetwAddr])&&(DIS_c>=DISRedun))&&(DISVersion==Version))  //EXTRA
+        if(((!IsJoined)&&(DIS_c>=DISRedun))&&(DISVersion==Version))
+
         {
-            DeleteDIOTimer();
-            ScheduleNextGlobalRepair();
-            if (DISEnable)
-                for (int i=0; i<NodesNumber;i++)
-                    if(i != pManagerRPL->getIndexFromAddress(sinkAddress)) //if(i!=sinkAddress) //EXTRA
-                    {
-                        NodesAddress[i]->SetDISParameters();
-                        NodesAddress[i]->scheduleNextDISTransmission();
-                    }
-            scheduleNextDIOTransmission();
+            if ((NodeCounter[Version]<NodesNumber)&&(!IsDODAGFormed))  NodeStateLast->DIS.Suppressed++;
+
+            DISStatusLast->nbDISSuppressed++;
+            char buf1[100];
+            sprintf(buf1, "DIS transmission suppressed!");
+            //cModule* host=findHost();    //EXTRA; host was defined in initiat method
+            host->bubble(buf1);
+            delete msg;
+            cancelAndDelete(DISTimer);
+            DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
+            scheduleNextDISTransmission();
             return;
+
         }
-            else
-                if(msg->getKind() == SEND_DIS_FLOOD_TIMER)
-                {
-                    //if(((!IsNodeJoined[myNetwAddr])&&((DIS_c<DISRedun)||(DISRedun==0)))&&(DISVersion==Version))    //EXTRA
-                    if(((!IsJoined)&&((DIS_c<DISRedun)||(DISRedun==0)))&&(DISVersion==Version))
-                    {
-                        //EXTRA BEGIN
-                        ICMPv6DISMsg* pkt = new ICMPv6DISMsg("DIS", DIS_FLOOD);  //DISMessage* pkt = new DISMessage("DIS", DIS_FLOOD);  //EXTRA
-                        IPv6ControlInfo *controlInfo = new IPv6ControlInfo;
-                        controlInfo->setSrcAddr(myNetwAddr);
-                        controlInfo->setDestAddr(IPv6Address::ALL_NODES_2); // IPv6Address::ALL_NODES_2 is ff02::2 (scope 2 (link-local)), FIXME: ff02::1a for rpl
-                        //pkt->setInitialSrcAddr(myNetwAddr);
-                        //pkt->setFinalDestAddr(LAddress::L3BROADCAST);
-                        //pkt->setSrcAddr(myNetwAddr);
-                        //pkt->setDestAddr(LAddress::L3BROADCAST);
-                        //EXTRA END
-                        pkt->setByteLength(DISheaderLength);
-                        pkt->setVersionNumber(VersionNember);
-                        pkt->setDODAGID(DODAGID);
-                        //EXTRA BEGIN
-                        //setDownControlInfo(pkt, LAddress::L2BROADCAST);
-                        //sendDown(pkt);
-                        pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
-                        controlInfo->setProtocol(IP_PROT_IPv6_ICMP);
-                        pkt->setControlInfo(controlInfo);
-                        send(pkt, icmpv6OutGateId);
-                        //EXTRA END
+        else
+            if(IsJoined) //if(IsNodeJoined[myNetwAddr])  //EXTRA
+            {
+                cancelAndDelete(DISTimer);
+                DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
+            }
+}
 
-                        if ((NodeCounter[Version]<NodesNumber)&&(!IsDODAGFormed))  NodeStateLast->DIS.Sent++;
-                        DISStatusLast->nbDISSent++;
-                        cancelAndDelete(DISTimer);
-                        DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
-                        scheduleNextDISTransmission();
-                        return;
-                    }
-                    else
-                        //if(((!IsNodeJoined[myNetwAddr])&&(DIS_c>=DISRedun))&&(DISVersion==Version))  //EXTRA
-                        if(((!IsJoined)&&(DIS_c>=DISRedun))&&(DISVersion==Version))
+void RPLRouting::handleDAOTimer(cMessage* msg)
+{
+    if (DAOEnable){
+        if (NofParents > 0)  //there is a prparent
+            sendDAO(Parents[VersionNember][0], defaultLifeTime); //or sendDAO(PrParent, defaultLifeTime);
+        else
+            EV<< "DAO can not be sent. There is no preferred parent." << endl;
 
-                        {
-                            if ((NodeCounter[Version]<NodesNumber)&&(!IsDODAGFormed))  NodeStateLast->DIS.Suppressed++;
+        if (DAOTimer){
+            cancelAndDelete(DAOTimer);
+        }
 
-                            DISStatusLast->nbDISSuppressed++;
-                            char buf1[100];
-                            sprintf(buf1, "DIS transmission suppressed!");
-                            //cModule* host=findHost();    //EXTRA; host was defined in initiat method
-                            host->bubble(buf1);
-                            delete msg;
-                            cancelAndDelete(DISTimer);
-                            DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
-                            scheduleNextDISTransmission();
-                            return;
+        if (!DAOLifeTimer){
+            scheduleDAOlifetimer(defaultLifeTime, lifeTimeUnit);
+        }
+    }
+}
 
-                        }
-                        else
-                            if(IsJoined) //if(IsNodeJoined[myNetwAddr])  //EXTRA
-                            {
-                                cancelAndDelete(DISTimer);
-                                DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
-                            }
-                }
-                else delete msg;
+void RPLRouting::handleGlobalRepairTimer(cMessage* msg)
+{
+
+    DeleteDIOTimer();
+    ScheduleNextGlobalRepair();
+    if (DISEnable)
+        for (int i=0; i<NodesNumber;i++)
+            if(i != pManagerRPL->getIndexFromAddress(sinkAddress)) //if(i!=sinkAddress) //EXTRA
+            {
+                NodesAddress[i]->SetDISParameters();
+                NodesAddress[i]->scheduleNextDISTransmission();
+            }
+    scheduleNextDIOTransmission();
+    return;
+
 }
 
 //EXTRA BEGIN
@@ -1211,6 +1274,26 @@ void RPLRouting::handleIncommingDAOMessage(cMessage* msg)
     if (ctrlInfo != NULL)
         delete ctrlInfo;
     EV << "<-RPLRouting::handleIncommingDAOMessage()" << endl;
+
+}
+//EXTRA END
+
+//EXTRA BEGIN
+void RPLRouting::sendDAOMessage(parent, lifetime)
+{
+
+    EV << "->RPLRouting::sendDAOMessage()" << endl;
+
+    IPv6ControlInfo *ctrlInfo = nullptr;
+
+    if lifetime
+    if parent
+    Set header fields
+    parent=>dest addres
+
+    send to outgate
+
+    EV << "<-RPLRouting::sendDAOMessage()" << endl;
 
 }
 //EXTRA END

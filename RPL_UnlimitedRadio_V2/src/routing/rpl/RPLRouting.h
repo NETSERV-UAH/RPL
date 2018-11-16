@@ -137,6 +137,8 @@ public:
         : DIOheaderLength(0)
         , DISheaderLength(0)
         , DAOheaderLength(0) //EXTRA
+        , defaultLifeTime(0) //EXTRA
+        , lifeTimeUnit(0) //EXTRA
         , macaddress()
         , sinkAddress()
         , debug(false)
@@ -167,7 +169,7 @@ public:
         RESET_Global_REPAIR_TIMER,
         DAO,  //EXTRA
         SEND_DAO_TIMER, //EXTRA
-
+        DAO_LIFETIME_TIMER, //EXTRA
     };
 
     struct Route_Table
@@ -208,6 +210,27 @@ public:
     int DAOheaderLength;  //EXTRA
     int headerLength;
 
+    /**
+     * @brief RPL setting parameters
+     * Read from omnetpp.ini
+     **/
+    simtime_t defaultLifeTime; //EXTRA
+    simtime_t lifeTimeUnit; //EXTRA
+    bool DAOEnable;  //EXTRA
+    simtime_t DelayDAO;  //EXTRA
+    bool DISEnable;
+
+    double DIOIntMin;
+    int DIORedun;
+    int DIOIntDoubl;
+    simtime_t DIOIMaxLength;
+
+    double DISIntMin;
+    double DISStartDelay;
+    int DISRedun;
+    int DISIntDoubl;
+    simtime_t DISIMaxLength;
+    int DISVersion;
 
     MACAddress macaddress; // LAddress::L2Type macaddress;  //EXTRA
 
@@ -225,6 +248,7 @@ public:
     cMessage* DIOTimer;
     cMessage* DISTimer;
     cMessage* DAOTimer;  //EXTRA
+    cMessage* DAOLifeTimer; //EXTRA
 
 
     struct DIOStatus
@@ -247,27 +271,10 @@ public:
 
     char *FilePath;
     bool IsJoined;
-    bool DISEnable;
 
     double GlobalRepairTimer;
 
-    double DIOIntMin;
-    int DIORedun;
-    int DIOIntDoubl;
-    simtime_t DIOIMaxLength;
-
-    double DISIntMin;
-    double DISStartDelay;
-    int DISRedun;
-    int DISIntDoubl;
-    simtime_t DISIMaxLength;
-    int DISVersion;
-
-    //EXTRA BEGIN
-    bool DAOEnable;
-    simtime_t DelayDAO;
-    unsigned char dtsnInstance;
-    //EXTRA END
+    unsigned char dtsnInstance; //EXTRA
 
     IPv6Address DODAGID; //LAddress::L3Type DODAGID;
     int Rank;
@@ -348,7 +355,7 @@ public:
     virtual int  IsParent(const IPv6Address& id,int idrank);
     virtual void AddParent(const IPv6Address& id,int idrank, unsigned int dtsn);
     virtual void DeleteParent(const IPv6Address& id);
-    virtual bool IsNeedDAO(const IPv6Address& parent, unsigned char dtsn);
+    virtual bool IsNeedDAO(const IPv6Address parent, unsigned char dtsn);
 
 
     //EXTRA END
