@@ -59,6 +59,8 @@ class DISMessage;
 #ifndef _RPL_SRC_ROUTING_RPLROUTING_H
 #define _RPL_SRC_ROUTING_RPLROUTING_H
 
+#include <map> //EXTRA
+
 #include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
 #include "inet/common/INETDefs.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
@@ -172,13 +174,38 @@ public:
         DAO_LIFETIME_TIMER, //EXTRA
     };
 
-    struct Route_Table
+    //EXTRA BEGIN
+    /*struct Route_Table
     {
         IPv6Address Address; //LAddress::L3Type Address;  //EXTRA
         IPv6Address NextHop; //LAddress::L3Type NextHop;  //EXTRA
         struct Route_Table* Link;
-    }*RoutingTable;
+    }*RoutingTable;*/
     int NofEntry;
+
+    struct RoutingEntry
+     {
+        int prefixLen;
+        IPv6Address nextHop;
+        simtime_t lifeTime;
+        RoutingEntry() {}
+        RoutingEntry(unsigned int vid, int portno, simtime_t insertionTime) :
+            prefixLen(prefixLen), nextHop(nextHop), lifeTime(lifeTime) {}
+     };
+
+     friend std::ostream& operator<<(std::ostream& os, const RoutingEntry& entry);
+
+     struct IPv6_compare
+     {
+         bool operator()(const IPv6Address& u1, const IPv6Address& u2) const { return u1.compareTo(u2) < 0; }
+     };
+
+     typedef std::map<IPv6Address, RoutingEntry, IPv6_compare> RoutingTable;
+
+     RoutingTable *routingTable = nullptr;
+
+    //EXTRA END
+
 
     //EXTRA BEGIN
     // environment

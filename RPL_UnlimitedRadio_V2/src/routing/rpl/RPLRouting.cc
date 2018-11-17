@@ -350,6 +350,8 @@ void RPLRouting::initialize(int stage)
                 hasRoute[i] = false;
             //EXTRA END
             NofEntry=0;
+            routingTable = new RoutingTable();  //EXTRA
+
             DIOStatusHeader = NULL;
             DISStatusHeader = NULL;
             DODAGJoinTimeHeader = NULL;
@@ -570,7 +572,20 @@ void RPLRouting::scheduleNextDAOTransmission(simtime_t delay)
         }
         DAOTimer = new cMessage("DAO-timer", SEND_DAO_TIMER);
         scheduleAt(expirationTime, DAOTimer);
+        //based the Contiki-ng ambiguity, there is 3 interpretation:
+        //1:
+        if (!DAOLifeTimer)
+            scheduleDAOlifetimer(defaultLifeTime, lifeTimeUnit);
+        else {
+            cancelAndDelete(DAOLifeTimer);
+            scheduleDAOlifetimer(defaultLifeTime, lifeTimeUnit);
+        }
+/*      //2:
+        if (!DAOLifeTimer)
+            scheduleDAOlifetimer(defaultLifeTime, lifeTimeUnit);
+        //3: Contiki approach, error on OMNeT?
         scheduleDAOlifetimer(defaultLifeTime, lifeTimeUnit);
+*/
     }
 }
 //EXTRA END
@@ -1267,12 +1282,59 @@ void RPLRouting::handleIncommingDAOMessage(cMessage* msg)
 
     EV << "->RPLRouting::handleIncommingDAOMessage()" << endl;
 
-    IPv6ControlInfo *ctrlInfo = nullptr;
+    ICMPv6DAOMsg* pkt = check_and_cast<ICMPv6DAOMsg*>(msg);
+    IPv6ControlInfo *ctrlInfo = check_and_cast<IPv6ControlInfo *>(pkt->removeControlInfo());
+    IPv6Address prefix; //= pkt->get
+    int prefixLen; //= pkt->
+    simtime_t lifeTime; //= pkt->
+    IPv6Address senderIPAddress = ctrlInfo->getSrcAddr(); //Sender address
+
+    EV << "Received message is ICMPv6 DAO message, DODAGID address is " << pkt->getDODAGID() << ", src address is " << ctrlInfo->getSrcAddr() << endl;
+
+    int parentIndex = getParentIndex(senderIPAddress);
+
+    if (parentIndex >= 0){
+        if (Parents[VersionNember][parentIndex].ParentRank < rank){
+            EV << "DAO message is received from a parent with a lower rank and discarded." << endl;
+            delete msg;
+            return;
+        }
+
+        if (srcIPAddress == PrParent){
+            EV << "DAO message is received from the preferred parent and discarded." << endl;
+            delete msg;
+            return;
+        }
+
+    }
 
 
+    routingTable::iterator iter = table->find(prefix);
+    if (iter == routingTable->end()){
+        // Add entry to table
+        EV << "Adding entry to Routing Table: " << prefix << " nextHop ->" << senderIPAddress << "\n";
+        (*table)[prefix] = RoutingEntry( senderIPAddress, lifeTime);
+    } else {
+        // Update existing entry
+        EV << "Updating entry in Address Table: " << address << " --> port" << portno << "\n";
+        RoutingEntry& entry = iter->second;
+        entry.nextHop = senderIPAddress;
+        entry.lifeTime = lifeTime;
+    }
 
-    if (ctrlInfo != NULL)
-        delete ctrlInfo;
+    if (NofParents > 0){  //there is a prparent
+        pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
+        ctrlInfo->setProtocol(IP_PROT_IPv6_ICMP);
+        controlInfo->setSrcAddr(myNetwAddr);
+        ctrlInfo->setDestAddr(Parents[VersionNember][0].ParentId);  //ctrlInfo->setDestAddr(PrParent)
+        pkt->setControlInfo(controlInfo);
+        send(pkt, icmpv6OutGateId);
+    }
+    else{
+        EV<< "DAO can not be sent. There is no preferred parent." << endl;
+        delete msg;
+    }
+
     EV << "<-RPLRouting::handleIncommingDAOMessage()" << endl;
 
 }
@@ -1284,14 +1346,23 @@ void RPLRouting::sendDAOMessage(parent, lifetime)
 
     EV << "->RPLRouting::sendDAOMessage()" << endl;
 
-    IPv6ControlInfo *ctrlInfo = nullptr;
+    if (lifetime)
+        if (parent){
+            ICMPv6DAOMsg* pkt = new ICMPv6DAOMsg("DAO", DAO);
+            IPv6ControlInfo *controlInfo = new IPv6ControlInfo;
+            controlInfo->setSrcAddr(myNetwAddr);
+            ctrlInfo->setDestAddr(Parents[VersionNember][0].ParentId);  //ctrlInfo->setDestAddr(PrParent)
+            pkt->setByteLength(DAOheaderLength);
+            pkt->setDODAGID(DODAGID);
+            //pkt->
 
-    if lifetime
-    if parent
-    Set header fields
-    parent=>dest addres
 
-    send to outgate
+            pkt->setControlInfo(controlInfo);
+            send(pkt, icmpv6OutGateId);
+        }else
+            EV << "Cancel a generated DAO, there is no preferred parent." << endl;
+    else
+        EV << "Cancel a generated DAO, life time is zero." << endl;
 
     EV << "<-RPLRouting::sendDAOMessage()" << endl;
 
@@ -1305,6 +1376,7 @@ void RPLRouting::handleLowerControl(cMessage *msg)
 
 void RPLRouting::handleUpperMsg(cMessage* msg)
 {
+    delete msg;
 }
 
 void RPLRouting::finish()
@@ -1333,6 +1405,16 @@ int RPLRouting::IsParent(const IPv6Address& id,int idrank)
       }
     return(NOT_EXIST);
 }
+
+//EXTRA BEGIN
+int RPLRouting::getParentIndex(const IPv6Address& id)
+{
+    for(int i=0;i<NofParents[VersionNember];i++)
+      if (Parents[VersionNember][i].ParentId==id)
+          return(i);
+    return(-1);
+}
+//EXTRA END
 
 void RPLRouting::AddParent(const IPv6Address& id,int idrank, unsigned char dtsn)
 {
