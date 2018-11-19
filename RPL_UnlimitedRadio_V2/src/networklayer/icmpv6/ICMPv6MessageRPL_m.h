@@ -252,7 +252,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6DISMsg& obj) {obj.p
  *     //Prf
  *     //int flags = 0; // RFC 6550, section 6.3.1
  *     //int reserved = 0; // RFC 6550, section 6.3.1
- *     int dtsn;                 // Destination Advertisement Trigger Sequence Number       
+ *     int DTSN;                 // Destination Advertisement Trigger Sequence Number       
  *     double IMin;              // The size of Imin in Trcikle algorithm
  *     int NofDoub;              // Number of doubling in Trcikle algorithm
  *     int k;                    // Redundancy constant in Trcikle algorithm
@@ -291,7 +291,7 @@ class ICMPv6DIOMsg : public ::inet::ICMPv6Message
     int versionNumber;
     int rank;
     int grounded;
-    int dtsn;
+    int DTSN;
     double IMin;
     int NofDoub;
     int k;
@@ -323,8 +323,8 @@ class ICMPv6DIOMsg : public ::inet::ICMPv6Message
     virtual void setRank(int rank);
     virtual int getGrounded() const;
     virtual void setGrounded(int grounded);
-    virtual int getDtsn() const;
-    virtual void setDtsn(int dtsn);
+    virtual int getDTSN() const;
+    virtual void setDTSN(int DTSN);
     virtual double getIMin() const;
     virtual void setIMin(double IMin);
     virtual int getNofDoub() const;
@@ -361,6 +361,13 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6DIOMsg& obj) {obj.p
  *     IPv6Address DODAGID;  //DODAGID (optional): 128-bit unsigned integer set by a DODAG root that uniquely identifies a DODAG.  This field is only present when the 'D' flag is set.  This field is typically only present when a local RPLInstanceID is in use, in order to identify the DODAGID that is associated with the RPLInstanceID.  When a global RPLInstanceID is in use, this field need not be present.
  * 
  *     int options \@enum(RPL_OPTIONS); //RFC 6550, section 6.3.1
+ * 
+ * 
+ *     int prefixLen;        //When options are RPL_Target = 0x05;  
+ *     IPv6Address prefix;   //When options are RPL_Target = 0x05;         
+ *     simtime_t lifeTime;     //When option are Transit_Information = 0x06;
+ * 
+ * 
  * }
  * </pre>
  */
@@ -371,6 +378,9 @@ class ICMPv6DAOMsg : public ::inet::ICMPv6Message
     int d;
     IPv6Address DODAGID;
     int options;
+    int prefixLen;
+    IPv6Address prefix;
+    ::omnetpp::simtime_t lifeTime;
 
   private:
     void copy(const ICMPv6DAOMsg& other);
@@ -398,6 +408,13 @@ class ICMPv6DAOMsg : public ::inet::ICMPv6Message
     virtual void setDODAGID(const IPv6Address& DODAGID);
     virtual int getOptions() const;
     virtual void setOptions(int options);
+    virtual int getPrefixLen() const;
+    virtual void setPrefixLen(int prefixLen);
+    virtual IPv6Address& getPrefix();
+    virtual const IPv6Address& getPrefix() const {return const_cast<ICMPv6DAOMsg*>(this)->getPrefix();}
+    virtual void setPrefix(const IPv6Address& prefix);
+    virtual ::omnetpp::simtime_t getLifeTime() const;
+    virtual void setLifeTime(::omnetpp::simtime_t lifeTime);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6DAOMsg& obj) {obj.parsimPack(b);}

@@ -32,34 +32,13 @@
  *                    [1] Kermajani, Hamidreza, and Carles Gomez. "On the network convergence process
  *                    in RPL over IEEE 802.15. 4 multihop networks: Improvement and trade-offs."
  *                    Sensors 14.7 (2014): 11993-12022.þ
-*/
+ */
 
-//EXTRA BEGIN
-/*
-#ifndef RPL_h
-#define RPL_h
-
-#include <map>
-#include <omnetpp.h>
-
-
-#include "MiXiMDefs.h"
-#include "BaseNetwLayer.h"
-#include "SimpleAddress.h"
-#include "SimpleBattery.h"
-#include "DIOMsg_m.h"
-#include "DISMessage_m.h"
-
-
-class SimTracer;
-class DIOMsg;
-class DISMessage;
-*/
 
 #ifndef _RPL_SRC_ROUTING_RPLROUTING_H
 #define _RPL_SRC_ROUTING_RPLROUTING_H
 
-#include <map> //EXTRA
+#include <map>
 
 #include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
 #include "inet/common/INETDefs.h"
@@ -75,7 +54,8 @@ class DISMessage;
 
 namespace rpl {
 using namespace inet;
-//EXTRA END
+
+#define ZERO_LIFETIME 0 // This feature is used for No-Path DAO, is not implemented yet.
 
 struct DIOState{
     int version;
@@ -101,10 +81,10 @@ struct NodeState{
     int *Rank;
     simtime_t *JoiningDODAGTime;
     simtime_t DODAGsFormationTimeRecords;
-    //EXTRA BEGIN, variables for saving the number of table entries in each iteration
+    //Variables for saving the number of table entries in each iteration
     int numPreferedParents;
     int numParents;
-    //EXTRA END
+
     NodeState* Link;
 }*NodeStateHeader=NULL,*NodeStateLast=NULL,*NodeStateNew=NULL;
 
@@ -115,48 +95,12 @@ struct NodeState{
  * multipoint-to-point traffic from devices inside the LLN towards a central
  * control point is supported.
  *
- *
- * @ingroup netwLayer
- * @author Hamidreza Kermajani
- **/
-//EXTRA BEGIN
-//class RPL : public BaseNetwLayer
+**/
+
 class RPLRouting : public cSimpleModule, public ILifecycle//, public INetfilter::IHook//, public cListener
 
-//EXTRA END
 {
 public:
-    /** @brief Copy constructor is not allowed.
-     */
-   // RPLRouting(const RPLRouting&);
-    /** @brief Assignment operator is not allowed.
-     */
-   // RPLRouting& operator=(const RPLRouting&);
-
-
-    RPLRouting()
-        //: BaseNetwLayer() //EXTRA
-        : DIOheaderLength(0)
-        , DISheaderLength(0)
-        , DAOheaderLength(0) //EXTRA
-        , defaultLifeTime(0) //EXTRA
-        , lifeTimeUnit(0) //EXTRA
-        , macaddress()
-        , sinkAddress()
-        , debug(false)
-        , DISEnable(false) //EXTRA
-        , DAOEnable(false) //EXTRA
-    {};
-
-    /** @brief Initialization of the module and some variables*/
-    virtual void initialize(int) override;  //virtual void initialize(int);  //EXTRA
-    virtual int numInitStages() const override { return NUM_INIT_STAGES; }  //EXTRA
-
-    void handleMessage(cMessage* msg) override;  //EXTRA
-
-    virtual void finish() override;  //virtual void finish();  //EXTRA
-    friend NodeState* CreateNewNodeState(int Index, int VersionNo, simtime_t Time, int NodeRank);
-    virtual ~RPLRouting();
 
     enum messagesTypes {
         UNKNOWN=0,
@@ -169,18 +113,11 @@ public:
         DIS_FLOOD,
         SEND_DIS_FLOOD_TIMER,
         RESET_Global_REPAIR_TIMER,
-        DAO,  //EXTRA
-        SEND_DAO_TIMER, //EXTRA
-        DAO_LIFETIME_TIMER, //EXTRA
+        DAO,
+        SEND_DAO_TIMER,
+        DAO_LIFETIME_TIMER,
     };
 
-    //EXTRA BEGIN
-    /*struct Route_Table
-    {
-        IPv6Address Address; //LAddress::L3Type Address;  //EXTRA
-        IPv6Address NextHop; //LAddress::L3Type NextHop;  //EXTRA
-        struct Route_Table* Link;
-    }*RoutingTable;*/
     int NofEntry;
 
     struct RoutingEntry
@@ -189,28 +126,26 @@ public:
         IPv6Address nextHop;
         simtime_t lifeTime;
         RoutingEntry() {}
-        RoutingEntry(unsigned int vid, int portno, simtime_t insertionTime) :
+        RoutingEntry(IPv6Address nextHop, simtime_t insertionTime) :
             prefixLen(prefixLen), nextHop(nextHop), lifeTime(lifeTime) {}
      };
 
-     friend std::ostream& operator<<(std::ostream& os, const RoutingEntry& entry);
+     //friend std::ostream& operator<<(std::ostream& os, const RoutingEntry& entry);
 
      struct IPv6_compare
      {
-         bool operator()(const IPv6Address& u1, const IPv6Address& u2) const { return u1.compareTo(u2) < 0; }
+         bool operator()(const IPv6Address& u1, const IPv6Address& u2) const { return u1.compare(u2) < 0; }
      };
 
-     typedef std::map<IPv6Address, RoutingEntry, IPv6_compare> RoutingTable;
+     typedef std::map<IPv6Address, RoutingEntry, IPv6_compare> RoutingTable;  // Each prefix is mapped to one RoutingEntry
 
-     RoutingTable *routingTable = nullptr;
+     typedef std::vector<RoutingTable *> RoutingTables; //To maintain one routing table for each version number(global repair).
+     RoutingTables routingTables;
 
-    //EXTRA END
 
-
-    //EXTRA BEGIN
     // environment
     cModule *host = nullptr;
-    IRoutingTable *routingTable = nullptr;
+    //IRoutingTable *routingTable = nullptr;
     IInterfaceTable *interfaceTable = nullptr;
     managerRPL *pManagerRPL = nullptr;
     INetfilter *networkProtocol = nullptr;
@@ -226,26 +161,26 @@ public:
     // lifecycle
     bool isOperational = false;
 
-    //EXTRA END
-
     /**
      * @brief Length of the NetwPkt header
      * Read from omnetpp.ini
      **/
     int DIOheaderLength;
     int DISheaderLength;
-    int DAOheaderLength;  //EXTRA
+    int DAOheaderLength;
     int headerLength;
 
     /**
      * @brief RPL setting parameters
      * Read from omnetpp.ini
      **/
-    simtime_t defaultLifeTime; //EXTRA
-    simtime_t lifeTimeUnit; //EXTRA
-    bool DAOEnable;  //EXTRA
-    simtime_t DelayDAO;  //EXTRA
+    simtime_t defaultLifeTime;  // only used for DAO
+    simtime_t ROUTE_INFINITE_LIFETIME;
+
+    bool DAOEnable;
+    simtime_t DelayDAO;
     bool DISEnable;
+    bool refreshDAORoutes;
 
     double DIOIntMin;
     int DIORedun;
@@ -259,12 +194,12 @@ public:
     simtime_t DISIMaxLength;
     int DISVersion;
 
-    MACAddress macaddress; // LAddress::L2Type macaddress;  //EXTRA
+    MACAddress macaddress;
 
-    IPv6Address sinkAddress; //LAddress::L3Type sinkAddress;  //EXTRA
-    IPv6Address myNetwAddr;  //EXTRA
+    IPv6Address sinkAddress;
+    IPv6Address myNetwAddr;
 
-    bool isSink; //EXTRA
+    bool isSink;
 
     bool useSimTracer;
     bool trace, stats, debug;
@@ -274,8 +209,8 @@ public:
     cMessage* GRepairTimer;
     cMessage* DIOTimer;
     cMessage* DISTimer;
-    cMessage* DAOTimer;  //EXTRA
-    cMessage* DAOLifeTimer; //EXTRA
+    cMessage* DAOTimer;
+    cMessage* DAOLifeTimer;
 
 
     struct DIOStatus
@@ -301,9 +236,9 @@ public:
 
     double GlobalRepairTimer;
 
-    unsigned char dtsnInstance; //EXTRA
+    unsigned char dtsnInstance;
 
-    IPv6Address DODAGID; //LAddress::L3Type DODAGID;
+    IPv6Address DODAGID;
     int Rank;
     simtime_t NodeStartTime;
     int VersionNember;
@@ -327,14 +262,16 @@ public:
     simtime_t DIS_EndofCurIntNow,DIS_EndofCurIntNext;
 
 
-    IPv6Address PrParent; //LAddress::L3Type PrParent;  //EXTRA
+    IPv6Address PrParent;
     int *NofParents;
     int MaxNofParents;
     struct ParentStructure{
-        IPv6Address ParentId; //LAddress::L3Type ParentId;  //EXTRA
+        IPv6Address ParentId;
         int ParentRank;
-        unsigned char dtsn;  //EXTRA
+        unsigned char dtsn;
     }**Parents;
+    typedef ParentStructure Parent;
+
     enum PARENT_TYPES
     {
       NOT_EXIST,
@@ -342,22 +279,66 @@ public:
       SHOULD_BE_UPDATED,
     };
 
+
+    /** @brief Copy constructor is not allowed.
+     */
+   // RPLRouting(const RPLRouting&);
+    /** @brief Assignment operator is not allowed.
+     */
+   // RPLRouting& operator=(const RPLRouting&);
+
+
+    RPLRouting()
+        : DIOheaderLength(0)
+        , DISheaderLength(0)
+        , DAOheaderLength(0)
+        , defaultLifeTime(0)
+        , ROUTE_INFINITE_LIFETIME(0)
+        , macaddress()
+        , sinkAddress()
+        , debug(false)
+        , DISEnable(false)
+        , DAOEnable(false)
+        , refreshDAORoutes(false)
+    {};
+
+    /** @brief Initialization of the module and some variables*/
+    virtual void initialize(int) override;
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+
+    void handleMessage(cMessage* msg) override;
+
+    virtual void finish() override;
+    friend NodeState* CreateNewNodeState(int Index, int VersionNo, simtime_t Time, int NodeRank);
+    virtual ~RPLRouting();
+
     /** @brief Handle messages from upper layer */
     virtual void handleUpperMsg(cMessage* msg);
 
-    //EXTRA BEGIN
-    /** @brief Handle messages from lower layer */
-    //virtual void handleLowerMsg(cMessage* msg);
 
     /** @brief Handle messages from the ICMPv6 module */
     virtual void handleIncommingMessage(cMessage* msg);
-    //EXTRA END
+
+    virtual void handleIncommingDIOMessage(cMessage* msg);
+
+    virtual void handleIncommingDISMessage(cMessage* msg);
+
+    virtual void handleIncommingDAOMessage(cMessage* msg);
+
 
     /** @brief Handle self messages */
     virtual void handleSelfMsg(cMessage* msg);
 
+    virtual void handleGlobalRepairTimer(cMessage* msg);
+
+
     /** @brief Handle control messages from lower layer */
     virtual void handleLowerControl(cMessage* msg);
+
+    virtual void handleDISTimer(cMessage* msg);
+
+    virtual void handleDAOTimer(cMessage* msg);
+
 
 
     /** @brief Decapsulate a message */
@@ -366,6 +347,8 @@ public:
     /** @brief scheduling next DIO message transmission. */
     virtual void scheduleNextDIOTransmission();
     void scheduleNextDISTransmission();
+    virtual void scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime);
+    virtual void scheduleDAOlifetimer(simtime_t LifeTime);
     void ScheduleNextGlobalRepair();
     void DeleteScheduledNextGlobalRepair();
 
@@ -374,25 +357,22 @@ public:
     void SetDIOParameters();
     void SetDISParameters();
 
-    //EXTRA BEGIN
-    //virtual int  IsParent(const LAddress::L3Type& id,int idrank);
-    //virtual void AddParent(const LAddress::L3Type& id,int idrank);
-    //virtual void DeleteParent(const LAddress::L3Type& id);
-
     virtual int  IsParent(const IPv6Address& id,int idrank);
-    virtual void AddParent(const IPv6Address& id,int idrank, unsigned int dtsn);
+    virtual void AddParent(const IPv6Address& id,int idrank, unsigned char dtsn);
     virtual void DeleteParent(const IPv6Address& id);
+    virtual int getParentIndex(const IPv6Address& id);
+
+
     virtual bool IsNeedDAO(const IPv6Address parent, unsigned char dtsn);
-
-
-    //EXTRA END
+    virtual void handleDIOTimer(cMessage* msg);
 
     DIOStatus* CreateNewVersionDIO(void);
     DISStatus* CreateNewVersionDIS(void);
     void DISHandler();
     DODAGJoiningtime* CreateNewVersionJoiningTime(void);
 
-    //EXTRA
+    virtual void sendDAOMessage(simtime_t lifetime);
+
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
 
 };

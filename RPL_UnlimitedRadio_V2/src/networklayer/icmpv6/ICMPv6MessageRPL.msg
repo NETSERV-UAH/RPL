@@ -155,7 +155,7 @@ packet ICMPv6DIOMsg extends ICMPv6Message
     //Prf
     //int flags = 0; // RFC 6550, section 6.3.1
     //int reserved = 0; // RFC 6550, section 6.3.1
-    int dtsn;                 // Destination Advertisement Trigger Sequence Number       
+    int DTSN;                 // Destination Advertisement Trigger Sequence Number       
     double IMin;              // The size of Imin in Trcikle algorithm
     int NofDoub;              // Number of doubling in Trcikle algorithm
     int k;                    // Redundancy constant in Trcikle algorithm
@@ -204,4 +204,11 @@ packet ICMPv6DAOMsg extends ICMPv6Message
     IPv6Address DODAGID;  //DODAGID (optional): 128-bit unsigned integer set by a DODAG root that uniquely identifies a DODAG.  This field is only present when the 'D' flag is set.  This field is typically only present when a local RPLInstanceID is in use, in order to identify the DODAGID that is associated with the RPLInstanceID.  When a global RPLInstanceID is in use, this field need not be present.
       
     int options @enum(RPL_OPTIONS); //RFC 6550, section 6.3.1
+    
+    
+    int prefixLen;        //When options are RPL_Target = 0x05;  
+    IPv6Address prefix;   //When options are RPL_Target = 0x05;         
+    simtime_t lifeTime;     //When option are Transit_Information = 0x06;
+    
+    
 }
