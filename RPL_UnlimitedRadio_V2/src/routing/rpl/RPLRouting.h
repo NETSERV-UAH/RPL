@@ -70,20 +70,33 @@ struct DISState{
     int Suppressed;
 };
 
+struct DAOState{
+    int Sent;
+    int Received;
+    int Suppressed;
+};
+
 struct NodeState{
     int Version;
     int Collision;
     int PacketLost;
     struct DIOState DIO;
     struct DISState DIS;
+    struct DAOState DAO;
 
     double *PowerConsumption;
     int *Rank;
-    simtime_t *JoiningDODAGTime;
-    simtime_t DODAGsFormationTimeRecords;
+    simtime_t *JoiningDODAGTime_Upward;
+    simtime_t *JoiningDODAGTime_Downward;
+
+    simtime_t DODAGsFormationTimeRecords_Upward;
+    simtime_t DODAGsFormationTimeRecords_Downward;
+
     //Variables for saving the number of table entries in each iteration
-    int numPreferedParents;
-    int numParents;
+    int numPreferedParents_Upward;
+    int numParents_Upward;
+    int numParents_Downward;
+
 
     NodeState* Link;
 }*NodeStateHeader=NULL,*NodeStateLast=NULL,*NodeStateNew=NULL;
@@ -230,6 +243,14 @@ public:
         struct DISStatus* link;
     }*DISStatusHeader,*DISStatusNew,*DISStatusLast;
 
+    struct DAOStatus
+    {
+        unsigned int nbDAOSent;
+        unsigned int nbDAOReceived;
+        unsigned int nbDAOSuppressed;
+        struct DAOStatus* link;
+    }*DAOStatusHeader,*DAOStatusNew,*DAOStatusLast;
+
 
     char *FilePath;
     bool IsJoined;
@@ -245,11 +266,12 @@ public:
     int Grounded;
     simtime_t TimetoSendDIO;
     simtime_t TimetoSendDIS;
+
     struct DODAGJoiningtime{
         simtime_t TimetoJoinDODAG;
         int version;
         struct DODAGJoiningtime* link;
-    }*DODAGJoinTimeHeader,*DODAGJoinTimeLast,*DODAGJoinTimeNew;
+    }*DODAGJoinTimeHeader_Upward,*DODAGJoinTimeLast_Upward,*DODAGJoinTimeNew_Upward,*DODAGJoinTimeHeader_Downward,*DODAGJoinTimeLast_Downward,*DODAGJoinTimeNew_Downward;
 
     int DIO_c;
     simtime_t DIO_CurIntsizeNow,DIO_CurIntsizeNext;
@@ -300,6 +322,11 @@ public:
         , DISEnable(false)
         , DAOEnable(false)
         , refreshDAORoutes(false)
+        , GRepairTimer(nullptr)
+        , DIOTimer(nullptr)
+        , DISTimer(nullptr)
+        , DAOTimer(nullptr)
+        , DAOLifeTimer(nullptr)
     {};
 
     /** @brief Initialization of the module and some variables*/
@@ -354,6 +381,7 @@ public:
 
     void TrickleReset();
     void DeleteDIOTimer();
+    void DeleteDAOTimers();
     void SetDIOParameters();
     void SetDISParameters();
 

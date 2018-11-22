@@ -52,18 +52,18 @@ using namespace inet;
 class managerRPL;
 char Path[100],MainPath[100],Mode[4] = "a+t",K_value[3];
 bool* IsNodeJoined,GlobalRepairTimerReset=false,Flg=false,IsFirsttime=true;
-bool NeighboursCalculationFlag=false,IsDODAGFormed=false;
-simtime_t DODAGSartTime,AvgDODAGFomationTime;
+bool NeighboursCalculationFlag=false,IsDODAGFormed_Upward=false;
+simtime_t DODAGSartTime,AvgDODAGFomationTime_Upward;
 int AllDIOsSent=0,AllDIOsReceived=0,AllDIOsSuppressed=0,AvgAllDIOsSent=0;
 int AvgAllDIOsReceived=0,AvgAllDIOsSuppressed=0;
 
-int Version,NodesNumber,NumberofIterations,*NodeCounter=nullptr,GRT_Counter=0;  //initializing nullptr to deallocate memory
+int Version,NodesNumber,NumberofIterations,*NodeCounter_Upward=nullptr,GRT_Counter=0;  //initializing nullptr to deallocate memory
 
-static int NofDODAGformationNormal=0;
+static int NofDODAGformationNormal=0; //test11!!
 double AvgAllCollisionNarmal=0;
-FILE *JoiningTime,*Collosion,*DIOSent,*DISSent,*FormationTime,*PacketLost,*NodesRank,*ConsumedPower;
+FILE *JoiningTime_Upward,*Collosion,*DIOSent,*DISSent,*FormationTime_Upward,*PacketLost,*NodesRank,*ConsumedPower;
 FILE *IterationsNumber;
-FILE *preferedParent, *numberOfParents, *numTableEntris;
+FILE *preferedParent_Upward, *numberOfParents, *numTableEntris;
 
 RPLRouting **NodesAddress;
 
@@ -76,7 +76,7 @@ struct SubDataStr
 struct DataStructure
 {
     SubDataStr *OtherFields;
-    float *FormationTime;
+    float *FormationTime_Upward;
     int *Collosion,*DIOSent,*DISSent,*PacketLost;
     int IterationsNumber;
     //Variables for saving the number of table entries in each iteration
@@ -89,11 +89,11 @@ int FileRecordCounter=-1;
 
 void FileRecordMemoryAllocation(void)
 {
-    FileRecord.Collosion        = new int [NumberofIterations+10];
-    FileRecord.DIOSent          = new int [NumberofIterations+10];
-    FileRecord.DISSent          = new int [NumberofIterations+10];
-    FileRecord.PacketLost       = new int [NumberofIterations+10];
-    FileRecord.FormationTime    = new float [NumberofIterations+10];
+    FileRecord.Collosion               = new int [NumberofIterations+10];
+    FileRecord.DIOSent                 = new int [NumberofIterations+10];
+    FileRecord.DISSent                 = new int [NumberofIterations+10];
+    FileRecord.PacketLost              = new int [NumberofIterations+10];
+    FileRecord.FormationTime_Upward    = new float [NumberofIterations+10];
     //Variables for saving the number of table entries
     FileRecord.numPreferedParents = new int[NumberofIterations+10];
     FileRecord.numParents = new int[NumberofIterations+10];
@@ -135,9 +135,9 @@ void FileRecordMemoryDeallocation(void)
         delete [] FileRecord.PacketLost;
         FileRecord.PacketLost = nullptr;
     }
-    if (!FileRecord.FormationTime){
-        delete [] FileRecord.FormationTime;
-        FileRecord.FormationTime = nullptr;
+    if (!FileRecord.FormationTime_Upward){
+        delete [] FileRecord.FormationTime_Upward;
+        FileRecord.FormationTime_Upward = nullptr;
     }
 
     if (!FileRecord.numPreferedParents){
@@ -160,7 +160,7 @@ NodeState *CreateNewNodeState(int Index, int VersionNo, simtime_t Time, int Node
     Temp = new NodeState;
 
     Temp->Rank = new int[NodesNumber];
-    Temp->JoiningDODAGTime = new simtime_t[NodesNumber];
+    Temp->JoiningDODAGTime_Upward = new simtime_t[NodesNumber];
     Temp->PowerConsumption = new double[NodesNumber];
 
     Temp->Version = VersionNo;
@@ -173,11 +173,11 @@ NodeState *CreateNewNodeState(int Index, int VersionNo, simtime_t Time, int Node
     Temp->Collision = 0;
     Temp->PacketLost = 0;
     Temp->Rank[Index] = NodeRank;
-    Temp->JoiningDODAGTime[Index] = Time;
-    Temp->DODAGsFormationTimeRecords = 0;
+    Temp->JoiningDODAGTime_Upward[Index] = Time;
+    Temp->DODAGsFormationTimeRecords_Upward = 0;
     Temp->PowerConsumption[Index] = 0;
-    Temp->numPreferedParents = 0;
-    Temp->numParents = 0;
+    Temp->numPreferedParents_Upward = 0;
+    Temp->numParents_Upward = 0;
 
     Temp->Link=NULL;
     return Temp;
@@ -249,8 +249,8 @@ void RPLRouting::initialize(int stage)
             NodesAddress = new RPLRouting* [NodesNumber] ;
             IsNodeJoined = new bool[NodesNumber+1];
             for(int i=0;i<NodesNumber+1;i++) IsNodeJoined[i] = false;
-            NodeCounter= new int[NumberofIterations+2];
-            for(int i=0;i<NumberofIterations+2;i++) NodeCounter[i] = 0;
+            NodeCounter_Upward= new int[NumberofIterations+2];
+            for(int i=0;i<NumberofIterations+2;i++) NodeCounter_Upward[i] = 0;
             FileRecordMemoryAllocation();
         }
     }
@@ -288,13 +288,15 @@ void RPLRouting::initialize(int stage)
 
             DIOStatusHeader = NULL;
             DISStatusHeader = NULL;
-            DODAGJoinTimeHeader = NULL;
+            DODAGJoinTimeHeader_Upward = NULL;
+            DODAGJoinTimeHeader_Downward = NULL;
+
             GRepairTimer = NULL;
             DIOTimer = NULL;
             DISTimer = NULL;
             DAOTimer = NULL;
             DODAGSartTime=simTime();
-            AvgDODAGFomationTime=simTime();
+            AvgDODAGFomationTime_Upward=simTime();
             IsJoined=false;
             VersionNember=-1;
             PrParent = IPv6Address::UNSPECIFIED_ADDRESS;
@@ -312,28 +314,28 @@ void RPLRouting::initialize(int stage)
 
             // Scheduling the sink node to the first DIO transmission!!
             DODAGSartTime=simTime();
-            DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
+            //DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
 
            if (myNetwAddr==sinkAddress)
             {
-                AvgDODAGFomationTime=simTime();
+                AvgDODAGFomationTime_Upward=simTime();  //line 299!!
                 IsJoined=true;
                 IsNodeJoined[pManagerRPL->getIndexFromAddress(sinkAddress)]=true;
                 NodeStartTime=simTime();
                 VersionNember=1;
                 Version=VersionNember;
-                NodeCounter[VersionNember]++;
-                EV << "NodeCounter[" << VersionNember << "] = " << NodeCounter[VersionNember] << endl;
+                NodeCounter_Upward[VersionNember]++;
+                EV << "NodeCounter_Upward[" << VersionNember << "] = " << NodeCounter_Upward[VersionNember] << endl;
                 DIOStatusNew = CreateNewVersionDIO();
                 DIOStatusLast = DIOStatusNew;
                 DIOStatusHeader = DIOStatusNew;
                 Rank=1;
                 DODAGID=myNetwAddr;
                 Grounded=1;
-                DODAGJoinTimeNew = CreateNewVersionJoiningTime();
-                DODAGJoinTimeNew->TimetoJoinDODAG = simTime();
-                DODAGJoinTimeLast = DODAGJoinTimeNew;
-                DODAGJoinTimeHeader = DODAGJoinTimeNew;
+                DODAGJoinTimeNew_Upward = CreateNewVersionJoiningTime();
+                DODAGJoinTimeNew_Upward->TimetoJoinDODAG = simTime();
+                DODAGJoinTimeLast_Upward = DODAGJoinTimeNew_Upward;
+                DODAGJoinTimeHeader_Upward = DODAGJoinTimeNew_Upward;
 
                 DIO_CurIntsizeNext=DIOIntMin;
                 DIO_StofCurIntNext=DODAGSartTime;
@@ -344,7 +346,7 @@ void RPLRouting::initialize(int stage)
                 sprintf(buf,"Root");
                 host->getDisplayString().setTagArg("t", 0, buf);
                 NodeStateNew = CreateNewNodeState(pManagerRPL->getIndexFromAddress(myNetwAddr),VersionNember,simTime(),Rank);
-                NodeStateNew->JoiningDODAGTime[pManagerRPL->getIndexFromAddress(myNetwAddr)] = DODAGJoinTimeNew->TimetoJoinDODAG;
+                NodeStateNew->JoiningDODAGTime_Upward[pManagerRPL->getIndexFromAddress(myNetwAddr)] = DODAGJoinTimeNew_Upward->TimetoJoinDODAG;
                 NodeStateLast = NodeStateNew;
                 NodeStateHeader = NodeStateNew;
                 if(GlobalRepairTimer!=0)
@@ -383,8 +385,8 @@ void RPLRouting::ScheduleNextGlobalRepair()
     VersionNember++;
     Version=VersionNember;
     dtsnInstance ++;
-    NodeCounter[Version]++;
-    EV << "NodeCounter[" << VersionNember << "] = " << NodeCounter[VersionNember] << endl;
+    NodeCounter_Upward[Version]++;
+    EV << "NodeCounter_Upward[" << VersionNember << "] = " << NodeCounter_Upward[VersionNember] << endl;
 
 
     DIOStatusNew = CreateNewVersionDIO();
@@ -395,16 +397,16 @@ void RPLRouting::ScheduleNextGlobalRepair()
     DODAGID=myNetwAddr;
 
     Grounded=1;
-    DODAGJoinTimeNew = CreateNewVersionJoiningTime();
-    DODAGJoinTimeNew->TimetoJoinDODAG=simTime();
-    DODAGJoinTimeLast->link = DODAGJoinTimeNew;
-    DODAGJoinTimeLast = DODAGJoinTimeNew;
+    DODAGJoinTimeNew_Upward = CreateNewVersionJoiningTime();
+    DODAGJoinTimeNew_Upward->TimetoJoinDODAG=simTime();
+    DODAGJoinTimeLast_Upward->link = DODAGJoinTimeNew_Upward;
+    DODAGJoinTimeLast_Upward = DODAGJoinTimeNew_Upward;
 
-    DODAGSartTime=DODAGJoinTimeLast->TimetoJoinDODAG;
-    IsDODAGFormed= false;
+    DODAGSartTime=DODAGJoinTimeLast_Upward->TimetoJoinDODAG;
+    IsDODAGFormed_Upward= false;
     NodeStateNew = new NodeState;
     NodeStateNew = CreateNewNodeState(pManagerRPL->getIndexFromAddress(myNetwAddr),VersionNember,simTime(),Rank);
-    NodeStateNew->JoiningDODAGTime[pManagerRPL->getIndexFromAddress(myNetwAddr)] = DODAGJoinTimeLast->TimetoJoinDODAG;
+    NodeStateNew->JoiningDODAGTime_Upward[pManagerRPL->getIndexFromAddress(myNetwAddr)] = DODAGJoinTimeLast_Upward->TimetoJoinDODAG;
 
     if(NodeStateHeader==NULL)
     {
@@ -420,8 +422,12 @@ void RPLRouting::ScheduleNextGlobalRepair()
     DIO_CurIntsizeNext=DIOIntMin;
     DIO_StofCurIntNext=DODAGSartTime;
     DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
-    for (int i=0; i<NodesNumber;i++)
+    for (int i=0; i<NodesNumber;i++){
         NodesAddress[i]->DeleteDIOTimer();
+        if (DAOEnable)
+            NodesAddress[i]->DeleteDAOTimers();
+    }
+
     if (DISEnable)
         for (int i=0; i<NodesNumber;i++)
         {
@@ -447,6 +453,12 @@ void RPLRouting::scheduleNextDIOTransmission()
     DIO_StofCurIntNow = DIO_StofCurIntNext;
     DIO_EndofCurIntNow = DIO_EndofCurIntNext;
     TimetoSendDIO=DIO_StofCurIntNow+uniform(0,DIO_CurIntsizeNow/2)+(DIO_CurIntsizeNow/2);
+
+    if (DIOTimer)//EXTRA
+        throw cRuntimeError("RPLRouting::scheduleNextDIOTransmission: DIO Timer must be nullptr.");
+    else
+        DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
+
     scheduleAt(TimetoSendDIO,DIOTimer );
     DIO_CurIntsizeNext*=2;
     if (DIO_CurIntsizeNext>DIOIMaxLength) DIO_CurIntsizeNext=DIOIMaxLength;
@@ -455,69 +467,123 @@ void RPLRouting::scheduleNextDIOTransmission()
     DIO_c=0;
 }
 
+void RPLRouting::DeleteDIOTimer()
+{
+    Enter_Method("DeleteDIOTimer()");
+    if (DIOTimer){
+        if(DIOTimer->isScheduled()){
+            cancelAndDelete(DIOTimer);
+            DIOTimer = nullptr;
+        }
+        else{
+            delete DIOTimer;
+            DIOTimer = nullptr;
+        }
+    }
+
+}
+
 void RPLRouting::scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime)
 {
+    EV << "->RPLRouting::scheduleNextDAOTransmission()" << endl;
+
+
     if (DAOTimer){
         EV << "DAO timer already scheduled." << endl;
-    } else{
+    }else{
+        DAOTimer = new cMessage("DAO-timer", SEND_DAO_TIMER);
         simtime_t expirationTime;
-        if (delay == 0)
+        if (delay == 0){
             expirationTime = 0;
+            EV << "Next DAO message is scheduled at t = " << expirationTime << ", delay parameter = " << delay << endl;
+        }
         else if (delay == DelayDAO){
             expirationTime = par("randomDelayDAO"); //expirationTime = x~[0,1) * delay + delay/2 or x~[0.5,1.5) * delay
+            EV << "DAO message is scheduled at t = " << expirationTime << ", delay parameter = DelayDAO = " << DelayDAO << endl;
         }else{
             throw cRuntimeError("RPLRouting::scheduleNextDAOTransmission: the value of the delay parameter is wrong! delay = %e'", delay);
         }
-        DAOTimer = new cMessage("DAO-timer", SEND_DAO_TIMER);
         scheduleAt(expirationTime, DAOTimer);
+
         //based on the Contiki-ng ambiguity, there is 3 interpretation:
         //1:
-        if (!DAOLifeTimer)
-            scheduleDAOlifetimer(LifeTime);
-        else {
+        if (DAOLifeTimer){
+            EV << "DAOLifeTimer already scheduled. It is again rescheduled now." << endl;
+            //cancelAndDelete(DAOLifeTimer);
             cancelAndDelete(DAOLifeTimer);
-            scheduleDAOlifetimer(LifeTime);
-        }
-/*      //2:
-        if (!DAOLifeTimer)
-            scheduleDAOlifetimer(LifeTime);
-        //3: Contiki approach, error on OMNeT?
+            DAOLifeTimer = nullptr;
+        }else
+            EV << "DAOLifeTimer was not scheduled. It is scheduled now." << endl;
+
         scheduleDAOlifetimer(LifeTime);
-*/
-    }
+
+
+
+
+    /*      //2:
+            if (!DAOLifeTimer){
+                EV << "DAOLifeTimer was not scheduled. It is scheduled." << endl;
+                scheduleDAOlifetimer(LifeTime);
+            }else{
+                EV << "DAOLifeTimer already scheduled. It is not again scheduled." << endl;
+            }
+
+
+            //3: Contiki approach, error on OMNeT?
+            scheduleDAOlifetimer(LifeTime);
+    */
+        }
+        EV << "<-RPLRouting::scheduleNextDAOTransmission()" << endl;
+
 }
 
 void RPLRouting::scheduleDAOlifetimer(simtime_t lifeTime)
 {
+    EV << "->RPLRouting::scheduleDAOlifetimer()" << endl;
+
     if (lifeTime == ROUTE_INFINITE_LIFETIME){
-        EV << "DAO life time is infinit." << endl;
-    } else if (lifeTime == defaultLifeTime){
-        simtime_t expirationTime = par("randomDefaultLifeTime"); //expirationTime = x~[0.5,0.75) * lifeTime
+        EV << "DAO life time is infinit. DAOLifeTimer is not scheduled." << endl;
+    }else if (!DAOLifeTimer){
         DAOLifeTimer = new cMessage("DAO-life-timer", DAO_LIFETIME_TIMER);
-        scheduleAt(expirationTime, DAOLifeTimer);
+        if (lifeTime == defaultLifeTime){
+               simtime_t expirationTime = par("randomDefaultLifeTime"); //expirationTime = x~[0.5,0.75) * lifeTime
+               scheduleAt(expirationTime, DAOLifeTimer);
+               EV << "The DAO life time is not infinit. The next DAO is scheduled at t = " << expirationTime << ", the lifeTime parameter = defaultLifeTime = " << defaultLifeTime << endl;
+           }else{
+               throw cRuntimeError("RPLRouting::scheduleDAOlifetimer: the value of the input parameter is wrong! lifeTime = %e'", lifeTime);
+           }
     }else{
-        throw cRuntimeError("RPLRouting::scheduleDAOlifetimer: the value of the lifeTime parameter is wrong! lifeTime = %e'", lifeTime);
+        throw cRuntimeError("RPLRouting::scheduleDAOlifetimer: DAOLifeTimer must be nullptr.");
     }
+
+    EV << "->RPLRouting::scheduleDAOlifetimer()" << endl;
+}
+
+void RPLRouting::DeleteDAOTimers()
+{
+    Enter_Method("DeleteDAOTimers()");
+    if (DAOTimer){
+        cancelAndDelete(DAOTimer);
+        DAOTimer = nullptr;
+    }
+
+    if (DAOLifeTimer){
+        cancelAndDelete(DAOLifeTimer);
+        DAOLifeTimer = nullptr;
+    }
+
 }
 
 void RPLRouting::TrickleReset()
 {
     Enter_Method("TrickleReset()");
-    if (DIOTimer){     //test1111
-        cancelAndDelete(DIOTimer);
+    if (DIOTimer->isScheduled()){     //EXTRA
+        cancelEvent(DIOTimer);
     }
-    DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
+    //DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER); //EXTRA
     DIO_CurIntsizeNext=DIOIntMin;
     DIO_StofCurIntNext=simTime();
     DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
-}
-void RPLRouting::DeleteDIOTimer()
-{
-    Enter_Method("DeleteDIOTimer()");
-    if (DIOTimer){     //test1111
-        cancelAndDelete(DIOTimer);
-    }
-    DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
 }
 
 void RPLRouting::SetDISParameters()
@@ -598,7 +664,7 @@ void RPLRouting::handleDIOTimer(cMessage* msg)
         pkt->setControlInfo(controlInfo);
         send(pkt, icmpv6OutGateId);
 
-        if ((NodeCounter[Version]<NodesNumber)&&(!IsDODAGFormed))  NodeStateLast->DIO.Sent++;
+        if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIO.Sent++;
         DIOStatusLast->nbDIOSent++;
         char buf[100];
         if(myNetwAddr==sinkAddress)
@@ -607,7 +673,8 @@ void RPLRouting::handleDIOTimer(cMessage* msg)
             sprintf(buf,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent.getSuffix(96).str().c_str(),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
         host->getDisplayString().setTagArg("t", 0, buf);
         cancelAndDelete(DIOTimer);
-        DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
+        DIOTimer = nullptr; //EXTRA
+        //DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER); //EXTRA
         scheduleNextDIOTransmission();
         return;
     }
@@ -615,7 +682,7 @@ void RPLRouting::handleDIOTimer(cMessage* msg)
     {
         if((DIO_c>=DIORedun)&&(Version==VersionNember))
         {
-            if ((NodeCounter[Version]<NodesNumber)&&(!IsDODAGFormed))  NodeStateLast->DIO.Suppressed++;
+            if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIO.Suppressed++;
 
             DIOStatusLast->nbDIOSuppressed++;
             char buf1[100];
@@ -625,7 +692,8 @@ void RPLRouting::handleDIOTimer(cMessage* msg)
             sprintf(buf2,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnbDIOSent = %d\nnbDIOReceived = %d\nnbDIOSuppressed = %d",VersionNember,Rank,PrParent.getSuffix(96).str().c_str(),DIOStatusLast->nbDIOSent,DIOStatusLast->nbDIOReceived,DIOStatusLast->nbDIOSuppressed);
             host->getDisplayString().setTagArg("t", 0, buf2);
             cancelAndDelete(DIOTimer);
-            DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
+            DIOTimer = nullptr; //EXTRA
+            //DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER); //EXTRA
             scheduleNextDIOTransmission();
             return;
         }
@@ -634,7 +702,8 @@ void RPLRouting::handleDIOTimer(cMessage* msg)
             if((DIO_c<DIORedun)&&(Version-1==VersionNember))
             {
                 cancelAndDelete(DIOTimer);
-                DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
+                DIOTimer = nullptr; //EXTRA
+                //DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER); //EXTRA
                 scheduleNextDIOTransmission();
                 return;
            }
@@ -660,7 +729,7 @@ void RPLRouting::handleDISTimer(cMessage* msg)
         pkt->setControlInfo(controlInfo);
         send(pkt, icmpv6OutGateId);
 
-        if ((NodeCounter[Version]<NodesNumber)&&(!IsDODAGFormed))  NodeStateLast->DIS.Sent++;
+        if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Sent++;
         DISStatusLast->nbDISSent++;
         cancelAndDelete(DISTimer);
         DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
@@ -671,7 +740,7 @@ void RPLRouting::handleDISTimer(cMessage* msg)
         if(((!IsJoined)&&(DIS_c>=DISRedun))&&(DISVersion==Version))
 
         {
-            if ((NodeCounter[Version]<NodesNumber)&&(!IsDODAGFormed))  NodeStateLast->DIS.Suppressed++;
+            if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Suppressed++;
 
             DISStatusLast->nbDISSuppressed++;
             char buf1[100];
@@ -761,7 +830,7 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)
         ctrlInfo = check_and_cast<IPv6ControlInfo *>(netwMsg->removeControlInfo());
         EV << "Received message is ICMPv6 DIO message, DODAGID address is " << netwMsg->getDODAGID() << ", src address is " << ctrlInfo->getSrcAddr() << endl;
 
-       if ((NodeCounter[Version]<NodesNumber)&&(!IsDODAGFormed)) NodeStateLast->DIO.Received++;
+       if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward)) NodeStateLast->DIO.Received++;
        if(myNetwAddr==sinkAddress)
         {
             DIOStatusLast->nbDIOReceived++;
@@ -795,27 +864,27 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)
                    DIOStatusLast = DIOStatusNew;
                }
 
-               NodeCounter[VersionNember]++;
-               EV << "NodeCounter[" << VersionNember << "] = " << NodeCounter[VersionNember] << endl;
+               NodeCounter_Upward[VersionNember]++;
+               EV << "NodeCounter_Upward[" << VersionNember << "] = " << NodeCounter_Upward[VersionNember] << endl;
 
-               DODAGJoinTimeNew = CreateNewVersionJoiningTime();
-               DODAGJoinTimeNew->TimetoJoinDODAG=netwMsg->getArrivalTime();
-               if (DODAGJoinTimeHeader==NULL)
+               DODAGJoinTimeNew_Upward = CreateNewVersionJoiningTime();
+               DODAGJoinTimeNew_Upward->TimetoJoinDODAG=netwMsg->getArrivalTime();
+               if (DODAGJoinTimeHeader_Upward==NULL)
                {
-                   DODAGJoinTimeLast = DODAGJoinTimeNew;
-                   DODAGJoinTimeHeader = DODAGJoinTimeNew;
+                   DODAGJoinTimeLast_Upward = DODAGJoinTimeNew_Upward;
+                   DODAGJoinTimeHeader_Upward = DODAGJoinTimeNew_Upward;
                }
                else
                {
-                   DODAGJoinTimeLast->link = DODAGJoinTimeNew;
-                   DODAGJoinTimeLast = DODAGJoinTimeNew;
+                   DODAGJoinTimeLast_Upward->link = DODAGJoinTimeNew_Upward;
+                   DODAGJoinTimeLast_Upward = DODAGJoinTimeNew_Upward;
 
                }
 
-               NodeStateLast->JoiningDODAGTime[pManagerRPL->getIndexFromAddress(myNetwAddr)] = DODAGJoinTimeLast->TimetoJoinDODAG;
+               NodeStateLast->JoiningDODAGTime_Upward[pManagerRPL->getIndexFromAddress(myNetwAddr)] = DODAGJoinTimeLast_Upward->TimetoJoinDODAG;
 
                DIO_CurIntsizeNext=DIOIntMin;
-               DIO_StofCurIntNext=DODAGJoinTimeLast->TimetoJoinDODAG;
+               DIO_StofCurIntNext=DODAGJoinTimeLast_Upward->TimetoJoinDODAG;
                DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
 
                Grounded=netwMsg->getGrounded();
@@ -838,7 +907,8 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)
             }else
                 if(netwMsg->getVersionNumber()>VersionNember)
                 {
-                    IsJoined = true;
+                    //IsJoined = true;
+                    IsNodeJoined[pManagerRPL->getIndexFromAddress(myNetwAddr)] = true;
                     DeleteDIOTimer();
                     VersionNember=netwMsg->getVersionNumber();
                     dtsnInstance ++;
@@ -857,28 +927,28 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)
                         DIOStatusLast = DIOStatusNew;
                     }
 
-                    NodeCounter[VersionNember]++;
-                    EV << "NodeCounter[" << VersionNember << "] = " << NodeCounter[VersionNember] << endl;
+                    NodeCounter_Upward[VersionNember]++;
+                    EV << "NodeCounter_Upward[" << VersionNember << "] = " << NodeCounter_Upward[VersionNember] << endl;
 
-                    DODAGJoinTimeNew = CreateNewVersionJoiningTime();
-                    DODAGJoinTimeNew->TimetoJoinDODAG=netwMsg->getArrivalTime();
-                    if (DODAGJoinTimeHeader==NULL)
+                    DODAGJoinTimeNew_Upward = CreateNewVersionJoiningTime();
+                    DODAGJoinTimeNew_Upward->TimetoJoinDODAG=netwMsg->getArrivalTime();
+                    if (DODAGJoinTimeHeader_Upward==NULL)
                     {
-                        DODAGJoinTimeLast = DODAGJoinTimeNew;
-                        DODAGJoinTimeHeader = DODAGJoinTimeNew;
+                        DODAGJoinTimeLast_Upward = DODAGJoinTimeNew_Upward;
+                        DODAGJoinTimeHeader_Upward = DODAGJoinTimeNew_Upward;
                     }
                     else
                     {
-                        DODAGJoinTimeLast->link = DODAGJoinTimeNew;
-                        DODAGJoinTimeLast = DODAGJoinTimeNew;
+                        DODAGJoinTimeLast_Upward->link = DODAGJoinTimeNew_Upward;
+                        DODAGJoinTimeLast_Upward = DODAGJoinTimeNew_Upward;
                     }
-                    NodeStateLast->JoiningDODAGTime[pManagerRPL->getIndexFromAddress(myNetwAddr)] = DODAGJoinTimeLast->TimetoJoinDODAG;
+                    NodeStateLast->JoiningDODAGTime_Upward[pManagerRPL->getIndexFromAddress(myNetwAddr)] = DODAGJoinTimeLast_Upward->TimetoJoinDODAG;
                     DIOIntDoubl=netwMsg->getNofDoub();
                     DIOIntMin=netwMsg->getIMin();
                     DIORedun=netwMsg->getK();
                     DODAGID=netwMsg->getDODAGID();
                     DIO_CurIntsizeNext=DIOIntMin;
-                    DIO_StofCurIntNext=DODAGJoinTimeLast->TimetoJoinDODAG;
+                    DIO_StofCurIntNext=DODAGJoinTimeLast_Upward->TimetoJoinDODAG;
                     DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
                     Grounded=netwMsg->getGrounded();
                     AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank(), netwMsg->getDTSN());
@@ -946,39 +1016,39 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)
                         host->getDisplayString().setTagArg("t", 0, buf4);
                         host->bubble("DIO deleted!!");
                     }
-            if((NodeCounter[Version]==NodesNumber)&&(!IsDODAGFormed))
+            if((NodeCounter_Upward[Version]==NodesNumber)&&(!IsDODAGFormed_Upward))
             {
                 FileRecordCounter++;
                 host->bubble("I'm the last node that joined DODAG! DODAG formed!!");
-                IsDODAGFormed=true;
-                NodeStateLast->DODAGsFormationTimeRecords = netwMsg->getArrivalTime()-DODAGSartTime;
-                AvgDODAGFomationTime+=NodeStateLast->DODAGsFormationTimeRecords;
+                IsDODAGFormed_Upward=true;
+                NodeStateLast->DODAGsFormationTimeRecords_Upward = netwMsg->getArrivalTime()-DODAGSartTime;
+                AvgDODAGFomationTime_Upward+=NodeStateLast->DODAGsFormationTimeRecords_Upward;
                 AvgAllDIOsSent+=NodeStateLast->DIO.Sent;
                 AvgAllDIOsReceived+=NodeStateLast->DIO.Received;
                 AvgAllDIOsSuppressed+=NodeStateLast->DIO.Suppressed;
-                NodeCounter[Version]++;
-                EV << "NodeCounter[" << VersionNember << "] = " << NodeCounter[VersionNember] << endl;
+                NodeCounter_Upward[Version]++;
+                EV << "NodeCounter_Upward[" << VersionNember << "] = " << NodeCounter_Upward[VersionNember] << endl;
                 NofDODAGformationNormal++;
                 EV << "Number of DODAGformationNormal is " << NofDODAGformationNormal << endl;
 
-                if(NodeStateLast->DODAGsFormationTimeRecords!=0)
+                if(NodeStateLast->DODAGsFormationTimeRecords_Upward!=0)
                 {
                     FileRecord.Collosion[FileRecordCounter] = NodeStateLast->Collision;
-                    FileRecord.FormationTime[FileRecordCounter] = SIMTIME_DBL(NodeStateLast->DODAGsFormationTimeRecords);
+                    FileRecord.FormationTime_Upward[FileRecordCounter] = SIMTIME_DBL(NodeStateLast->DODAGsFormationTimeRecords_Upward);
                     FileRecord.DIOSent[FileRecordCounter] = NodeStateLast->DIO.Sent;
                     FileRecord.DISSent[FileRecordCounter] = NodeStateLast->DIS.Sent;
                     FileRecord.PacketLost[FileRecordCounter] = NodeStateLast->PacketLost;
-                    FileRecord.numParents[FileRecordCounter] = NodeStateLast->numParents;
-                    FileRecord.numPreferedParents[FileRecordCounter] = NodeStateLast->numPreferedParents;
+                    FileRecord.numParents[FileRecordCounter] = NodeStateLast->numParents_Upward;
+                    FileRecord.numPreferedParents[FileRecordCounter] = NodeStateLast->numPreferedParents_Upward;
 
                 }
-                if(NodeStateNew->DODAGsFormationTimeRecords!=0)
+                if(NodeStateNew->DODAGsFormationTimeRecords_Upward!=0)
                 {
                     for (int i=0; i<NodesNumber;i++)
                     {
                         if(i!=pManagerRPL->getIndexFromAddress(sinkAddress))
                         {
-                            FileRecord.OtherFields[FileRecordCounter].JoiningTime[i] = SIMTIME_DBL(NodeStateLast->JoiningDODAGTime[i] - NodeStateLast->JoiningDODAGTime[pManagerRPL->getIndexFromAddress(sinkAddress)]);
+                            FileRecord.OtherFields[FileRecordCounter].JoiningTime[i] = SIMTIME_DBL(NodeStateLast->JoiningDODAGTime_Upward[i] - NodeStateLast->JoiningDODAGTime_Upward[pManagerRPL->getIndexFromAddress(sinkAddress)]);
                             FileRecord.OtherFields[FileRecordCounter].NodesRank[i] = NodeStateLast->Rank[i];
                         }
                         FileRecord.OtherFields[FileRecordCounter].ConsumedPower[i] = NodeStateLast->PowerConsumption[i];
@@ -1175,7 +1245,7 @@ void RPLRouting::AddParent(const IPv6Address& id,int idrank, unsigned char dtsn)
 {
     if(!hasRoute[VersionNember]){
         hasRoute[VersionNember] = true;
-        NodeStateLast->numPreferedParents++; // next condition is not a good place for this statement because when deleteParent() increaments NofParents[VersionNember], the condition is true, and numPreferedParents increaments twice or more
+        NodeStateLast->numPreferedParents_Upward++; // next condition is not a good place for this statement because when deleteParent() increaments NofParents[VersionNember], the condition is true, and numPreferedParents increaments twice or more
     }
     if(NofParents[VersionNember]==0)
     {
@@ -1185,7 +1255,7 @@ void RPLRouting::AddParent(const IPv6Address& id,int idrank, unsigned char dtsn)
         PrParent=Parents[VersionNember][0].ParentId;
         Rank=Parents[VersionNember][0].ParentRank+1;
         NofParents[VersionNember]++;
-        NodeStateLast->numParents++;
+        NodeStateLast->numParents_Upward++;
         return;
     }else
     {
@@ -1194,7 +1264,7 @@ void RPLRouting::AddParent(const IPv6Address& id,int idrank, unsigned char dtsn)
            if (idrank >= Parents[VersionNember][NofParents[VersionNember]-1].ParentRank) return;
            else{
                NofParents[VersionNember]--;
-               NodeStateLast->numParents--;
+               NodeStateLast->numParents_Upward--;
            }
         }
         int i=NofParents[VersionNember]-1;
@@ -1209,7 +1279,7 @@ void RPLRouting::AddParent(const IPv6Address& id,int idrank, unsigned char dtsn)
         PrParent=Parents[VersionNember][0].ParentId;
         Rank=Parents[VersionNember][0].ParentRank+1;
         NofParents[VersionNember]++;
-        NodeStateLast->numParents++;
+        NodeStateLast->numParents_Upward++;
     }
     return;
 }
@@ -1223,7 +1293,7 @@ void RPLRouting::DeleteParent(const IPv6Address& id)
             break;
         }
     NofParents[VersionNember]--;
-    NodeStateLast->numParents--;
+    NodeStateLast->numParents_Upward--;
 }
 
 bool RPLRouting::IsNeedDAO(const IPv6Address parent, unsigned char dtsn)
@@ -1310,7 +1380,9 @@ bool RPLRouting::handleOperationStage(LifecycleOperation *operation, int stage, 
 
 RPLRouting::~RPLRouting()
 {
-    cancelAndDelete(DIOTimer);
+    //cancelAndDelete(DIOTimer); //EXTRA
+    DeleteDIOTimer();
+    DeleteDAOTimers();
     cancelAndDelete(DISTimer);
     cancelAndDelete(GRepairTimer);
     delete [] NofParents;
@@ -1334,17 +1406,17 @@ RPLRouting::~RPLRouting()
         DISStatusHeader = DISStatusNew;
     }
 
-    DODAGJoinTimeNew  = DODAGJoinTimeHeader;
+    DODAGJoinTimeNew_Upward  = DODAGJoinTimeHeader_Upward;
     while(DIOStatusNew)
     {
-        DODAGJoinTimeNew= DODAGJoinTimeNew->link;
-        delete DODAGJoinTimeHeader;
-        DODAGJoinTimeHeader = DODAGJoinTimeNew;
+        DODAGJoinTimeNew_Upward= DODAGJoinTimeNew_Upward->link;
+        delete DODAGJoinTimeHeader_Upward;
+        DODAGJoinTimeHeader_Upward = DODAGJoinTimeNew_Upward;
     }
 
-    if (NodeCounter){
-        delete [] NodeCounter;
-        NodeCounter = nullptr;    //for mutual exclusion
+    if (NodeCounter_Upward){
+        delete [] NodeCounter_Upward;
+        NodeCounter_Upward = nullptr;    //for mutual exclusion
     }
 
     FileRecordMemoryDeallocation();
@@ -1355,7 +1427,7 @@ RPLRouting::~RPLRouting()
         NodeStateNew= NodeStateHeader->Link;
 
         delete [] NodeStateHeader->Rank;
-        delete [] NodeStateHeader->JoiningDODAGTime;
+        delete [] NodeStateHeader->JoiningDODAGTime_Upward;
         delete [] NodeStateHeader->PowerConsumption;
         delete NodeStateHeader;
         NodeStateHeader = NodeStateNew;
@@ -1373,20 +1445,20 @@ void Datasaving(int sinkAddressIndex, bool DISEnable)
     fprintf(IterationsNumber,"%d\n",NofDODAGformationNormal);
 
 
-    temp = SetPath(MainPath,"JoiningTime_K",K_value);
+    temp = SetPath(MainPath,"JoiningTime_Upward_K",K_value);
     strcpy(Path, temp);
     delete[] temp;
-    JoiningTime = fopen(Path,Mode);
+    JoiningTime_Upward = fopen(Path,Mode);
 
     temp = SetPath(MainPath,"DIOSent_K",K_value);
     strcpy(Path, temp);
     delete[] temp;
     DIOSent = fopen(Path,Mode);
 
-    temp = SetPath(MainPath,"FormationTime_K",K_value);
+    temp = SetPath(MainPath,"FormationTime_Upward_K",K_value);
     strcpy(Path, temp);
     delete[] temp;
-    FormationTime = fopen(Path,Mode);
+    FormationTime_Upward = fopen(Path,Mode);
 
 
     temp = SetPath(MainPath,"numTableEntris_K",K_value);
@@ -1399,10 +1471,10 @@ void Datasaving(int sinkAddressIndex, bool DISEnable)
     delete[] temp;
     NodesRank = fopen(Path,Mode);
 
-    temp = SetPath(MainPath,"numPreferedParent_K",K_value);
+    temp = SetPath(MainPath,"numPreferedParent_Upward_K",K_value);
     strcpy(Path, temp);
     delete[] temp;
-    preferedParent = fopen(Path,Mode);
+    preferedParent_Upward = fopen(Path,Mode);
 
     temp = SetPath(MainPath,"numParents_K",K_value);
     strcpy(Path, temp);
@@ -1422,10 +1494,10 @@ void Datasaving(int sinkAddressIndex, bool DISEnable)
 
     for(int j=0;j<NofDODAGformationNormal;j++)
     {
-        fprintf(FormationTime,"%f\n",FileRecord.FormationTime[j]);
+        fprintf(FormationTime_Upward,"%f\n",FileRecord.FormationTime_Upward[j]);
         fprintf(DIOSent,"%d\n",FileRecord.DIOSent[j]);
 
-        fprintf(preferedParent,"%d\n",FileRecord.numPreferedParents[j]);
+        fprintf(preferedParent_Upward,"%d\n",FileRecord.numPreferedParents[j]);
         fprintf(numberOfParents,"%d\n",FileRecord.numParents[j]);
         fprintf(numTableEntris,"%d\n",FileRecord.numParents[j] + FileRecord.numPreferedParents[j]);
 
@@ -1433,19 +1505,19 @@ void Datasaving(int sinkAddressIndex, bool DISEnable)
         {
             if(i != sinkAddressIndex)
             {
-                fprintf(JoiningTime,"%f\n",FileRecord.OtherFields[j].JoiningTime[i]);
+                fprintf(JoiningTime_Upward,"%f\n",FileRecord.OtherFields[j].JoiningTime[i]);
                 fprintf(NodesRank,"%d\n",FileRecord.OtherFields[j].NodesRank[i]);
             }
         }
     }
 
-    fclose(JoiningTime);
+    fclose(JoiningTime_Upward);
     fclose(DIOSent);
     fclose(DISSent);
-    fclose(FormationTime);
+    fclose(FormationTime_Upward);
     fclose(NodesRank);
     fclose(IterationsNumber);
-    fclose(preferedParent);
+    fclose(preferedParent_Upward);
     fclose(numberOfParents);
 
 }
