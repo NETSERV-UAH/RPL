@@ -196,8 +196,8 @@ packet ICMPv6DAOMsg extends ICMPv6Message
     // TODO: checksum 
     //int rplInstanceId = 0; // RPLInstanceID: 8-bit field indicating the topology instance associated with the DODAG, as learned from the DIO.
     //int k;                // The 'K' flag indicates that the recipient is expected to send a DAO-ACK back.
-    int d;  // The 'D' flag indicates that the DODAGID field is present.  This flag MUST be set when a local RPLInstanceID is used.
-    //int flags = 0; // Flags: The 6 bits remaining unused in the Flags field are reserved for flags.  The field MUST be initialized to zero by the sender and MUST be ignored by the receiver.
+    int dFlag;  // The 'D' flag indicates that the DODAGID field is present.  This flag MUST be set when a local RPLInstanceID is used.
+    int kFlag;  //int flags = 0; // Flags: The 6 bits remaining unused in the Flags field are reserved for flags.  The field MUST be initialized to zero by the sender and MUST be ignored by the receiver.
     
     //int reserved = 0;  // Reserved: 8-bit unused field.  The field MUST be initialized to zero by the sender and MUST be ignored by the receiver.
     //int daoSequence;  //  DAOSequence: Incremented at each unique DAO message from a node and echoed in the DAO-ACK message.

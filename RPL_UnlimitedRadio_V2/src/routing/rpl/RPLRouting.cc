@@ -362,7 +362,7 @@ void RPLRouting::initialize(int stage)
                 host->getDisplayString().setTagArg("t", 0, buf);
                 if (DISEnable)
                 {
-                    DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
+                    //DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);  //EXTRA
                     DIS_CurIntsizeNext=DISIntMin;
                     DIS_StofCurIntNext =DISStartDelay +DODAGSartTime;
                     DIS_EndofCurIntNext=DIS_StofCurIntNext+DIS_CurIntsizeNext;
@@ -433,6 +433,7 @@ void RPLRouting::ScheduleNextGlobalRepair()
         {
             NodesAddress[i]->SetDISParameters();
             NodesAddress[i]->DISHandler();
+            NodesAddress[i]->scheduleNextDISTransmission();  //EXTRA
         }
     scheduleAt(simTime()+GlobalRepairTimer,GRepairTimer );
     GRT_Counter++;
@@ -446,13 +447,35 @@ void RPLRouting::DeleteScheduledNextGlobalRepair()
     scheduleAt(simTime(),GRepairTimer );
 }
 
+void RPLRouting::TrickleReset()
+{
+    EV << "->RPLRouting::TrickleReset()" << endl;
+
+    Enter_Method("TrickleReset()");
+    if (DIOTimer->isScheduled()){     //EXTRA
+        cancelEvent(DIOTimer);
+    }
+    //DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER); //EXTRA
+    DIO_CurIntsizeNext=DIOIntMin;
+    DIO_StofCurIntNext=simTime();
+    DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
+    EV << "Trickle is reset to Imin for next DIO, theoretical Imin : " << DIOIntMin << "practical Imin = Imin + simtime = : " << DIO_EndofCurIntNext << endl;
+
+    EV << "<-RPLRouting::TrickleReset()" << endl;
+
+}
+
 void RPLRouting::scheduleNextDIOTransmission()
 {
+    EV << "->RPLRouting::scheduleNextDIOTransmission()" << endl;
 
     DIO_CurIntsizeNow = DIO_CurIntsizeNext;
     DIO_StofCurIntNow = DIO_StofCurIntNext;
     DIO_EndofCurIntNow = DIO_EndofCurIntNext;
-    TimetoSendDIO=DIO_StofCurIntNow+uniform(0,DIO_CurIntsizeNow/2)+(DIO_CurIntsizeNow/2);
+    TimetoSendDIO = DIO_StofCurIntNow + (DIO_CurIntsizeNow/2) + uniform(0,DIO_CurIntsizeNow/2);
+    EV << "Schedule next DIO : theoretical I = " << DIO_CurIntsizeNow << ", practical I = I + simtime = : " << DIO_EndofCurIntNow << endl;
+    EV << "Time to send is random amount in the interval of [practical I/2 practicalI] uniformly :" << TimetoSendDIO << endl;
+
 
     if (DIOTimer)//EXTRA
         throw cRuntimeError("RPLRouting::scheduleNextDIOTransmission: DIO Timer must be nullptr.");
@@ -461,10 +484,18 @@ void RPLRouting::scheduleNextDIOTransmission()
 
     scheduleAt(TimetoSendDIO,DIOTimer );
     DIO_CurIntsizeNext*=2;
-    if (DIO_CurIntsizeNext>DIOIMaxLength) DIO_CurIntsizeNext=DIOIMaxLength;
+    EV << "New theoretical I = I * 2 = " << DIO_CurIntsizeNext << endl;
+    if (DIO_CurIntsizeNext>DIOIMaxLength)
+    {
+        EV << "New theoretical I (" << DIO_CurIntsizeNext << " is higher than Imax (" << DIOIMaxLength << "), so I is not changed." << endl;
+        DIO_CurIntsizeNext=DIOIMaxLength;
+    }
+
     DIO_StofCurIntNext = DIO_EndofCurIntNext;
     DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
     DIO_c=0;
+
+    EV << "<-RPLRouting::scheduleNextDIOTransmission()" << endl;
 }
 
 void RPLRouting::DeleteDIOTimer()
@@ -481,6 +512,43 @@ void RPLRouting::DeleteDIOTimer()
         }
     }
 
+}
+
+void RPLRouting::SetDISParameters()
+{
+    Enter_Method("SetDISParameters()");
+
+    if (DISTimer){  //EXTRA
+        cancelAndDelete(DISTimer);
+        DISTimer = nullptr;
+    }
+
+    //DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);  EXTRA
+    DIS_CurIntsizeNext=DISIntMin;
+    DIS_StofCurIntNext =DISStartDelay+DODAGSartTime;
+    DIS_EndofCurIntNext=DIS_StofCurIntNext+DIS_CurIntsizeNext;
+}
+
+void RPLRouting::scheduleNextDISTransmission()
+{
+    Enter_Method("scheduleNextDISTransmission()");
+    DIS_CurIntsizeNow = DIS_CurIntsizeNext;
+    DIS_StofCurIntNow = DIS_StofCurIntNext;
+    DIS_EndofCurIntNow = DIS_EndofCurIntNext;
+    TimetoSendDIS=DIS_StofCurIntNow+uniform(0,DIS_CurIntsizeNow/2)+(DIS_CurIntsizeNow/2);
+
+    if (DISTimer)//EXTRA
+        throw cRuntimeError("RPLRouting::scheduleNextDISTransmission: DIS Timer must be nullptr.");
+    else
+        DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
+
+    scheduleAt(TimetoSendDIS,DISTimer );
+    DIS_CurIntsizeNext*=2;
+    if (DIS_CurIntsizeNext>DISIMaxLength)
+        DIS_CurIntsizeNext=DISIMaxLength;
+    DIS_StofCurIntNext = DIS_EndofCurIntNext;
+    DIS_EndofCurIntNext=DIS_StofCurIntNext+DIS_CurIntsizeNext;
+    DIS_c=0;
 }
 
 void RPLRouting::scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime)
@@ -574,50 +642,12 @@ void RPLRouting::DeleteDAOTimers()
 
 }
 
-void RPLRouting::TrickleReset()
-{
-    Enter_Method("TrickleReset()");
-    if (DIOTimer->isScheduled()){     //EXTRA
-        cancelEvent(DIOTimer);
-    }
-    //DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER); //EXTRA
-    DIO_CurIntsizeNext=DIOIntMin;
-    DIO_StofCurIntNext=simTime();
-    DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
-}
-
-void RPLRouting::SetDISParameters()
-{
-    Enter_Method("SetDISParameters()");
-    cancelAndDelete(DISTimer);
-    DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
-    DIS_CurIntsizeNext=DISIntMin;
-    DIS_StofCurIntNext =DISStartDelay+DODAGSartTime;
-    DIS_EndofCurIntNext=DIS_StofCurIntNext+DIS_CurIntsizeNext;
-}
-
-void RPLRouting::scheduleNextDISTransmission()
-{
-    Enter_Method("scheduleNextDISTransmission()");
-    DIS_CurIntsizeNow = DIS_CurIntsizeNext;
-    DIS_StofCurIntNow = DIS_StofCurIntNext;
-    DIS_EndofCurIntNow = DIS_EndofCurIntNext;
-    TimetoSendDIS=DIS_StofCurIntNow+uniform(0,DIS_CurIntsizeNow/2)+(DIS_CurIntsizeNow/2);
-    scheduleAt(TimetoSendDIS,DISTimer );
-    DIS_CurIntsizeNext*=2;
-    if (DIS_CurIntsizeNext>DISIMaxLength) DIS_CurIntsizeNext=DISIMaxLength;
-    DIS_StofCurIntNext = DIS_EndofCurIntNext;
-    DIS_EndofCurIntNext=DIS_StofCurIntNext+DIS_CurIntsizeNext;
-    DIS_c=0;
-}
-
 void RPLRouting::handleMessage(cMessage* msg)
 {
     if (msg->isSelfMessage())
         handleSelfMsg(msg);
     else
         handleIncommingMessage(msg);
-
 }
 
 void RPLRouting::handleSelfMsg(cMessage* msg)
@@ -715,7 +745,8 @@ void RPLRouting::handleDIOTimer(cMessage* msg)
 void RPLRouting::handleDISTimer(cMessage* msg)
 {
 
-    if(((!IsJoined)&&((DIS_c<DISRedun)||(DISRedun==0)))&&(DISVersion==Version))
+    if(((!IsNodeJoined[pManagerRPL->getIndexFromAddress(myNetwAddr)])&&((DIS_c<DISRedun)||(DISRedun==0)))&&(DISVersion==Version)) //EXTRA
+    //if(((!IsJoined)&&((DIS_c<DISRedun)||(DISRedun==0)))&&(DISVersion==Version))  //EXTRA
     {
         ICMPv6DISMsg* pkt = new ICMPv6DISMsg("DIS", DIS_FLOOD);
         IPv6ControlInfo *controlInfo = new IPv6ControlInfo;
@@ -732,40 +763,46 @@ void RPLRouting::handleDISTimer(cMessage* msg)
         if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Sent++;
         DISStatusLast->nbDISSent++;
         cancelAndDelete(DISTimer);
-        DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
+        //DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER); //EXTRA
+        DISTimer = nullptr;  //EXTRA
         scheduleNextDISTransmission();
         return;
     }
     else
-        if(((!IsJoined)&&(DIS_c>=DISRedun))&&(DISVersion==Version))
-
+        //if(((!IsJoined)&&(DIS_c>=DISRedun))&&(DISVersion==Version)) //EXTRA
+        if(((!IsNodeJoined[pManagerRPL->getIndexFromAddress(myNetwAddr)])&&(DIS_c>=DISRedun))&&(DISVersion==Version)) //EXTRA
         {
-            if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Suppressed++;
+            if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Suppressed++;  // if !end simulation
 
             DISStatusLast->nbDISSuppressed++;
             char buf1[100];
             sprintf(buf1, "DIS transmission suppressed!");
             host->bubble(buf1);
-            delete msg;
+            //delete msg; //EXTRA
             cancelAndDelete(DISTimer);
-            DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
+            //DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER); //EXTRA
+            DISTimer = nullptr;  //EXTRA
             scheduleNextDISTransmission();
             return;
 
         }
         else
-            if(IsJoined)
+            //if(IsJoined) //EXTRA
+            if(IsNodeJoined[pManagerRPL->getIndexFromAddress(myNetwAddr)]) //EXTRA
             {
                 cancelAndDelete(DISTimer);
-                DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
+                //DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);  //EXTRA
+                DISTimer = nullptr;  //EXTRA
             }
+    //EXTRA : addin a condition : if joined Version > disversion, disc < dis redun, disc=0 ==> send dio
+    //EXTRA : if not joined || dis_c > dis redun || version < disversion == > suppressed
 }
 
 void RPLRouting::handleDAOTimer(cMessage* msg)
 {
     if (DAOEnable){
         if (NofParents > 0)  //there is a prparent
-            sendDAOMessage(defaultLifeTime); //or sendDAO(PrParent, defaultLifeTime);
+            sendDAOMessage(myNetwAddr, defaultLifeTime); //or sendDAO(PrParent, defaultLifeTime);
         else
             EV<< "DAO can not be sent. There is no preferred parent." << endl;
 
@@ -782,16 +819,16 @@ void RPLRouting::handleDAOTimer(cMessage* msg)
 void RPLRouting::handleGlobalRepairTimer(cMessage* msg)
 {
 
-    DeleteDIOTimer();
+    //DeleteDIOTimer();  //EXTRA this method is called in the ScheduleNextGlobalRepair()
     ScheduleNextGlobalRepair();
-    if (DISEnable)
+   /* if (DISEnable)   //These are in the ScheduleNextGlobalRepair()
         for (int i=0; i<NodesNumber;i++)
             if(i != pManagerRPL->getIndexFromAddress(sinkAddress))
             {
                 NodesAddress[i]->SetDISParameters();
-                NodesAddress[i]->scheduleNextDISTransmission();
-            }
-    scheduleNextDIOTransmission();
+                NodesAddress[i]->scheduleNextDISTransmission();  // this is added to ScheduleNextGlobalRepair()
+            } */
+    scheduleNextDIOTransmission();  // root node must run it.
     return;
 
 }
@@ -830,7 +867,7 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)
         ctrlInfo = check_and_cast<IPv6ControlInfo *>(netwMsg->removeControlInfo());
         EV << "Received message is ICMPv6 DIO message, DODAGID address is " << netwMsg->getDODAGID() << ", src address is " << ctrlInfo->getSrcAddr() << endl;
 
-       if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward)) NodeStateLast->DIO.Received++;
+       if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward)) NodeStateLast->DIO.Received++;  //if simulation is not end ...
        if(myNetwAddr==sinkAddress)
         {
             DIOStatusLast->nbDIOReceived++;
@@ -1071,8 +1108,9 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)
         }
     }  // end if DIO
 
-    if (ctrlInfo != NULL)
-        delete ctrlInfo;
+    //if (ctrlInfo != NULL) //EXTRA
+    delete ctrlInfo;
+
     EV << "<-RPLRouting::handleIncommingDIOMessage()" << endl;
 }
 
@@ -1082,36 +1120,43 @@ void RPLRouting::handleIncommingDISMessage(cMessage* msg)
 
     EV << "->RPLRouting::handleIncommingDISMessage()" << endl;
 
-    IPv6ControlInfo *ctrlInfo = nullptr;
+    ICMPv6DISMsg *netwMsg = check_and_cast<ICMPv6DISMsg *>(msg);  //EXTRA
+    IPv6ControlInfo *ctrlInfo = check_and_cast<IPv6ControlInfo *> (netwMsg->removeControlInfo());  //EXTRA
 
-    if ((msg->getKind() == DIS_FLOOD)&&(IsJoined))
+    //if ((msg->getKind() == DIS_FLOOD)&&(IsJoined))  //EXTRA
+    if ((msg->getKind() == DIS_FLOOD)&&(IsNodeJoined[pManagerRPL->getIndexFromAddress(myNetwAddr)]))  //EXTRA
+
     {
         DIS_c++;
         NodeStateLast->DIS.Received++;
-        ICMPv6DISMsg *netwMsg = check_and_cast<ICMPv6DISMsg *>(msg);
-        ctrlInfo = check_and_cast<IPv6ControlInfo *> (netwMsg->removeControlInfo());
+        //ICMPv6DISMsg *netwMsg = check_and_cast<ICMPv6DISMsg *>(msg);  //EXTRA
+        //ctrlInfo = check_and_cast<IPv6ControlInfo *> (netwMsg->removeControlInfo());  //EXTRA
         char buf2[255];
                 sprintf(buf2, "A DIS message received from node %d!\nResetting Trickle timer!", ctrlInfo->getSrcAddr());
         host->bubble(buf2);
         TrickleReset();
-        delete netwMsg;
+        //delete netwMsg;  //EXTRA
         scheduleNextDIOTransmission();
     }
     else
-        if ((msg->getKind() == DIS_FLOOD)&&(!IsJoined))
+        //if ((msg->getKind() == DIS_FLOOD)&&(!IsJoined))  //EXTRA
+        if ((msg->getKind() == DIS_FLOOD)&&(!IsNodeJoined[pManagerRPL->getIndexFromAddress(myNetwAddr)]))  //EXTRA
         {
             DIS_c++;
             NodeStateLast->DIS.Received++;
-            ICMPv6DISMsg* netwMsg = check_and_cast<ICMPv6DISMsg*>(msg);
-            ctrlInfo = check_and_cast<IPv6ControlInfo *>(netwMsg->removeControlInfo());
+            //ICMPv6DISMsg* netwMsg = check_and_cast<ICMPv6DISMsg*>(msg);  //EXTRA
+            //ctrlInfo = check_and_cast<IPv6ControlInfo *>(netwMsg->removeControlInfo());  //EXTRA
             char buf2[255];
             sprintf(buf2, "A DIS message received from node %s!\nBut I am not a member of any DODAG!", ctrlInfo->getSrcAddr());
             host->bubble(buf2);
-            delete netwMsg;
+            //delete netwMsg;
         }
 
-    if (ctrlInfo != NULL)
-        delete ctrlInfo;
+    //if (ctrlInfo != NULL)    //EXTRA
+    delete ctrlInfo;
+
+    delete netwMsg;
+
     EV << "<-RPLRouting::handleIncommingDISMessage()" << endl;
 }
 
@@ -1126,6 +1171,7 @@ void RPLRouting::handleIncommingDAOMessage(cMessage* msg)
     IPv6Address prefix = pkt->getPrefix();
     int prefixLen = pkt->getPrefixLen();
     simtime_t lifeTime = pkt->getLifeTime();
+    int flagK = pkt->getKFlag();
     IPv6Address senderIPAddress = ctrlInfoIn->getSrcAddr(); //Sender address
 
     EV << "Received message is ICMPv6 DAO message, DODAGID address is " << pkt->getDODAGID() << ", src address is " << ctrlInfoIn->getSrcAddr() << endl;
@@ -1147,20 +1193,38 @@ void RPLRouting::handleIncommingDAOMessage(cMessage* msg)
 
     }
 
-
     RoutingTable *routingTable = routingTables.at(VersionNember);
-    auto iter = routingTable->find(prefix);
-    if (iter == routingTable->end()){
-        // Add entry to table
-        EV << "Adding entry to Routing Table: " << prefix << " nextHop -->" << senderIPAddress << "\n";
-        (*routingTable)[prefix] = RoutingEntry( senderIPAddress, simTime() + lifeTime);
-    } else {
-        // Update existing entry
-        EV << "Updating entry in Address Table: " << prefix << " nextHop -->" << senderIPAddress << "\n";
-        RoutingEntry& entry = iter->second;
-        entry.nextHop = senderIPAddress;
-        entry.lifeTime = simTime() + lifeTime;
+
+
+    if (lifeTime == ZERO_LIFETIME){ // && (flagK == 1)  //No-Path DAO  //FIXME: this situation must handle ACK message
+        auto iter = routingTable->find(prefix);
+        if (iter != routingTable->end()){   // prefix has a route
+            RoutingEntry& entry = iter->second;
+            bool removeable = false;
+            if ((!entry.NoPathReceived) && (entry.prefixLen == prefixLen) && (entry.nextHop == senderIPAddress)){
+                removeable = true;
+                EV << "No-Path DAO received from " << senderIPAddress <<" removes a route with the prefeix of " << prefix << endl;
+                entry.NoPathReceived = true;
+                //TODO: setting lifetime label on the route
+                routingTable->erase(prefix);
+            }
+            EV << "Deleting the entry :" << prefix << ", nextHop" << senderIPAddress << "\n";
+        }
+    }else{
+        auto iter = routingTable->find(prefix);
+        if (iter == routingTable->end()){
+            // Add entry to table
+            EV << "Adding entry to Routing Table: " << prefix << " nextHop -->" << senderIPAddress << "\n";
+            (*routingTable)[prefix] = RoutingEntry( senderIPAddress, simTime() + lifeTime);
+        } else {
+            // Update existing entry
+            EV << "Updating entry in Address Table: " << prefix << " nextHop -->" << senderIPAddress << "\n";
+            RoutingEntry& entry = iter->second;
+            entry.nextHop = senderIPAddress;
+            entry.lifeTime = simTime() + lifeTime;
+        }
     }
+
 
     if (NofParents > 0){  //this node has a preferred parent, so DAO must forward to the preferred parent.
         IPv6ControlInfo *ctrlInfoOut = new IPv6ControlInfo;
@@ -1183,30 +1247,35 @@ void RPLRouting::handleIncommingDAOMessage(cMessage* msg)
 
 }
 
-void RPLRouting::sendDAOMessage(simtime_t lifetime)
+void RPLRouting::sendDAOMessage(IPv6Address prefix, simtime_t lifetime)
 {
 
     EV << "->RPLRouting::sendDAOMessage()" << endl;
 
-    if (lifetime != ZERO_LIFETIME)
-        if (NofParents[VersionNember] > 0){
-            ICMPv6DAOMsg* pkt = new ICMPv6DAOMsg("DAO", DAO);
-            IPv6ControlInfo *ctrlInfo = new IPv6ControlInfo;
-            ctrlInfo->setProtocol(IP_PROT_IPv6_ICMP);
-            ctrlInfo->setSrcAddr(myNetwAddr);
-            ctrlInfo->setDestAddr(Parents[VersionNember][0].ParentId);  //ctrlInfo->setDestAddr(PrParent)
-            pkt->setByteLength(DAOheaderLength);
-            pkt->setDODAGID(DODAGID);
-            pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
-            pkt->setPrefixLen(64); //link local address
-            pkt->setPrefix(myNetwAddr);
-            pkt->setLifeTime(lifetime);
-            pkt->setControlInfo(ctrlInfo);
-            send(pkt, icmpv6OutGateId);
-        }else
-            EV << "Cancel a generated DAO, there is no preferred parent." << endl;
-    else
-        EV << "Cancel a generated DAO, life time is zero." << endl;
+    if (NofParents[VersionNember] > 0){
+        ICMPv6DAOMsg* pkt = new ICMPv6DAOMsg("DAO", DAO);
+        IPv6ControlInfo *ctrlInfo = new IPv6ControlInfo;
+        ctrlInfo->setProtocol(IP_PROT_IPv6_ICMP);
+        ctrlInfo->setSrcAddr(myNetwAddr);
+        ctrlInfo->setDestAddr(Parents[VersionNember][0].ParentId);  //ctrlInfo->setDestAddr(PrParent)
+        pkt->setByteLength(DAOheaderLength);
+        pkt->setDFlag(1); //spesified DAG
+        pkt->setDODAGID(DODAGID);
+
+        if (lifetime == ZERO_LIFETIME)
+            pkt->setKFlag(1);
+        else
+            pkt->setKFlag(0);
+
+        pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
+        pkt->setPrefixLen(64); //link local address
+        pkt->setPrefix(prefix);
+        pkt->setLifeTime(lifetime);
+        pkt->setControlInfo(ctrlInfo);
+        send(pkt, icmpv6OutGateId);
+    }else
+        EV << "Cancel a generated DAO, there is no preferred parent." << endl;
+
 
     EV << "<-RPLRouting::sendDAOMessage()" << endl;
 
@@ -1332,6 +1401,7 @@ RPLRouting::DISStatus* RPLRouting::CreateNewVersionDIS()
     Temp->link=NULL;
     return Temp;
 }
+
 void RPLRouting::DISHandler()
 {
     Enter_Method("DISHandler()");

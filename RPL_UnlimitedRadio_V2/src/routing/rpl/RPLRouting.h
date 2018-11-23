@@ -138,9 +138,10 @@ public:
         int prefixLen;
         IPv6Address nextHop;
         simtime_t lifeTime;
+        bool NoPathReceived = false;
         RoutingEntry() {}
         RoutingEntry(IPv6Address nextHop, simtime_t insertionTime) :
-            prefixLen(prefixLen), nextHop(nextHop), lifeTime(lifeTime) {}
+            prefixLen(prefixLen), nextHop(nextHop), lifeTime(lifeTime), NoPathReceived(NoPathReceived) {}
      };
 
      //friend std::ostream& operator<<(std::ostream& os, const RoutingEntry& entry);
@@ -399,7 +400,7 @@ public:
     void DISHandler();
     DODAGJoiningtime* CreateNewVersionJoiningTime(void);
 
-    virtual void sendDAOMessage(simtime_t lifetime);
+    virtual void sendDAOMessage(IPv6Address prefix, simtime_t lifetime);
 
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
 

@@ -1180,7 +1180,8 @@ Register_Class(ICMPv6DAOMsg)
 ICMPv6DAOMsg::ICMPv6DAOMsg(const char *name, short kind) : ::inet::ICMPv6Message(name,kind)
 {
     this->code = 0;
-    this->d = 0;
+    this->dFlag = 0;
+    this->kFlag = 0;
     this->options = 0;
     this->prefixLen = 0;
     this->lifeTime = 0;
@@ -1206,7 +1207,8 @@ ICMPv6DAOMsg& ICMPv6DAOMsg::operator=(const ICMPv6DAOMsg& other)
 void ICMPv6DAOMsg::copy(const ICMPv6DAOMsg& other)
 {
     this->code = other.code;
-    this->d = other.d;
+    this->dFlag = other.dFlag;
+    this->kFlag = other.kFlag;
     this->DODAGID = other.DODAGID;
     this->options = other.options;
     this->prefixLen = other.prefixLen;
@@ -1218,7 +1220,8 @@ void ICMPv6DAOMsg::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::inet::ICMPv6Message::parsimPack(b);
     doParsimPacking(b,this->code);
-    doParsimPacking(b,this->d);
+    doParsimPacking(b,this->dFlag);
+    doParsimPacking(b,this->kFlag);
     doParsimPacking(b,this->DODAGID);
     doParsimPacking(b,this->options);
     doParsimPacking(b,this->prefixLen);
@@ -1230,7 +1233,8 @@ void ICMPv6DAOMsg::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::inet::ICMPv6Message::parsimUnpack(b);
     doParsimUnpacking(b,this->code);
-    doParsimUnpacking(b,this->d);
+    doParsimUnpacking(b,this->dFlag);
+    doParsimUnpacking(b,this->kFlag);
     doParsimUnpacking(b,this->DODAGID);
     doParsimUnpacking(b,this->options);
     doParsimUnpacking(b,this->prefixLen);
@@ -1248,14 +1252,24 @@ void ICMPv6DAOMsg::setCode(int code)
     this->code = code;
 }
 
-int ICMPv6DAOMsg::getD() const
+int ICMPv6DAOMsg::getDFlag() const
 {
-    return this->d;
+    return this->dFlag;
 }
 
-void ICMPv6DAOMsg::setD(int d)
+void ICMPv6DAOMsg::setDFlag(int dFlag)
 {
-    this->d = d;
+    this->dFlag = dFlag;
+}
+
+int ICMPv6DAOMsg::getKFlag() const
+{
+    return this->kFlag;
+}
+
+void ICMPv6DAOMsg::setKFlag(int kFlag)
+{
+    this->kFlag = kFlag;
 }
 
 IPv6Address& ICMPv6DAOMsg::getDODAGID()
@@ -1373,7 +1387,7 @@ const char *ICMPv6DAOMsgDescriptor::getProperty(const char *propertyname) const
 int ICMPv6DAOMsgDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 7+basedesc->getFieldCount() : 7;
+    return basedesc ? 8+basedesc->getFieldCount() : 8;
 }
 
 unsigned int ICMPv6DAOMsgDescriptor::getFieldTypeFlags(int field) const
@@ -1387,13 +1401,14 @@ unsigned int ICMPv6DAOMsgDescriptor::getFieldTypeFlags(int field) const
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
         FD_ISCOMPOUND,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISCOMPOUND,
         FD_ISEDITABLE,
     };
-    return (field>=0 && field<7) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<8) ? fieldTypeFlags[field] : 0;
 }
 
 const char *ICMPv6DAOMsgDescriptor::getFieldName(int field) const
@@ -1406,14 +1421,15 @@ const char *ICMPv6DAOMsgDescriptor::getFieldName(int field) const
     }
     static const char *fieldNames[] = {
         "code",
-        "d",
+        "dFlag",
+        "kFlag",
         "DODAGID",
         "options",
         "prefixLen",
         "prefix",
         "lifeTime",
     };
-    return (field>=0 && field<7) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<8) ? fieldNames[field] : nullptr;
 }
 
 int ICMPv6DAOMsgDescriptor::findField(const char *fieldName) const
@@ -1421,12 +1437,13 @@ int ICMPv6DAOMsgDescriptor::findField(const char *fieldName) const
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='c' && strcmp(fieldName, "code")==0) return base+0;
-    if (fieldName[0]=='d' && strcmp(fieldName, "d")==0) return base+1;
-    if (fieldName[0]=='D' && strcmp(fieldName, "DODAGID")==0) return base+2;
-    if (fieldName[0]=='o' && strcmp(fieldName, "options")==0) return base+3;
-    if (fieldName[0]=='p' && strcmp(fieldName, "prefixLen")==0) return base+4;
-    if (fieldName[0]=='p' && strcmp(fieldName, "prefix")==0) return base+5;
-    if (fieldName[0]=='l' && strcmp(fieldName, "lifeTime")==0) return base+6;
+    if (fieldName[0]=='d' && strcmp(fieldName, "dFlag")==0) return base+1;
+    if (fieldName[0]=='k' && strcmp(fieldName, "kFlag")==0) return base+2;
+    if (fieldName[0]=='D' && strcmp(fieldName, "DODAGID")==0) return base+3;
+    if (fieldName[0]=='o' && strcmp(fieldName, "options")==0) return base+4;
+    if (fieldName[0]=='p' && strcmp(fieldName, "prefixLen")==0) return base+5;
+    if (fieldName[0]=='p' && strcmp(fieldName, "prefix")==0) return base+6;
+    if (fieldName[0]=='l' && strcmp(fieldName, "lifeTime")==0) return base+7;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -1441,13 +1458,14 @@ const char *ICMPv6DAOMsgDescriptor::getFieldTypeString(int field) const
     static const char *fieldTypeStrings[] = {
         "int",
         "int",
+        "int",
         "IPv6Address",
         "int",
         "int",
         "IPv6Address",
         "simtime_t",
     };
-    return (field>=0 && field<7) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<8) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **ICMPv6DAOMsgDescriptor::getFieldPropertyNames(int field) const
@@ -1463,7 +1481,7 @@ const char **ICMPv6DAOMsgDescriptor::getFieldPropertyNames(int field) const
             static const char *names[] = { "enum",  nullptr };
             return names;
         }
-        case 3: {
+        case 4: {
             static const char *names[] = { "enum",  nullptr };
             return names;
         }
@@ -1483,7 +1501,7 @@ const char *ICMPv6DAOMsgDescriptor::getFieldProperty(int field, const char *prop
         case 0:
             if (!strcmp(propertyname,"enum")) return "inet::ICMPv6_RPL_CONTROL_MSG";
             return nullptr;
-        case 3:
+        case 4:
             if (!strcmp(propertyname,"enum")) return "inet::RPL_OPTIONS";
             return nullptr;
         default: return nullptr;
@@ -1529,12 +1547,13 @@ std::string ICMPv6DAOMsgDescriptor::getFieldValueAsString(void *object, int fiel
     ICMPv6DAOMsg *pp = (ICMPv6DAOMsg *)object; (void)pp;
     switch (field) {
         case 0: return enum2string(pp->getCode(), "inet::ICMPv6_RPL_CONTROL_MSG");
-        case 1: return long2string(pp->getD());
-        case 2: {std::stringstream out; out << pp->getDODAGID(); return out.str();}
-        case 3: return enum2string(pp->getOptions(), "inet::RPL_OPTIONS");
-        case 4: return long2string(pp->getPrefixLen());
-        case 5: {std::stringstream out; out << pp->getPrefix(); return out.str();}
-        case 6: return simtime2string(pp->getLifeTime());
+        case 1: return long2string(pp->getDFlag());
+        case 2: return long2string(pp->getKFlag());
+        case 3: {std::stringstream out; out << pp->getDODAGID(); return out.str();}
+        case 4: return enum2string(pp->getOptions(), "inet::RPL_OPTIONS");
+        case 5: return long2string(pp->getPrefixLen());
+        case 6: {std::stringstream out; out << pp->getPrefix(); return out.str();}
+        case 7: return simtime2string(pp->getLifeTime());
         default: return "";
     }
 }
@@ -1550,10 +1569,11 @@ bool ICMPv6DAOMsgDescriptor::setFieldValueAsString(void *object, int field, int 
     ICMPv6DAOMsg *pp = (ICMPv6DAOMsg *)object; (void)pp;
     switch (field) {
         case 0: pp->setCode((inet::ICMPv6_RPL_CONTROL_MSG)string2enum(value, "inet::ICMPv6_RPL_CONTROL_MSG")); return true;
-        case 1: pp->setD(string2long(value)); return true;
-        case 3: pp->setOptions((inet::RPL_OPTIONS)string2enum(value, "inet::RPL_OPTIONS")); return true;
-        case 4: pp->setPrefixLen(string2long(value)); return true;
-        case 6: pp->setLifeTime(string2simtime(value)); return true;
+        case 1: pp->setDFlag(string2long(value)); return true;
+        case 2: pp->setKFlag(string2long(value)); return true;
+        case 4: pp->setOptions((inet::RPL_OPTIONS)string2enum(value, "inet::RPL_OPTIONS")); return true;
+        case 5: pp->setPrefixLen(string2long(value)); return true;
+        case 7: pp->setLifeTime(string2simtime(value)); return true;
         default: return false;
     }
 }
@@ -1567,8 +1587,8 @@ const char *ICMPv6DAOMsgDescriptor::getFieldStructName(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 2: return omnetpp::opp_typename(typeid(IPv6Address));
-        case 5: return omnetpp::opp_typename(typeid(IPv6Address));
+        case 3: return omnetpp::opp_typename(typeid(IPv6Address));
+        case 6: return omnetpp::opp_typename(typeid(IPv6Address));
         default: return nullptr;
     };
 }
@@ -1583,8 +1603,8 @@ void *ICMPv6DAOMsgDescriptor::getFieldStructValuePointer(void *object, int field
     }
     ICMPv6DAOMsg *pp = (ICMPv6DAOMsg *)object; (void)pp;
     switch (field) {
-        case 2: return (void *)(&pp->getDODAGID()); break;
-        case 5: return (void *)(&pp->getPrefix()); break;
+        case 3: return (void *)(&pp->getDODAGID()); break;
+        case 6: return (void *)(&pp->getPrefix()); break;
         default: return nullptr;
     }
 }
