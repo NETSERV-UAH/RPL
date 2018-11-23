@@ -32,15 +32,15 @@
 #include <map>
 
 #include "inet/common/INETDefs.h"
+//EXTRA
+//#include "src/networklayer/icmpv6/ICMPv6RPL.h"
+//#include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
 
 #include "inet/networklayer/contract/ipv6/IPv6Address.h"
 #include "inet/networklayer/icmpv6/IPv6NDMessage_m.h"
 //#include "inet/networklayer/icmpv6/IPv6NeighbourCache.h"
 #include "inet/common/lifecycle/ILifecycle.h"
 
-//EXTRA
-//#include "src/networklayer/icmpv6/ICMPv6RPL.h"
-#include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
 #include "inet/networklayer/xmipv6/xMIPv6.h"
 #include "src/networklayer/icmpv6/IPv6NeighbourCacheRPL.h"
 
@@ -194,6 +194,8 @@ class IPv6NeighbourDiscoveryRPL : public cSimpleModule, public ILifecycle
     virtual void initialize(int stage) override;
     virtual void handleMessage(cMessage *msg) override;
     virtual void processNDMessage(ICMPv6Message *msg, IPv6ControlInfo *ctrlInfo);
+    virtual void processIncomingRPLMessage(IPv6ControlInfo *ctrlInfo); //EXTRA
+
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
     virtual void finish() override;
 

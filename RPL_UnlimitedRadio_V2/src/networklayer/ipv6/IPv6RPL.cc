@@ -143,6 +143,8 @@ void IPv6RPL::refreshDisplay() const
 
 void IPv6RPL::handleMessage(cMessage *msg)
 {
+    EV << "->IPv6RPL::handleMessage()" << endl;  //EXTRA
+
     if (dynamic_cast<RegisterTransportProtocolCommand *>(msg)) {
         RegisterTransportProtocolCommand *command = static_cast<RegisterTransportProtocolCommand *>(msg);
         if (msg->getArrivalGate()->isName("transportIn")) {
@@ -154,10 +156,13 @@ void IPv6RPL::handleMessage(cMessage *msg)
     }
     else
         QueueBase::handleMessage(msg);
+    EV << "<-IPv6RPL::handleMessage()" << endl;  //EXTRA
 }
 
 void IPv6RPL::endService(cPacket *msg)
 {
+    EV << "->IPv6RPL::endService()" << endl;
+
 #ifdef WITH_xMIPv6
     // 28.09.07 - CB
     // support for rescheduling datagrams which are supposed to be sent over
@@ -189,6 +194,7 @@ void IPv6RPL::endService(cPacket *msg)
         )
     {
         // packet from upper layers, tunnel link-layer output or ND: encapsulate and send out
+        //DIO is here, then routeMulticastPacket
         handleMessageFromHL(msg);
     }
     else if (msg->getArrivalGate()->isName("ndIn") && dynamic_cast<IPv6Datagram *>(msg)) {
@@ -233,6 +239,8 @@ void IPv6RPL::endService(cPacket *msg)
                 preroutingFinish(datagram, fromIE, destIE, nextHop.toIPv6());
         }
     }
+        EV << "<-IPv6RPL::endService()" << endl;
+
 }
 
 InterfaceEntry *IPv6RPL::getSourceInterfaceFrom(cPacket *msg)
@@ -256,6 +264,8 @@ void IPv6RPL::preroutingFinish(IPv6Datagram *datagram, const InterfaceEntry *fro
 
 void IPv6RPL::handleMessageFromHL(cPacket *msg)
 {
+    EV << "->IPv6RPL::handleMessageFromHL()" << endl;
+
     // if no interface exists, do not send datagram
     if (ift->getNumInterfaces() == 0) {
         EV_WARN << "No interfaces exist, dropping packet\n";
@@ -267,6 +277,12 @@ void IPv6RPL::handleMessageFromHL(cPacket *msg)
     // encapsulate upper-layer packet into IPv6Datagram
     // IPV6_MULTICAST_IF option, but allow interface selection for unicast packets as well
     const InterfaceEntry *destIE = ift->getInterfaceById(controlInfo->getInterfaceId());
+
+    if (!destIE)
+        EV << "Interface :  notdefined "<< endl; //EXTRA
+    else
+        EV << "Interface : " << destIE->getName() << endl; //EXTRA
+
     IPv6Datagram *datagram = encapsulate(msg, controlInfo);
     delete controlInfo;
 
@@ -279,6 +295,8 @@ void IPv6RPL::handleMessageFromHL(cPacket *msg)
 #endif /* WITH_xMIPv6 */
 
     IPv6Address destAddress = datagram->getDestAddress();
+    EV << "destAddress : " << destAddress << ", srcAddress : " << datagram->getSrcAddress() << endl; //EXTRA
+
 
     // check for local delivery
     if (!destAddress.isMulticast() && rt->isLocalAddress(destAddress)) {
@@ -295,12 +313,17 @@ void IPv6RPL::handleMessageFromHL(cPacket *msg)
         ASSERT(destIE);
     }
     L3Address nextHopAddr(IPv6Address::UNSPECIFIED_ADDRESS);
+    EV << "nextHopAddr : " << nextHopAddr << endl;
     if (datagramLocalOutHook(datagram, destIE, nextHopAddr) == INetfilter::IHook::ACCEPT)
         datagramLocalOut(datagram, destIE, nextHopAddr.toIPv6());
+
+    EV << "<-IPv6RPL::handleMessageFromHL()" << endl;
+
 }
 
 void IPv6RPL::datagramLocalOut(IPv6Datagram *datagram, const InterfaceEntry *destIE, IPv6Address requestedNextHopAddress)
 {
+    EV << "->IPv6RPL::datagramLocalOut()" << endl; //EXTRA
     // route packet
     if (destIE != nullptr)
         fragmentAndSend(datagram, destIE, MACAddress::BROADCAST_ADDRESS, true); // FIXME what MAC address to use?
@@ -308,10 +331,12 @@ void IPv6RPL::datagramLocalOut(IPv6Datagram *datagram, const InterfaceEntry *des
         routePacket(datagram, destIE, requestedNextHopAddress, true);
     else
         routeMulticastPacket(datagram, destIE, nullptr, true);
+    EV << "<-IPv6RPL::datagramLocalOut()" << endl; //EXTRA
 }
 
 void IPv6RPL::routePacket(IPv6Datagram *datagram, const InterfaceEntry *destIE, IPv6Address requestedNextHopAddress, bool fromHL)
 {
+    EV << "->IPv6RPL::routePacket()" << endl; //EXTRA
     // TBD add option handling code here
     IPv6Address destAddress = datagram->getDestAddress();
 
@@ -403,6 +428,7 @@ void IPv6RPL::routePacket(IPv6Datagram *datagram, const InterfaceEntry *destIE, 
     // don't raise error if sent to ND or ICMP!
 
     resolveMACAddressAndSendPacket(datagram, interfaceId, nextHop, fromHL);
+    EV << "<-IPv6RPL::routePacket()" << endl; //EXTRA
 }
 
 void IPv6RPL::resolveMACAddressAndSendPacket(IPv6Datagram *datagram, int interfaceId, IPv6Address nextHop, bool fromHL)
@@ -451,6 +477,8 @@ void IPv6RPL::resolveMACAddressAndSendPacket(IPv6Datagram *datagram, int interfa
 
 void IPv6RPL::routeMulticastPacket(IPv6Datagram *datagram, const InterfaceEntry *destIE, const InterfaceEntry *fromIE, bool fromHL)
 {
+    EV << "->IPv6RPL::routeMulticastPacket()" << endl;  //EXTRA
+
     const IPv6Address& destAddr = datagram->getDestAddress();
 
     EV_INFO << "destination address " << destAddr << " is multicast, doing multicast routing\n";
@@ -568,6 +596,8 @@ void IPv6RPL::routeMulticastPacket(IPv6Datagram *datagram, const InterfaceEntry 
         delete datagram;
     }
  */
+    EV << "<-IPv6RPL::routeMulticastPacket()" << endl;  //EXTRA
+
 }
 
 void IPv6RPL::localDeliver(IPv6Datagram *datagram)
@@ -610,7 +640,6 @@ void IPv6RPL::localDeliver(IPv6Datagram *datagram)
     int protocol = datagram->getTransportProtocol();
     cPacket *packet = decapsulate(datagram);
 
-
     if (protocol == IP_PROT_IPv6_ICMP && dynamic_cast<IPv6NDMessage *>(packet)) {
         EV_INFO << "Neigbour Discovery packet: passing it to ND module\n";
         send(packet, "ndOut");
@@ -638,6 +667,15 @@ void IPv6RPL::localDeliver(IPv6Datagram *datagram)
     }
 #endif /* WITH_xMIPv6 */
     else if (protocol == IP_PROT_IPv6_ICMP) {
+        //EXTRA BEGIN
+         if ((dynamic_cast<ICMPv6DISMsg *>(packet)) || (dynamic_cast<ICMPv6DIOMsg *>(packet)) || (dynamic_cast<ICMPv6DAOMsg *>(packet))){
+                EV << "A copy of Message " << packet->getName() << " received from IPv6 module is sent to ND module."<< endl;
+                cObject *ctrlDup = packet->getControlInfo()->dup();
+                cPacket *packetDup = packet->dup();
+                packetDup->setControlInfo(ctrlDup);
+                send(packetDup, "ndOut");
+         }
+        //EXTRA END
         handleReceivedICMP(check_and_cast<ICMPv6Message *>(packet));
         packet = nullptr;
     }    //Added by WEI to forward ICMPv6 msgs to ICMPv6 module.

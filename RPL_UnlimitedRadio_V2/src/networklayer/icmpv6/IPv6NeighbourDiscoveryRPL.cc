@@ -37,6 +37,10 @@
 //EXTRA
 #include "src/networklayer/icmpv6/IPv6NeighbourDiscoveryRPL.h"
 #include "src/networklayer/icmpv6/ICMPv6RPL.h"
+//#include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
+#include "src/simulationManager/managerRPL.h"
+
+
 
 #ifdef WITH_xMIPv6
 #include "inet/networklayer/xmipv6/xMIPv6.h"
@@ -199,6 +203,8 @@ void IPv6NeighbourDiscoveryRPL::initialize(int stage)
 
 void IPv6NeighbourDiscoveryRPL::handleMessage(cMessage *msg)
 {
+    EV << "->IPv6NeighbourDiscoveryRPL::handleMessage()" << endl;  //EXTRA
+
     if (msg->isSelfMessage()) {
         EV_TRACE << "Self message received!\n";
 
@@ -237,11 +243,23 @@ void IPv6NeighbourDiscoveryRPL::handleMessage(cMessage *msg)
         else
             throw cRuntimeError("Unrecognized Timer"); //stops sim w/ error msg.
     }
+
     else if (dynamic_cast<ICMPv6Message *>(msg)) {
-        //This information will serve as input parameters to various processors.
-        IPv6ControlInfo *ctrlInfo = check_and_cast<IPv6ControlInfo *>(msg->removeControlInfo());
-        ICMPv6Message *ndMsg = (ICMPv6Message *)msg;
-        processNDMessage(ndMsg, ctrlInfo);
+
+        //EXTRA BEGIN
+        if (dynamic_cast<ICMPv6DIOMsg *>(msg) || dynamic_cast<ICMPv6DISMsg *>(msg) || dynamic_cast<ICMPv6DAOMsg *>(msg)) {
+            EV_INFO << "New " << msg->getName() << " is received\n";
+            //ICMPv6Message* msg = check_and_cast<ICMPv6Message*>(msg);
+            IPv6ControlInfo *ctrlInfo = check_and_cast<IPv6ControlInfo *>(msg->removeControlInfo());
+            processIncomingRPLMessage(ctrlInfo);
+            delete msg;
+        }else{
+        //EXTRA END
+            //This information will serve as input parameters to various processors.
+            IPv6ControlInfo *ctrlInfo = check_and_cast<IPv6ControlInfo *>(msg->removeControlInfo());
+            ICMPv6Message *ndMsg = (ICMPv6Message *)msg;
+            processNDMessage(ndMsg, ctrlInfo);
+        }//EXTRA
     }
     else if (dynamic_cast<IPv6Datagram *>(msg)) {    // not ND message
         IPv6Datagram *datagram = static_cast<IPv6Datagram *>(msg);
@@ -249,7 +267,63 @@ void IPv6NeighbourDiscoveryRPL::handleMessage(cMessage *msg)
     }
     else
         throw cRuntimeError("Unknown message type received.\n");
+
+    EV << "<-IPv6NeighbourDiscoveryRPL::handleMessage()" << endl;  //EXTRA
 }
+
+//EXTRA BEGIN
+void IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage(IPv6ControlInfo *ctrlInfo)
+{
+    EV << "->IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage()" << endl;  //EXTRA
+
+    IPv6Address srcIPv6Addr = ctrlInfo->getSourceAddress().toIPv6();
+
+    if (srcIPv6Addr.isUnspecified()) {
+        EV_INFO << "No MAC Address specified in RPL control message. Ignoring packet\n";
+        throw cRuntimeError("IPv6NeighbourDiscoveryRPL::handleIncomingRPLMessage: No MAC Address specified in RPL control message.!");
+    }
+
+    managerRPL *pManagerRPL = check_and_cast<managerRPL *>(getSimulation()->getSystemModule()->getSubmodule("managerRPL"));
+    MACAddress srcMacAddress = pManagerRPL->getMacAddressFromIPAddress(srcIPv6Addr);
+    //MACAddress srcMacAddress = ctrlInfo->getSourceAddress().toMAC();
+
+    InterfaceEntry *ie = ift->getInterfaceById(ctrlInfo->getInterfaceId());
+
+    if (ie->ipv6Data()->isTentativeAddress(srcIPv6Addr)) {
+        throw cRuntimeError("IPv6NeighbourDiscoveryRPL::handleIncomingRPLMessage: Duplicate Address Detected! Manual attention needed!");
+    }
+
+    Neighbour *neighbourEntry = neighbourCache.lookup(srcIPv6Addr, ie->getInterfaceId());
+    if (!neighbourEntry) {
+        //Source Address has not entry in Neighbour Cache
+        EV_INFO << "Source address not found in Neighbour Cache\n";
+        EV_INFO << "Add source address to Neighbour Cache.\n";
+        Neighbour *addedNeighbourEntry = neighbourCache.addNeighbour(srcIPv6Addr, ctrlInfo->getInterfaceId(), srcMacAddress);
+        if (addedNeighbourEntry){
+            addedNeighbourEntry->reachabilityState = IPv6NeighbourCacheRPL::REACHABLE;
+            EV_INFO << "Reachability confirmed through successful Addr Resolution: " << addedNeighbourEntry->reachabilityState << endl;
+            addedNeighbourEntry->reachabilityExpires = simTime() + ie->ipv6Data()->_getReachableTime();
+            EV_INFO << "New neighbour (IP: " << srcIPv6Addr << ", MAC: " << srcMacAddress << ") was added successfully. Expiration time:" << ie->ipv6Data()->_getReachableTime() << endl;
+        }else{
+            EV_INFO << "New neighbour was not added successfully." << endl;
+            throw cRuntimeError("IPv6NeighbourDiscoveryRPL::handleIncomingRPLMessage: Neighbour can not added!");
+        }
+    }else{
+        //Source Address has entry in Neighbour Cache
+        EV_INFO << "Source address found in Neighbour Cache\n";
+        EV_INFO << "Update source address to Neighbour Cache.\n";
+        neighbourEntry->macAddress = srcMacAddress;
+        neighbourEntry->reachabilityState = IPv6NeighbourCacheRPL::REACHABLE;
+        EV_INFO << "Reachability confirmed through successful Addr Resolution: " << neighbourEntry->reachabilityState << endl;
+        neighbourEntry->reachabilityExpires = simTime() + ie->ipv6Data()->_getReachableTime();
+        EV_INFO << "New neighbour (IP: " << srcIPv6Addr << ", MAC: " << srcMacAddress << ") was updated successfully. Expiration time:" << ie->ipv6Data()->_getReachableTime() << endl;
+    }
+
+    delete ctrlInfo;
+    EV << "<-IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage()" << endl;  //EXTRA
+
+}
+//EXTRA END
 
 void IPv6NeighbourDiscoveryRPL::processNDMessage(ICMPv6Message *msg, IPv6ControlInfo *ctrlInfo)
 {

@@ -1016,7 +1016,8 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)
                         host->getDisplayString().setTagArg("t", 0, buf4);
                         host->bubble("DIO deleted!!");
                     }
-            if((NodeCounter_Upward[Version]==NodesNumber)&&(!IsDODAGFormed_Upward))
+
+           if((!DAOEnable) && (NodeCounter_Upward[Version]==NodesNumber) && (!IsDODAGFormed_Upward))
             {
                 FileRecordCounter++;
                 host->bubble("I'm the last node that joined DODAG! DODAG formed!!");
@@ -1059,14 +1060,16 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)
                 else
                     Datasaving(pManagerRPL->getIndexFromAddress(sinkAddress),DISEnable);
             }
+
             delete netwMsg;
+
             if(GRT_Counter==NumberofIterations)
             {
                 Datasaving(pManagerRPL->getIndexFromAddress(sinkAddress), DISEnable);
                 endSimulation();
             }
         }
-    }
+    }  // end if DIO
 
     if (ctrlInfo != NULL)
         delete ctrlInfo;
@@ -1119,13 +1122,13 @@ void RPLRouting::handleIncommingDAOMessage(cMessage* msg)
     EV << "->RPLRouting::handleIncommingDAOMessage()" << endl;
 
     ICMPv6DAOMsg* pkt = check_and_cast<ICMPv6DAOMsg*>(msg);
-    IPv6ControlInfo *ctrlInfo = check_and_cast<IPv6ControlInfo *>(pkt->removeControlInfo());
+    IPv6ControlInfo *ctrlInfoIn = check_and_cast<IPv6ControlInfo *>(pkt->removeControlInfo());
     IPv6Address prefix = pkt->getPrefix();
     int prefixLen = pkt->getPrefixLen();
     simtime_t lifeTime = pkt->getLifeTime();
-    IPv6Address senderIPAddress = ctrlInfo->getSrcAddr(); //Sender address
+    IPv6Address senderIPAddress = ctrlInfoIn->getSrcAddr(); //Sender address
 
-    EV << "Received message is ICMPv6 DAO message, DODAGID address is " << pkt->getDODAGID() << ", src address is " << ctrlInfo->getSrcAddr() << endl;
+    EV << "Received message is ICMPv6 DAO message, DODAGID address is " << pkt->getDODAGID() << ", src address is " << ctrlInfoIn->getSrcAddr() << endl;
 
     int parentIndex = getParentIndex(senderIPAddress);
 
@@ -1160,17 +1163,21 @@ void RPLRouting::handleIncommingDAOMessage(cMessage* msg)
     }
 
     if (NofParents > 0){  //this node has a preferred parent, so DAO must forward to the preferred parent.
+        IPv6ControlInfo *ctrlInfoOut = new IPv6ControlInfo;
         pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
-        ctrlInfo->setProtocol(IP_PROT_IPv6_ICMP);
-        ctrlInfo->setSrcAddr(myNetwAddr);
-        ctrlInfo->setDestAddr(Parents[VersionNember][0].ParentId);  //ctrlInfo->setDestAddr(PrParent)
-        pkt->setControlInfo(ctrlInfo);
+        ctrlInfoOut->setProtocol(IP_PROT_IPv6_ICMP);
+        ctrlInfoOut->setSrcAddr(myNetwAddr);
+        ctrlInfoOut->setDestAddr(Parents[VersionNember][0].ParentId);  //ctrlInfo->setDestAddr(PrParent)
+        EV << "A DAO message is sent from : " << ctrlInfoOut->getSourceAddress() << " to parent : " << ctrlInfoOut->getDestinationAddress() << " to advertise prefix : " << prefix << "with prefix len : " << prefixLen << endl;
+        pkt->setControlInfo(ctrlInfoOut);
         send(pkt, icmpv6OutGateId);
     }
     else{
         EV<< "DAO can not be sent. There is no preferred parent." << endl;
         delete msg;
     }
+
+    delete ctrlInfoIn;
 
     EV << "<-RPLRouting::handleIncommingDAOMessage()" << endl;
 

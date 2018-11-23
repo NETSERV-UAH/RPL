@@ -91,6 +91,10 @@ class managerRPL : public cSimpleModule
       /**@brief return the address corresponding to the index */
       IPv6Address getAddressFromIndex(int index);
 
+      /**@brief return the MAC address corresponding to the IP address */
+      MACAddress getMacAddressFromIPAddress(IPv6Address address);
+
+
       /**@brief return the name corresponding to the address */
       std::string getNameFromAddress(IPv6Address address);
 

@@ -90,7 +90,7 @@ void ICMPv6RPL::handleMessage(cMessage *msg)
     //EXTRA
     // request from RPL
     if (msg->getArrivalGate()->isName("RPLIn")) {
-        EV << "Message " << msg->getName() << "received from RPL module is sent to IPv6 module."<< endl;
+        EV << "Message " << msg->getName() << "received from RPL module is sent to the IPv6 module."<< endl;
         send(msg, "ipv6Out");
         return;
     }
@@ -125,7 +125,7 @@ void ICMPv6RPL::processICMPv6Message(ICMPv6Message *icmpv6msg)
         EV_INFO << "ICMPv6 Echo Reply Message Received." << endl;
         processEchoReply((ICMPv6EchoReplyMsg *)icmpv6msg);
     } //EXTRA BEGIN
-    else if ((dynamic_cast<ICMPv6DISMsg *>(icmpv6msg)) || (dynamic_cast<ICMPv6DIOMsg *>(icmpv6msg))){
+    else if ((dynamic_cast<ICMPv6DISMsg *>(icmpv6msg)) || (dynamic_cast<ICMPv6DIOMsg *>(icmpv6msg)) || (dynamic_cast<ICMPv6DAOMsg *>(icmpv6msg))){
         EV << "Message " << icmpv6msg->getName() << " received from IPv6 module is sent to RPL module."<< endl;
         sendToRPL(icmpv6msg);
     }//EXTRA END

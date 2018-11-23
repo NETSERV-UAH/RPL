@@ -51,7 +51,8 @@ namespace rpl {
 using namespace inet;
 
 
-class inet::ICMPv6Message;  //EXTRA
+//class inet::ICMPv6Message;  //EXTRA
+//class ICMPv6MessageRPL;  //EXTRA
 
 /**
  * IPv6 implementation.

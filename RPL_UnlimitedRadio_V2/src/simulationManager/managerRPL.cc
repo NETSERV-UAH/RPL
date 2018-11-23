@@ -146,6 +146,25 @@ int managerRPL::getIndexFromAddress(IPv6Address address)
     EV << "<-managerRPL::getIndexFromAddress()" << endl;
 }
 
+MACAddress managerRPL::getMacAddressFromIPAddress(IPv6Address address)
+{
+    EV << "->managerRPL::getMacAddressFromIPAddress()" << endl;
+
+    Enter_Method("managerRPL::getMacAddressFromIPAddress()");
+
+    for (int i=0; i<wSNInfo.size(); i++){
+        if (wSNInfo.at(i).ipAddress == address)
+            return wSNInfo.at(i).macAddress;
+    }
+
+    //return -1;
+    throw cRuntimeError("managerRPL::getMacAddressFromIPAddress(): Address not found!");
+
+
+    EV << "<-managerRPL::getIndexFromAddress()" << endl;
+}
+
+
 IPv6Address managerRPL::getAddressFromIndex(int index)
 {
     EV << "->managerRPL::getAddressFromIndex()" << endl;
