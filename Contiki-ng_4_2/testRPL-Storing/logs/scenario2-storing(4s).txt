@@ -1,0 +1,980 @@
+312	ID:20	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+315	ID:20	[INFO: Main      ] - Routing: RPL Classic
+318	ID:20	[INFO: Main      ] - Net: sicslowpan
+320	ID:20	[INFO: Main      ] - MAC: CSMA
+323	ID:20	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+327	ID:20	[INFO: Main      ] - 802.15.4 Default channel: 26
+329	ID:20	[INFO: Main      ] Node ID: 20
+332	ID:19	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+334	ID:8	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+335	ID:20	[INFO: Main      ] Link-layer address: 0012.7414.0014.1414
+335	ID:19	[INFO: Main      ] - Routing: RPL Classic
+337	ID:8	[INFO: Main      ] - Routing: RPL Classic
+337	ID:19	[INFO: Main      ] - Net: sicslowpan
+339	ID:19	[INFO: Main      ] - MAC: CSMA
+339	ID:8	[INFO: Main      ] - Net: sicslowpan
+340	ID:4	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+342	ID:8	[INFO: Main      ] - MAC: CSMA
+343	ID:19	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+343	ID:4	[INFO: Main      ] - Routing: RPL Classic
+345	ID:8	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+345	ID:4	[INFO: Main      ] - Net: sicslowpan
+346	ID:19	[INFO: Main      ] - 802.15.4 Default channel: 26
+347	ID:20	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7414:14:1414
+348	ID:4	[INFO: Main      ] - MAC: CSMA
+348	ID:8	[INFO: Main      ] - 802.15.4 Default channel: 26
+349	ID:19	[INFO: Main      ] Node ID: 19
+350	ID:20	[INFO: Sky       ] CC2420 CCA threshold -45
+351	ID:8	[INFO: Main      ] Node ID: 8
+351	ID:4	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+354	ID:19	[INFO: Main      ] Link-layer address: 0012.7413.0013.1313
+354	ID:4	[INFO: Main      ] - 802.15.4 Default channel: 26
+356	ID:8	[INFO: Main      ] Link-layer address: 0012.7408.0008.0808
+357	ID:4	[INFO: Main      ] Node ID: 4
+362	ID:4	[INFO: Main      ] Link-layer address: 0012.7404.0004.0404
+366	ID:19	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7413:13:1313
+368	ID:8	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7408:8:808
+370	ID:19	[INFO: Sky       ] CC2420 CCA threshold -45
+371	ID:8	[INFO: Sky       ] CC2420 CCA threshold -45
+374	ID:4	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7404:4:404
+377	ID:4	[INFO: Sky       ] CC2420 CCA threshold -45
+402	ID:15	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+405	ID:15	[INFO: Main      ] - Routing: RPL Classic
+407	ID:15	[INFO: Main      ] - Net: sicslowpan
+410	ID:15	[INFO: Main      ] - MAC: CSMA
+413	ID:15	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+417	ID:15	[INFO: Main      ] - 802.15.4 Default channel: 26
+419	ID:15	[INFO: Main      ] Node ID: 15
+424	ID:15	[INFO: Main      ] Link-layer address: 0012.740f.000f.0f0f
+436	ID:15	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740f:f:f0f
+439	ID:15	[INFO: Sky       ] CC2420 CCA threshold -45
+490	ID:18	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+493	ID:18	[INFO: Main      ] - Routing: RPL Classic
+495	ID:6	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+496	ID:18	[INFO: Main      ] - Net: sicslowpan
+498	ID:18	[INFO: Main      ] - MAC: CSMA
+498	ID:6	[INFO: Main      ] - Routing: RPL Classic
+501	ID:6	[INFO: Main      ] - Net: sicslowpan
+501	ID:18	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+503	ID:6	[INFO: Main      ] - MAC: CSMA
+505	ID:18	[INFO: Main      ] - 802.15.4 Default channel: 26
+506	ID:6	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+507	ID:18	[INFO: Main      ] Node ID: 18
+510	ID:6	[INFO: Main      ] - 802.15.4 Default channel: 26
+512	ID:6	[INFO: Main      ] Node ID: 6
+513	ID:18	[INFO: Main      ] Link-layer address: 0012.7412.0012.1212
+517	ID:6	[INFO: Main      ] Link-layer address: 0012.7406.0006.0606
+525	ID:18	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7412:12:1212
+528	ID:18	[INFO: Sky       ] CC2420 CCA threshold -45
+529	ID:6	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7406:6:606
+532	ID:6	[INFO: Sky       ] CC2420 CCA threshold -45
+617	ID:13	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+620	ID:13	[INFO: Main      ] - Routing: RPL Classic
+623	ID:13	[INFO: Main      ] - Net: sicslowpan
+623	ID:14	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+625	ID:13	[INFO: Main      ] - MAC: CSMA
+626	ID:14	[INFO: Main      ] - Routing: RPL Classic
+628	ID:13	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+628	ID:14	[INFO: Main      ] - Net: sicslowpan
+630	ID:14	[INFO: Main      ] - MAC: CSMA
+632	ID:13	[INFO: Main      ] - 802.15.4 Default channel: 26
+634	ID:14	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+634	ID:13	[INFO: Main      ] Node ID: 13
+637	ID:14	[INFO: Main      ] - 802.15.4 Default channel: 26
+639	ID:13	[INFO: Main      ] Link-layer address: 0012.740d.000d.0d0d
+640	ID:14	[INFO: Main      ] Node ID: 14
+645	ID:14	[INFO: Main      ] Link-layer address: 0012.740e.000e.0e0e
+651	ID:13	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740d:d:d0d
+654	ID:13	[INFO: Sky       ] CC2420 CCA threshold -45
+657	ID:14	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740e:e:e0e
+660	ID:14	[INFO: Sky       ] CC2420 CCA threshold -45
+698	ID:21	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+700	ID:21	[INFO: Main      ] - Routing: RPL Classic
+703	ID:21	[INFO: Main      ] - Net: sicslowpan
+705	ID:21	[INFO: Main      ] - MAC: CSMA
+708	ID:21	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+712	ID:21	[INFO: Main      ] - 802.15.4 Default channel: 26
+714	ID:21	[INFO: Main      ] Node ID: 21
+720	ID:21	[INFO: Main      ] Link-layer address: 0012.7415.0015.1515
+732	ID:21	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7415:15:1515
+735	ID:21	[INFO: Sky       ] CC2420 CCA threshold -45
+762	ID:1	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+765	ID:1	[INFO: Main      ] - Routing: RPL Classic
+768	ID:1	[INFO: Main      ] - Net: sicslowpan
+770	ID:1	[INFO: Main      ] - MAC: CSMA
+773	ID:1	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+777	ID:1	[INFO: Main      ] - 802.15.4 Default channel: 26
+779	ID:1	[INFO: Main      ] Node ID: 1
+784	ID:1	[INFO: Main      ] Link-layer address: 0012.7401.0001.0101
+796	ID:1	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7401:1:101
+799	ID:1	[INFO: Sky       ] CC2420 CCA threshold -45
+805	ID:1	[INFO: App       ] Init timer value: 1988
+824	ID:22	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+827	ID:22	[INFO: Main      ] - Routing: RPL Classic
+830	ID:22	[INFO: Main      ] - Net: sicslowpan
+832	ID:22	[INFO: Main      ] - MAC: CSMA
+835	ID:22	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+839	ID:22	[INFO: Main      ] - 802.15.4 Default channel: 26
+841	ID:22	[INFO: Main      ] Node ID: 22
+847	ID:22	[INFO: Main      ] Link-layer address: 0012.7416.0016.1616
+859	ID:22	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7416:16:1616
+862	ID:22	[INFO: Sky       ] CC2420 CCA threshold -45
+873	ID:12	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+876	ID:12	[INFO: Main      ] - Routing: RPL Classic
+878	ID:12	[INFO: Main      ] - Net: sicslowpan
+880	ID:12	[INFO: Main      ] - MAC: CSMA
+884	ID:12	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+887	ID:12	[INFO: Main      ] - 802.15.4 Default channel: 26
+889	ID:12	[INFO: Main      ] Node ID: 12
+895	ID:12	[INFO: Main      ] Link-layer address: 0012.740c.000c.0c0c
+906	ID:16	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+906	ID:12	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740c:c:c0c
+909	ID:16	[INFO: Main      ] - Routing: RPL Classic
+910	ID:12	[INFO: Sky       ] CC2420 CCA threshold -45
+911	ID:16	[INFO: Main      ] - Net: sicslowpan
+913	ID:16	[INFO: Main      ] - MAC: CSMA
+917	ID:16	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+920	ID:16	[INFO: Main      ] - 802.15.4 Default channel: 26
+923	ID:16	[INFO: Main      ] Node ID: 16
+928	ID:16	[INFO: Main      ] Link-layer address: 0012.7410.0010.1010
+940	ID:16	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7410:10:1010
+944	ID:16	[INFO: Sky       ] CC2420 CCA threshold -45
+948	ID:7	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+951	ID:7	[INFO: Main      ] - Routing: RPL Classic
+953	ID:7	[INFO: Main      ] - Net: sicslowpan
+956	ID:7	[INFO: Main      ] - MAC: CSMA
+959	ID:7	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+962	ID:7	[INFO: Main      ] - 802.15.4 Default channel: 26
+965	ID:7	[INFO: Main      ] Node ID: 7
+970	ID:7	[INFO: Main      ] Link-layer address: 0012.7407.0007.0707
+982	ID:7	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7407:7:707
+985	ID:7	[INFO: Sky       ] CC2420 CCA threshold -45
+989	ID:17	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+992	ID:17	[INFO: Main      ] - Routing: RPL Classic
+995	ID:17	[INFO: Main      ] - Net: sicslowpan
+997	ID:17	[INFO: Main      ] - MAC: CSMA
+1000	ID:17	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1000	ID:3	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+1003	ID:3	[INFO: Main      ] - Routing: RPL Classic
+1004	ID:17	[INFO: Main      ] - 802.15.4 Default channel: 26
+1006	ID:3	[INFO: Main      ] - Net: sicslowpan
+1006	ID:17	[INFO: Main      ] Node ID: 17
+1008	ID:3	[INFO: Main      ] - MAC: CSMA
+1011	ID:3	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1012	ID:17	[INFO: Main      ] Link-layer address: 0012.7411.0011.1111
+1015	ID:3	[INFO: Main      ] - 802.15.4 Default channel: 26
+1016	ID:5	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+1017	ID:3	[INFO: Main      ] Node ID: 3
+1019	ID:5	[INFO: Main      ] - Routing: RPL Classic
+1021	ID:5	[INFO: Main      ] - Net: sicslowpan
+1022	ID:3	[INFO: Main      ] Link-layer address: 0012.7403.0003.0303
+1024	ID:17	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7411:11:1111
+1024	ID:5	[INFO: Main      ] - MAC: CSMA
+1025	ID:24	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+1027	ID:17	[INFO: Sky       ] CC2420 CCA threshold -45
+1027	ID:5	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1028	ID:24	[INFO: Main      ] - Routing: RPL Classic
+1030	ID:24	[INFO: Main      ] - Net: sicslowpan
+1031	ID:5	[INFO: Main      ] - 802.15.4 Default channel: 26
+1032	ID:24	[INFO: Main      ] - MAC: CSMA
+1033	ID:5	[INFO: Main      ] Node ID: 5
+1034	ID:3	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7403:3:303
+1036	ID:24	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1037	ID:3	[INFO: Sky       ] CC2420 CCA threshold -45
+1038	ID:5	[INFO: Main      ] Link-layer address: 0012.7405.0005.0505
+1039	ID:24	[INFO: Main      ] - 802.15.4 Default channel: 26
+1042	ID:9	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+1042	ID:24	[INFO: Main      ] Node ID: 24
+1044	ID:9	[INFO: Main      ] - Routing: RPL Classic
+1047	ID:9	[INFO: Main      ] - Net: sicslowpan
+1047	ID:24	[INFO: Main      ] Link-layer address: 0012.7418.0018.1818
+1049	ID:9	[INFO: Main      ] - MAC: CSMA
+1050	ID:5	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7405:5:505
+1052	ID:9	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1053	ID:5	[INFO: Sky       ] CC2420 CCA threshold -45
+1056	ID:9	[INFO: Main      ] - 802.15.4 Default channel: 26
+1058	ID:9	[INFO: Main      ] Node ID: 9
+1059	ID:24	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7418:18:1818
+1063	ID:24	[INFO: Sky       ] CC2420 CCA threshold -45
+1063	ID:9	[INFO: Main      ] Link-layer address: 0012.7409.0009.0909
+1075	ID:9	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7409:9:909
+1078	ID:9	[INFO: Sky       ] CC2420 CCA threshold -45
+1091	ID:11	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+1094	ID:11	[INFO: Main      ] - Routing: RPL Classic
+1096	ID:11	[INFO: Main      ] - Net: sicslowpan
+1098	ID:11	[INFO: Main      ] - MAC: CSMA
+1102	ID:11	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1103	ID:10	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+1105	ID:11	[INFO: Main      ] - 802.15.4 Default channel: 26
+1105	ID:10	[INFO: Main      ] - Routing: RPL Classic
+1108	ID:11	[INFO: Main      ] Node ID: 11
+1108	ID:10	[INFO: Main      ] - Net: sicslowpan
+1110	ID:10	[INFO: Main      ] - MAC: CSMA
+1113	ID:11	[INFO: Main      ] Link-layer address: 0012.740b.000b.0b0b
+1113	ID:10	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1117	ID:10	[INFO: Main      ] - 802.15.4 Default channel: 26
+1119	ID:10	[INFO: Main      ] Node ID: 10
+1125	ID:11	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740b:b:b0b
+1125	ID:10	[INFO: Main      ] Link-layer address: 0012.740a.000a.0a0a
+1128	ID:11	[INFO: Sky       ] CC2420 CCA threshold -45
+1136	ID:10	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740a:a:a0a
+1140	ID:10	[INFO: Sky       ] CC2420 CCA threshold -45
+1231	ID:25	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+1234	ID:25	[INFO: Main      ] - Routing: RPL Classic
+1236	ID:25	[INFO: Main      ] - Net: sicslowpan
+1238	ID:25	[INFO: Main      ] - MAC: CSMA
+1238	ID:2	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+1241	ID:2	[INFO: Main      ] - Routing: RPL Classic
+1242	ID:25	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1244	ID:2	[INFO: Main      ] - Net: sicslowpan
+1245	ID:25	[INFO: Main      ] - 802.15.4 Default channel: 26
+1246	ID:2	[INFO: Main      ] - MAC: CSMA
+1248	ID:25	[INFO: Main      ] Node ID: 25
+1249	ID:2	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1253	ID:2	[INFO: Main      ] - 802.15.4 Default channel: 26
+1253	ID:25	[INFO: Main      ] Link-layer address: 0012.7419.0019.1919
+1255	ID:2	[INFO: Main      ] Node ID: 2
+1260	ID:2	[INFO: Main      ] Link-layer address: 0012.7402.0002.0202
+1262	ID:23	[INFO: Main      ] Starting Contiki-NG-release/v4.2-121-g372cce8-dirty
+1265	ID:23	[INFO: Main      ] - Routing: RPL Classic
+1265	ID:25	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7419:19:1919
+1267	ID:23	[INFO: Main      ] - Net: sicslowpan
+1269	ID:25	[INFO: Sky       ] CC2420 CCA threshold -45
+1269	ID:23	[INFO: Main      ] - MAC: CSMA
+1272	ID:2	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7402:2:202
+1273	ID:23	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1275	ID:2	[INFO: Sky       ] CC2420 CCA threshold -45
+1276	ID:23	[INFO: Main      ] - 802.15.4 Default channel: 26
+1279	ID:23	[INFO: Main      ] Node ID: 23
+1284	ID:23	[INFO: Main      ] Link-layer address: 0012.7417.0017.1717
+1296	ID:23	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7417:17:1717
+1300	ID:23	[INFO: Sky       ] CC2420 CCA threshold -45
+8390	ID:19	[INFO: App       ] M[19] Addresses [3 max]:2
+8394	ID:19	[INFO: App       ] M[19] Neighbors [26 max]:4
+8398	ID:19	[INFO: App       ] M[19] Routes [26 max]:0
+8402	ID:19	[INFO: App       ] M[19] Min.Hops to root: <not reachable>
+8406	ID:19	[INFO: App       ] M[19] | DIS:0 | DIO:1 | DAO:1 
+8409	ID:19	[INFO: App       ] M[19] ConvTime:28736 us
+8439	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:1 | DAO:0 
+8443	ID:1	[INFO: App       ] M[1] Routes [26 max]:9
+8448	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+8473	ID:15	[INFO: App       ] M[15] Addresses [3 max]:2
+8478	ID:15	[INFO: App       ] M[15] Neighbors [26 max]:4
+8481	ID:15	[INFO: App       ] M[15] Routes [26 max]:0
+8485	ID:15	[INFO: App       ] M[15] Min.Hops to root: <not reachable>
+8489	ID:15	[INFO: App       ] M[15] | DIS:0 | DIO:2 | DAO:1 
+8493	ID:15	[INFO: App       ] M[15] ConvTime:56512 us
+8509	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:1 | DAO:0 
+8512	ID:1	[INFO: App       ] M[1] Routes [26 max]:9
+8518	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+8660	ID:14	[INFO: App       ] M[14] Addresses [3 max]:2
+8665	ID:13	[INFO: App       ] M[13] Addresses [3 max]:2
+8665	ID:14	[INFO: App       ] M[14] Neighbors [26 max]:4
+8668	ID:14	[INFO: App       ] M[14] Routes [26 max]:0
+8669	ID:13	[INFO: App       ] M[13] Neighbors [26 max]:5
+8672	ID:14	[INFO: App       ] M[14] Min.Hops to root: <not reachable>
+8673	ID:13	[INFO: App       ] M[13] Routes [26 max]:0
+8676	ID:14	[INFO: App       ] M[14] | DIS:0 | DIO:1 | DAO:1 
+8677	ID:13	[INFO: App       ] M[13] Min.Hops to root: <not reachable>
+8679	ID:14	[INFO: App       ] M[14] ConvTime:50176 us
+8681	ID:13	[INFO: App       ] M[13] | DIS:0 | DIO:2 | DAO:1 
+8684	ID:13	[INFO: App       ] M[13] ConvTime:6208 us
+8709	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:1 | DAO:0 
+8712	ID:1	[INFO: App       ] M[1] Routes [26 max]:9
+8718	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+8734	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:1 | DAO:0 
+8738	ID:1	[INFO: App       ] M[1] Routes [26 max]:9
+8743	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+8971	ID:16	[INFO: App       ] M[16] Addresses [3 max]:2
+8976	ID:16	[INFO: App       ] M[16] Neighbors [26 max]:4
+8980	ID:16	[INFO: App       ] M[16] Routes [26 max]:0
+8984	ID:16	[INFO: App       ] M[16] Min.Hops to root: <not reachable>
+8988	ID:16	[INFO: App       ] M[16] | DIS:0 | DIO:2 | DAO:1 
+8991	ID:16	[INFO: App       ] M[16] ConvTime:44416 us
+9037	ID:3	[INFO: App       ] M[3] Addresses [3 max]:2
+9042	ID:3	[INFO: App       ] M[3] Neighbors [26 max]:5
+9045	ID:3	[INFO: App       ] M[3] Routes [26 max]:0
+9049	ID:3	[INFO: App       ] M[3] Min.Hops to root: <not reachable>
+9052	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:1 | DAO:0 
+9053	ID:3	[INFO: App       ] M[3] | DIS:0 | DIO:1 | DAO:1 
+9053	ID:5	[INFO: App       ] M[5] Addresses [3 max]:2
+9055	ID:1	[INFO: App       ] M[1] Routes [26 max]:9
+9056	ID:3	[INFO: App       ] M[3] ConvTime:50176 us
+9058	ID:5	[INFO: App       ] M[5] Neighbors [26 max]:5
+9061	ID:5	[INFO: App       ] M[5] Routes [26 max]:0
+9061	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+9065	ID:5	[INFO: App       ] M[5] Min.Hops to root: <not reachable>
+9068	ID:5	[INFO: App       ] M[5] | DIS:0 | DIO:1 | DAO:1 
+9072	ID:5	[INFO: App       ] M[5] ConvTime:50176 us
+9078	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:1 | DAO:0 
+9082	ID:1	[INFO: App       ] M[1] Routes [26 max]:9
+9088	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+9110	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:1 | DAO:0 
+9113	ID:1	[INFO: App       ] M[1] Routes [26 max]:9
+9119	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+9140	ID:10	[INFO: App       ] M[10] Addresses [3 max]:2
+9144	ID:10	[INFO: App       ] M[10] Neighbors [26 max]:5
+9148	ID:10	[INFO: App       ] M[10] Routes [26 max]:0
+9152	ID:10	[INFO: App       ] M[10] Min.Hops to root: <not reachable>
+9156	ID:10	[INFO: App       ] M[10] | DIS:0 | DIO:1 | DAO:1 
+9159	ID:10	[INFO: App       ] M[10] ConvTime:50176 us
+9179	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:1 | DAO:0 
+9183	ID:1	[INFO: App       ] M[1] Routes [26 max]:9
+9189	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+9268	ID:25	[INFO: App       ] M[25] Addresses [3 max]:2
+9272	ID:25	[INFO: App       ] M[25] Neighbors [26 max]:3
+9275	ID:2	[INFO: App       ] M[2] Addresses [3 max]:2
+9275	ID:25	[INFO: App       ] M[25] Routes [26 max]:0
+9280	ID:25	[INFO: App       ] M[25] Min.Hops to root: <not reachable>
+9280	ID:2	[INFO: App       ] M[2] Neighbors [26 max]:4
+9283	ID:2	[INFO: App       ] M[2] Routes [26 max]:0
+9283	ID:25	[INFO: App       ] M[25] | DIS:0 | DIO:1 | DAO:1 
+9287	ID:25	[INFO: App       ] M[25] ConvTime:50176 us
+9287	ID:2	[INFO: App       ] M[2] Min.Hops to root: <not reachable>
+9291	ID:2	[INFO: App       ] M[2] | DIS:0 | DIO:1 | DAO:1 
+9294	ID:2	[INFO: App       ] M[2] ConvTime:50176 us
+9302	ID:23	[INFO: App       ] M[23] Addresses [3 max]:2
+9307	ID:23	[INFO: App       ] M[23] Neighbors [26 max]:3
+9310	ID:23	[INFO: App       ] M[23] Routes [26 max]:0
+9314	ID:23	[INFO: App       ] M[23] Min.Hops to root: <not reachable>
+9318	ID:23	[INFO: App       ] M[23] | DIS:0 | DIO:2 | DAO:1 
+9321	ID:23	[INFO: App       ] M[23] ConvTime:57152 us
+9339	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:1 | DAO:0 
+9342	ID:1	[INFO: App       ] M[1] Routes [26 max]:9
+9349	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+9366	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:1 | DAO:0 
+9369	ID:1	[INFO: App       ] M[1] Routes [26 max]:9
+9375	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+9388	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:1 | DAO:0 
+9392	ID:1	[INFO: App       ] M[1] Routes [26 max]:9
+9398	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+12349	ID:20	[INFO: App       ] M[20] Addresses [3 max]:2
+12355	ID:20	[INFO: App       ] M[20] Neighbors [26 max]:5
+12358	ID:20	[INFO: App       ] M[20] Routes [26 max]:0
+12362	ID:20	[INFO: App       ] M[20] Min.Hops to root: <not reachable>
+12366	ID:20	[INFO: App       ] M[20] | DIS:0 | DIO:1 | DAO:1 
+12370	ID:20	[INFO: App       ] M[20] ConvTime:50176 us
+12416	ID:19	[INFO: App       ] M[19] Addresses [3 max]:2
+12421	ID:19	[INFO: App       ] M[19] Neighbors [26 max]:7
+12424	ID:19	[INFO: App       ] M[19] Routes [26 max]:1
+12428	ID:19	[INFO: App       ] M[19] Min.Hops to root:1
+12431	ID:19	[INFO: App       ] M[19] | DIS:0 | DIO:2 | DAO:1 
+12435	ID:19	[INFO: App       ] M[19] ConvTime:17536 us
+12478	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+12482	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+12488	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+12498	ID:15	[INFO: App       ] M[15] Addresses [3 max]:2
+12502	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+12504	ID:15	[INFO: App       ] M[15] Neighbors [26 max]:9
+12506	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+12507	ID:15	[INFO: App       ] M[15] Routes [26 max]:4
+12511	ID:15	[INFO: App       ] M[15] Min.Hops to root:1
+12512	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+12514	ID:15	[INFO: App       ] M[15] | DIS:0 | DIO:2 | DAO:1 
+12518	ID:15	[INFO: App       ] M[15] ConvTime:42944 us
+12527	ID:18	[INFO: App       ] M[18] Addresses [3 max]:2
+12532	ID:18	[INFO: App       ] M[18] Neighbors [26 max]:4
+12535	ID:18	[INFO: App       ] M[18] Routes [26 max]:0
+12540	ID:18	[INFO: App       ] M[18] Min.Hops to root: <not reachable>
+12543	ID:18	[INFO: App       ] M[18] | DIS:0 | DIO:1 | DAO:2 
+12547	ID:18	[INFO: App       ] M[18] ConvTime:50176 us
+12560	ID:6	[INFO: App       ] M[6] Addresses [3 max]:2
+12565	ID:6	[INFO: App       ] M[6] Neighbors [26 max]:5
+12568	ID:6	[INFO: App       ] M[6] Routes [26 max]:0
+12572	ID:6	[INFO: App       ] M[6] Min.Hops to root: <not reachable>
+12576	ID:6	[INFO: App       ] M[6] | DIS:0 | DIO:2 | DAO:1 
+12579	ID:6	[INFO: App       ] M[6] ConvTime:43072 us
+12581	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+12584	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+12590	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+12650	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+12653	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+12660	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+12674	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+12677	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+12683	ID:14	[INFO: App       ] M[14] Addresses [3 max]:2
+12683	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+12686	ID:13	[INFO: App       ] M[13] Addresses [3 max]:2
+12688	ID:14	[INFO: App       ] M[14] Neighbors [26 max]:4
+12690	ID:13	[INFO: App       ] M[13] Neighbors [26 max]:5
+12691	ID:14	[INFO: App       ] M[14] Routes [26 max]:0
+12694	ID:13	[INFO: App       ] M[13] Routes [26 max]:0
+12695	ID:14	[INFO: App       ] M[14] Min.Hops to root:1
+12697	ID:13	[INFO: App       ] M[13] Min.Hops to root:1
+12698	ID:14	[INFO: App       ] M[14] | DIS:0 | DIO:2 | DAO:1 
+12701	ID:13	[INFO: App       ] M[13] | DIS:0 | DIO:2 | DAO:1 
+12702	ID:14	[INFO: App       ] M[14] ConvTime:33920 us
+12704	ID:13	[INFO: App       ] M[13] ConvTime:50240 us
+12730	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+12733	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+12734	ID:21	[INFO: App       ] M[21] Addresses [3 max]:2
+12739	ID:21	[INFO: App       ] M[21] Neighbors [26 max]:5
+12740	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+12743	ID:21	[INFO: App       ] M[21] Routes [26 max]:0
+12747	ID:21	[INFO: App       ] M[21] Min.Hops to root: <not reachable>
+12751	ID:21	[INFO: App       ] M[21] | DIS:0 | DIO:1 | DAO:1 
+12754	ID:21	[INFO: App       ] M[21] ConvTime:50176 us
+12757	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+12760	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+12766	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+12908	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+12912	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+12918	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+12998	ID:16	[INFO: App       ] M[16] Addresses [3 max]:2
+13004	ID:16	[INFO: App       ] M[16] Neighbors [26 max]:9
+13007	ID:16	[INFO: App       ] M[16] Routes [26 max]:0
+13010	ID:16	[INFO: App       ] M[16] Min.Hops to root:1
+13014	ID:16	[INFO: App       ] M[16] | DIS:0 | DIO:4 | DAO:1 
+13017	ID:16	[INFO: App       ] M[16] ConvTime:33984 us
+13061	ID:3	[INFO: App       ] M[3] Addresses [3 max]:2
+13066	ID:3	[INFO: App       ] M[3] Neighbors [26 max]:8
+13069	ID:3	[INFO: App       ] M[3] Routes [26 max]:0
+13073	ID:3	[INFO: App       ] M[3] Min.Hops to root: <not reachable>
+13077	ID:3	[INFO: App       ] M[3] | DIS:0 | DIO:2 | DAO:1 
+13080	ID:3	[INFO: App       ] M[3] ConvTime:33920 us
+13099	ID:5	[INFO: App       ] M[5] Addresses [3 max]:2
+13104	ID:5	[INFO: App       ] M[5] Neighbors [26 max]:5
+13107	ID:5	[INFO: App       ] M[5] Routes [26 max]:0
+13111	ID:5	[INFO: App       ] M[5] Min.Hops to root: <not reachable>
+13115	ID:5	[INFO: App       ] M[5] | DIS:0 | DIO:2 | DAO:1 
+13118	ID:5	[INFO: App       ] M[5] ConvTime:16064 us
+13130	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+13133	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+13140	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+13154	ID:24	[INFO: App       ] M[24] Addresses [3 max]:2
+13154	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+13158	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+13159	ID:24	[INFO: App       ] M[24] Neighbors [26 max]:7
+13163	ID:24	[INFO: App       ] M[24] Routes [26 max]:0
+13164	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+13167	ID:24	[INFO: App       ] M[24] Min.Hops to root: <not reachable>
+13171	ID:24	[INFO: App       ] M[24] | DIS:0 | DIO:3 | DAO:2 
+13174	ID:24	[INFO: App       ] M[24] ConvTime:46464 us
+13180	ID:11	[INFO: App       ] M[11] Addresses [3 max]:2
+13185	ID:11	[INFO: App       ] M[11] Neighbors [26 max]:8
+13189	ID:11	[INFO: App       ] M[11] Routes [26 max]:0
+13193	ID:11	[INFO: App       ] M[11] Min.Hops to root: <not reachable>
+13195	ID:10	[INFO: App       ] M[10] Addresses [3 max]:2
+13197	ID:11	[INFO: App       ] M[11] | DIS:0 | DIO:3 | DAO:2 
+13200	ID:11	[INFO: App       ] M[11] ConvTime:27776 us
+13200	ID:10	[INFO: App       ] M[10] Neighbors [26 max]:6
+13204	ID:10	[INFO: App       ] M[10] Routes [26 max]:0
+13207	ID:10	[INFO: App       ] M[10] Min.Hops to root:1
+13211	ID:10	[INFO: App       ] M[10] | DIS:0 | DIO:2 | DAO:1 
+13213	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+13214	ID:10	[INFO: App       ] M[10] ConvTime:36032 us
+13216	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+13223	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+13237	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+13241	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+13247	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+13260	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+13263	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+13269	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+13287	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+13291	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+13291	ID:25	[INFO: App       ] M[25] Addresses [3 max]:2
+13296	ID:25	[INFO: App       ] M[25] Neighbors [26 max]:3
+13297	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+13299	ID:25	[INFO: App       ] M[25] Routes [26 max]:0
+13302	ID:25	[INFO: App       ] M[25] Min.Hops to root:1
+13306	ID:25	[INFO: App       ] M[25] | DIS:0 | DIO:2 | DAO:1 
+13310	ID:25	[INFO: App       ] M[25] ConvTime:33920 us
+13322	ID:2	[INFO: App       ] M[2] Addresses [3 max]:2
+13327	ID:23	[INFO: App       ] M[23] Addresses [3 max]:2
+13328	ID:2	[INFO: App       ] M[2] Neighbors [26 max]:10
+13331	ID:2	[INFO: App       ] M[2] Routes [26 max]:3
+13332	ID:23	[INFO: App       ] M[23] Neighbors [26 max]:5
+13335	ID:23	[INFO: App       ] M[23] Routes [26 max]:0
+13335	ID:2	[INFO: App       ] M[2] Min.Hops to root: <not reachable>
+13339	ID:23	[INFO: App       ] M[23] Min.Hops to root: <not reachable>
+13339	ID:2	[INFO: App       ] M[2] | DIS:0 | DIO:3 | DAO:1 
+13343	ID:2	[INFO: App       ] M[2] ConvTime:16896 us
+13343	ID:23	[INFO: App       ] M[23] | DIS:0 | DIO:2 | DAO:1 
+13346	ID:23	[INFO: App       ] M[23] ConvTime:43008 us
+13347	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+13350	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+13357	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+13374	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+13377	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+13383	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+13402	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+13405	ID:1	[INFO: App       ] M[1] Routes [26 max]:17
+13412	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:9
+16371	ID:8	[INFO: App       ] M[8] Addresses [3 max]:2
+16373	ID:20	[INFO: App       ] M[20] Addresses [3 max]:2
+16376	ID:8	[INFO: App       ] M[8] Neighbors [26 max]:6
+16377	ID:4	[INFO: App       ] M[4] Addresses [3 max]:2
+16379	ID:20	[INFO: App       ] M[20] Neighbors [26 max]:8
+16379	ID:8	[INFO: App       ] M[8] Routes [26 max]:0
+16382	ID:20	[INFO: App       ] M[20] Routes [26 max]:0
+16382	ID:4	[INFO: App       ] M[4] Neighbors [26 max]:6
+16383	ID:8	[INFO: App       ] M[8] Min.Hops to root: <not reachable>
+16385	ID:4	[INFO: App       ] M[4] Routes [26 max]:0
+16385	ID:20	[INFO: App       ] M[20] Min.Hops to root:2
+16387	ID:8	[INFO: App       ] M[8] | DIS:0 | DIO:1 | DAO:4 
+16389	ID:20	[INFO: App       ] M[20] | DIS:0 | DIO:2 | DAO:1 
+16389	ID:4	[INFO: App       ] M[4] Min.Hops to root: <not reachable>
+16390	ID:8	[INFO: App       ] M[8] ConvTime:50176 us
+16392	ID:20	[INFO: App       ] M[20] ConvTime:33920 us
+16393	ID:4	[INFO: App       ] M[4] | DIS:0 | DIO:2 | DAO:2 
+16396	ID:4	[INFO: App       ] M[4] ConvTime:50240 us
+16424	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+16428	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+16434	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+16488	ID:19	[INFO: App       ] M[19] Addresses [3 max]:2
+16495	ID:19	[INFO: App       ] M[19] Neighbors [26 max]:11
+16498	ID:19	[INFO: App       ] M[19] Routes [26 max]:1
+16502	ID:19	[INFO: App       ] M[19] Min.Hops to root:1
+16505	ID:19	[INFO: App       ] M[19] | DIS:0 | DIO:3 | DAO:2 
+16509	ID:19	[INFO: App       ] M[19] ConvTime:38784 us
+16541	ID:15	[INFO: App       ] M[15] Addresses [3 max]:2
+16543	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+16547	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+16548	ID:15	[INFO: App       ] M[15] Neighbors [26 max]:12
+16551	ID:18	[INFO: App       ] M[18] Addresses [3 max]:2
+16552	ID:15	[INFO: App       ] M[15] Routes [26 max]:10
+16553	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+16555	ID:15	[INFO: App       ] M[15] Min.Hops to root:1
+16556	ID:18	[INFO: App       ] M[18] Neighbors [26 max]:5
+16559	ID:15	[INFO: App       ] M[15] | DIS:0 | DIO:3 | DAO:1 
+16559	ID:18	[INFO: App       ] M[18] Routes [26 max]:0
+16562	ID:15	[INFO: App       ] M[15] ConvTime:2816 us
+16562	ID:18	[INFO: App       ] M[18] Min.Hops to root:2
+16566	ID:18	[INFO: App       ] M[18] | DIS:0 | DIO:2 | DAO:2 
+16568	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+16570	ID:18	[INFO: App       ] M[18] ConvTime:33920 us
+16572	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+16578	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+16579	ID:6	[INFO: App       ] M[6] Addresses [3 max]:2
+16585	ID:6	[INFO: App       ] M[6] Neighbors [26 max]:9
+16588	ID:6	[INFO: App       ] M[6] Routes [26 max]:3
+16592	ID:6	[INFO: App       ] M[6] Min.Hops to root: <not reachable>
+16596	ID:6	[INFO: App       ] M[6] | DIS:0 | DIO:3 | DAO:1 
+16599	ID:6	[INFO: App       ] M[6] ConvTime:17536 us
+16635	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+16638	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+16645	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+16681	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+16684	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+16691	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+16706	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+16709	ID:13	[INFO: App       ] M[13] Addresses [3 max]:2
+16710	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+16714	ID:13	[INFO: App       ] M[13] Neighbors [26 max]:7
+16716	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+16718	ID:13	[INFO: App       ] M[13] Routes [26 max]:0
+16721	ID:13	[INFO: App       ] M[13] Min.Hops to root:1
+16725	ID:13	[INFO: App       ] M[13] | DIS:0 | DIO:3 | DAO:2 
+16728	ID:13	[INFO: App       ] M[13] ConvTime:33792 us
+16751	ID:14	[INFO: App       ] M[14] Addresses [3 max]:2
+16756	ID:14	[INFO: App       ] M[14] Neighbors [26 max]:9
+16758	ID:21	[INFO: App       ] M[21] Addresses [3 max]:2
+16760	ID:14	[INFO: App       ] M[14] Routes [26 max]:0
+16763	ID:14	[INFO: App       ] M[14] Min.Hops to root:1
+16763	ID:21	[INFO: App       ] M[21] Neighbors [26 max]:7
+16767	ID:21	[INFO: App       ] M[21] Routes [26 max]:0
+16767	ID:14	[INFO: App       ] M[14] | DIS:0 | DIO:4 | DAO:2 
+16770	ID:21	[INFO: App       ] M[21] Min.Hops to root:2
+16770	ID:14	[INFO: App       ] M[14] ConvTime:43584 us
+16774	ID:21	[INFO: App       ] M[21] | DIS:0 | DIO:2 | DAO:1 
+16777	ID:21	[INFO: App       ] M[21] ConvTime:33920 us
+16800	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+16804	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+16810	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+16839	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+16842	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+16848	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+16869	ID:22	[INFO: App       ] M[22] Addresses [3 max]:2
+16874	ID:22	[INFO: App       ] M[22] Neighbors [26 max]:5
+16877	ID:22	[INFO: App       ] M[22] Routes [26 max]:0
+16881	ID:22	[INFO: App       ] M[22] Min.Hops to root: <not reachable>
+16885	ID:22	[INFO: App       ] M[22] | DIS:0 | DIO:4 | DAO:3 
+16889	ID:22	[INFO: App       ] M[22] ConvTime:1088 us
+16889	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+16892	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+16899	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+16930	ID:12	[INFO: App       ] M[12] Addresses [3 max]:2
+16935	ID:12	[INFO: App       ] M[12] Neighbors [26 max]:7
+16938	ID:12	[INFO: App       ] M[12] Routes [26 max]:0
+16943	ID:12	[INFO: App       ] M[12] Min.Hops to root: <not reachable>
+16946	ID:12	[INFO: App       ] M[12] | DIS:0 | DIO:3 | DAO:3 
+16950	ID:12	[INFO: App       ] M[12] ConvTime:26432 us
+16985	ID:7	[INFO: App       ] M[7] Addresses [3 max]:2
+16990	ID:7	[INFO: App       ] M[7] Neighbors [26 max]:7
+16993	ID:7	[INFO: App       ] M[7] Routes [26 max]:0
+16997	ID:7	[INFO: App       ] M[7] Min.Hops to root: <not reachable>
+17001	ID:7	[INFO: App       ] M[7] | DIS:0 | DIO:2 | DAO:3 
+17004	ID:7	[INFO: App       ] M[7] ConvTime:50176 us
+17021	ID:16	[INFO: App       ] M[16] Addresses [3 max]:2
+17028	ID:16	[INFO: App       ] M[16] Neighbors [26 max]:13
+17031	ID:16	[INFO: App       ] M[16] Routes [26 max]:0
+17034	ID:17	[INFO: App       ] M[17] Addresses [3 max]:2
+17035	ID:16	[INFO: App       ] M[16] Min.Hops to root:1
+17039	ID:16	[INFO: App       ] M[16] | DIS:0 | DIO:4 | DAO:2 
+17039	ID:17	[INFO: App       ] M[17] Neighbors [26 max]:5
+17041	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+17042	ID:16	[INFO: App       ] M[16] ConvTime:17408 us
+17042	ID:17	[INFO: App       ] M[17] Routes [26 max]:0
+17044	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+17046	ID:17	[INFO: App       ] M[17] Min.Hops to root: <not reachable>
+17050	ID:17	[INFO: App       ] M[17] | DIS:0 | DIO:4 | DAO:3 
+17051	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+17053	ID:17	[INFO: App       ] M[17] ConvTime:1088 us
+17065	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+17069	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+17075	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+17078	ID:9	[INFO: App       ] M[9] Addresses [3 max]:2
+17083	ID:9	[INFO: App       ] M[9] Neighbors [26 max]:6
+17084	ID:3	[INFO: App       ] M[3] Addresses [3 max]:2
+17087	ID:9	[INFO: App       ] M[9] Routes [26 max]:0
+17090	ID:3	[INFO: App       ] M[3] Neighbors [26 max]:10
+17091	ID:9	[INFO: App       ] M[9] Min.Hops to root: <not reachable>
+17093	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+17093	ID:3	[INFO: App       ] M[3] Routes [26 max]:0
+17094	ID:9	[INFO: App       ] M[9] | DIS:0 | DIO:3 | DAO:3 
+17096	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+17098	ID:3	[INFO: App       ] M[3] Min.Hops to root: <not reachable>
+17098	ID:9	[INFO: App       ] M[9] ConvTime:50240 us
+17101	ID:3	[INFO: App       ] M[3] | DIS:0 | DIO:3 | DAO:1 
+17102	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+17105	ID:3	[INFO: App       ] M[3] ConvTime:17472 us
+17119	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+17123	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+17123	ID:5	[INFO: App       ] M[5] Addresses [3 max]:2
+17129	ID:5	[INFO: App       ] M[5] Neighbors [26 max]:8
+17129	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+17132	ID:5	[INFO: App       ] M[5] Routes [26 max]:0
+17136	ID:5	[INFO: App       ] M[5] Min.Hops to root: <not reachable>
+17140	ID:5	[INFO: App       ] M[5] | DIS:0 | DIO:3 | DAO:1 
+17143	ID:5	[INFO: App       ] M[5] ConvTime:1088 us
+17156	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+17159	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+17166	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+17185	ID:24	[INFO: App       ] M[24] Addresses [3 max]:2
+17192	ID:24	[INFO: App       ] M[24] Neighbors [26 max]:11
+17195	ID:24	[INFO: App       ] M[24] Routes [26 max]:2
+17197	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+17198	ID:24	[INFO: App       ] M[24] Min.Hops to root:2
+17201	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+17202	ID:24	[INFO: App       ] M[24] | DIS:0 | DIO:4 | DAO:2 
+17206	ID:24	[INFO: App       ] M[24] ConvTime:46208 us
+17206	ID:11	[INFO: App       ] M[11] Addresses [3 max]:2
+17207	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+17212	ID:11	[INFO: App       ] M[11] Neighbors [26 max]:10
+17216	ID:11	[INFO: App       ] M[11] Routes [26 max]:1
+17218	ID:10	[INFO: App       ] M[10] Addresses [3 max]:2
+17220	ID:11	[INFO: App       ] M[11] Min.Hops to root: <not reachable>
+17224	ID:11	[INFO: App       ] M[11] | DIS:0 | DIO:4 | DAO:2 
+17224	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+17224	ID:10	[INFO: App       ] M[10] Neighbors [26 max]:10
+17227	ID:11	[INFO: App       ] M[11] ConvTime:17536 us
+17227	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+17227	ID:10	[INFO: App       ] M[10] Routes [26 max]:0
+17231	ID:10	[INFO: App       ] M[10] Min.Hops to root:1
+17234	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+17234	ID:10	[INFO: App       ] M[10] | DIS:0 | DIO:3 | DAO:2 
+17238	ID:10	[INFO: App       ] M[10] ConvTime:17408 us
+17289	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+17293	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+17299	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+17315	ID:25	[INFO: App       ] M[25] Addresses [3 max]:2
+17317	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+17320	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+17320	ID:25	[INFO: App       ] M[25] Neighbors [26 max]:8
+17324	ID:25	[INFO: App       ] M[25] Routes [26 max]:0
+17327	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+17327	ID:25	[INFO: App       ] M[25] Min.Hops to root:1
+17331	ID:25	[INFO: App       ] M[25] | DIS:0 | DIO:3 | DAO:2 
+17334	ID:25	[INFO: App       ] M[25] ConvTime:17472 us
+17342	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+17346	ID:2	[INFO: App       ] M[2] Addresses [3 max]:2
+17346	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+17352	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+17352	ID:2	[INFO: App       ] M[2] Neighbors [26 max]:11
+17354	ID:23	[INFO: App       ] M[23] Addresses [3 max]:2
+17355	ID:2	[INFO: App       ] M[2] Routes [26 max]:3
+17359	ID:2	[INFO: App       ] M[2] Min.Hops to root: <not reachable>
+17360	ID:23	[INFO: App       ] M[23] Neighbors [26 max]:9
+17363	ID:23	[INFO: App       ] M[23] Routes [26 max]:0
+17363	ID:2	[INFO: App       ] M[2] | DIS:0 | DIO:3 | DAO:2 
+17366	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+17366	ID:2	[INFO: App       ] M[2] ConvTime:1152 us
+17367	ID:23	[INFO: App       ] M[23] Min.Hops to root: <not reachable>
+17369	ID:1	[INFO: App       ] M[1] Routes [26 max]:21
+17371	ID:23	[INFO: App       ] M[23] | DIS:0 | DIO:3 | DAO:2 
+17374	ID:23	[INFO: App       ] M[23] ConvTime:33792 us
+17375	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+17425	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+17428	ID:1	[INFO: App       ] M[1] Routes [26 max]:22
+17435	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+17472	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+17475	ID:1	[INFO: App       ] M[1] Routes [26 max]:22
+17482	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+17829	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+17833	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+17839	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+20411	ID:8	[INFO: App       ] M[8] Addresses [3 max]:2
+20418	ID:8	[INFO: App       ] M[8] Neighbors [26 max]:10
+20421	ID:8	[INFO: App       ] M[8] Routes [26 max]:0
+20424	ID:8	[INFO: App       ] M[8] Min.Hops to root:2
+20428	ID:8	[INFO: App       ] M[8] | DIS:0 | DIO:2 | DAO:4 
+20428	ID:20	[INFO: App       ] M[20] Addresses [3 max]:2
+20431	ID:8	[INFO: App       ] M[8] ConvTime:3776 us
+20435	ID:20	[INFO: App       ] M[20] Neighbors [26 max]:11
+20438	ID:20	[INFO: App       ] M[20] Routes [26 max]:0
+20442	ID:20	[INFO: App       ] M[20] Min.Hops to root:2
+20446	ID:20	[INFO: App       ] M[20] | DIS:0 | DIO:3 | DAO:2 
+20447	ID:4	[INFO: App       ] M[4] Addresses [3 max]:2
+20449	ID:20	[INFO: App       ] M[20] ConvTime:19648 us
+20453	ID:4	[INFO: App       ] M[4] Neighbors [26 max]:9
+20456	ID:4	[INFO: App       ] M[4] Routes [26 max]:0
+20460	ID:4	[INFO: App       ] M[4] Min.Hops to root: <not reachable>
+20464	ID:4	[INFO: App       ] M[4] | DIS:0 | DIO:3 | DAO:3 
+20467	ID:4	[INFO: App       ] M[4] ConvTime:1024 us
+20510	ID:19	[INFO: App       ] M[19] Addresses [3 max]:2
+20516	ID:19	[INFO: App       ] M[19] Neighbors [26 max]:11
+20520	ID:19	[INFO: App       ] M[19] Routes [26 max]:1
+20523	ID:19	[INFO: App       ] M[19] Min.Hops to root:1
+20527	ID:19	[INFO: App       ] M[19] | DIS:0 | DIO:3 | DAO:2 
+20530	ID:19	[INFO: App       ] M[19] ConvTime:18304 us
+20564	ID:15	[INFO: App       ] M[15] Addresses [3 max]:2
+20564	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+20568	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+20571	ID:15	[INFO: App       ] M[15] Neighbors [26 max]:12
+20574	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+20574	ID:15	[INFO: App       ] M[15] Routes [26 max]:10
+20575	ID:18	[INFO: App       ] M[18] Addresses [3 max]:2
+20578	ID:15	[INFO: App       ] M[15] Min.Hops to root:1
+20580	ID:18	[INFO: App       ] M[18] Neighbors [26 max]:5
+20581	ID:15	[INFO: App       ] M[15] | DIS:0 | DIO:3 | DAO:2 
+20583	ID:18	[INFO: App       ] M[18] Routes [26 max]:0
+20585	ID:15	[INFO: App       ] M[15] ConvTime:50176 us
+20586	ID:18	[INFO: App       ] M[18] Min.Hops to root:2
+20588	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+20590	ID:18	[INFO: App       ] M[18] | DIS:0 | DIO:4 | DAO:3 
+20591	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+20594	ID:18	[INFO: App       ] M[18] ConvTime:18432 us
+20598	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+20602	ID:6	[INFO: App       ] M[6] Addresses [3 max]:2
+20609	ID:6	[INFO: App       ] M[6] Neighbors [26 max]:10
+20612	ID:6	[INFO: App       ] M[6] Routes [26 max]:3
+20614	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+20616	ID:6	[INFO: App       ] M[6] Min.Hops to root: <not reachable>
+20618	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+20619	ID:6	[INFO: App       ] M[6] | DIS:0 | DIO:4 | DAO:1 
+20623	ID:6	[INFO: App       ] M[6] ConvTime:1088 us
+20624	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+20638	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+20641	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+20648	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+20721	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+20724	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+20731	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+20732	ID:13	[INFO: App       ] M[13] Addresses [3 max]:2
+20738	ID:13	[INFO: App       ] M[13] Neighbors [26 max]:7
+20741	ID:13	[INFO: App       ] M[13] Routes [26 max]:0
+20744	ID:13	[INFO: App       ] M[13] Min.Hops to root:1
+20748	ID:13	[INFO: App       ] M[13] | DIS:0 | DIO:3 | DAO:2 
+20752	ID:13	[INFO: App       ] M[13] ConvTime:17408 us
+20767	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+20770	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+20776	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+20777	ID:14	[INFO: App       ] M[14] Addresses [3 max]:2
+20782	ID:21	[INFO: App       ] M[21] Addresses [3 max]:2
+20783	ID:14	[INFO: App       ] M[14] Neighbors [26 max]:9
+20786	ID:14	[INFO: App       ] M[14] Routes [26 max]:0
+20788	ID:21	[INFO: App       ] M[21] Neighbors [26 max]:10
+20790	ID:14	[INFO: App       ] M[14] Min.Hops to root:1
+20792	ID:21	[INFO: App       ] M[21] Routes [26 max]:0
+20793	ID:14	[INFO: App       ] M[14] | DIS:0 | DIO:4 | DAO:2 
+20795	ID:21	[INFO: App       ] M[21] Min.Hops to root:2
+20797	ID:14	[INFO: App       ] M[14] ConvTime:33792 us
+20799	ID:21	[INFO: App       ] M[21] | DIS:0 | DIO:3 | DAO:1 
+20802	ID:21	[INFO: App       ] M[21] ConvTime:18496 us
+20819	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+20823	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+20829	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+20880	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+20883	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+20889	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+20892	ID:22	[INFO: App       ] M[22] Addresses [3 max]:2
+20898	ID:22	[INFO: App       ] M[22] Neighbors [26 max]:9
+20902	ID:22	[INFO: App       ] M[22] Routes [26 max]:0
+20906	ID:22	[INFO: App       ] M[22] Min.Hops to root: <not reachable>
+20910	ID:22	[INFO: App       ] M[22] | DIS:0 | DIO:4 | DAO:3 
+20913	ID:22	[INFO: App       ] M[22] ConvTime:50240 us
+20957	ID:12	[INFO: App       ] M[12] Addresses [3 max]:2
+20963	ID:12	[INFO: App       ] M[12] Neighbors [26 max]:10
+20967	ID:12	[INFO: App       ] M[12] Routes [26 max]:0
+20971	ID:12	[INFO: App       ] M[12] Min.Hops to root: <not reachable>
+20975	ID:12	[INFO: App       ] M[12] | DIS:0 | DIO:4 | DAO:3 
+20978	ID:12	[INFO: App       ] M[12] ConvTime:18560 us
+21008	ID:7	[INFO: App       ] M[7] Addresses [3 max]:2
+21014	ID:7	[INFO: App       ] M[7] Neighbors [26 max]:10
+21018	ID:7	[INFO: App       ] M[7] Routes [26 max]:0
+21021	ID:7	[INFO: App       ] M[7] Min.Hops to root:3
+21024	ID:7	[INFO: App       ] M[7] | DIS:0 | DIO:3 | DAO:3 
+21028	ID:7	[INFO: App       ] M[7] ConvTime:33920 us
+21044	ID:16	[INFO: App       ] M[16] Addresses [3 max]:2
+21052	ID:16	[INFO: App       ] M[16] Neighbors [26 max]:13
+21055	ID:16	[INFO: App       ] M[16] Routes [26 max]:0
+21057	ID:17	[INFO: App       ] M[17] Addresses [3 max]:2
+21058	ID:16	[INFO: App       ] M[16] Min.Hops to root:1
+21062	ID:16	[INFO: App       ] M[16] | DIS:0 | DIO:4 | DAO:2 
+21063	ID:17	[INFO: App       ] M[17] Neighbors [26 max]:8
+21065	ID:16	[INFO: App       ] M[16] ConvTime:1024 us
+21066	ID:17	[INFO: App       ] M[17] Routes [26 max]:0
+21070	ID:17	[INFO: App       ] M[17] Min.Hops to root:3
+21073	ID:17	[INFO: App       ] M[17] | DIS:0 | DIO:4 | DAO:3 
+21077	ID:17	[INFO: App       ] M[17] ConvTime:50240 us
+21078	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+21082	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+21088	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+21107	ID:3	[INFO: App       ] M[3] Addresses [3 max]:2
+21114	ID:3	[INFO: App       ] M[3] Neighbors [26 max]:10
+21116	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+21117	ID:3	[INFO: App       ] M[3] Routes [26 max]:0
+21119	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+21121	ID:3	[INFO: App       ] M[3] Min.Hops to root: <not reachable>
+21125	ID:3	[INFO: App       ] M[3] | DIS:0 | DIO:3 | DAO:2 
+21126	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+21128	ID:3	[INFO: App       ] M[3] ConvTime:1024 us
+21147	ID:5	[INFO: App       ] M[5] Addresses [3 max]:2
+21152	ID:5	[INFO: App       ] M[5] Neighbors [26 max]:9
+21156	ID:5	[INFO: App       ] M[5] Routes [26 max]:0
+21160	ID:5	[INFO: App       ] M[5] Min.Hops to root: <not reachable>
+21163	ID:9	[INFO: App       ] M[9] Addresses [3 max]:2
+21163	ID:5	[INFO: App       ] M[5] | DIS:0 | DIO:3 | DAO:2 
+21167	ID:5	[INFO: App       ] M[5] ConvTime:50176 us
+21169	ID:9	[INFO: App       ] M[9] Neighbors [26 max]:10
+21172	ID:9	[INFO: App       ] M[9] Routes [26 max]:0
+21175	ID:9	[INFO: App       ] M[9] Min.Hops to root:3
+21179	ID:9	[INFO: App       ] M[9] | DIS:0 | DIO:4 | DAO:4 
+21182	ID:9	[INFO: App       ] M[9] ConvTime:30528 us
+21187	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+21190	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+21197	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+21216	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+21219	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+21224	ID:24	[INFO: App       ] M[24] Addresses [3 max]:2
+21226	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+21229	ID:11	[INFO: App       ] M[11] Addresses [3 max]:2
+21232	ID:24	[INFO: App       ] M[24] Neighbors [26 max]:16
+21235	ID:24	[INFO: App       ] M[24] Routes [26 max]:2
+21237	ID:11	[INFO: App       ] M[11] Neighbors [26 max]:15
+21239	ID:24	[INFO: App       ] M[24] Min.Hops to root:2
+21240	ID:11	[INFO: App       ] M[11] Routes [26 max]:1
+21241	ID:10	[INFO: App       ] M[10] Addresses [3 max]:2
+21242	ID:24	[INFO: App       ] M[24] | DIS:0 | DIO:5 | DAO:3 
+21244	ID:11	[INFO: App       ] M[11] Min.Hops to root:2
+21246	ID:24	[INFO: App       ] M[24] ConvTime:62528 us
+21247	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+21247	ID:11	[INFO: App       ] M[11] | DIS:0 | DIO:5 | DAO:3 
+21248	ID:10	[INFO: App       ] M[10] Neighbors [26 max]:11
+21250	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+21251	ID:11	[INFO: App       ] M[11] ConvTime:1024 us
+21251	ID:10	[INFO: App       ] M[10] Routes [26 max]:0
+21254	ID:10	[INFO: App       ] M[10] Min.Hops to root:1
+21257	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+21258	ID:10	[INFO: App       ] M[10] | DIS:0 | DIO:3 | DAO:2 
+21261	ID:10	[INFO: App       ] M[10] ConvTime:1024 us
+21298	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+21302	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+21308	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+21325	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+21328	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+21334	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+21338	ID:25	[INFO: App       ] M[25] Addresses [3 max]:2
+21344	ID:25	[INFO: App       ] M[25] Neighbors [26 max]:8
+21347	ID:25	[INFO: App       ] M[25] Routes [26 max]:0
+21350	ID:25	[INFO: App       ] M[25] Min.Hops to root:1
+21354	ID:25	[INFO: App       ] M[25] | DIS:0 | DIO:3 | DAO:2 
+21357	ID:25	[INFO: App       ] M[25] ConvTime:1024 us
+21369	ID:2	[INFO: App       ] M[2] Addresses [3 max]:2
+21376	ID:2	[INFO: App       ] M[2] Neighbors [26 max]:13
+21377	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+21377	ID:23	[INFO: App       ] M[23] Addresses [3 max]:2
+21379	ID:2	[INFO: App       ] M[2] Routes [26 max]:3
+21380	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+21382	ID:2	[INFO: App       ] M[2] Min.Hops to root:1
+21383	ID:23	[INFO: App       ] M[23] Neighbors [26 max]:9
+21386	ID:2	[INFO: App       ] M[2] | DIS:0 | DIO:3 | DAO:2 
+21386	ID:23	[INFO: App       ] M[23] Routes [26 max]:0
+21387	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+21389	ID:2	[INFO: App       ] M[2] ConvTime:50176 us
+21390	ID:23	[INFO: App       ] M[23] Min.Hops to root: <not reachable>
+21394	ID:23	[INFO: App       ] M[23] | DIS:0 | DIO:3 | DAO:2 
+21398	ID:23	[INFO: App       ] M[23] ConvTime:17408 us
+21404	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+21407	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+21414	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+21682	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+21685	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+21692	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+21749	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+21752	ID:1	[INFO: App       ] M[1] Routes [26 max]:23
+21759	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+24433	ID:8	[INFO: App       ] M[8] Addresses [3 max]:2
+24440	ID:8	[INFO: App       ] M[8] Neighbors [26 max]:12
+24443	ID:8	[INFO: App       ] M[8] Routes [26 max]:0
+24446	ID:8	[INFO: App       ] M[8] Min.Hops to root:2
+24450	ID:8	[INFO: App       ] M[8] | DIS:0 | DIO:2 | DAO:4 
+24451	ID:20	[INFO: App       ] M[20] Addresses [3 max]:2
+24453	ID:8	[INFO: App       ] M[8] ConvTime:50176 us
+24458	ID:20	[INFO: App       ] M[20] Neighbors [26 max]:12
+24461	ID:20	[INFO: App       ] M[20] Routes [26 max]:0
+24464	ID:20	[INFO: App       ] M[20] Min.Hops to root:2
+24468	ID:20	[INFO: App       ] M[20] | DIS:0 | DIO:3 | DAO:2 
+24471	ID:4	[INFO: App       ] M[4] Addresses [3 max]:2
+24471	ID:20	[INFO: App       ] M[20] ConvTime:1024 us
+24477	ID:4	[INFO: App       ] M[4] Neighbors [26 max]:10
+24480	ID:4	[INFO: App       ] M[4] Routes [26 max]:0
+24483	ID:4	[INFO: App       ] M[4] Min.Hops to root:3
+24487	ID:4	[INFO: App       ] M[4] | DIS:0 | DIO:5 | DAO:3 
+24490	ID:4	[INFO: App       ] M[4] ConvTime:50240 us
+24518	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+24522	ID:1	[INFO: App       ] M[1] Routes [26 max]:24
+24528	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+24533	ID:19	[INFO: App       ] M[19] Addresses [3 max]:2
+24539	ID:19	[INFO: App       ] M[19] Neighbors [26 max]:11
+24542	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+24543	ID:19	[INFO: App       ] M[19] Routes [26 max]:1
+24545	ID:1	[INFO: App       ] M[1] Routes [26 max]:24
+24546	ID:19	[INFO: App       ] M[19] Min.Hops to root:1
+24550	ID:19	[INFO: App       ] M[19] | DIS:0 | DIO:3 | DAO:2 
+24552	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+24553	ID:19	[INFO: App       ] M[19] ConvTime:1024 us
+24587	ID:15	[INFO: App       ] M[15] Addresses [3 max]:2
+24588	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+24592	ID:1	[INFO: App       ] M[1] Routes [26 max]:24
+24594	ID:15	[INFO: App       ] M[15] Neighbors [26 max]:12
+24598	ID:18	[INFO: App       ] M[18] Addresses [3 max]:2
+24598	ID:15	[INFO: App       ] M[15] Routes [26 max]:11
+24598	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+24601	ID:15	[INFO: App       ] M[15] Min.Hops to root:1
+24603	ID:18	[INFO: App       ] M[18] Neighbors [26 max]:5
+24605	ID:15	[INFO: App       ] M[15] | DIS:0 | DIO:3 | DAO:2 
+24606	ID:18	[INFO: App       ] M[18] Routes [26 max]:0
+24608	ID:15	[INFO: App       ] M[15] ConvTime:33792 us
+24609	ID:18	[INFO: App       ] M[18] Min.Hops to root:2
+24613	ID:18	[INFO: App       ] M[18] | DIS:0 | DIO:4 | DAO:3 
+24616	ID:18	[INFO: App       ] M[18] ConvTime:1024 us
+24626	ID:6	[INFO: App       ] M[6] Addresses [3 max]:2
+24632	ID:6	[INFO: App       ] M[6] Neighbors [26 max]:11
+24635	ID:6	[INFO: App       ] M[6] Routes [26 max]:3
+24639	ID:6	[INFO: App       ] M[6] Min.Hops to root: <not reachable>
+24643	ID:6	[INFO: App       ] M[6] | DIS:0 | DIO:4 | DAO:2 
+24646	ID:6	[INFO: App       ] M[6] ConvTime:50176 us
+24650	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+24653	ID:1	[INFO: App       ] M[1] Routes [26 max]:24
+24660	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
+24756	ID:13	[INFO: App       ] M[13] Addresses [3 max]:2
+24761	ID:13	[INFO: App       ] M[13] Neighbors [26 max]:7
+24765	ID:13	[INFO: App       ] M[13] Routes [26 max]:0
+24766	ID:1	[INFO: App       ] M[1] | DIS:0 | DIO:2 | DAO:0 
+24768	ID:13	[INFO: App       ] M[13] Min.Hops to root:1
+24770	ID:1	[INFO: App       ] M[1] Routes [26 max]:24
+24772	ID:13	[INFO: App       ] M[13] | DIS:0 | DIO:3 | DAO:2 
+24775	ID:13	[INFO: App       ] M[13] ConvTime:1024 us
+24776	ID:1	[INFO: App       ] M[1] Neighbors [26 max]:11
