@@ -1,0 +1,9 @@
+CONTIKI_PROJECT = mote sink 
+all: $(CONTIKI_PROJECT)
+
+CONTIKI=../../..
+
+PROJECT_SOURCEFILES += deployment.c
+
+MAKE_ROUTING = MAKE_ROUTING_RPL_CLASSIC
+include $(CONTIKI)/Makefile.include
