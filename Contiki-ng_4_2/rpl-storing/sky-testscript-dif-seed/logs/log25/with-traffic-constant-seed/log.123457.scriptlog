@@ -1,0 +1,2417 @@
+Random seed: 123457
+295257 ID:18 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+298130 ID:18 [INFO: Main      ] - Routing: RPL Classic
+300659 ID:18 [INFO: Main      ] - Net: sicslowpan
+302778 ID:18 [INFO: Main      ] - MAC: CSMA
+306156 ID:18 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+309715 ID:18 [INFO: Main      ] - 802.15.4 Default channel: 26
+311979 ID:18 [INFO: Main      ] Node ID: 18
+317709 ID:18 [INFO: Main      ] Link-layer address: 0012.7412.0012.1212
+329695 ID:18 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7412:12:1212
+333085 ID:18 [INFO: Sky       ] CC2420 CCA threshold -45
+379063 ID:20 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+381933 ID:20 [INFO: Main      ] - Routing: RPL Classic
+384463 ID:20 [INFO: Main      ] - Net: sicslowpan
+386582 ID:20 [INFO: Main      ] - MAC: CSMA
+389960 ID:20 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+393519 ID:20 [INFO: Main      ] - 802.15.4 Default channel: 26
+395783 ID:20 [INFO: Main      ] Node ID: 20
+401513 ID:20 [INFO: Main      ] Link-layer address: 0012.7414.0014.1414
+410883 ID:25 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+413499 ID:20 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7414:14:1414
+413756 ID:25 [INFO: Main      ] - Routing: RPL Classic
+416285 ID:25 [INFO: Main      ] - Net: sicslowpan
+416888 ID:20 [INFO: Sky       ] CC2420 CCA threshold -45
+418404 ID:25 [INFO: Main      ] - MAC: CSMA
+421783 ID:25 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+425341 ID:25 [INFO: Main      ] - 802.15.4 Default channel: 26
+426112 ID:14 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+427606 ID:25 [INFO: Main      ] Node ID: 25
+428983 ID:14 [INFO: Main      ] - Routing: RPL Classic
+431512 ID:14 [INFO: Main      ] - Net: sicslowpan
+433335 ID:25 [INFO: Main      ] Link-layer address: 0012.7419.0019.1919
+433631 ID:14 [INFO: Main      ] - MAC: CSMA
+437010 ID:14 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+440569 ID:14 [INFO: Main      ] - 802.15.4 Default channel: 26
+442833 ID:14 [INFO: Main      ] Node ID: 14
+445324 ID:25 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7419:19:1919
+448212 ID:14 [INFO: Main      ] Link-layer address: 0012.740e.000e.0e0e
+448713 ID:25 [INFO: Sky       ] CC2420 CCA threshold -45
+459876 ID:14 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740e:e:e0e
+463265 ID:14 [INFO: Sky       ] CC2420 CCA threshold -45
+474935 ID:1 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+477806 ID:1 [INFO: Main      ] - Routing: RPL Classic
+480335 ID:1 [INFO: Main      ] - Net: sicslowpan
+482454 ID:1 [INFO: Main      ] - MAC: CSMA
+485833 ID:1 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+487583 ID:4 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+489391 ID:1 [INFO: Main      ] - 802.15.4 Default channel: 26
+490453 ID:4 [INFO: Main      ] - Routing: RPL Classic
+491505 ID:1 [INFO: Main      ] Node ID: 1
+492983 ID:4 [INFO: Main      ] - Net: sicslowpan
+495102 ID:4 [INFO: Main      ] - MAC: CSMA
+496890 ID:1 [INFO: Main      ] Link-layer address: 0012.7401.0001.0101
+498480 ID:4 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+502039 ID:4 [INFO: Main      ] - 802.15.4 Default channel: 26
+504153 ID:4 [INFO: Main      ] Node ID: 4
+508544 ID:1 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7401:1:101
+509538 ID:4 [INFO: Main      ] Link-layer address: 0012.7404.0004.0404
+511933 ID:1 [INFO: Sky       ] CC2420 CCA threshold -45
+514341 ID:16 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+514885 ID:1 Periodic Statistics: Number of nodes: 25
+517211 ID:16 [INFO: Main      ] - Routing: RPL Classic
+518018 ID:1 Periodic Statistics: convergence time started
+519741 ID:16 [INFO: Main      ] - Net: sicslowpan
+521191 ID:4 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7404:4:404
+521860 ID:16 [INFO: Main      ] - MAC: CSMA
+522078 ID:13 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+523245 ID:1 [INFO: App       ] Init timer value: 2187
+524581 ID:4 [INFO: Sky       ] CC2420 CCA threshold -45
+524949 ID:13 [INFO: Main      ] - Routing: RPL Classic
+525238 ID:16 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+527478 ID:13 [INFO: Main      ] - Net: sicslowpan
+528797 ID:16 [INFO: Main      ] - 802.15.4 Default channel: 26
+529597 ID:13 [INFO: Main      ] - MAC: CSMA
+531061 ID:16 [INFO: Main      ] Node ID: 16
+532976 ID:13 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+536535 ID:13 [INFO: Main      ] - 802.15.4 Default channel: 26
+536793 ID:16 [INFO: Main      ] Link-layer address: 0012.7410.0010.1010
+538799 ID:13 [INFO: Main      ] Node ID: 13
+544180 ID:13 [INFO: Main      ] Link-layer address: 0012.740d.000d.0d0d
+548777 ID:16 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7410:10:1010
+552166 ID:16 [INFO: Sky       ] CC2420 CCA threshold -45
+555844 ID:13 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740d:d:d0d
+559233 ID:13 [INFO: Sky       ] CC2420 CCA threshold -45
+658264 ID:21 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+661135 ID:21 [INFO: Main      ] - Routing: RPL Classic
+663664 ID:21 [INFO: Main      ] - Net: sicslowpan
+665783 ID:21 [INFO: Main      ] - MAC: CSMA
+669162 ID:21 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+672721 ID:21 [INFO: Main      ] - 802.15.4 Default channel: 26
+674985 ID:21 [INFO: Main      ] Node ID: 21
+680715 ID:21 [INFO: Main      ] Link-layer address: 0012.7415.0015.1515
+692703 ID:21 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7415:15:1515
+696092 ID:21 [INFO: Sky       ] CC2420 CCA threshold -45
+704862 ID:5 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+707733 ID:5 [INFO: Main      ] - Routing: RPL Classic
+710262 ID:5 [INFO: Main      ] - Net: sicslowpan
+712381 ID:5 [INFO: Main      ] - MAC: CSMA
+715380 ID:23 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+715760 ID:5 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+718251 ID:23 [INFO: Main      ] - Routing: RPL Classic
+719318 ID:5 [INFO: Main      ] - 802.15.4 Default channel: 26
+720780 ID:23 [INFO: Main      ] - Net: sicslowpan
+721432 ID:5 [INFO: Main      ] Node ID: 5
+722899 ID:23 [INFO: Main      ] - MAC: CSMA
+726278 ID:23 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+726817 ID:5 [INFO: Main      ] Link-layer address: 0012.7405.0005.0505
+729837 ID:23 [INFO: Main      ] - 802.15.4 Default channel: 26
+732101 ID:23 [INFO: Main      ] Node ID: 23
+737831 ID:23 [INFO: Main      ] Link-layer address: 0012.7417.0017.1717
+738473 ID:5 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7405:5:505
+741862 ID:5 [INFO: Sky       ] CC2420 CCA threshold -45
+749821 ID:23 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7417:17:1717
+753210 ID:23 [INFO: Sky       ] CC2420 CCA threshold -45
+780121 ID:2 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+782991 ID:2 [INFO: Main      ] - Routing: RPL Classic
+785521 ID:2 [INFO: Main      ] - Net: sicslowpan
+787640 ID:2 [INFO: Main      ] - MAC: CSMA
+791018 ID:2 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+794577 ID:2 [INFO: Main      ] - 802.15.4 Default channel: 26
+794872 ID:3 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+796690 ID:2 [INFO: Main      ] Node ID: 2
+797743 ID:3 [INFO: Main      ] - Routing: RPL Classic
+800272 ID:3 [INFO: Main      ] - Net: sicslowpan
+802075 ID:2 [INFO: Main      ] Link-layer address: 0012.7402.0002.0202
+802391 ID:3 [INFO: Main      ] - MAC: CSMA
+805770 ID:3 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+809329 ID:3 [INFO: Main      ] - 802.15.4 Default channel: 26
+810733 ID:10 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+811442 ID:3 [INFO: Main      ] Node ID: 3
+813604 ID:10 [INFO: Main      ] - Routing: RPL Classic
+813729 ID:2 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7402:2:202
+816133 ID:10 [INFO: Main      ] - Net: sicslowpan
+816829 ID:3 [INFO: Main      ] Link-layer address: 0012.7403.0003.0303
+817118 ID:2 [INFO: Sky       ] CC2420 CCA threshold -45
+818252 ID:10 [INFO: Main      ] - MAC: CSMA
+821630 ID:10 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+825189 ID:10 [INFO: Main      ] - 802.15.4 Default channel: 26
+827453 ID:10 [INFO: Main      ] Node ID: 10
+828485 ID:3 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7403:3:303
+831874 ID:3 [INFO: Sky       ] CC2420 CCA threshold -45
+832835 ID:10 [INFO: Main      ] Link-layer address: 0012.740a.000a.0a0a
+844497 ID:10 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740a:a:a0a
+847886 ID:10 [INFO: Sky       ] CC2420 CCA threshold -45
+994972 ID:8 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+997843 ID:8 [INFO: Main      ] - Routing: RPL Classic
+1000373 ID:8 [INFO: Main      ] - Net: sicslowpan
+1002492 ID:8 [INFO: Main      ] - MAC: CSMA
+1005870 ID:8 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1009429 ID:8 [INFO: Main      ] - 802.15.4 Default channel: 26
+1011542 ID:8 [INFO: Main      ] Node ID: 8
+1015097 ID:9 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+1016927 ID:8 [INFO: Main      ] Link-layer address: 0012.7408.0008.0808
+1017968 ID:9 [INFO: Main      ] - Routing: RPL Classic
+1020497 ID:9 [INFO: Main      ] - Net: sicslowpan
+1022616 ID:9 [INFO: Main      ] - MAC: CSMA
+1025995 ID:9 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1028581 ID:8 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7408:8:808
+1029554 ID:9 [INFO: Main      ] - 802.15.4 Default channel: 26
+1031316 ID:11 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+1031667 ID:9 [INFO: Main      ] Node ID: 9
+1031970 ID:8 [INFO: Sky       ] CC2420 CCA threshold -45
+1034187 ID:11 [INFO: Main      ] - Routing: RPL Classic
+1036716 ID:11 [INFO: Main      ] - Net: sicslowpan
+1037054 ID:9 [INFO: Main      ] Link-layer address: 0012.7409.0009.0909
+1038835 ID:11 [INFO: Main      ] - MAC: CSMA
+1042214 ID:11 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1045492 ID:12 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+1045772 ID:11 [INFO: Main      ] - 802.15.4 Default channel: 26
+1048037 ID:11 [INFO: Main      ] Node ID: 11
+1048362 ID:12 [INFO: Main      ] - Routing: RPL Classic
+1048710 ID:9 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7409:9:909
+1050892 ID:12 [INFO: Main      ] - Net: sicslowpan
+1052099 ID:9 [INFO: Sky       ] CC2420 CCA threshold -45
+1053011 ID:12 [INFO: Main      ] - MAC: CSMA
+1053418 ID:11 [INFO: Main      ] Link-layer address: 0012.740b.000b.0b0b
+1055780 ID:19 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+1056389 ID:12 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1058651 ID:19 [INFO: Main      ] - Routing: RPL Classic
+1059948 ID:12 [INFO: Main      ] - 802.15.4 Default channel: 26
+1061180 ID:19 [INFO: Main      ] - Net: sicslowpan
+1062212 ID:12 [INFO: Main      ] Node ID: 12
+1063299 ID:19 [INFO: Main      ] - MAC: CSMA
+1065082 ID:11 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740b:b:b0b
+1066677 ID:19 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1067594 ID:12 [INFO: Main      ] Link-layer address: 0012.740c.000c.0c0c
+1068471 ID:11 [INFO: Sky       ] CC2420 CCA threshold -45
+1070236 ID:19 [INFO: Main      ] - 802.15.4 Default channel: 26
+1072500 ID:19 [INFO: Main      ] Node ID: 19
+1078230 ID:19 [INFO: Main      ] Link-layer address: 0012.7413.0013.1313
+1079255 ID:12 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740c:c:c0c
+1082645 ID:12 [INFO: Sky       ] CC2420 CCA threshold -45
+1090218 ID:19 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7413:13:1313
+1093608 ID:19 [INFO: Sky       ] CC2420 CCA threshold -45
+1137065 ID:7 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+1139936 ID:7 [INFO: Main      ] - Routing: RPL Classic
+1142465 ID:7 [INFO: Main      ] - Net: sicslowpan
+1144584 ID:7 [INFO: Main      ] - MAC: CSMA
+1147962 ID:7 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1149919 ID:17 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+1151521 ID:7 [INFO: Main      ] - 802.15.4 Default channel: 26
+1152789 ID:17 [INFO: Main      ] - Routing: RPL Classic
+1153517 ID:6 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+1153635 ID:7 [INFO: Main      ] Node ID: 7
+1155319 ID:17 [INFO: Main      ] - Net: sicslowpan
+1156387 ID:6 [INFO: Main      ] - Routing: RPL Classic
+1157438 ID:17 [INFO: Main      ] - MAC: CSMA
+1158917 ID:6 [INFO: Main      ] - Net: sicslowpan
+1159020 ID:7 [INFO: Main      ] Link-layer address: 0012.7407.0007.0707
+1160212 ID:22 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+1160816 ID:17 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1161036 ID:6 [INFO: Main      ] - MAC: CSMA
+1162383 ID:15 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+1163082 ID:22 [INFO: Main      ] - Routing: RPL Classic
+1164375 ID:17 [INFO: Main      ] - 802.15.4 Default channel: 26
+1164414 ID:6 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1165254 ID:15 [INFO: Main      ] - Routing: RPL Classic
+1165612 ID:22 [INFO: Main      ] - Net: sicslowpan
+1166639 ID:17 [INFO: Main      ] Node ID: 17
+1167731 ID:22 [INFO: Main      ] - MAC: CSMA
+1167783 ID:15 [INFO: Main      ] - Net: sicslowpan
+1167973 ID:6 [INFO: Main      ] - 802.15.4 Default channel: 26
+1169902 ID:15 [INFO: Main      ] - MAC: CSMA
+1170087 ID:6 [INFO: Main      ] Node ID: 6
+1170678 ID:7 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7407:7:707
+1171109 ID:22 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1172369 ID:17 [INFO: Main      ] Link-layer address: 0012.7411.0011.1111
+1173280 ID:15 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1174067 ID:7 [INFO: Sky       ] CC2420 CCA threshold -45
+1174668 ID:22 [INFO: Main      ] - 802.15.4 Default channel: 26
+1175473 ID:6 [INFO: Main      ] Link-layer address: 0012.7406.0006.0606
+1176839 ID:15 [INFO: Main      ] - 802.15.4 Default channel: 26
+1176932 ID:22 [INFO: Main      ] Node ID: 22
+1179103 ID:15 [INFO: Main      ] Node ID: 15
+1182662 ID:22 [INFO: Main      ] Link-layer address: 0012.7416.0016.1616
+1184355 ID:17 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7411:11:1111
+1184483 ID:15 [INFO: Main      ] Link-layer address: 0012.740f.000f.0f0f
+1187129 ID:6 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7406:6:606
+1187744 ID:17 [INFO: Sky       ] CC2420 CCA threshold -45
+1190518 ID:6 [INFO: Sky       ] CC2420 CCA threshold -45
+1194650 ID:22 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7416:16:1616
+1196149 ID:15 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740f:f:f0f
+1198039 ID:22 [INFO: Sky       ] CC2420 CCA threshold -45
+1199538 ID:15 [INFO: Sky       ] CC2420 CCA threshold -45
+1277538 ID:24 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+1280408 ID:24 [INFO: Main      ] - Routing: RPL Classic
+1282938 ID:24 [INFO: Main      ] - Net: sicslowpan
+1285057 ID:24 [INFO: Main      ] - MAC: CSMA
+1288435 ID:24 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1291994 ID:24 [INFO: Main      ] - 802.15.4 Default channel: 26
+1294258 ID:24 [INFO: Main      ] Node ID: 24
+1299988 ID:24 [INFO: Main      ] Link-layer address: 0012.7418.0018.1818
+1311974 ID:24 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7418:18:1818
+1315363 ID:24 [INFO: Sky       ] CC2420 CCA threshold -45
+3768918 ID:1 Periodic Statistics: M[1] | DIO: 1
+3820006 ID:4 Periodic Statistics: M[4] Neighbors: 1 [26 max]
+3820006 ID:8 Periodic Statistics: M[8] Neighbors: 1 [26 max]
+3820064 ID:2 Periodic Statistics: M[2] Neighbors: 1 [26 max]
+3820074 ID:5 Periodic Statistics: M[5] Neighbors: 1 [26 max]
+3820120 ID:6 Periodic Statistics: M[6] Neighbors: 1 [26 max]
+3820193 ID:20 Periodic Statistics: M[20] Neighbors: 1 [26 max]
+3820212 ID:16 Periodic Statistics: M[16] Neighbors: 1 [26 max]
+3820212 ID:17 Periodic Statistics: M[17] Neighbors: 1 [26 max]
+3820212 ID:18 Periodic Statistics: M[18] Neighbors: 1 [26 max]
+3820212 ID:19 Periodic Statistics: M[19] Neighbors: 1 [26 max]
+3820213 ID:10 Periodic Statistics: M[10] Neighbors: 1 [26 max]
+3820213 ID:14 Periodic Statistics: M[14] Neighbors: 1 [26 max]
+3820213 ID:23 Periodic Statistics: M[23] Neighbors: 1 [26 max]
+3820214 ID:11 Periodic Statistics: M[11] Neighbors: 1 [26 max]
+3820214 ID:12 Periodic Statistics: M[12] Neighbors: 1 [26 max]
+3820214 ID:21 Periodic Statistics: M[21] Neighbors: 1 [26 max]
+3820215 ID:24 Periodic Statistics: M[24] Neighbors: 1 [26 max]
+3820221 ID:25 Periodic Statistics: M[25] Neighbors: 1 [26 max]
+3824615 ID:4 Periodic Statistics: M[4] Parents: 1 [26 max]
+3824615 ID:8 Periodic Statistics: M[8] Parents: 1 [26 max]
+3824729 ID:6 Periodic Statistics: M[6] Parents: 1 [26 max]
+3824732 ID:2 Periodic Statistics: M[2] Parents: 1 [26 max]
+3824752 ID:5 Periodic Statistics: M[5] Parents: 1 [26 max]
+3824951 ID:20 Periodic Statistics: M[20] Parents: 1 [26 max]
+3824972 ID:14 Periodic Statistics: M[14] Parents: 1 [26 max]
+3824972 ID:17 Periodic Statistics: M[17] Parents: 1 [26 max]
+3824972 ID:23 Periodic Statistics: M[23] Parents: 1 [26 max]
+3824974 ID:11 Periodic Statistics: M[11] Parents: 1 [26 max]
+3824974 ID:24 Periodic Statistics: M[24] Parents: 1 [26 max]
+3824979 ID:25 Periodic Statistics: M[25] Parents: 1 [26 max]
+3825029 ID:18 Periodic Statistics: M[18] Parents: 1 [26 max]
+3825029 ID:19 Periodic Statistics: M[19] Parents: 1 [26 max]
+3825030 ID:10 Periodic Statistics: M[10] Parents: 1 [26 max]
+3825030 ID:21 Periodic Statistics: M[21] Parents: 1 [26 max]
+3825031 ID:12 Periodic Statistics: M[12] Parents: 1 [26 max]
+3825039 ID:16 Periodic Statistics: M[16] Parents: 1 [26 max]
+3829615 ID:4 Periodic Statistics: M[4] Default routes: 1
+3829626 ID:8 Periodic Statistics: M[8] Default routes: 1
+3829670 ID:6 Periodic Statistics: M[6] Default routes: 1
+3829675 ID:2 Periodic Statistics: M[2] Default routes: 1
+3829694 ID:5 Periodic Statistics: M[5] Default routes: 1
+3830064 ID:17 Periodic Statistics: M[17] Default routes: 1
+3830102 ID:20 Periodic Statistics: M[20] Default routes: 1
+3830121 ID:19 Periodic Statistics: M[19] Default routes: 1
+3830123 ID:21 Periodic Statistics: M[21] Default routes: 1
+3830123 ID:23 Periodic Statistics: M[23] Default routes: 1
+3830124 ID:11 Periodic Statistics: M[11] Default routes: 1
+3830124 ID:24 Periodic Statistics: M[24] Default routes: 1
+3830125 ID:10 Periodic Statistics: M[10] Default routes: 1
+3830129 ID:25 Periodic Statistics: M[25] Default routes: 1
+3830132 ID:14 Periodic Statistics: M[14] Default routes: 1
+3830136 ID:18 Periodic Statistics: M[18] Default routes: 1
+3830181 ID:12 Periodic Statistics: M[12] Default routes: 1
+3830200 ID:16 Periodic Statistics: M[16] Default routes: 1
+6904936 ID:19 Periodic Statistics: M[19] | DAO: 1
+6905331 ID:17 Periodic Statistics: M[17] | DAO: 1
+6905434 ID:5 Periodic Statistics: M[5] | DAO: 1
+6905863 ID:21 Periodic Statistics: M[21] | DAO: 1
+6906488 ID:8 Periodic Statistics: M[8] | DAO: 1
+6906910 ID:4 Periodic Statistics: M[4] | DAO: 1
+6907912 ID:20 Periodic Statistics: M[20] | DAO: 1
+6907952 ID:24 Periodic Statistics: M[24] | DAO: 1
+6908081 ID:14 Periodic Statistics: M[14] | DAO: 1
+6908287 ID:23 Periodic Statistics: M[23] | DAO: 1
+6908779 ID:6 Periodic Statistics: M[6] | DAO: 1
+6908947 ID:25 Periodic Statistics: M[25] | DAO: 1
+6909897 ID:10 Periodic Statistics: M[10] | DAO: 1
+6910041 ID:18 Periodic Statistics: M[18] | DAO: 1
+6910280 ID:12 Periodic Statistics: M[12] | DAO: 1
+6910379 ID:16 Periodic Statistics: M[16] | DAO: 1
+6910384 ID:2 Periodic Statistics: M[2] | DAO: 1
+6911726 ID:11 Periodic Statistics: M[11] | DAO: 1
+7000623 ID:1 Periodic Statistics: M[1] Neighbors: 1 [26 max]
+7004553 ID:1 Periodic Statistics: M[1] Routes: 1 [26 max]
+7015353 ID:1 Periodic Statistics: M[1] Neighbors: 2 [26 max]
+7019679 ID:1 Periodic Statistics: M[1] Routes: 2 [26 max]
+7061321 ID:1 Periodic Statistics: M[1] Neighbors: 3 [26 max]
+7065952 ID:1 Periodic Statistics: M[1] Routes: 3 [26 max]
+7072328 ID:25 Periodic Statistics: M[25] | DIO: 1
+7072630 ID:6 Periodic Statistics: M[6] | DIO: 1
+7073747 ID:10 Periodic Statistics: M[10] | DIO: 1
+7074229 ID:16 Periodic Statistics: M[16] | DIO: 1
+7074235 ID:2 Periodic Statistics: M[2] | DIO: 1
+7074382 ID:18 Periodic Statistics: M[18] | DIO: 1
+7074921 ID:12 Periodic Statistics: M[12] | DIO: 1
+7075526 ID:11 Periodic Statistics: M[11] | DIO: 1
+7076995 ID:17 Periodic Statistics: M[17] | DIO: 1
+7077098 ID:5 Periodic Statistics: M[5] | DIO: 1
+7077527 ID:21 Periodic Statistics: M[21] | DIO: 1
+7078151 ID:8 Periodic Statistics: M[8] | DIO: 1
+7078574 ID:4 Periodic Statistics: M[4] | DIO: 1
+7079571 ID:24 Periodic Statistics: M[24] | DIO: 1
+7079576 ID:20 Periodic Statistics: M[20] | DIO: 1
+7079766 ID:14 Periodic Statistics: M[14] | DIO: 1
+7079952 ID:23 Periodic Statistics: M[23] | DIO: 1
+7083193 ID:19 Periodic Statistics: M[19] | DIO: 1
+7093162 ID:3 Periodic Statistics: M[3] Neighbors: 1 [26 max]
+7093313 ID:13 Periodic Statistics: M[13] Neighbors: 1 [26 max]
+7093313 ID:22 Periodic Statistics: M[22] Neighbors: 1 [26 max]
+7093322 ID:15 Periodic Statistics: M[15] Neighbors: 1 [26 max]
+7094507 ID:5 Periodic Statistics: M[5] Neighbors: 2 [26 max]
+7094654 ID:25 Periodic Statistics: M[25] Neighbors: 2 [26 max]
+7094660 ID:20 Periodic Statistics: M[20] Neighbors: 2 [26 max]
+7094667 ID:17 Periodic Statistics: M[17] Neighbors: 2 [26 max]
+7094668 ID:21 Periodic Statistics: M[21] Neighbors: 2 [26 max]
+7094716 ID:18 Periodic Statistics: M[18] Neighbors: 2 [26 max]
+7094725 ID:12 Periodic Statistics: M[12] Neighbors: 2 [26 max]
+7097839 ID:3 Periodic Statistics: M[3] Parents: 1 [26 max]
+7098072 ID:22 Periodic Statistics: M[22] Parents: 1 [26 max]
+7098130 ID:13 Periodic Statistics: M[13] Parents: 1 [26 max]
+7098150 ID:15 Periodic Statistics: M[15] Parents: 1 [26 max]
+7100202 ID:5 Periodic Statistics: M[5] Parents: 2 [26 max]
+7100499 ID:25 Periodic Statistics: M[25] Parents: 2 [26 max]
+7100514 ID:21 Periodic Statistics: M[21] Parents: 2 [26 max]
+7100562 ID:18 Periodic Statistics: M[18] Parents: 2 [26 max]
+7100564 ID:20 Periodic Statistics: M[20] Parents: 2 [26 max]
+7100571 ID:12 Periodic Statistics: M[12] Parents: 2 [26 max]
+7100582 ID:17 Periodic Statistics: M[17] Parents: 2 [26 max]
+7102850 ID:3 Periodic Statistics: M[3] Default routes: 1
+7103223 ID:13 Periodic Statistics: M[13] Default routes: 1
+7103232 ID:22 Periodic Statistics: M[22] Default routes: 1
+7103299 ID:15 Periodic Statistics: M[15] Default routes: 1
+7161751 ID:7 Periodic Statistics: M[7] Neighbors: 1 [26 max]
+7163088 ID:3 Periodic Statistics: M[3] Neighbors: 2 [26 max]
+7163238 ID:13 Periodic Statistics: M[13] Neighbors: 2 [26 max]
+7166429 ID:7 Periodic Statistics: M[7] Parents: 1 [26 max]
+7168842 ID:3 Periodic Statistics: M[3] Parents: 2 [26 max]
+7169142 ID:13 Periodic Statistics: M[13] Parents: 2 [26 max]
+7171370 ID:7 Periodic Statistics: M[7] Default routes: 1
+7174171 ID:1 Periodic Statistics: M[1] Neighbors: 4 [26 max]
+7179029 ID:3 Periodic Statistics: M[3] Default routes: 0
+7179116 ID:1 Periodic Statistics: M[1] Routes: 4 [26 max]
+7179479 ID:13 Periodic Statistics: M[13] Default routes: 0
+7182190 ID:3 Periodic Statistics: M[3] Default routes: 1
+7182788 ID:13 Periodic Statistics: M[13] Default routes: 1
+7185163 ID:3 Periodic Statistics: M[3] | DAO: 1
+7185911 ID:13 Periodic Statistics: M[13] | DAO: 1
+7192917 ID:1 Periodic Statistics: M[1] Neighbors: 5 [26 max]
+7198218 ID:1 Periodic Statistics: M[1] Routes: 5 [26 max]
+7204494 ID:7 Periodic Statistics: M[7] Neighbors: 2 [26 max]
+7204644 ID:22 Periodic Statistics: M[22] Neighbors: 2 [26 max]
+7204702 ID:11 Periodic Statistics: M[11] Neighbors: 2 [26 max]
+7205235 ID:3 Periodic Statistics: M[3] Neighbors: 3 [26 max]
+7205276 ID:5 Periodic Statistics: M[5] Neighbors: 3 [26 max]
+7205404 ID:13 Periodic Statistics: M[13] Neighbors: 3 [26 max]
+7205415 ID:21 Periodic Statistics: M[21] Neighbors: 3 [26 max]
+7205416 ID:17 Periodic Statistics: M[17] Neighbors: 3 [26 max]
+7205416 ID:20 Periodic Statistics: M[20] Neighbors: 3 [26 max]
+7205473 ID:18 Periodic Statistics: M[18] Neighbors: 3 [26 max]
+7205474 ID:25 Periodic Statistics: M[25] Neighbors: 3 [26 max]
+7210248 ID:7 Periodic Statistics: M[7] Parents: 2 [26 max]
+7210491 ID:22 Periodic Statistics: M[22] Parents: 2 [26 max]
+7210606 ID:11 Periodic Statistics: M[11] Parents: 2 [26 max]
+7211797 ID:3 Periodic Statistics: M[3] Parents: 3 [26 max]
+7211881 ID:5 Periodic Statistics: M[5] Parents: 3 [26 max]
+7212103 ID:20 Periodic Statistics: M[20] Parents: 3 [26 max]
+7212159 ID:13 Periodic Statistics: M[13] Parents: 3 [26 max]
+7212160 ID:17 Periodic Statistics: M[17] Parents: 3 [26 max]
+7212160 ID:21 Periodic Statistics: M[21] Parents: 3 [26 max]
+7212161 ID:25 Periodic Statistics: M[25] Parents: 3 [26 max]
+7212180 ID:18 Periodic Statistics: M[18] Parents: 3 [26 max]
+7220828 ID:22 Periodic Statistics: M[22] Default routes: 0
+7224139 ID:22 Periodic Statistics: M[22] Default routes: 1
+7227319 ID:22 Periodic Statistics: M[22] | DAO: 1
+7297003 ID:4 Periodic Statistics: M[4] Neighbors: 2 [26 max]
+7297018 ID:6 Periodic Statistics: M[6] Neighbors: 2 [26 max]
+7297154 ID:19 Periodic Statistics: M[19] Neighbors: 2 [26 max]
+7297155 ID:10 Periodic Statistics: M[10] Neighbors: 2 [26 max]
+7297163 ID:16 Periodic Statistics: M[16] Neighbors: 2 [26 max]
+7297200 ID:24 Periodic Statistics: M[24] Neighbors: 2 [26 max]
+7297824 ID:22 Periodic Statistics: M[22] Neighbors: 3 [26 max]
+7297903 ID:12 Periodic Statistics: M[12] Neighbors: 3 [26 max]
+7298369 ID:3 Periodic Statistics: M[3] Neighbors: 4 [26 max]
+7298390 ID:5 Periodic Statistics: M[5] Neighbors: 4 [26 max]
+7298531 ID:13 Periodic Statistics: M[13] Neighbors: 4 [26 max]
+7298540 ID:21 Periodic Statistics: M[21] Neighbors: 4 [26 max]
+7298540 ID:17 Periodic Statistics: M[17] Neighbors: 4 [26 max]
+7298541 ID:18 Periodic Statistics: M[18] Neighbors: 4 [26 max]
+7298598 ID:20 Periodic Statistics: M[20] Neighbors: 4 [26 max]
+7298962 ID:11 Periodic Statistics: M[11] Neighbors: 3 [26 max]
+7299897 ID:1 Periodic Statistics: M[1] Neighbors: 6 [26 max]
+7302714 ID:6 Periodic Statistics: M[6] Parents: 2 [26 max]
+7302757 ID:4 Periodic Statistics: M[4] Parents: 2 [26 max]
+7303000 ID:19 Periodic Statistics: M[19] Parents: 2 [26 max]
+7303001 ID:10 Periodic Statistics: M[10] Parents: 2 [26 max]
+7303046 ID:24 Periodic Statistics: M[24] Parents: 2 [26 max]
+7303078 ID:16 Periodic Statistics: M[16] Parents: 2 [26 max]
+7304569 ID:22 Periodic Statistics: M[22] Parents: 3 [26 max]
+7304589 ID:12 Periodic Statistics: M[12] Parents: 3 [26 max]
+7305752 ID:3 Periodic Statistics: M[3] Parents: 4 [26 max]
+7305842 ID:5 Periodic Statistics: M[5] Parents: 4 [26 max]
+7306074 ID:18 Periodic Statistics: M[18] Parents: 4 [26 max]
+7306131 ID:17 Periodic Statistics: M[17] Parents: 4 [26 max]
+7306131 ID:21 Periodic Statistics: M[21] Parents: 4 [26 max]
+7306132 ID:13 Periodic Statistics: M[13] Parents: 4 [26 max]
+7306132 ID:20 Periodic Statistics: M[20] Parents: 4 [26 max]
+7306941 ID:11 Periodic Statistics: M[11] Parents: 3 [26 max]
+7312437 ID:1 Periodic Statistics: M[1] Routes: 6 [26 max]
+7346839 ID:1 Periodic Statistics: M[1] Neighbors: 7 [26 max]
+7350256 ID:9 Periodic Statistics: M[9] Neighbors: 1 [26 max]
+7351544 ID:8 Periodic Statistics: M[8] Neighbors: 2 [26 max]
+7351603 ID:2 Periodic Statistics: M[2] Neighbors: 2 [26 max]
+7351805 ID:14 Periodic Statistics: M[14] Neighbors: 2 [26 max]
+7352362 ID:4 Periodic Statistics: M[4] Neighbors: 3 [26 max]
+7352442 ID:16 Periodic Statistics: M[16] Neighbors: 3 [26 max]
+7352443 ID:19 Periodic Statistics: M[19] Neighbors: 3 [26 max]
+7352446 ID:24 Periodic Statistics: M[24] Neighbors: 3 [26 max]
+7352501 ID:10 Periodic Statistics: M[10] Neighbors: 3 [26 max]
+7352822 ID:1 Periodic Statistics: M[1] Routes: 7 [26 max]
+7353138 ID:25 Periodic Statistics: M[25] Neighbors: 4 [26 max]
+7353841 ID:17 Periodic Statistics: M[17] Neighbors: 5 [26 max]
+7353841 ID:21 Periodic Statistics: M[21] Neighbors: 5 [26 max]
+7353909 ID:20 Periodic Statistics: M[20] Neighbors: 5 [26 max]
+7354866 ID:9 Periodic Statistics: M[9] Parents: 1 [26 max]
+7357239 ID:8 Periodic Statistics: M[8] Parents: 2 [26 max]
+7357357 ID:2 Periodic Statistics: M[2] Parents: 2 [26 max]
+7357651 ID:14 Periodic Statistics: M[14] Parents: 2 [26 max]
+7358899 ID:4 Periodic Statistics: M[4] Parents: 3 [26 max]
+7359130 ID:16 Periodic Statistics: M[16] Parents: 3 [26 max]
+7359133 ID:24 Periodic Statistics: M[24] Parents: 3 [26 max]
+7359188 ID:10 Periodic Statistics: M[10] Parents: 3 [26 max]
+7359188 ID:19 Periodic Statistics: M[19] Parents: 3 [26 max]
+7359808 ID:9 Periodic Statistics: M[9] Default routes: 1
+7360671 ID:25 Periodic Statistics: M[25] Parents: 4 [26 max]
+7362281 ID:17 Periodic Statistics: M[17] Parents: 5 [26 max]
+7362282 ID:21 Periodic Statistics: M[21] Parents: 5 [26 max]
+7362356 ID:20 Periodic Statistics: M[20] Parents: 5 [26 max]
+7377062 ID:18 Periodic Statistics: M[18] Neighbors: 5 [26 max]
+7385435 ID:18 Periodic Statistics: M[18] Parents: 5 [26 max]
+7400799 ID:1 Periodic Statistics: M[1] Neighbors: 8 [26 max]
+7403105 ID:7 Periodic Statistics: M[7] Neighbors: 3 [26 max]
+7403107 ID:6 Periodic Statistics: M[6] Neighbors: 3 [26 max]
+7403801 ID:4 Periodic Statistics: M[4] Neighbors: 4 [26 max]
+7403951 ID:12 Periodic Statistics: M[12] Neighbors: 4 [26 max]
+7403951 ID:22 Periodic Statistics: M[22] Neighbors: 4 [26 max]
+7404490 ID:5 Periodic Statistics: M[5] Neighbors: 5 [26 max]
+7404491 ID:3 Periodic Statistics: M[3] Neighbors: 5 [26 max]
+7404641 ID:13 Periodic Statistics: M[13] Neighbors: 5 [26 max]
+7404641 ID:25 Periodic Statistics: M[25] Neighbors: 5 [26 max]
+7405128 ID:11 Periodic Statistics: M[11] Neighbors: 4 [26 max]
+7405375 ID:20 Periodic Statistics: M[20] Neighbors: 6 [26 max]
+7405396 ID:17 Periodic Statistics: M[17] Neighbors: 6 [26 max]
+7407153 ID:1 Periodic Statistics: M[1] Routes: 8 [26 max]
+7409700 ID:7 Periodic Statistics: M[7] Parents: 3 [26 max]
+7409702 ID:6 Periodic Statistics: M[6] Parents: 3 [26 max]
+7411184 ID:4 Periodic Statistics: M[4] Parents: 4 [26 max]
+7411542 ID:22 Periodic Statistics: M[22] Parents: 4 [26 max]
+7411542 ID:12 Periodic Statistics: M[12] Parents: 4 [26 max]
+7412733 ID:5 Periodic Statistics: M[5] Parents: 5 [26 max]
+7412771 ID:3 Periodic Statistics: M[3] Parents: 5 [26 max]
+7413071 ID:25 Periodic Statistics: M[25] Parents: 5 [26 max]
+7413071 ID:13 Periodic Statistics: M[13] Parents: 5 [26 max]
+7414010 ID:11 Periodic Statistics: M[11] Parents: 4 [26 max]
+7414594 ID:20 Periodic Statistics: M[20] Parents: 6 [26 max]
+7414673 ID:17 Periodic Statistics: M[17] Parents: 6 [26 max]
+7417319 ID:18 Periodic Statistics: M[18] Neighbors: 6 [26 max]
+7426595 ID:18 Periodic Statistics: M[18] Parents: 6 [26 max]
+7431128 ID:1 Periodic Statistics: M[1] Neighbors: 9 [26 max]
+7437781 ID:1 Periodic Statistics: M[1] Routes: 9 [26 max]
+7476448 ID:5 Periodic Statistics: M[5] | DIO: 2
+7476711 ID:1 Periodic Statistics: M[1] Neighbors: 10 [26 max]
+7483911 ID:1 Periodic Statistics: M[1] Routes: 10 [26 max]
+7503802 ID:1 Periodic Statistics: M[1] Neighbors: 11 [26 max]
+7511258 ID:1 Periodic Statistics: M[1] Routes: 11 [26 max]
+7534376 ID:1 Periodic Statistics: M[1] Neighbors: 12 [26 max]
+7542174 ID:1 Periodic Statistics: M[1] Routes: 12 [26 max]
+7576881 ID:1 Periodic Statistics: M[1] Neighbors: 13 [26 max]
+7585074 ID:1 Periodic Statistics: M[1] Routes: 13 [26 max]
+7676756 ID:25 Periodic Statistics: M[25] | DIO: 2
+7681656 ID:1 Periodic Statistics: M[1] Neighbors: 14 [26 max]
+7690131 ID:1 Periodic Statistics: M[1] Routes: 14 [26 max]
+8012453 ID:18 Periodic Statistics: M[18] | DIO: 2
+8135522 ID:6 Periodic Statistics: M[6] | DIO: 2
+8347278 ID:3 Periodic Statistics: M[3] | DIO: 1
+8348070 ID:13 Periodic Statistics: M[13] | DIO: 1
+8395158 ID:20 Periodic Statistics: M[20] Neighbors: 7 [26 max]
+8405347 ID:20 Periodic Statistics: M[20] Parents: 7 [26 max]
+8477038 ID:8 Periodic Statistics: M[8] | DIO: 2
+8495330 ID:20 Periodic Statistics: M[20] Neighbors: 8 [26 max]
+8506311 ID:20 Periodic Statistics: M[20] Parents: 8 [26 max]
+8522605 ID:6 Periodic Statistics: M[6] Neighbors: 4 [26 max]
+8523437 ID:21 Periodic Statistics: M[21] | DIO: 2
+8530004 ID:6 Periodic Statistics: M[6] Parents: 4 [26 max]
+8552961 ID:11 Periodic Statistics: M[11] | DIO: 2
+8990182 ID:10 Periodic Statistics: M[10] | DIO: 2
+9050898 ID:25 Periodic Statistics: M[25] Neighbors: 6 [26 max]
+9060174 ID:25 Periodic Statistics: M[25] Parents: 6 [26 max]
+9275678 ID:17 Periodic Statistics: M[17] | DIO: 2
+9306528 ID:20 Periodic Statistics: M[20] | DIO: 2
+9321705 ID:4 Periodic Statistics: M[4] | DIO: 2
+9350910 ID:6 Periodic Statistics: M[6] Neighbors: 5 [26 max]
+9359191 ID:6 Periodic Statistics: M[6] Parents: 5 [26 max]
+9359827 ID:11 Periodic Statistics: M[11] Neighbors: 5 [26 max]
+9370208 ID:11 Periodic Statistics: M[11] Parents: 5 [26 max]
+9435285 ID:11 Periodic Statistics: M[11] | DIO: 3
+9519533 ID:18 Periodic Statistics: M[18] | DIO: 3
+10181259 ID:22 Periodic Statistics: M[22] | DAO: 2
+10182973 ID:3 Periodic Statistics: M[3] | DAO: 2
+10183766 ID:13 Periodic Statistics: M[13] | DAO: 2
+10183867 ID:15 Periodic Statistics: M[15] | DAO: 1
+10202343 ID:12 Periodic Statistics: M[12] Neighbors: 5 [26 max]
+10207532 ID:12 Periodic Statistics: M[12] Routes: 1 [26 max]
+10216744 ID:11 Periodic Statistics: M[11] Neighbors: 6 [26 max]
+10222763 ID:11 Periodic Statistics: M[11] Routes: 1 [26 max]
+10229638 ID:20 Periodic Statistics: M[20] Routes: 1 [26 max]
+10246125 ID:20 Periodic Statistics: M[20] Routes: 2 [26 max]
+10252179 ID:7 Periodic Statistics: M[7] | DAO: 1
+10252835 ID:1 Periodic Statistics: M[1] Routes: 15 [26 max]
+10277139 ID:20 Periodic Statistics: M[20] Neighbors: 9 [26 max]
+10283541 ID:20 Periodic Statistics: M[20] Routes: 3 [26 max]
+10310814 ID:1 Periodic Statistics: M[1] Routes: 16 [26 max]
+10337576 ID:1 Periodic Statistics: M[1] Routes: 17 [26 max]
+10342829 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+10346746 ID:3 Periodic Statistics: M[3] | DIO: 2
+10347017 ID:18 [INFO: App       ] M[18] Min.Hops to root: <not reachable>
+10347201 ID:15 Periodic Statistics: M[15] | DIO: 1
+10347539 ID:13 Periodic Statistics: M[13] | DIO: 2
+10350354 ID:18 [INFO: App       ] M[18] ConvTime:6976 us
+10352845 ID:22 Periodic Statistics: M[22] | DIO: 1
+10355859 ID:16 Periodic Statistics: M[16] | DIO: 2
+10358515 ID:1 Periodic Statistics: M[1] Routes: 18 [26 max]
+10369387 ID:7 Periodic Statistics: M[7] Neighbors: 4 [26 max]
+10370227 ID:22 Periodic Statistics: M[22] Neighbors: 5 [26 max]
+10370681 ID:11 Periodic Statistics: M[11] Neighbors: 7 [26 max]
+10370714 ID:5 Periodic Statistics: M[5] Neighbors: 6 [26 max]
+10370865 ID:12 Periodic Statistics: M[12] Neighbors: 6 [26 max]
+10370865 ID:21 Periodic Statistics: M[21] Neighbors: 6 [26 max]
+10370876 ID:13 Periodic Statistics: M[13] Neighbors: 6 [26 max]
+10371617 ID:18 Periodic Statistics: M[18] Neighbors: 7 [26 max]
+10371619 ID:25 Periodic Statistics: M[25] Neighbors: 7 [26 max]
+10376828 ID:7 Periodic Statistics: M[7] Parents: 4 [26 max]
+10378446 ID:1 Periodic Statistics: M[1] Routes: 19 [26 max]
+10378667 ID:22 Periodic Statistics: M[22] Parents: 5 [26 max]
+10379842 ID:5 Periodic Statistics: M[5] Parents: 6 [26 max]
+10380134 ID:12 Periodic Statistics: M[12] Parents: 5 [26 max]
+10380142 ID:21 Periodic Statistics: M[21] Parents: 6 [26 max]
+10380162 ID:13 Periodic Statistics: M[13] Parents: 6 [26 max]
+10380698 ID:11 Periodic Statistics: M[11] Parents: 6 [26 max]
+10381738 ID:18 Periodic Statistics: M[18] Parents: 7 [26 max]
+10381750 ID:25 Periodic Statistics: M[25] Parents: 7 [26 max]
+10407504 ID:23 Periodic Statistics: M[23] Neighbors: 2 [26 max]
+10408962 ID:24 Periodic Statistics: M[24] Neighbors: 4 [26 max]
+10410960 ID:17 Periodic Statistics: M[17] Neighbors: 7 [26 max]
+10413418 ID:23 Periodic Statistics: M[23] Parents: 2 [26 max]
+10415195 ID:7 Periodic Statistics: M[7] Neighbors: 5 [26 max]
+10415233 ID:4 Periodic Statistics: M[4] Neighbors: 5 [26 max]
+10415944 ID:3 Periodic Statistics: M[3] Neighbors: 6 [26 max]
+10416487 ID:12 Periodic Statistics: M[12] Parents: 6 [26 max]
+10416564 ID:24 Periodic Statistics: M[24] Parents: 4 [26 max]
+10416585 ID:5 Periodic Statistics: M[5] Neighbors: 7 [26 max]
+10416786 ID:21 Periodic Statistics: M[21] Neighbors: 7 [26 max]
+10419049 ID:20 Periodic Statistics: M[20] Neighbors: 10 [26 max]
+10419471 ID:25 Periodic Statistics: M[25] Neighbors: 8 [26 max]
+10420751 ID:11 Periodic Statistics: M[11] Neighbors: 8 [26 max]
+10421081 ID:17 Periodic Statistics: M[17] Parents: 7 [26 max]
+10421541 ID:22 Periodic Statistics: M[22] Neighbors: 6 [26 max]
+10422538 ID:13 Periodic Statistics: M[13] Neighbors: 7 [26 max]
+10423418 ID:7 Periodic Statistics: M[7] Parents: 5 [26 max]
+10423513 ID:4 Periodic Statistics: M[4] Parents: 5 [26 max]
+10425070 ID:3 Periodic Statistics: M[3] Parents: 6 [26 max]
+10426555 ID:5 Periodic Statistics: M[5] Parents: 7 [26 max]
+10426908 ID:21 Periodic Statistics: M[21] Parents: 7 [26 max]
+10428404 ID:11 Periodic Statistics: M[11] Parents: 7 [26 max]
+10430443 ID:25 Periodic Statistics: M[25] Parents: 8 [26 max]
+10430760 ID:22 Periodic Statistics: M[22] Parents: 6 [26 max]
+10431776 ID:20 Periodic Statistics: M[20] Parents: 9 [26 max]
+10432602 ID:13 Periodic Statistics: M[13] Parents: 7 [26 max]
+10434403 ID:9 Periodic Statistics: M[9] | DAO: 1
+10444580 ID:12 Periodic Statistics: M[12] | DIO: 2
+10454701 ID:7 Periodic Statistics: M[7] Neighbors: 6 [26 max]
+10461397 ID:3 Periodic Statistics: M[3] Neighbors: 7 [26 max]
+10462648 ID:12 Periodic Statistics: M[12] Neighbors: 7 [26 max]
+10463035 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+10463051 ID:5 Periodic Statistics: M[5] Neighbors: 8 [26 max]
+10463827 ID:7 Periodic Statistics: M[7] Parents: 6 [26 max]
+10464022 ID:21 Periodic Statistics: M[21] Neighbors: 8 [26 max]
+10467222 ID:14 [INFO: App       ] M[14] Min.Hops to root: <not reachable>
+10470718 ID:14 [INFO: App       ] M[14] ConvTime:50176 us
+10471310 ID:3 Periodic Statistics: M[3] Parents: 7 [26 max]
+10472779 ID:12 Periodic Statistics: M[12] Parents: 7 [26 max]
+10473873 ID:5 Periodic Statistics: M[5] Parents: 8 [26 max]
+10474993 ID:21 Periodic Statistics: M[21] Parents: 8 [26 max]
+10487752 ID:7 Periodic Statistics: M[7] | DIO: 1
+10523139 ID:25 Periodic Statistics: M[25] Neighbors: 9 [26 max]
+10528975 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+10533012 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+10534948 ID:25 Periodic Statistics: M[25] Parents: 9 [26 max]
+10536360 ID:4 [INFO: App       ] M[4] ConvTime:59904 us
+10554208 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+10558393 ID:16 [INFO: App       ] M[16] Min.Hops to root: <not reachable>
+10561885 ID:16 [INFO: App       ] M[16] ConvTime:56384 us
+10567588 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+10571790 ID:25 [INFO: App       ] M[25] Min.Hops to root: <not reachable>
+10575284 ID:25 [INFO: App       ] M[25] ConvTime:39232 us
+10598117 ID:2 Periodic Statistics: M[2] | DIO: 2
+10598386 ID:6 Periodic Statistics: M[6] Neighbors: 6 [26 max]
+10603632 ID:6 Periodic Statistics: M[6] Routes: 1 [26 max]
+10606021 ID:9 Periodic Statistics: M[9] | DIO: 1
+10620990 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+10625178 ID:20 [INFO: App       ] M[20] Min.Hops to root: <not reachable>
+10628668 ID:20 [INFO: App       ] M[20] ConvTime:21376 us
+10629801 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+10633989 ID:13 [INFO: App       ] M[13] Min.Hops to root: <not reachable>
+10637321 ID:13 [INFO: App       ] M[13] ConvTime:2048 us
+10642126 ID:20 Periodic Statistics: M[20] | DIO: 3
+10645868 ID:6 Periodic Statistics: M[6] Neighbors: 7 [26 max]
+10655911 ID:6 Periodic Statistics: M[6] Parents: 6 [26 max]
+10667003 ID:2 Periodic Statistics: M[2] Neighbors: 3 [26 max]
+10667888 ID:10 Periodic Statistics: M[10] Neighbors: 4 [26 max]
+10667889 ID:19 Periodic Statistics: M[19] Neighbors: 4 [26 max]
+10669089 ID:4 Periodic Statistics: M[4] Neighbors: 6 [26 max]
+10670691 ID:18 Periodic Statistics: M[18] Neighbors: 8 [26 max]
+10673597 ID:2 Periodic Statistics: M[2] Parents: 3 [26 max]
+10675480 ID:19 Periodic Statistics: M[19] Parents: 4 [26 max]
+10675489 ID:10 Periodic Statistics: M[10] Parents: 4 [26 max]
+10678216 ID:4 Periodic Statistics: M[4] Parents: 6 [26 max]
+10681720 ID:18 Periodic Statistics: M[18] Parents: 8 [26 max]
+10692882 ID:6 Periodic Statistics: M[6] Parents: 7 [26 max]
+10722215 ID:3 Periodic Statistics: M[3] | DIO: 3
+10739137 ID:11 Periodic Statistics: M[11] Neighbors: 9 [26 max]
+10751587 ID:11 Periodic Statistics: M[11] Parents: 8 [26 max]
+10752303 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+10756490 ID:23 [INFO: App       ] M[23] Min.Hops to root: <not reachable>
+10759986 ID:23 [INFO: App       ] M[23] ConvTime:50176 us
+10764635 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+10768822 ID:21 [INFO: App       ] M[21] Min.Hops to root: <not reachable>
+10772312 ID:21 [INFO: App       ] M[21] ConvTime:64768 us
+10773857 ID:8 Periodic Statistics: M[8] | DIO: 3
+10803260 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+10807297 ID:5 [INFO: App       ] M[5] Min.Hops to root: <not reachable>
+10810637 ID:5 [INFO: App       ] M[5] ConvTime:48320 us
+10823794 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+10827831 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+10831171 ID:2 [INFO: App       ] M[2] ConvTime:64512 us
+10846996 ID:1 Periodic Statistics: M[1] Routes: 20 [26 max]
+10852442 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+10856629 ID:10 [INFO: App       ] M[10] Min.Hops to root: <not reachable>
+10860190 ID:10 [INFO: App       ] M[10] ConvTime:60160 us
+10900225 ID:22 Periodic Statistics: M[22] | DIO: 2
+10901246 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+10905283 ID:3 [INFO: App       ] M[3] Min.Hops to root: <not reachable>
+10908623 ID:3 [INFO: App       ] M[3] ConvTime:65088 us
+11031773 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+11035810 ID:8 [INFO: App       ] M[8] Min.Hops to root: <not reachable>
+11039197 ID:8 [INFO: App       ] M[8] ConvTime:50240 us
+11051913 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+11055949 ID:9 [INFO: App       ] M[9] Min.Hops to root: <not reachable>
+11059335 ID:9 [INFO: App       ] M[9] ConvTime:50304 us
+11097784 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+11101971 ID:19 [INFO: App       ] M[19] Min.Hops to root: <not reachable>
+11105522 ID:19 [INFO: App       ] M[19] ConvTime:60864 us
+11164905 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+11169091 ID:11 [INFO: App       ] M[11] Min.Hops to root: <not reachable>
+11172580 ID:11 [INFO: App       ] M[11] ConvTime:56320 us
+11181147 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+11185334 ID:12 [INFO: App       ] M[12] Min.Hops to root: <not reachable>
+11188899 ID:12 [INFO: App       ] M[12] ConvTime:60608 us
+11199343 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+11202450 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+11203530 ID:15 [INFO: App       ] M[15] Min.Hops to root: <not reachable>
+11206637 ID:17 [INFO: App       ] M[17] Min.Hops to root: <not reachable>
+11207027 ID:15 [INFO: App       ] M[15] ConvTime:50304 us
+11210128 ID:17 [INFO: App       ] M[17] ConvTime:17408 us
+11241840 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+11245877 ID:7 [INFO: App       ] M[7] Min.Hops to root: <not reachable>
+11249278 ID:7 [INFO: App       ] M[7] ConvTime:61696 us
+11260630 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+11260716 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+11264753 ID:6 [INFO: App       ] M[6] Min.Hops to root: <not reachable>
+11264817 ID:22 [INFO: App       ] M[22] Min.Hops to root: <not reachable>
+11267955 ID:6 [INFO: App       ] M[6] ConvTime:1280 us
+11268308 ID:22 [INFO: App       ] M[22] ConvTime:52288 us
+11319242 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+11323429 ID:24 [INFO: App       ] M[24] Min.Hops to root: <not reachable>
+11326983 ID:24 [INFO: App       ] M[24] ConvTime:60096 us
+11689598 ID:7 Periodic Statistics: M[7] | DIO: 2
+11733639 ID:20 Periodic Statistics: M[20] Parents: 10 [26 max]
+12025344 ID:22 Periodic Statistics: M[22] | DIO: 3
+12035585 ID:2 Periodic Statistics: M[2] | DIO: 3
+12446716 ID:24 Periodic Statistics: M[24] | DIO: 2
+12447050 ID:23 Periodic Statistics: M[23] | DIO: 2
+12499220 ID:15 Periodic Statistics: M[15] Neighbors: 2 [26 max]
+12499758 ID:8 Periodic Statistics: M[8] Neighbors: 3 [26 max]
+12499911 ID:14 Periodic Statistics: M[14] Neighbors: 3 [26 max]
+12499911 ID:23 Periodic Statistics: M[23] Neighbors: 3 [26 max]
+12500612 ID:16 Periodic Statistics: M[16] Neighbors: 4 [26 max]
+12503295 ID:6 Periodic Statistics: M[6] Neighbors: 8 [26 max]
+12503385 ID:17 Periodic Statistics: M[17] Neighbors: 8 [26 max]
+12505124 ID:15 Periodic Statistics: M[15] Parents: 2 [26 max]
+12505684 ID:20 Periodic Statistics: M[20] Neighbors: 11 [26 max]
+12506353 ID:8 Periodic Statistics: M[8] Parents: 3 [26 max]
+12506597 ID:23 Periodic Statistics: M[23] Parents: 3 [26 max]
+12506655 ID:14 Periodic Statistics: M[14] Parents: 3 [26 max]
+12508161 ID:16 Periodic Statistics: M[16] Parents: 4 [26 max]
+12514117 ID:6 Periodic Statistics: M[6] Parents: 8 [26 max]
+12514312 ID:17 Periodic Statistics: M[17] Parents: 8 [26 max]
+12519413 ID:20 Periodic Statistics: M[20] Parents: 11 [26 max]
+12539273 ID:15 Periodic Statistics: M[15] Neighbors: 3 [26 max]
+12539870 ID:8 Periodic Statistics: M[8] Neighbors: 4 [26 max]
+12539970 ID:14 Periodic Statistics: M[14] Neighbors: 4 [26 max]
+12540658 ID:24 Periodic Statistics: M[24] Neighbors: 5 [26 max]
+12540679 ID:16 Periodic Statistics: M[16] Neighbors: 5 [26 max]
+12545975 ID:15 Periodic Statistics: M[15] Parents: 3 [26 max]
+12547322 ID:8 Periodic Statistics: M[8] Parents: 4 [26 max]
+12547503 ID:14 Periodic Statistics: M[14] Parents: 4 [26 max]
+12549051 ID:16 Periodic Statistics: M[16] Parents: 5 [26 max]
+12549088 ID:24 Periodic Statistics: M[24] Parents: 5 [26 max]
+12555804 ID:17 Periodic Statistics: M[17] Neighbors: 9 [26 max]
+12567671 ID:17 Periodic Statistics: M[17] Parents: 9 [26 max]
+12635057 ID:6 Periodic Statistics: M[6] | DIO: 3
+12641549 ID:4 Periodic Statistics: M[4] | DIO: 3
+12748796 ID:17 Periodic Statistics: M[17] | DIO: 3
+12802651 ID:23 Periodic Statistics: M[23] Neighbors: 4 [26 max]
+12802652 ID:15 Periodic Statistics: M[15] Neighbors: 4 [26 max]
+12804038 ID:16 Periodic Statistics: M[16] Neighbors: 6 [26 max]
+12804038 ID:24 Periodic Statistics: M[24] Neighbors: 6 [26 max]
+12805431 ID:12 Periodic Statistics: M[12] Neighbors: 8 [26 max]
+12805982 ID:6 Periodic Statistics: M[6] Neighbors: 9 [26 max]
+12806028 ID:5 Periodic Statistics: M[5] Neighbors: 9 [26 max]
+12806121 ID:18 Periodic Statistics: M[18] Neighbors: 9 [26 max]
+12806179 ID:21 Periodic Statistics: M[21] Neighbors: 9 [26 max]
+12806966 ID:25 Periodic Statistics: M[25] Neighbors: 10 [26 max]
+12808416 ID:20 Periodic Statistics: M[20] Neighbors: 12 [26 max]
+12810242 ID:23 Periodic Statistics: M[23] Parents: 4 [26 max]
+12810253 ID:15 Periodic Statistics: M[15] Parents: 4 [26 max]
+12813257 ID:24 Periodic Statistics: M[24] Parents: 6 [26 max]
+12813314 ID:16 Periodic Statistics: M[16] Parents: 6 [26 max]
+12816346 ID:12 Periodic Statistics: M[12] Parents: 8 [26 max]
+12817652 ID:6 Periodic Statistics: M[6] Parents: 9 [26 max]
+12817685 ID:5 Periodic Statistics: M[5] Parents: 9 [26 max]
+12817930 ID:18 Periodic Statistics: M[18] Parents: 9 [26 max]
+12817989 ID:21 Periodic Statistics: M[21] Parents: 9 [26 max]
+12819802 ID:25 Periodic Statistics: M[25] Parents: 10 [26 max]
+12822975 ID:20 Periodic Statistics: M[20] Parents: 12 [26 max]
+13259949 ID:14 Periodic Statistics: M[14] | DIO: 2
+13291962 ID:24 Periodic Statistics: M[24] Neighbors: 7 [26 max]
+13302083 ID:24 Periodic Statistics: M[24] Parents: 7 [26 max]
+13572240 ID:25 Periodic Statistics: M[25] | DIO: 3
+13578501 ID:4 Periodic Statistics: M[4] | DIO: 4
+13599729 ID:9 Periodic Statistics: M[9] Neighbors: 2 [26 max]
+13601106 ID:2 Periodic Statistics: M[2] Neighbors: 4 [26 max]
+13601946 ID:10 Periodic Statistics: M[10] Neighbors: 5 [26 max]
+13601947 ID:19 Periodic Statistics: M[19] Neighbors: 5 [26 max]
+13603396 ID:22 Periodic Statistics: M[22] Neighbors: 7 [26 max]
+13605426 ID:9 Periodic Statistics: M[9] Parents: 2 [26 max]
+13605625 ID:21 Periodic Statistics: M[21] Neighbors: 10 [26 max]
+13605627 ID:18 Periodic Statistics: M[18] Neighbors: 10 [26 max]
+13606323 ID:25 Periodic Statistics: M[25] Neighbors: 11 [26 max]
+13607715 ID:20 Periodic Statistics: M[20] Neighbors: 13 [26 max]
+13608547 ID:2 Periodic Statistics: M[2] Parents: 4 [26 max]
+13609420 ID:1 Periodic Statistics: M[1] Neighbors: 15 [26 max]
+13610377 ID:10 Periodic Statistics: M[10] Parents: 5 [26 max]
+13610377 ID:19 Periodic Statistics: M[19] Parents: 5 [26 max]
+13613517 ID:22 Periodic Statistics: M[22] Parents: 7 [26 max]
+13618431 ID:21 Periodic Statistics: M[21] Parents: 10 [26 max]
+13618490 ID:18 Periodic Statistics: M[18] Parents: 10 [26 max]
+13620051 ID:25 Periodic Statistics: M[25] Parents: 11 [26 max]
+13623059 ID:20 Periodic Statistics: M[20] Parents: 13 [26 max]
+13720825 ID:14 Periodic Statistics: M[14] | DIO: 3
+14030578 ID:21 Periodic Statistics: M[21] | DIO: 3
+14382038 ID:3 Periodic Statistics: M[3] | DIO: 4
+14766126 ID:8 Periodic Statistics: M[8] | DIO: 4
+14785342 ID:15 Periodic Statistics: M[15] | DIO: 2
+14830301 ID:24 Periodic Statistics: M[24] Neighbors: 8 [26 max]
+14841273 ID:24 Periodic Statistics: M[24] Parents: 8 [26 max]
+15019370 ID:12 Periodic Statistics: M[12] | DIO: 3
+15019469 ID:16 Periodic Statistics: M[16] | DIO: 3
+15019474 ID:2 Periodic Statistics: M[2] | DIO: 4
+15049211 ID:9 Periodic Statistics: M[9] Neighbors: 3 [26 max]
+15051428 ID:19 Periodic Statistics: M[19] Neighbors: 6 [26 max]
+15051487 ID:10 Periodic Statistics: M[10] Neighbors: 6 [26 max]
+15051972 ID:4 Periodic Statistics: M[4] Neighbors: 7 [26 max]
+15055151 ID:18 Periodic Statistics: M[18] Neighbors: 11 [26 max]
+15055748 ID:9 Periodic Statistics: M[9] Parents: 3 [26 max]
+15057223 ID:20 Periodic Statistics: M[20] Neighbors: 14 [26 max]
+15058348 ID:1 Periodic Statistics: M[1] Neighbors: 16 [26 max]
+15060647 ID:19 Periodic Statistics: M[19] Parents: 6 [26 max]
+15060764 ID:10 Periodic Statistics: M[10] Parents: 6 [26 max]
+15061901 ID:4 Periodic Statistics: M[4] Parents: 7 [26 max]
+15068812 ID:18 Periodic Statistics: M[18] Parents: 11 [26 max]
+15073474 ID:20 Periodic Statistics: M[20] Parents: 14 [26 max]
+15081687 ID:8 Periodic Statistics: M[8] Neighbors: 5 [26 max]
+15081861 ID:23 Periodic Statistics: M[23] Neighbors: 5 [26 max]
+15082155 ID:14 Periodic Statistics: M[14] Neighbors: 5 [26 max]
+15084673 ID:24 Periodic Statistics: M[24] Neighbors: 9 [26 max]
+15089978 ID:8 Periodic Statistics: M[8] Parents: 5 [26 max]
+15090301 ID:23 Periodic Statistics: M[23] Parents: 5 [26 max]
+15090585 ID:14 Periodic Statistics: M[14] Parents: 5 [26 max]
+15091634 ID:6 Periodic Statistics: M[6] Neighbors: 10 [26 max]
+15093612 ID:19 Periodic Statistics: M[19] Neighbors: 7 [26 max]
+15093696 ID:10 Periodic Statistics: M[10] Neighbors: 7 [26 max]
+15096492 ID:24 Periodic Statistics: M[24] Parents: 9 [26 max]
+15096607 ID:17 Periodic Statistics: M[17] Neighbors: 10 [26 max]
+15103743 ID:19 Periodic Statistics: M[19] Parents: 7 [26 max]
+15103817 ID:10 Periodic Statistics: M[10] Parents: 7 [26 max]
+15104348 ID:6 Periodic Statistics: M[6] Parents: 10 [26 max]
+15105841 ID:25 Periodic Statistics: M[25] Neighbors: 12 [26 max]
+15109470 ID:17 Periodic Statistics: M[17] Parents: 10 [26 max]
+15120399 ID:25 Periodic Statistics: M[25] Parents: 12 [26 max]
+15182306 ID:20 Periodic Statistics: M[20] | DIO: 4
+15184878 ID:11 Periodic Statistics: M[11] | DIO: 4
+15227683 ID:2 Periodic Statistics: M[2] Neighbors: 5 [26 max]
+15229272 ID:16 Periodic Statistics: M[16] Neighbors: 7 [26 max]
+15229824 ID:4 Periodic Statistics: M[4] Neighbors: 8 [26 max]
+15229971 ID:19 Periodic Statistics: M[19] Neighbors: 8 [26 max]
+15231505 ID:24 Periodic Statistics: M[24] Neighbors: 10 [26 max]
+15235974 ID:2 Periodic Statistics: M[2] Parents: 5 [26 max]
+15239393 ID:16 Periodic Statistics: M[16] Parents: 7 [26 max]
+15240656 ID:4 Periodic Statistics: M[4] Parents: 8 [26 max]
+15240953 ID:19 Periodic Statistics: M[19] Parents: 8 [26 max]
+15244368 ID:24 Periodic Statistics: M[24] Parents: 10 [26 max]
+15255140 ID:6 Periodic Statistics: M[6] Neighbors: 11 [26 max]
+15257105 ID:12 Periodic Statistics: M[12] Neighbors: 9 [26 max]
+15260832 ID:5 Periodic Statistics: M[5] Neighbors: 10 [26 max]
+15266116 ID:21 Periodic Statistics: M[21] Neighbors: 11 [26 max]
+15268719 ID:6 Periodic Statistics: M[6] Parents: 11 [26 max]
+15268912 ID:12 Periodic Statistics: M[12] Parents: 9 [26 max]
+15270789 ID:18 Periodic Statistics: M[18] Neighbors: 12 [26 max]
+15273567 ID:5 Periodic Statistics: M[5] Parents: 10 [26 max]
+15275555 ID:25 Periodic Statistics: M[25] Neighbors: 13 [26 max]
+15279766 ID:21 Periodic Statistics: M[21] Parents: 11 [26 max]
+15285355 ID:18 Periodic Statistics: M[18] Parents: 12 [26 max]
+15290897 ID:25 Periodic Statistics: M[25] Parents: 13 [26 max]
+15475003 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+15479190 ID:14 [INFO: App       ] M[14] Min.Hops to root: <not reachable>
+15482526 ID:14 [INFO: App       ] M[14] ConvTime:9664 us
+15493266 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+15496495 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+15500002 ID:18 [INFO: App       ] M[18] ConvTime:60352 us
+15506840 ID:18 Periodic Statistics: M[18] | DIO: 4
+15541638 ID:9 Periodic Statistics: M[9] Neighbors: 4 [26 max]
+15543046 ID:2 Periodic Statistics: M[2] Neighbors: 6 [26 max]
+15543776 ID:7 Periodic Statistics: M[7] Neighbors: 7 [26 max]
+15544495 ID:3 Periodic Statistics: M[3] Neighbors: 8 [26 max]
+15544635 ID:13 Periodic Statistics: M[13] Neighbors: 8 [26 max]
+15544656 ID:16 Periodic Statistics: M[16] Neighbors: 8 [26 max]
+15544914 ID:22 Periodic Statistics: M[22] Neighbors: 8 [26 max]
+15545277 ID:19 Periodic Statistics: M[19] Neighbors: 9 [26 max]
+15546180 ID:12 Periodic Statistics: M[12] Neighbors: 10 [26 max]
+15546743 ID:11 Periodic Statistics: M[11] Neighbors: 10 [26 max]
+15546746 ID:5 Periodic Statistics: M[5] Neighbors: 11 [26 max]
+15546876 ID:17 Periodic Statistics: M[17] Neighbors: 11 [26 max]
+15547425 ID:6 Periodic Statistics: M[6] Neighbors: 12 [26 max]
+15547574 ID:21 Periodic Statistics: M[21] Neighbors: 12 [26 max]
+15549080 ID:9 Periodic Statistics: M[9] Parents: 4 [26 max]
+15552173 ID:2 Periodic Statistics: M[2] Parents: 6 [26 max]
+15553806 ID:7 Periodic Statistics: M[7] Parents: 7 [26 max]
+15555395 ID:3 Periodic Statistics: M[3] Parents: 8 [26 max]
+15555638 ID:16 Periodic Statistics: M[16] Parents: 8 [26 max]
+15555686 ID:13 Periodic Statistics: M[13] Parents: 8 [26 max]
+15555845 ID:22 Periodic Statistics: M[22] Parents: 8 [26 max]
+15557086 ID:19 Periodic Statistics: M[19] Parents: 9 [26 max]
+15557592 ID:23 Periodic Statistics: M[23] | DIO: 3
+15559043 ID:12 Periodic Statistics: M[12] Parents: 10 [26 max]
+15560096 ID:11 Periodic Statistics: M[11] Parents: 9 [26 max]
+15560325 ID:5 Periodic Statistics: M[5] Parents: 11 [26 max]
+15560526 ID:17 Periodic Statistics: M[17] Parents: 11 [26 max]
+15561775 ID:6 Periodic Statistics: M[6] Parents: 12 [26 max]
+15562074 ID:21 Periodic Statistics: M[21] Parents: 12 [26 max]
+15572381 ID:20 Periodic Statistics: M[20] Neighbors: 15 [26 max]
+15572804 ID:4 Periodic Statistics: M[4] Neighbors: 9 [26 max]
+15584462 ID:4 Periodic Statistics: M[4] Parents: 9 [26 max]
+15589481 ID:20 Periodic Statistics: M[20] Parents: 15 [26 max]
+15601259 ID:5 Periodic Statistics: M[5] | DIO: 3
+15623548 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+15627585 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+15630987 ID:4 [INFO: App       ] M[4] ConvTime:61568 us
+15635327 ID:25 Periodic Statistics: M[25] Neighbors: 14 [26 max]
+15648900 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+15649386 ID:7 Periodic Statistics: M[7] Neighbors: 8 [26 max]
+15649799 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+15650131 ID:3 Periodic Statistics: M[3] Neighbors: 9 [26 max]
+15650280 ID:22 Periodic Statistics: M[22] Neighbors: 9 [26 max]
+15651578 ID:25 Periodic Statistics: M[25] Parents: 14 [26 max]
+15651763 ID:12 Periodic Statistics: M[12] Neighbors: 11 [26 max]
+15652129 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+15652439 ID:11 Periodic Statistics: M[11] Neighbors: 11 [26 max]
+15653028 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+15653212 ID:18 Periodic Statistics: M[18] Neighbors: 13 [26 max]
+15653278 ID:21 Periodic Statistics: M[21] Neighbors: 13 [26 max]
+15655631 ID:20 [INFO: App       ] M[20] ConvTime:14336 us
+15656530 ID:16 [INFO: App       ] M[16] ConvTime:60160 us
+15660208 ID:7 Periodic Statistics: M[7] Parents: 8 [26 max]
+15661790 ID:3 Periodic Statistics: M[3] Parents: 9 [26 max]
+15662090 ID:22 Periodic Statistics: M[22] Parents: 9 [26 max]
+15665471 ID:12 Periodic Statistics: M[12] Parents: 11 [26 max]
+15666744 ID:11 Periodic Statistics: M[11] Parents: 10 [26 max]
+15668636 ID:18 Periodic Statistics: M[18] Parents: 13 [26 max]
+15668669 ID:21 Periodic Statistics: M[21] Parents: 13 [26 max]
+15706672 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+15709901 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+15713244 ID:25 [INFO: App       ] M[25] ConvTime:3264 us
+15721611 ID:13 Periodic Statistics: M[13] Neighbors: 9 [26 max]
+15722112 ID:10 Periodic Statistics: M[10] | DIO: 3
+15726516 ID:8 Periodic Statistics: M[8] | DIO: 5
+15728548 ID:14 Periodic Statistics: M[14] | DIO: 4
+15732763 ID:19 Periodic Statistics: M[19] | DIO: 2
+15733430 ID:13 Periodic Statistics: M[13] Parents: 9 [26 max]
+15750767 ID:23 Periodic Statistics: M[23] Neighbors: 6 [26 max]
+15750768 ID:14 Periodic Statistics: M[14] Neighbors: 6 [26 max]
+15752208 ID:10 Periodic Statistics: M[10] Neighbors: 8 [26 max]
+15752839 ID:16 Periodic Statistics: M[16] Neighbors: 9 [26 max]
+15753796 ID:19 Periodic Statistics: M[19] Neighbors: 10 [26 max]
+15758385 ID:1 Periodic Statistics: M[1] Neighbors: 17 [26 max]
+15760076 ID:14 Periodic Statistics: M[14] Parents: 6 [26 max]
+15760076 ID:23 Periodic Statistics: M[23] Parents: 6 [26 max]
+15763202 ID:10 Periodic Statistics: M[10] Parents: 8 [26 max]
+15764680 ID:16 Periodic Statistics: M[16] Parents: 9 [26 max]
+15766612 ID:19 Periodic Statistics: M[19] Parents: 10 [26 max]
+15772208 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+15775496 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+15778997 ID:13 [INFO: App       ] M[13] ConvTime:38592 us
+15802475 ID:8 Periodic Statistics: M[8] Neighbors: 6 [26 max]
+15807024 ID:9 Periodic Statistics: M[9] Neighbors: 5 [26 max]
+15807512 ID:6 Periodic Statistics: M[6] Neighbors: 13 [26 max]
+15808381 ID:2 Periodic Statistics: M[2] Neighbors: 7 [26 max]
+15808465 ID:1 Periodic Statistics: M[1] Neighbors: 18 [26 max]
+15808572 ID:14 Periodic Statistics: M[14] Neighbors: 7 [26 max]
+15810716 ID:10 Periodic Statistics: M[10] Neighbors: 9 [26 max]
+15810743 ID:4 Periodic Statistics: M[4] Neighbors: 10 [26 max]
+15811544 ID:8 Periodic Statistics: M[8] Parents: 6 [26 max]
+15815247 ID:9 Periodic Statistics: M[9] Parents: 5 [26 max]
+15818363 ID:2 Periodic Statistics: M[2] Parents: 7 [26 max]
+15818693 ID:14 Periodic Statistics: M[14] Parents: 7 [26 max]
+15822052 ID:16 Periodic Statistics: M[16] Neighbors: 10 [26 max]
+15822525 ID:10 Periodic Statistics: M[10] Parents: 9 [26 max]
+15822716 ID:6 Periodic Statistics: M[6] Parents: 13 [26 max]
+15823398 ID:4 Periodic Statistics: M[4] Parents: 10 [26 max]
+15823950 ID:19 Periodic Statistics: M[19] Neighbors: 11 [26 max]
+15824785 ID:18 Periodic Statistics: M[18] Neighbors: 14 [26 max]
+15826230 ID:20 Periodic Statistics: M[20] Neighbors: 16 [26 max]
+15834868 ID:16 Periodic Statistics: M[16] Parents: 10 [26 max]
+15837600 ID:19 Periodic Statistics: M[19] Parents: 11 [26 max]
+15841037 ID:18 Periodic Statistics: M[18] Parents: 14 [26 max]
+15843486 ID:9 Periodic Statistics: M[9] Neighbors: 6 [26 max]
+15843514 ID:23 Periodic Statistics: M[23] Neighbors: 7 [26 max]
+15844174 ID:20 Periodic Statistics: M[20] Parents: 16 [26 max]
+15849415 ID:8 Periodic Statistics: M[8] Neighbors: 7 [26 max]
+15852623 ID:9 Periodic Statistics: M[9] Parents: 6 [26 max]
+15853646 ID:23 Periodic Statistics: M[23] Parents: 7 [26 max]
+15859329 ID:8 Periodic Statistics: M[8] Parents: 7 [26 max]
+15860654 ID:2 Periodic Statistics: M[2] Neighbors: 8 [26 max]
+15868704 ID:10 Periodic Statistics: M[10] Neighbors: 10 [26 max]
+15871475 ID:2 Periodic Statistics: M[2] Parents: 8 [26 max]
+15871926 ID:25 Periodic Statistics: M[25] Neighbors: 15 [26 max]
+15872642 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+15876679 ID:5 [INFO: App       ] M[5] Min.Hops to root: <not reachable>
+15880022 ID:5 [INFO: App       ] M[5] ConvTime:62784 us
+15881351 ID:4 Periodic Statistics: M[4] Neighbors: 11 [26 max]
+15881520 ID:10 Periodic Statistics: M[10] Parents: 10 [26 max]
+15884433 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+15887662 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+15888394 ID:6 Periodic Statistics: M[6] Neighbors: 14 [26 max]
+15889027 ID:25 Periodic Statistics: M[25] Parents: 15 [26 max]
+15891209 ID:23 [INFO: App       ] M[23] ConvTime:65152 us
+15894861 ID:4 Periodic Statistics: M[4] Parents: 11 [26 max]
+15904539 ID:6 Periodic Statistics: M[6] Parents: 14 [26 max]
+15944646 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+15947876 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+15951376 ID:21 [INFO: App       ] M[21] ConvTime:48960 us
+15963857 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+15967894 ID:3 [INFO: App       ] M[3] Min.Hops to root: <not reachable>
+15971235 ID:3 [INFO: App       ] M[3] ConvTime:65216 us
+15973167 ID:9 Periodic Statistics: M[9] | DIO: 2
+16004041 ID:15 Periodic Statistics: M[15] | DIO: 3
+16030407 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+16034502 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+16037867 ID:2 [INFO: App       ] M[2] ConvTime:39232 us
+16081974 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+16086161 ID:10 [INFO: App       ] M[10] Min.Hops to root: <not reachable>
+16089649 ID:10 [INFO: App       ] M[10] ConvTime:17280 us
+16100515 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+16104552 ID:8 [INFO: App       ] M[8] Min.Hops to root: <not reachable>
+16107929 ID:8 [INFO: App       ] M[8] ConvTime:63360 us
+16108017 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+16111097 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+16114448 ID:9 [INFO: App       ] M[9] ConvTime:36864 us
+16177617 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+16181805 ID:11 [INFO: App       ] M[11] Min.Hops to root: <not reachable>
+16185295 ID:11 [INFO: App       ] M[11] ConvTime:17408 us
+16202908 ID:15 Periodic Statistics: M[15] Default routes: 0
+16206219 ID:15 Periodic Statistics: M[15] Default routes: 1
+16209341 ID:15 Periodic Statistics: M[15] | DAO: 2
+16223853 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+16227141 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+16230646 ID:12 [INFO: App       ] M[12] ConvTime:19136 us
+16232569 ID:7 Periodic Statistics: M[7] | DIO: 3
+16236176 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+16240364 ID:19 [INFO: App       ] M[19] Min.Hops to root: <not reachable>
+16243855 ID:19 [INFO: App       ] M[19] ConvTime:23424 us
+16258269 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+16262306 ID:7 [INFO: App       ] M[7] Min.Hops to root: <not reachable>
+16265710 ID:7 [INFO: App       ] M[7] ConvTime:30656 us
+16270862 ID:3 Periodic Statistics: M[3] Neighbors: 10 [26 max]
+16271012 ID:13 Periodic Statistics: M[13] Neighbors: 10 [26 max]
+16272198 ID:5 Periodic Statistics: M[5] Neighbors: 12 [26 max]
+16272405 ID:12 Periodic Statistics: M[12] Neighbors: 12 [26 max]
+16273797 ID:21 Periodic Statistics: M[21] Neighbors: 14 [26 max]
+16274593 ID:18 Periodic Statistics: M[18] Neighbors: 15 [26 max]
+16283518 ID:3 Periodic Statistics: M[3] Parents: 10 [26 max]
+16283886 ID:13 Periodic Statistics: M[13] Parents: 10 [26 max]
+16286548 ID:5 Periodic Statistics: M[5] Parents: 12 [26 max]
+16286963 ID:12 Periodic Statistics: M[12] Parents: 12 [26 max]
+16290049 ID:21 Periodic Statistics: M[21] Parents: 14 [26 max]
+16291646 ID:18 Periodic Statistics: M[18] Parents: 15 [26 max]
+16316490 ID:22 Periodic Statistics: M[22] Neighbors: 10 [26 max]
+16328427 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+16329295 ID:22 Periodic Statistics: M[22] Parents: 10 [26 max]
+16331711 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+16335211 ID:17 [INFO: App       ] M[17] ConvTime:19456 us
+16335479 ID:13 Periodic Statistics: M[13] | DIO: 3
+16373886 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+16377116 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+16377709 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+16380617 ID:24 [INFO: App       ] M[24] ConvTime:43584 us
+16380997 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+16384500 ID:22 [INFO: App       ] M[22] ConvTime:35648 us
+16425810 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+16429846 ID:6 [INFO: App       ] M[6] Min.Hops to root: <not reachable>
+16433185 ID:6 [INFO: App       ] M[6] ConvTime:19840 us
+16683998 ID:18 Periodic Statistics: M[18] Neighbors: 16 [26 max]
+16701953 ID:18 Periodic Statistics: M[18] Parents: 16 [26 max]
+17300641 ID:13 Periodic Statistics: M[13] | DIO: 4
+17368467 ID:22 Periodic Statistics: M[22] | DIO: 4
+17432728 ID:11 Periodic Statistics: M[11] Neighbors: 12 [26 max]
+17441610 ID:11 Periodic Statistics: M[11] Parents: 11 [26 max]
+17465778 ID:18 Periodic Statistics: M[18] Neighbors: 17 [26 max]
+17484570 ID:18 Periodic Statistics: M[18] Parents: 17 [26 max]
+17786972 ID:23 Periodic Statistics: M[23] | DIO: 4
+17895358 ID:2 Periodic Statistics: M[2] | DIO: 5
+17955364 ID:14 Periodic Statistics: M[14] | DIO: 5
+17963912 ID:3 Periodic Statistics: M[3] | DIO: 5
+18068467 ID:16 Periodic Statistics: M[16] Neighbors: 11 [26 max]
+18082129 ID:16 Periodic Statistics: M[16] Parents: 11 [26 max]
+18657568 ID:4 Periodic Statistics: M[4] | DIO: 5
+19002483 ID:16 Periodic Statistics: M[16] | DIO: 4
+19127200 ID:14 Periodic Statistics: M[14] | DIO: 6
+19479619 ID:14 Periodic Statistics: M[14] Default routes: 0
+19482935 ID:14 Periodic Statistics: M[14] Default routes: 1
+19486057 ID:14 Periodic Statistics: M[14] | DAO: 2
+19695958 ID:8 Periodic Statistics: M[8] | DIO: 6
+19730061 ID:15 Periodic Statistics: M[15] | DIO: 4
+19767252 ID:11 Periodic Statistics: M[11] Parents: 12 [26 max]
+19925667 ID:15 Periodic Statistics: M[15] | DAO: 3
+19947332 ID:17 Periodic Statistics: M[17] Routes: 1 [26 max]
+20016054 ID:1 Periodic Statistics: M[1] Routes: 19 [26 max]
+20020384 ID:1 Periodic Statistics: M[1] Routes: 20 [26 max]
+20087217 ID:4 Periodic Statistics: M[4] | DIO: 6
+20302007 ID:2 Periodic Statistics: M[2] | DIO: 6
+20504056 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+20507285 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+20509971 ID:22 Periodic Statistics: M[22] | DIO: 5
+20510785 ID:18 [INFO: App       ] M[18] ConvTime:17408 us
+20563107 ID:8 Periodic Statistics: M[8] | DIO: 7
+20633758 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+20637795 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+20641180 ID:4 [INFO: App       ] M[4] ConvTime:17472 us
+20658616 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+20660685 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+20661845 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+20663915 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+20665347 ID:20 [INFO: App       ] M[20] ConvTime:34752 us
+20667415 ID:16 [INFO: App       ] M[16] ConvTime:17472 us
+20713429 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+20716659 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+20720158 ID:25 [INFO: App       ] M[25] ConvTime:17408 us
+20785586 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+20788815 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+20792157 ID:13 [INFO: App       ] M[13] ConvTime:1088 us
+20882700 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+20886737 ID:5 [INFO: App       ] M[5] Min.Hops to root: <not reachable>
+20890079 ID:5 [INFO: App       ] M[5] ConvTime:18368 us
+20892946 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+20896176 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+20899676 ID:23 [INFO: App       ] M[23] ConvTime:17472 us
+20953004 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+20956233 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+20959574 ID:21 [INFO: App       ] M[21] ConvTime:1024 us
+20972712 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+20976749 ID:3 [INFO: App       ] M[3] Min.Hops to root: <not reachable>
+20980091 ID:3 [INFO: App       ] M[3] ConvTime:18368 us
+21043481 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+21047518 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+21050755 ID:2 [INFO: App       ] M[2] ConvTime:1088 us
+21089850 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+21093079 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+21096579 ID:10 [INFO: App       ] M[10] ConvTime:33792 us
+21109897 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+21113935 ID:8 [INFO: App       ] M[8] Min.Hops to root: <not reachable>
+21114375 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+21117320 ID:8 [INFO: App       ] M[8] ConvTime:17472 us
+21117455 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+21120809 ID:9 [INFO: App       ] M[9] ConvTime:50176 us
+21185409 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+21189597 ID:11 [INFO: App       ] M[11] Min.Hops to root: <not reachable>
+21193088 ID:11 [INFO: App       ] M[11] ConvTime:33792 us
+21230556 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+21230838 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+21234068 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+21234743 ID:15 [INFO: App       ] M[15] Min.Hops to root: <not reachable>
+21237568 ID:12 [INFO: App       ] M[12] ConvTime:33792 us
+21238239 ID:15 [INFO: App       ] M[15] ConvTime:50176 us
+21248933 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+21253121 ID:19 [INFO: App       ] M[19] Min.Hops to root: <not reachable>
+21256617 ID:19 [INFO: App       ] M[19] ConvTime:50176 us
+21267602 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+21271640 ID:7 [INFO: App       ] M[7] Min.Hops to root: <not reachable>
+21275029 ID:7 [INFO: App       ] M[7] ConvTime:50176 us
+21335724 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+21338953 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+21342457 ID:17 [INFO: App       ] M[17] ConvTime:34752 us
+21384683 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+21384761 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+21387913 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+21387991 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+21391333 ID:24 [INFO: App       ] M[24] ConvTime:1024 us
+21391418 ID:22 [INFO: App       ] M[22] ConvTime:50304 us
+21440275 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+21444312 ID:6 [INFO: App       ] M[6] Min.Hops to root: <not reachable>
+21447702 ID:6 [INFO: App       ] M[6] ConvTime:50176 us
+21758328 ID:21 Periodic Statistics: M[21] | DIO: 4
+21874769 ID:4 Periodic Statistics: M[4] | DIO: 7
+22009886 ID:14 Periodic Statistics: M[14] | DIO: 7
+22853960 ID:14 Periodic Statistics: M[14] | DAO: 3
+22909206 ID:16 Periodic Statistics: M[16] Routes: 1 [26 max]
+22970883 ID:1 Periodic Statistics: M[1] Routes: 21 [26 max]
+23129714 ID:2 Periodic Statistics: M[2] | DIO: 7
+24389511 ID:5 Periodic Statistics: M[5] | DIO: 4
+24403614 ID:11 Periodic Statistics: M[11] | DIO: 5
+24457166 ID:17 Periodic Statistics: M[17] Neighbors: 12 [26 max]
+24460586 ID:20 Periodic Statistics: M[20] Neighbors: 17 [26 max]
+24471666 ID:17 Periodic Statistics: M[17] Parents: 12 [26 max]
+24479378 ID:20 Periodic Statistics: M[20] Parents: 17 [26 max]
+24493440 ID:12 Periodic Statistics: M[12] | DIO: 4
+25486472 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+25490659 ID:14 [INFO: App       ] M[14] Min.Hops to root: <not reachable>
+25494151 ID:14 [INFO: App       ] M[14] ConvTime:33792 us
+25514286 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+25517573 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+25521075 ID:18 [INFO: App       ] M[18] ConvTime:38912 us
+25617836 ID:8 Periodic Statistics: M[8] | DIO: 8
+25641551 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+25645588 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+25648973 ID:4 [INFO: App       ] M[4] ConvTime:33792 us
+25665971 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+25668877 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+25669200 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+25672107 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+25672705 ID:20 [INFO: App       ] M[20] ConvTime:50176 us
+25675609 ID:16 [INFO: App       ] M[16] ConvTime:34688 us
+25721222 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+25724452 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+25727952 ID:25 [INFO: App       ] M[25] ConvTime:33792 us
+25793360 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+25796589 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+25800089 ID:13 [INFO: App       ] M[13] ConvTime:17408 us
+25890075 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+25893154 ID:5 [INFO: App       ] M[5] Min.Hops to root:1
+25896505 ID:5 [INFO: App       ] M[5] ConvTime:33792 us
+25900720 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+25903950 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+25907451 ID:23 [INFO: App       ] M[23] ConvTime:33792 us
+25960816 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+25964046 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+25967545 ID:21 [INFO: App       ] M[21] ConvTime:17408 us
+25980067 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+25984104 ID:3 [INFO: App       ] M[3] Min.Hops to root: <not reachable>
+25987490 ID:3 [INFO: App       ] M[3] ConvTime:33792 us
+26051274 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+26055311 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+26058696 ID:2 [INFO: App       ] M[2] ConvTime:17408 us
+26097643 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+26100872 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+26104377 ID:10 [INFO: App       ] M[10] ConvTime:50176 us
+26117691 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+26121728 ID:8 [INFO: App       ] M[8] Min.Hops to root: <not reachable>
+26122169 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+26125113 ID:8 [INFO: App       ] M[8] ConvTime:33792 us
+26125248 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+26128440 ID:9 [INFO: App       ] M[9] ConvTime:1024 us
+26193241 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+26196470 ID:11 [INFO: App       ] M[11] Min.Hops to root:1
+26199975 ID:11 [INFO: App       ] M[11] ConvTime:50176 us
+26218078 ID:21 Periodic Statistics: M[21] | DIO: 5
+26238670 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+26241900 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+26245405 ID:12 [INFO: App       ] M[12] ConvTime:50176 us
+26246161 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+26249390 ID:15 [INFO: App       ] M[15] Min.Hops to root:2
+26252890 ID:15 [INFO: App       ] M[15] ConvTime:17408 us
+26256746 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+26259975 ID:19 [INFO: App       ] M[19] Min.Hops to root:1
+26263317 ID:19 [INFO: App       ] M[19] ConvTime:1024 us
+26302062 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+26305141 ID:7 [INFO: App       ] M[7] Min.Hops to root:2
+26308491 ID:7 [INFO: App       ] M[7] ConvTime:56960 us
+26328076 ID:6 Periodic Statistics: M[6] | DIO: 4
+26343077 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+26346307 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+26349811 ID:17 [INFO: App       ] M[17] ConvTime:50176 us
+26392435 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+26392574 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+26395665 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+26395803 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+26399006 ID:22 [INFO: App       ] M[22] ConvTime:1024 us
+26399303 ID:24 [INFO: App       ] M[24] ConvTime:17408 us
+26448107 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+26451186 ID:6 [INFO: App       ] M[6] Min.Hops to root:1
+26454378 ID:6 [INFO: App       ] M[6] ConvTime:1024 us
+27553075 ID:19 Periodic Statistics: M[19] | DIO: 3
+27601764 ID:8 Periodic Statistics: M[8] Neighbors: 8 [26 max]
+27606837 ID:6 Periodic Statistics: M[6] Neighbors: 15 [26 max]
+27612586 ID:8 Periodic Statistics: M[8] Parents: 8 [26 max]
+27623809 ID:6 Periodic Statistics: M[6] Parents: 15 [26 max]
+28001363 ID:20 Periodic Statistics: M[20] | DIO: 5
+28068112 ID:22 Periodic Statistics: M[22] Neighbors: 11 [26 max]
+28069445 ID:17 Periodic Statistics: M[17] Neighbors: 13 [26 max]
+28081820 ID:22 Periodic Statistics: M[22] Parents: 11 [26 max]
+28084789 ID:17 Periodic Statistics: M[17] Parents: 13 [26 max]
+28104851 ID:13 Periodic Statistics: M[13] Default routes: 0
+28108161 ID:13 Periodic Statistics: M[13] Default routes: 1
+28111315 ID:13 Periodic Statistics: M[13] | DAO: 3
+28315928 ID:15 Periodic Statistics: M[15] | DIO: 5
+28330052 ID:25 Periodic Statistics: M[25] | DIO: 4
+29173627 ID:23 Periodic Statistics: M[23] | DIO: 5
+29275369 ID:7 Periodic Statistics: M[7] | DIO: 4
+29479415 ID:14 Periodic Statistics: M[14] | DIO: 8
+29483157 ID:17 Periodic Statistics: M[17] | DIO: 4
+29932642 ID:3 Periodic Statistics: M[3] | DIO: 6
+30144117 ID:18 Periodic Statistics: M[18] | DIO: 5
+30372360 ID:24 Periodic Statistics: M[24] | DIO: 3
+30401496 ID:25 Periodic Statistics: M[25] Neighbors: 16 [26 max]
+30419451 ID:25 Periodic Statistics: M[25] Parents: 16 [26 max]
+30502097 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+30505326 ID:14 [INFO: App       ] M[14] Min.Hops to root:2
+30508668 ID:14 [INFO: App       ] M[14] ConvTime:1024 us
+30527494 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+30530723 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+30534064 ID:18 [INFO: App       ] M[18] ConvTime:1024 us
+30649344 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+30653381 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+30656771 ID:4 [INFO: App       ] M[4] ConvTime:50176 us
+30676272 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+30679502 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+30683006 ID:16 [INFO: App       ] M[16] ConvTime:50176 us
+30707060 ID:16 Periodic Statistics: M[16] | DIO: 5
+30718054 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+30721283 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+30724782 ID:20 [INFO: App       ] M[20] ConvTime:28288 us
+30729054 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+30732283 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+30735788 ID:25 [INFO: App       ] M[25] ConvTime:50176 us
+30897868 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+30900948 ID:5 [INFO: App       ] M[5] Min.Hops to root:1
+30904303 ID:5 [INFO: App       ] M[5] ConvTime:50176 us
+30908552 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+30911782 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+30915286 ID:23 [INFO: App       ] M[23] ConvTime:50176 us
+30969066 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+30972296 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+30975798 ID:21 [INFO: App       ] M[21] ConvTime:34752 us
+30987899 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+30990979 ID:3 [INFO: App       ] M[3] Min.Hops to root:2
+30994333 ID:3 [INFO: App       ] M[3] ConvTime:50176 us
+31058491 ID:13 Periodic Statistics: M[13] | DIO: 5
+31059068 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+31063104 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+31066490 ID:2 [INFO: App       ] M[2] ConvTime:33792 us
+31105455 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+31108685 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+31112026 ID:10 [INFO: App       ] M[10] ConvTime:1024 us
+31125484 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+31129521 ID:8 [INFO: App       ] M[8] Min.Hops to root: <not reachable>
+31130438 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+31132911 ID:8 [INFO: App       ] M[8] ConvTime:50176 us
+31133518 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+31136927 ID:9 [INFO: App       ] M[9] ConvTime:18368 us
+31201035 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+31204264 ID:11 [INFO: App       ] M[11] Min.Hops to root:1
+31207605 ID:11 [INFO: App       ] M[11] ConvTime:1024 us
+31226516 ID:8 Periodic Statistics: M[8] | DIO: 9
+31246463 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+31249693 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+31253034 ID:12 [INFO: App       ] M[12] ConvTime:1024 us
+31253993 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+31257244 ID:15 [INFO: App       ] M[15] Min.Hops to root:2
+31260745 ID:15 [INFO: App       ] M[15] ConvTime:33792 us
+31264577 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+31267807 ID:19 [INFO: App       ] M[19] Min.Hops to root:1
+31271306 ID:19 [INFO: App       ] M[19] ConvTime:17408 us
+31314477 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+31317557 ID:7 [INFO: App       ] M[7] Min.Hops to root:2
+31320906 ID:7 [INFO: App       ] M[7] ConvTime:17408 us
+31356825 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+31360054 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+31363623 ID:17 [INFO: App       ] M[17] ConvTime:13312 us
+31400248 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+31400863 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+31403477 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+31404092 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+31406977 ID:22 [INFO: App       ] M[22] ConvTime:17408 us
+31407594 ID:24 [INFO: App       ] M[24] ConvTime:34752 us
+31456437 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+31459517 ID:6 [INFO: App       ] M[6] Min.Hops to root:1
+31462925 ID:6 [INFO: App       ] M[6] ConvTime:18496 us
+31613617 ID:13 Periodic Statistics: M[13] | DAO: 4
+31675661 ID:10 Periodic Statistics: M[10] | DIO: 4
+31680819 ID:18 Periodic Statistics: M[18] Routes: 1 [26 max]
+31710206 ID:1 Periodic Statistics: M[1] Routes: 20 [26 max]
+31714977 ID:1 Periodic Statistics: M[1] Routes: 21 [26 max]
+31734860 ID:16 Periodic Statistics: M[16] Neighbors: 12 [26 max]
+31749418 ID:16 Periodic Statistics: M[16] Parents: 12 [26 max]
+31785100 ID:2 Periodic Statistics: M[2] | DIO: 8
+31994203 ID:13 Periodic Statistics: M[13] | DIO: 6
+32133188 ID:4 Periodic Statistics: M[4] | DIO: 8
+32658115 ID:7 Periodic Statistics: M[7] | DIO: 5
+32830052 ID:7 Periodic Statistics: M[7] | DIO: 6
+33790342 ID:22 Periodic Statistics: M[22] | DIO: 6
+33840373 ID:9 Periodic Statistics: M[9] | DIO: 3
+34447471 ID:22 Periodic Statistics: M[22] | DIO: 7
+34721081 ID:7 Periodic Statistics: M[7] | DIO: 7
+35402295 ID:3 Periodic Statistics: M[3] | DIO: 7
+35485166 ID:8 Periodic Statistics: M[8] | DIO: 10
+35517722 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+35520951 ID:14 [INFO: App       ] M[14] Min.Hops to root:2
+35524451 ID:14 [INFO: App       ] M[14] ConvTime:33792 us
+35535306 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+35538536 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+35542035 ID:18 [INFO: App       ] M[18] ConvTime:17408 us
+35657176 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+35661213 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+35664450 ID:4 [INFO: App       ] M[4] ConvTime:1024 us
+35684082 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+35687311 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+35690653 ID:16 [INFO: App       ] M[16] ConvTime:1024 us
+35728490 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+35731720 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+35735224 ID:20 [INFO: App       ] M[20] ConvTime:50176 us
+35736867 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+35740097 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+35743438 ID:25 [INFO: App       ] M[25] ConvTime:1024 us
+35801211 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+35804440 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+35807941 ID:13 [INFO: App       ] M[13] ConvTime:33856 us
+35905700 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+35908779 ID:5 [INFO: App       ] M[5] Min.Hops to root:1
+35911971 ID:5 [INFO: App       ] M[5] ConvTime:1024 us
+35916365 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+35919594 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+35922936 ID:23 [INFO: App       ] M[23] ConvTime:1024 us
+35976441 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+35979670 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+35983175 ID:21 [INFO: App       ] M[21] ConvTime:50176 us
+35995731 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+35998811 ID:3 [INFO: App       ] M[3] Min.Hops to root:2
+36002002 ID:3 [INFO: App       ] M[3] ConvTime:1088 us
+36044686 ID:8 Periodic Statistics: M[8] Default routes: 0
+36047846 ID:8 Periodic Statistics: M[8] Default routes: 1
+36050819 ID:8 Periodic Statistics: M[8] | DAO: 2
+36066899 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+36070937 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+36074326 ID:2 [INFO: App       ] M[2] ConvTime:50176 us
+36113287 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+36116517 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+36120016 ID:10 [INFO: App       ] M[10] ConvTime:17408 us
+36137813 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+36140892 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+36144243 ID:9 [INFO: App       ] M[9] ConvTime:33792 us
+36209304 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+36212533 ID:11 [INFO: App       ] M[11] Min.Hops to root:1
+36216036 ID:11 [INFO: App       ] M[11] ConvTime:18368 us
+36254295 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+36257524 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+36261024 ID:12 [INFO: App       ] M[12] ConvTime:17408 us
+36261786 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+36265015 ID:15 [INFO: App       ] M[15] Min.Hops to root:2
+36268520 ID:15 [INFO: App       ] M[15] ConvTime:50176 us
+36272390 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+36275619 ID:19 [INFO: App       ] M[19] Min.Hops to root:1
+36279119 ID:19 [INFO: App       ] M[19] ConvTime:33792 us
+36322309 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+36325388 ID:7 [INFO: App       ] M[7] Min.Hops to root:2
+36328739 ID:7 [INFO: App       ] M[7] ConvTime:33856 us
+36366506 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+36369735 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+36373234 ID:17 [INFO: App       ] M[17] ConvTime:33728 us
+36408099 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+36408218 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+36411328 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+36411448 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+36414829 ID:22 [INFO: App       ] M[22] ConvTime:33856 us
+36414952 ID:24 [INFO: App       ] M[24] ConvTime:50176 us
+36463732 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+36466811 ID:6 [INFO: App       ] M[6] Min.Hops to root:1
+36470162 ID:6 [INFO: App       ] M[6] ConvTime:33792 us
+36494114 ID:7 Periodic Statistics: M[7] | DIO: 8
+37183283 ID:7 Periodic Statistics: M[7] Default routes: 0
+37186445 ID:7 Periodic Statistics: M[7] Default routes: 1
+37189417 ID:7 Periodic Statistics: M[7] | DAO: 2
+37636565 ID:13 Periodic Statistics: M[13] | DIO: 7
+37722178 ID:15 Periodic Statistics: M[15] | DIO: 6
+38141257 ID:8 Periodic Statistics: M[8] | DIO: 11
+38693491 ID:2 Periodic Statistics: M[2] | DIO: 9
+39712613 ID:7 Periodic Statistics: M[7] | DAO: 3
+39728040 ID:7 Periodic Statistics: M[7] | DIO: 9
+39750333 ID:8 Periodic Statistics: M[8] | DAO: 3
+39754188 ID:12 Periodic Statistics: M[12] Routes: 2 [26 max]
+39812695 ID:16 Periodic Statistics: M[16] Routes: 2 [26 max]
+39829814 ID:1 Periodic Statistics: M[1] Routes: 20 [26 max]
+39834355 ID:1 Periodic Statistics: M[1] Routes: 21 [26 max]
+39869503 ID:1 Periodic Statistics: M[1] Routes: 22 [26 max]
+39993296 ID:6 Periodic Statistics: M[6] | DIO: 5
+40027295 ID:3 Periodic Statistics: M[3] | DIO: 8
+40533327 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+40536557 ID:14 [INFO: App       ] M[14] Min.Hops to root:2
+40539898 ID:14 [INFO: App       ] M[14] ConvTime:1024 us
+40543537 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+40546766 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+40550267 ID:18 [INFO: App       ] M[18] ConvTime:34688 us
+40664969 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+40669006 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+40672390 ID:4 [INFO: App       ] M[4] ConvTime:17408 us
+40691875 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+40695104 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+40698604 ID:16 [INFO: App       ] M[16] ConvTime:17408 us
+40736283 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+40739513 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+40742854 ID:20 [INFO: App       ] M[20] ConvTime:1024 us
+40744660 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+40747889 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+40751388 ID:25 [INFO: App       ] M[25] ConvTime:17408 us
+40816817 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+40820046 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+40823387 ID:13 [INFO: App       ] M[13] ConvTime:1024 us
+40837335 ID:10 Periodic Statistics: M[10] | DIO: 5
+40913493 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+40916572 ID:5 [INFO: App       ] M[5] Min.Hops to root:1
+40919922 ID:5 [INFO: App       ] M[5] ConvTime:17408 us
+40924158 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+40927387 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+40930887 ID:23 [INFO: App       ] M[23] ConvTime:17408 us
+40984257 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+40987486 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+40990827 ID:21 [INFO: App       ] M[21] ConvTime:1024 us
+41003524 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+41006604 ID:3 [INFO: App       ] M[3] Min.Hops to root:2
+41009953 ID:3 [INFO: App       ] M[3] ConvTime:17408 us
+41074712 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+41078749 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+41081975 ID:2 [INFO: App       ] M[2] ConvTime:1024 us
+41121100 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+41124329 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+41127829 ID:10 [INFO: App       ] M[10] ConvTime:33792 us
+41133338 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+41137375 ID:8 [INFO: App       ] M[8] Min.Hops to root: <not reachable>
+41140612 ID:8 [INFO: App       ] M[8] ConvTime:1088 us
+41145606 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+41148686 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+41152040 ID:9 [INFO: App       ] M[9] ConvTime:50176 us
+41216659 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+41219889 ID:11 [INFO: App       ] M[11] Min.Hops to root:1
+41223389 ID:11 [INFO: App       ] M[11] ConvTime:33792 us
+41262088 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+41265318 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+41268818 ID:12 [INFO: App       ] M[12] ConvTime:33792 us
+41269618 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+41272847 ID:15 [INFO: App       ] M[15] Min.Hops to root:2
+41276189 ID:15 [INFO: App       ] M[15] ConvTime:1024 us
+41280183 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+41283413 ID:19 [INFO: App       ] M[19] Min.Hops to root:1
+41286917 ID:19 [INFO: App       ] M[19] ConvTime:50176 us
+41330122 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+41333202 ID:7 [INFO: App       ] M[7] Min.Hops to root:2
+41336554 ID:7 [INFO: App       ] M[7] ConvTime:50240 us
+41374327 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+41377556 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+41381074 ID:17 [INFO: App       ] M[17] ConvTime:50176 us
+41415873 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+41416011 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+41419102 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+41419240 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+41422604 ID:24 [INFO: App       ] M[24] ConvTime:1024 us
+41422607 ID:22 [INFO: App       ] M[22] ConvTime:50176 us
+41471544 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+41474624 ID:6 [INFO: App       ] M[6] Min.Hops to root:1
+41477979 ID:6 [INFO: App       ] M[6] ConvTime:50176 us
+42254276 ID:3 Periodic Statistics: M[3] | DIO: 9
+42855400 ID:3 Periodic Statistics: M[3] Default routes: 0
+42858561 ID:3 Periodic Statistics: M[3] Default routes: 1
+42861566 ID:3 Periodic Statistics: M[3] | DAO: 3
+42931851 ID:22 Periodic Statistics: M[22] | DIO: 8
+43452897 ID:25 Periodic Statistics: M[25] | DIO: 5
+45315681 ID:3 Periodic Statistics: M[3] | DIO: 10
+45548952 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+45550912 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+45552182 ID:14 [INFO: App       ] M[14] Min.Hops to root:2
+45554141 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+45555682 ID:14 [INFO: App       ] M[14] ConvTime:33792 us
+45557646 ID:18 [INFO: App       ] M[18] ConvTime:50176 us
+45672781 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+45676818 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+45680204 ID:4 [INFO: App       ] M[4] ConvTime:33792 us
+45705255 ID:22 Periodic Statistics: M[22] | DIO: 9
+45708232 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+45711461 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+45715020 ID:16 [INFO: App       ] M[16] ConvTime:51712 us
+45744096 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+45747325 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+45750824 ID:20 [INFO: App       ] M[20] ConvTime:17408 us
+45752492 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+45755721 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+45759221 ID:25 [INFO: App       ] M[25] ConvTime:33792 us
+45832422 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+45835651 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+45839151 ID:13 [INFO: App       ] M[13] ConvTime:33792 us
+45921306 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+45924385 ID:5 [INFO: App       ] M[5] Min.Hops to root:1
+45927736 ID:5 [INFO: App       ] M[5] ConvTime:33792 us
+45932408 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+45935637 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+45939138 ID:23 [INFO: App       ] M[23] ConvTime:34688 us
+45992047 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+45995276 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+45998776 ID:21 [INFO: App       ] M[21] ConvTime:17408 us
+46082943 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+46086980 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+46090322 ID:2 [INFO: App       ] M[2] ConvTime:18304 us
+46128893 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+46132122 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+46135627 ID:10 [INFO: App       ] M[10] ConvTime:50176 us
+46149041 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+46152121 ID:8 [INFO: App       ] M[8] Min.Hops to root:2
+46153419 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+46155470 ID:8 [INFO: App       ] M[8] ConvTime:34048 us
+46156498 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+46159690 ID:9 [INFO: App       ] M[9] ConvTime:1024 us
+46195404 ID:8 Periodic Statistics: M[8] | DIO: 12
+46224471 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+46227700 ID:11 [INFO: App       ] M[11] Min.Hops to root:1
+46231205 ID:11 [INFO: App       ] M[11] ConvTime:50176 us
+46233006 ID:22 Periodic Statistics: M[22] Default routes: 0
+46236317 ID:22 Periodic Statistics: M[22] Default routes: 1
+46239472 ID:22 Periodic Statistics: M[22] | DAO: 3
+46269901 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+46273131 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+46276635 ID:12 [INFO: App       ] M[12] ConvTime:50176 us
+46277887 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+46281117 ID:15 [INFO: App       ] M[15] Min.Hops to root:2
+46284619 ID:15 [INFO: App       ] M[15] ConvTime:18368 us
+46287911 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+46291141 ID:19 [INFO: App       ] M[19] Min.Hops to root:1
+46294330 ID:19 [INFO: App       ] M[19] ConvTime:832 us
+46337896 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+46340975 ID:7 [INFO: App       ] M[7] Min.Hops to root:2
+46344167 ID:7 [INFO: App       ] M[7] ConvTime:1024 us
+46382672 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+46385901 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+46389268 ID:17 [INFO: App       ] M[17] ConvTime:2112 us
+46423825 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+46427054 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+46430553 ID:24 [INFO: App       ] M[24] ConvTime:17408 us
+46479338 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+46482418 ID:6 [INFO: App       ] M[6] Min.Hops to root:1
+46485609 ID:6 [INFO: App       ] M[6] ConvTime:1024 us
+47081575 ID:3 Periodic Statistics: M[3] | DAO: 4
+47142735 ID:18 Periodic Statistics: M[18] Routes: 2 [26 max]
+47171223 ID:1 Periodic Statistics: M[1] Routes: 21 [26 max]
+47176005 ID:1 Periodic Statistics: M[1] Routes: 22 [26 max]
+47610907 ID:14 Periodic Statistics: M[14] | DIO: 9
+48493674 ID:22 Periodic Statistics: M[22] | DIO: 10
+48775002 ID:7 Periodic Statistics: M[7] | DIO: 10
+49074065 ID:13 Periodic Statistics: M[13] | DIO: 8
+49552616 ID:16 Periodic Statistics: M[16] | DIO: 6
+49634567 ID:22 Periodic Statistics: M[22] | DAO: 4
+49695262 ID:18 Periodic Statistics: M[18] Routes: 3 [26 max]
+49738749 ID:1 Periodic Statistics: M[1] Routes: 21 [26 max]
+49743157 ID:1 Periodic Statistics: M[1] Routes: 22 [26 max]
+49777281 ID:16 Periodic Statistics: M[16] | DIO: 7
+49777439 ID:2 Periodic Statistics: M[2] | DIO: 10
+50558724 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+50561954 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+50564597 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+50565295 ID:18 [INFO: App       ] M[18] ConvTime:1024 us
+50567826 ID:14 [INFO: App       ] M[14] Min.Hops to root:2
+50571167 ID:14 [INFO: App       ] M[14] ConvTime:1024 us
+50680594 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+50684631 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+50688021 ID:4 [INFO: App       ] M[4] ConvTime:50176 us
+50715399 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+50718629 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+50721971 ID:16 [INFO: App       ] M[16] ConvTime:1216 us
+50752346 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+50755575 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+50759076 ID:20 [INFO: App       ] M[20] ConvTime:34688 us
+50760285 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+50763514 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+50767019 ID:25 [INFO: App       ] M[25] ConvTime:50176 us
+50848067 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+50851296 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+50854638 ID:13 [INFO: App       ] M[13] ConvTime:1024 us
+50929118 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+50932198 ID:5 [INFO: App       ] M[5] Min.Hops to root:1
+50935552 ID:5 [INFO: App       ] M[5] ConvTime:50176 us
+50939783 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+50943012 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+50946517 ID:23 [INFO: App       ] M[23] ConvTime:50176 us
+50999859 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+51003089 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+51006589 ID:21 [INFO: App       ] M[21] ConvTime:33792 us
+51011337 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+51014416 ID:3 [INFO: App       ] M[3] Min.Hops to root:2
+51017767 ID:3 [INFO: App       ] M[3] ConvTime:33792 us
+51076513 ID:19 Periodic Statistics: M[19] | DIO: 4
+51090337 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+51094374 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+51097759 ID:2 [INFO: App       ] M[2] ConvTime:33792 us
+51161231 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+51164311 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+51166883 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+51167660 ID:9 [INFO: App       ] M[9] ConvTime:17408 us
+51169963 ID:8 [INFO: App       ] M[8] Min.Hops to root:2
+51172651 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+51173159 ID:8 [INFO: App       ] M[8] ConvTime:5888 us
+51175880 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+51179377 ID:10 [INFO: App       ] M[10] ConvTime:10688 us
+51232285 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+51235514 ID:11 [INFO: App       ] M[11] Min.Hops to root:1
+51238856 ID:11 [INFO: App       ] M[11] ConvTime:1024 us
+51277713 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+51280943 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+51284284 ID:12 [INFO: App       ] M[12] ConvTime:1024 us
+51293036 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+51295827 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+51296265 ID:15 [INFO: App       ] M[15] Min.Hops to root:2
+51299057 ID:19 [INFO: App       ] M[19] Min.Hops to root:1
+51299770 ID:15 [INFO: App       ] M[15] ConvTime:50176 us
+51302556 ID:19 [INFO: App       ] M[19] ConvTime:17408 us
+51345727 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+51348807 ID:7 [INFO: App       ] M[7] Min.Hops to root:2
+51352156 ID:7 [INFO: App       ] M[7] ConvTime:17408 us
+51389998 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+51393227 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+51396728 ID:17 [INFO: App       ] M[17] ConvTime:17472 us
+51423705 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+51426934 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+51430276 ID:22 [INFO: App       ] M[22] ConvTime:1024 us
+51431636 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+51434866 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+51438367 ID:24 [INFO: App       ] M[24] ConvTime:33792 us
+51487150 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+51490230 ID:6 [INFO: App       ] M[6] Min.Hops to root:1
+51493579 ID:6 [INFO: App       ] M[6] ConvTime:17408 us
+52207996 ID:15 Periodic Statistics: M[15] | DIO: 7
+52280315 ID:18 Periodic Statistics: M[18] | DIO: 6
+52901799 ID:10 Periodic Statistics: M[10] | DIO: 6
+53994422 ID:23 Periodic Statistics: M[23] | DIO: 6
+54201100 ID:14 Periodic Statistics: M[14] | DIO: 10
+54284362 ID:3 Periodic Statistics: M[3] | DIO: 11
+55181104 ID:22 Periodic Statistics: M[22] | DIO: 11
+55249782 ID:21 Periodic Statistics: M[21] | DIO: 6
+55566556 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+55569785 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+55573285 ID:18 [INFO: App       ] M[18] ConvTime:17408 us
+55580222 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+55583451 ID:14 [INFO: App       ] M[14] Min.Hops to root:2
+55586951 ID:14 [INFO: App       ] M[14] ConvTime:33792 us
+55684864 ID:11 Periodic Statistics: M[11] | DIO: 6
+55688407 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+55692443 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+55695670 ID:4 [INFO: App       ] M[4] ConvTime:1024 us
+55727750 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+55730979 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+55734479 ID:16 [INFO: App       ] M[16] ConvTime:26944 us
+55760037 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+55763267 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+55766797 ID:20 [INFO: App       ] M[20] ConvTime:50816 us
+55768097 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+55771327 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+55774668 ID:25 [INFO: App       ] M[25] ConvTime:1024 us
+55863672 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+55866902 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+55870402 ID:13 [INFO: App       ] M[13] ConvTime:33792 us
+55936930 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+55940010 ID:5 [INFO: App       ] M[5] Min.Hops to root:1
+55943201 ID:5 [INFO: App       ] M[5] ConvTime:1024 us
+55947615 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+55950844 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+55954185 ID:23 [INFO: App       ] M[23] ConvTime:1024 us
+56007691 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+56010921 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+56014425 ID:21 [INFO: App       ] M[21] ConvTime:50176 us
+56026962 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+56030041 ID:3 [INFO: App       ] M[3] Min.Hops to root:2
+56033234 ID:3 [INFO: App       ] M[3] ConvTime:1024 us
+56098130 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+56102189 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+56105578 ID:2 [INFO: App       ] M[2] ConvTime:50176 us
+56169044 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+56172123 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+56175474 ID:9 [INFO: App       ] M[9] ConvTime:33792 us
+56180171 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+56183251 ID:8 [INFO: App       ] M[8] Min.Hops to root:2
+56183600 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+56186602 ID:8 [INFO: App       ] M[8] ConvTime:33792 us
+56186829 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+56190329 ID:10 [INFO: App       ] M[10] ConvTime:33792 us
+56240116 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+56243345 ID:11 [INFO: App       ] M[11] Min.Hops to root:1
+56246845 ID:11 [INFO: App       ] M[11] ConvTime:17408 us
+56285964 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+56289193 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+56292694 ID:12 [INFO: App       ] M[12] ConvTime:18304 us
+56300868 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+56304058 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+56304097 ID:15 [INFO: App       ] M[15] Min.Hops to root:2
+56307287 ID:19 [INFO: App       ] M[19] Min.Hops to root:1
+56307438 ID:15 [INFO: App       ] M[15] ConvTime:1024 us
+56310788 ID:19 [INFO: App       ] M[19] ConvTime:34688 us
+56353521 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+56356600 ID:7 [INFO: App       ] M[7] Min.Hops to root:2
+56359951 ID:7 [INFO: App       ] M[7] ConvTime:33792 us
+56398201 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+56401430 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+56404930 ID:17 [INFO: App       ] M[17] ConvTime:34688 us
+56439330 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+56439451 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+56442559 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+56442681 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+56446059 ID:22 [INFO: App       ] M[22] ConvTime:33792 us
+56446185 ID:24 [INFO: App       ] M[24] ConvTime:50176 us
+56494962 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+56498042 ID:6 [INFO: App       ] M[6] Min.Hops to root:1
+56501393 ID:6 [INFO: App       ] M[6] ConvTime:33792 us
+56503142 ID:12 Periodic Statistics: M[12] | DIO: 5
+56804778 ID:8 Periodic Statistics: M[8] | DIO: 13
+59329529 ID:24 Periodic Statistics: M[24] | DIO: 4
+59930049 ID:4 Periodic Statistics: M[4] | DIO: 9
+60574350 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+60577579 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+60581079 ID:18 [INFO: App       ] M[18] ConvTime:33792 us
+60595828 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+60599057 ID:14 [INFO: App       ] M[14] Min.Hops to root:2
+60602399 ID:14 [INFO: App       ] M[14] ConvTime:1024 us
+60696676 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+60700713 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+60702011 ID:5 Periodic Statistics: M[5] | DIO: 5
+60704055 ID:4 [INFO: App       ] M[4] ConvTime:18368 us
+60738750 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+60741979 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+60745484 ID:16 [INFO: App       ] M[16] ConvTime:50176 us
+60745952 ID:23 Periodic Statistics: M[23] | DIO: 7
+60749909 ID:25 Periodic Statistics: M[25] Neighbors: 17 [26 max]
+60768722 ID:25 Periodic Statistics: M[25] Parents: 17 [26 max]
+60812111 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+60815341 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+60818839 ID:20 [INFO: App       ] M[20] ConvTime:28928 us
+60838437 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+60841666 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+60845166 ID:25 [INFO: App       ] M[25] ConvTime:17472 us
+60879317 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+60882546 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+60885888 ID:13 [INFO: App       ] M[13] ConvTime:1024 us
+60944762 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+60947842 ID:5 [INFO: App       ] M[5] Min.Hops to root:1
+60951191 ID:5 [INFO: App       ] M[5] ConvTime:17408 us
+60955427 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+60958657 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+60962156 ID:23 [INFO: App       ] M[23] ConvTime:17408 us
+61015484 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+61018714 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+61022055 ID:21 [INFO: App       ] M[21] ConvTime:1024 us
+61042568 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+61045647 ID:3 [INFO: App       ] M[3] Min.Hops to root:2
+61048998 ID:3 [INFO: App       ] M[3] ConvTime:33792 us
+61105942 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+61110002 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+61113228 ID:2 [INFO: App       ] M[2] ConvTime:1024 us
+61176856 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+61179936 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+61183290 ID:9 [INFO: App       ] M[9] ConvTime:50176 us
+61188003 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+61191083 ID:8 [INFO: App       ] M[8] Min.Hops to root:2
+61191393 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+61194437 ID:8 [INFO: App       ] M[8] ConvTime:50176 us
+61194622 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+61198127 ID:10 [INFO: App       ] M[10] ConvTime:50176 us
+61247909 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+61251139 ID:11 [INFO: App       ] M[11] Min.Hops to root:1
+61254639 ID:11 [INFO: App       ] M[11] ConvTime:33792 us
+61293358 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+61296587 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+61300087 ID:12 [INFO: App       ] M[12] ConvTime:33792 us
+61308661 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+61311433 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+61311890 ID:15 [INFO: App       ] M[15] Min.Hops to root:2
+61314662 ID:19 [INFO: App       ] M[19] Min.Hops to root:1
+61315390 ID:15 [INFO: App       ] M[15] ConvTime:17408 us
+61318167 ID:19 [INFO: App       ] M[19] ConvTime:50176 us
+61361333 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+61364413 ID:7 [INFO: App       ] M[7] Min.Hops to root:2
+61367767 ID:7 [INFO: App       ] M[7] ConvTime:50176 us
+61405582 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+61408812 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+61412316 ID:17 [INFO: App       ] M[17] ConvTime:50176 us
+61447281 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+61450510 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+61453852 ID:24 [INFO: App       ] M[24] ConvTime:1024 us
+61454955 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+61458184 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+61461525 ID:22 [INFO: App       ] M[22] ConvTime:1024 us
+61502775 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+61505855 ID:6 [INFO: App       ] M[6] Min.Hops to root:1
+61509209 ID:6 [INFO: App       ] M[6] ConvTime:50176 us
+61701907 ID:17 Periodic Statistics: M[17] | DIO: 5
+61720995 ID:6 Periodic Statistics: M[6] | DIO: 6
+63037359 ID:5 Periodic Statistics: M[5] | DIO: 6
+63324058 ID:12 Periodic Statistics: M[12] | DIO: 6
+63384377 ID:7 Periodic Statistics: M[7] | DIO: 11
+64581237 ID:3 Periodic Statistics: M[3] | DIO: 12
+64626942 ID:25 Periodic Statistics: M[25] | DIO: 6
+64705582 ID:18 Periodic Statistics: M[18] | DIO: 7
+64851281 ID:17 Periodic Statistics: M[17] | DIO: 6
+65227926 ID:20 Periodic Statistics: M[20] | DIO: 6
+65582181 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+65585411 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+65588915 ID:18 [INFO: App       ] M[18] ConvTime:50176 us
+65611452 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+65614682 ID:14 [INFO: App       ] M[14] Min.Hops to root:2
+65618182 ID:14 [INFO: App       ] M[14] ConvTime:33792 us
+65704073 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+65708110 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+65711495 ID:4 [INFO: App       ] M[4] ConvTime:33856 us
+65746627 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+65749856 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+65753200 ID:16 [INFO: App       ] M[16] ConvTime:1152 us
+65822240 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+65825469 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+65828974 ID:20 [INFO: App       ] M[20] ConvTime:50176 us
+65846242 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+65849471 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+65852971 ID:25 [INFO: App       ] M[25] ConvTime:33792 us
+65894922 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+65898152 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+65901652 ID:13 [INFO: App       ] M[13] ConvTime:33792 us
+65952594 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+65955673 ID:5 [INFO: App       ] M[5] Min.Hops to root:1
+65959046 ID:5 [INFO: App       ] M[5] ConvTime:33856 us
+65963240 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+65966469 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+65969969 ID:23 [INFO: App       ] M[23] ConvTime:33792 us
+66023338 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+66026567 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+66030066 ID:21 [INFO: App       ] M[21] ConvTime:17408 us
+66058212 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+66061291 ID:3 [INFO: App       ] M[3] Min.Hops to root:2
+66064485 ID:3 [INFO: App       ] M[3] ConvTime:1024 us
+66113774 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+66117811 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+66121196 ID:2 [INFO: App       ] M[2] ConvTime:17408 us
+66184669 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+66187748 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+66190940 ID:9 [INFO: App       ] M[9] ConvTime:1024 us
+66195816 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+66198895 ID:8 [INFO: App       ] M[8] Min.Hops to root:2
+66199224 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+66202087 ID:8 [INFO: App       ] M[8] ConvTime:1024 us
+66202454 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+66205795 ID:10 [INFO: App       ] M[10] ConvTime:1024 us
+66255741 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+66258970 ID:11 [INFO: App       ] M[11] Min.Hops to root:1
+66262475 ID:11 [INFO: App       ] M[11] ConvTime:50176 us
+66301170 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+66304399 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+66307904 ID:12 [INFO: App       ] M[12] ConvTime:50176 us
+66316473 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+66319265 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+66319703 ID:15 [INFO: App       ] M[15] Min.Hops to root:2
+66322495 ID:19 [INFO: App       ] M[19] Min.Hops to root:1
+66323203 ID:15 [INFO: App       ] M[15] ConvTime:33792 us
+66325836 ID:19 [INFO: App       ] M[19] ConvTime:1024 us
+66369165 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+66372244 ID:7 [INFO: App       ] M[7] Min.Hops to root:2
+66375436 ID:7 [INFO: App       ] M[7] ConvTime:1024 us
+66413436 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+66416665 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+66420007 ID:17 [INFO: App       ] M[17] ConvTime:1088 us
+66455115 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+66458345 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+66461844 ID:24 [INFO: App       ] M[24] ConvTime:17408 us
+66470560 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+66473790 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+66477290 ID:22 [INFO: App       ] M[22] ConvTime:33792 us
+66510607 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+66513686 ID:6 [INFO: App       ] M[6] Min.Hops to root:1
+66516880 ID:6 [INFO: App       ] M[6] ConvTime:1024 us
+66613811 ID:9 Periodic Statistics: M[9] | DIO: 4
+67105005 ID:15 Periodic Statistics: M[15] | DIO: 8
+67469012 ID:13 Periodic Statistics: M[13] | DIO: 9
+68501698 ID:14 Periodic Statistics: M[14] | DIO: 11
+70579542 ID:22 Periodic Statistics: M[22] | DIO: 12
+70589974 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+70593204 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+70596546 ID:18 [INFO: App       ] M[18] ConvTime:1024 us
+70627097 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+70630326 ID:14 [INFO: App       ] M[14] Min.Hops to root:2
+70633668 ID:14 [INFO: App       ] M[14] ConvTime:1024 us
+70711844 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+70715881 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+70719270 ID:4 [INFO: App       ] M[4] ConvTime:50176 us
+70754375 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+70757604 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+70761104 ID:16 [INFO: App       ] M[16] ConvTime:17408 us
+70830033 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+70833263 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+70836604 ID:20 [INFO: App       ] M[20] ConvTime:1024 us
+70854035 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+70857264 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+70860769 ID:25 [INFO: App       ] M[25] ConvTime:50176 us
+70910566 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+70913796 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+70917138 ID:13 [INFO: App       ] M[13] ConvTime:1024 us
+70960368 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+70963447 ID:5 [INFO: App       ] M[5] Min.Hops to root:1
+70966802 ID:5 [INFO: App       ] M[5] ConvTime:50176 us
+70971033 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+70974262 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+70977767 ID:23 [INFO: App       ] M[23] ConvTime:50176 us
+71031109 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+71034339 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+71037840 ID:21 [INFO: App       ] M[21] ConvTime:33792 us
+71073818 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+71076897 ID:3 [INFO: App       ] M[3] Min.Hops to root:2
+71080248 ID:3 [INFO: App       ] M[3] ConvTime:33792 us
+71121567 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+71125604 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+71128990 ID:2 [INFO: App       ] M[2] ConvTime:33792 us
+71192500 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+71195580 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+71198929 ID:9 [INFO: App       ] M[9] ConvTime:17408 us
+71203609 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+71206688 ID:8 [INFO: App       ] M[8] Min.Hops to root:2
+71207018 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+71210038 ID:8 [INFO: App       ] M[8] ConvTime:17408 us
+71210247 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+71213747 ID:10 [INFO: App       ] M[10] ConvTime:17408 us
+71263556 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+71266786 ID:11 [INFO: App       ] M[11] Min.Hops to root:1
+71270127 ID:11 [INFO: App       ] M[11] ConvTime:1024 us
+71308963 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+71312193 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+71315534 ID:12 [INFO: App       ] M[12] ConvTime:1024 us
+71324305 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+71327058 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+71327534 ID:15 [INFO: App       ] M[15] Min.Hops to root:2
+71330287 ID:19 [INFO: App       ] M[19] Min.Hops to root:1
+71331039 ID:15 [INFO: App       ] M[15] ConvTime:50176 us
+71333787 ID:19 [INFO: App       ] M[19] ConvTime:17408 us
+71377396 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+71380475 ID:7 [INFO: App       ] M[7] Min.Hops to root:2
+71383835 ID:7 [INFO: App       ] M[7] ConvTime:18304 us
+71421247 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+71424477 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+71427999 ID:17 [INFO: App       ] M[17] ConvTime:17472 us
+71462886 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+71466116 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+71469616 ID:24 [INFO: App       ] M[24] ConvTime:33792 us
+71486205 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+71489434 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+71492776 ID:22 [INFO: App       ] M[22] ConvTime:1024 us
+71518446 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+71521526 ID:6 [INFO: App       ] M[6] Min.Hops to root:1
+71524876 ID:6 [INFO: App       ] M[6] ConvTime:17472 us
+72082930 ID:20 Periodic Statistics: M[20] | DIO: 7
+72800814 ID:6 Periodic Statistics: M[6] | DIO: 7
+75093365 ID:3 Periodic Statistics: M[3] | DIO: 13
+75597787 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+75601016 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+75604515 ID:18 [INFO: App       ] M[18] ConvTime:17408 us
+75642702 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+75645932 ID:14 [INFO: App       ] M[14] Min.Hops to root:2
+75649433 ID:14 [INFO: App       ] M[14] ConvTime:33792 us
+75719678 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+75723716 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+75726942 ID:4 [INFO: App       ] M[4] ConvTime:1024 us
+75763153 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+75766440 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+75769946 ID:16 [INFO: App       ] M[16] ConvTime:35776 us
+75837865 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+75841095 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+75844594 ID:20 [INFO: App       ] M[20] ConvTime:17408 us
+75861869 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+75865099 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+75868440 ID:25 [INFO: App       ] M[25] ConvTime:1024 us
+75926194 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+75929424 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+75932924 ID:13 [INFO: App       ] M[13] ConvTime:33792 us
+75968181 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+75971260 ID:5 [INFO: App       ] M[5] Min.Hops to root:1
+75974452 ID:5 [INFO: App       ] M[5] ConvTime:1024 us
+75978845 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+75982075 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+75985416 ID:23 [INFO: App       ] M[23] ConvTime:1024 us
+76038944 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+76042173 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+76045678 ID:21 [INFO: App       ] M[21] ConvTime:50176 us
+76060756 ID:11 Periodic Statistics: M[11] Routes: 0 [26 max]
+76064140 ID:11 Periodic Statistics: M[11] | DAO: 2
+76089481 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+76092560 ID:3 [INFO: App       ] M[3] Min.Hops to root:2
+76095752 ID:3 [INFO: App       ] M[3] ConvTime:1088 us
+76129380 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+76133417 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+76136807 ID:2 [INFO: App       ] M[2] ConvTime:50176 us
+76200293 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+76203373 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+76206724 ID:9 [INFO: App       ] M[9] ConvTime:33792 us
+76211422 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+76214501 ID:8 [INFO: App       ] M[8] Min.Hops to root:2
+76214830 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+76217852 ID:8 [INFO: App       ] M[8] ConvTime:33792 us
+76218060 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+76221560 ID:10 [INFO: App       ] M[10] ConvTime:33792 us
+76271369 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+76274598 ID:11 [INFO: App       ] M[11] Min.Hops to root:1
+76278098 ID:11 [INFO: App       ] M[11] ConvTime:17408 us
+76316776 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+76320006 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+76323505 ID:12 [INFO: App       ] M[12] ConvTime:17408 us
+76332099 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+76334871 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+76335328 ID:15 [INFO: App       ] M[15] Min.Hops to root:2
+76338100 ID:19 [INFO: App       ] M[19] Min.Hops to root:1
+76338669 ID:15 [INFO: App       ] M[15] ConvTime:1024 us
+76341600 ID:19 [INFO: App       ] M[19] ConvTime:33792 us
+76384771 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+76387850 ID:7 [INFO: App       ] M[7] Min.Hops to root:2
+76391201 ID:7 [INFO: App       ] M[7] ConvTime:33792 us
+76434984 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+76438213 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+76441773 ID:17 [INFO: App       ] M[17] ConvTime:46208 us
+76470699 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+76473950 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+76477455 ID:24 [INFO: App       ] M[24] ConvTime:50176 us
+76501830 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+76505059 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+76508559 ID:22 [INFO: App       ] M[22] ConvTime:33792 us
+76526232 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+76529311 ID:6 [INFO: App       ] M[6] Min.Hops to root:1
+76532662 ID:6 [INFO: App       ] M[6] ConvTime:33792 us
+80605599 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+80608829 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+80612329 ID:18 [INFO: App       ] M[18] ConvTime:33792 us
+80658327 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+80661557 ID:14 [INFO: App       ] M[14] Min.Hops to root:2
+80664898 ID:14 [INFO: App       ] M[14] ConvTime:1024 us
+80727469 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+80731506 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+80734890 ID:4 [INFO: App       ] M[4] ConvTime:17408 us
+80770000 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+80773251 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+80776756 ID:16 [INFO: App       ] M[16] ConvTime:50176 us
+80846096 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+80849325 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+80852826 ID:20 [INFO: App       ] M[20] ConvTime:34688 us
+80869660 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+80872890 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+80876389 ID:25 [INFO: App       ] M[25] ConvTime:17408 us
+80941819 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+80945049 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+80948390 ID:13 [INFO: App       ] M[13] ConvTime:1024 us
+80976430 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+80979510 ID:5 [INFO: App       ] M[5] Min.Hops to root:1
+80982870 ID:5 [INFO: App       ] M[5] ConvTime:18304 us
+80986658 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+80989888 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+80993387 ID:23 [INFO: App       ] M[23] ConvTime:17408 us
+81046734 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+81049964 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+81053305 ID:21 [INFO: App       ] M[21] ConvTime:1024 us
+81105068 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+81108147 ID:3 [INFO: App       ] M[3] Min.Hops to root:2
+81111498 ID:3 [INFO: App       ] M[3] ConvTime:33792 us
+81137193 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+81141229 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+81144467 ID:2 [INFO: App       ] M[2] ConvTime:1024 us
+81208106 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+81211186 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+81214540 ID:9 [INFO: App       ] M[9] ConvTime:50176 us
+81219234 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+81222314 ID:8 [INFO: App       ] M[8] Min.Hops to root:2
+81222643 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+81225690 ID:8 [INFO: App       ] M[8] ConvTime:50176 us
+81225873 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+81229377 ID:10 [INFO: App       ] M[10] ConvTime:50176 us
+81279160 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+81282389 ID:11 [INFO: App       ] M[11] Min.Hops to root:1
+81285890 ID:11 [INFO: App       ] M[11] ConvTime:33792 us
+81324589 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+81327818 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+81331318 ID:12 [INFO: App       ] M[12] ConvTime:33792 us
+81340368 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+81342683 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+81343597 ID:15 [INFO: App       ] M[15] Min.Hops to root:2
+81345913 ID:19 [INFO: App       ] M[19] Min.Hops to root:1
+81347099 ID:15 [INFO: App       ] M[15] ConvTime:18368 us
+81348338 ID:11 Periodic Statistics: M[11] | DIO: 7
+81349417 ID:19 [INFO: App       ] M[19] ConvTime:50176 us
+81392583 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+81395662 ID:7 [INFO: App       ] M[7] Min.Hops to root:2
+81399017 ID:7 [INFO: App       ] M[7] ConvTime:50176 us
+81444627 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+81447856 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+81451044 ID:17 [INFO: App       ] M[17] ConvTime:960 us
+81478511 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+81481741 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+81485083 ID:24 [INFO: App       ] M[24] ConvTime:1024 us
+81517435 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+81520665 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+81524006 ID:22 [INFO: App       ] M[22] ConvTime:1024 us
+81534025 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+81537105 ID:6 [INFO: App       ] M[6] Min.Hops to root:1
+81540459 ID:6 [INFO: App       ] M[6] ConvTime:50176 us
+82847668 ID:13 Periodic Statistics: M[13] | DIO: 10
+83360940 ID:7 Periodic Statistics: M[7] | DIO: 12
+84554778 ID:8 Periodic Statistics: M[8] | DIO: 14
+85613412 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+85616641 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+85620146 ID:18 [INFO: App       ] M[18] ConvTime:50176 us
+85673972 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+85677201 ID:14 [INFO: App       ] M[14] Min.Hops to root:2
+85680701 ID:14 [INFO: App       ] M[14] ConvTime:33792 us
+85735282 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+85739318 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+85742704 ID:4 [INFO: App       ] M[4] ConvTime:33792 us
+85777859 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+85781088 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+85784429 ID:16 [INFO: App       ] M[16] ConvTime:1088 us
+85853471 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+85856700 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+85860205 ID:20 [INFO: App       ] M[20] ConvTime:50176 us
+85877472 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+85880702 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+85884203 ID:25 [INFO: App       ] M[25] ConvTime:33792 us
+85957442 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+85960671 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+85964171 ID:13 [INFO: App       ] M[13] ConvTime:33792 us
+85983828 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+85986907 ID:5 [INFO: App       ] M[5] Min.Hops to root:1
+85990258 ID:5 [INFO: App       ] M[5] ConvTime:33792 us
+85994471 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+85997700 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+86001200 ID:23 [INFO: App       ] M[23] ConvTime:33792 us
+86054547 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+86057777 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+86061276 ID:21 [INFO: App       ] M[21] ConvTime:17408 us
+86120693 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+86123772 ID:3 [INFO: App       ] M[3] Min.Hops to root:2
+86126964 ID:3 [INFO: App       ] M[3] ConvTime:1024 us
+86145005 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+86149064 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+86152448 ID:2 [INFO: App       ] M[2] ConvTime:17408 us
+86215919 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+86218998 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+86222190 ID:9 [INFO: App       ] M[9] ConvTime:1024 us
+86227066 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+86230145 ID:8 [INFO: App       ] M[8] Min.Hops to root:2
+86230455 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+86233338 ID:8 [INFO: App       ] M[8] ConvTime:1024 us
+86233685 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+86237026 ID:10 [INFO: App       ] M[10] ConvTime:1024 us
+86262763 ID:18 Periodic Statistics: M[18] | DIO: 8
+86286991 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+86290220 ID:11 [INFO: App       ] M[11] Min.Hops to root:1
+86293725 ID:11 [INFO: App       ] M[11] ConvTime:50176 us
+86332401 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+86335630 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+86339135 ID:12 [INFO: App       ] M[12] ConvTime:50176 us
+86350495 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+86353725 ID:19 [INFO: App       ] M[19] Min.Hops to root:1
+86355536 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+86357066 ID:19 [INFO: App       ] M[19] ConvTime:1024 us
+86358765 ID:15 [INFO: App       ] M[15] Min.Hops to root:2
+86362270 ID:15 [INFO: App       ] M[15] ConvTime:50176 us
+86400415 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+86403494 ID:7 [INFO: App       ] M[7] Min.Hops to root:2
+86406686 ID:7 [INFO: App       ] M[7] ConvTime:1024 us
+86453220 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+86456473 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+86460012 ID:17 [INFO: App       ] M[17] ConvTime:19008 us
+86486324 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+86489553 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+86493053 ID:24 [INFO: App       ] M[24] ConvTime:17408 us
+86533060 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+86536290 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+86539790 ID:22 [INFO: App       ] M[22] ConvTime:33792 us
+86589503 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+86592583 ID:6 [INFO: App       ] M[6] Min.Hops to root:1
+86595936 ID:6 [INFO: App       ] M[6] ConvTime:35456 us
+86849456 ID:25 Periodic Statistics: M[25] | DIO: 7
+87408991 ID:20 Periodic Statistics: M[20] Routes: 2 [26 max]
+87412405 ID:20 Periodic Statistics: M[20] | DAO: 2
+90171276 ID:24 Periodic Statistics: M[24] | DIO: 5
+90177078 ID:19 Periodic Statistics: M[19] | DIO: 5
+90621244 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+90624473 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+90627815 ID:18 [INFO: App       ] M[18] ConvTime:1024 us
+90689577 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+90692807 ID:14 [INFO: App       ] M[14] Min.Hops to root:2
+90696148 ID:14 [INFO: App       ] M[14] ConvTime:1024 us
+90743094 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+90747131 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+90750520 ID:4 [INFO: App       ] M[4] ConvTime:50176 us
+90794226 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+90797513 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+90801017 ID:16 [INFO: App       ] M[16] ConvTime:35456 us
+90861283 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+90864513 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+90867854 ID:20 [INFO: App       ] M[20] ConvTime:1024 us
+90885304 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+90888534 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+90892038 ID:25 [INFO: App       ] M[25] ConvTime:50176 us
+90973067 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+90976296 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+90979637 ID:13 [INFO: App       ] M[13] ConvTime:1024 us
+90991640 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+90994720 ID:5 [INFO: App       ] M[5] Min.Hops to root:1
+90998074 ID:5 [INFO: App       ] M[5] ConvTime:50176 us
+91002283 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+91005512 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+91009017 ID:23 [INFO: App       ] M[23] ConvTime:50176 us
+91062797 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+91066026 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+91069527 ID:21 [INFO: App       ] M[21] ConvTime:34688 us
+91127684 ID:23 Periodic Statistics: M[23] | DIO: 8
+91136317 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+91139397 ID:3 [INFO: App       ] M[3] Min.Hops to root:2
+91142748 ID:3 [INFO: App       ] M[3] ConvTime:33792 us
+91152818 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+91156854 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+91160240 ID:2 [INFO: App       ] M[2] ConvTime:33792 us
+91224168 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+91227248 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+91230607 ID:9 [INFO: App       ] M[9] ConvTime:18304 us
+91234859 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+91237939 ID:8 [INFO: App       ] M[8] Min.Hops to root:2
+91238268 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+91241288 ID:8 [INFO: App       ] M[8] ConvTime:17408 us
+91241497 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+91244997 ID:10 [INFO: App       ] M[10] ConvTime:17408 us
+91294784 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+91298014 ID:11 [INFO: App       ] M[11] Min.Hops to root:1
+91301355 ID:11 [INFO: App       ] M[11] ConvTime:1024 us
+91340213 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+91343443 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+91346784 ID:12 [INFO: App       ] M[12] ConvTime:1024 us
+91358590 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+91361819 ID:19 [INFO: App       ] M[19] Min.Hops to root:1
+91363348 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+91365388 ID:19 [INFO: App       ] M[19] ConvTime:17984 us
+91366578 ID:15 [INFO: App       ] M[15] Min.Hops to root:2
+91369919 ID:15 [INFO: App       ] M[15] ConvTime:1024 us
+91408208 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+91411288 ID:7 [INFO: App       ] M[7] Min.Hops to root:2
+91414637 ID:7 [INFO: App       ] M[7] ConvTime:17408 us
+91460801 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+91464031 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+91467530 ID:17 [INFO: App       ] M[17] ConvTime:34880 us
+91494961 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+91498248 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+91501751 ID:24 [INFO: App       ] M[24] ConvTime:35520 us
+91548685 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+91551915 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+91555256 ID:22 [INFO: App       ] M[22] ConvTime:1024 us
+91596525 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+91599605 ID:6 [INFO: App       ] M[6] Min.Hops to root:1
+91602959 ID:6 [INFO: App       ] M[6] ConvTime:50176 us
+93009229 ID:22 Periodic Statistics: M[22] | DIO: 13
+93695390 ID:9 Periodic Statistics: M[9] | DIO: 5
+95629037 ID:18 [INFO: App       ] M[18] Addresses [3 max]:2
+95632266 ID:18 [INFO: App       ] M[18] Min.Hops to root:1
+95635766 ID:18 [INFO: App       ] M[18] ConvTime:17408 us
+95705203 ID:14 [INFO: App       ] M[14] Addresses [3 max]:2
+95708432 ID:14 [INFO: App       ] M[14] Min.Hops to root:2
+95711932 ID:14 [INFO: App       ] M[14] ConvTime:33792 us
+95750907 ID:4 [INFO: App       ] M[4] Addresses [3 max]:2
+95754943 ID:4 [INFO: App       ] M[4] Min.Hops to root: <not reachable>
+95758181 ID:4 [INFO: App       ] M[4] ConvTime:1024 us
+95801250 ID:16 [INFO: App       ] M[16] Addresses [3 max]:2
+95804479 ID:16 [INFO: App       ] M[16] Min.Hops to root:1
+95807984 ID:16 [INFO: App       ] M[16] ConvTime:50176 us
+95869096 ID:20 [INFO: App       ] M[20] Addresses [3 max]:2
+95872325 ID:20 [INFO: App       ] M[20] Min.Hops to root:1
+95875825 ID:20 [INFO: App       ] M[20] ConvTime:17408 us
+95893097 ID:25 [INFO: App       ] M[25] Addresses [3 max]:2
+95896327 ID:25 [INFO: App       ] M[25] Min.Hops to root:1
+95899668 ID:25 [INFO: App       ] M[25] ConvTime:1024 us
+95988672 ID:13 [INFO: App       ] M[13] Addresses [3 max]:2
+95991902 ID:13 [INFO: App       ] M[13] Min.Hops to root:2
+95995402 ID:13 [INFO: App       ] M[13] ConvTime:33792 us
+95999431 ID:5 [INFO: App       ] M[5] Addresses [3 max]:2
+96002510 ID:5 [INFO: App       ] M[5] Min.Hops to root:1
+96005702 ID:5 [INFO: App       ] M[5] ConvTime:1024 us
+96010115 ID:23 [INFO: App       ] M[23] Addresses [3 max]:2
+96013344 ID:23 [INFO: App       ] M[23] Min.Hops to root:1
+96016685 ID:23 [INFO: App       ] M[23] ConvTime:1024 us
+96070172 ID:21 [INFO: App       ] M[21] Addresses [3 max]:2
+96073401 ID:21 [INFO: App       ] M[21] Min.Hops to root:1
+96076906 ID:21 [INFO: App       ] M[21] ConvTime:50176 us
+96151943 ID:3 [INFO: App       ] M[3] Addresses [3 max]:2
+96155021 ID:3 [INFO: App       ] M[3] Min.Hops to root:2
+96158212 ID:3 [INFO: App       ] M[3] ConvTime:1024 us
+96160630 ID:2 [INFO: App       ] M[2] Addresses [3 max]:2
+96164667 ID:2 [INFO: App       ] M[2] Min.Hops to root: <not reachable>
+96168056 ID:2 [INFO: App       ] M[2] ConvTime:50176 us
+96231563 ID:9 [INFO: App       ] M[9] Addresses [3 max]:2
+96234642 ID:9 [INFO: App       ] M[9] Min.Hops to root:2
+96237993 ID:9 [INFO: App       ] M[9] ConvTime:33792 us
+96242672 ID:8 [INFO: App       ] M[8] Addresses [3 max]:2
+96245751 ID:8 [INFO: App       ] M[8] Min.Hops to root:2
+96246081 ID:10 [INFO: App       ] M[10] Addresses [3 max]:2
+96249102 ID:8 [INFO: App       ] M[8] ConvTime:33792 us
+96249310 ID:10 [INFO: App       ] M[10] Min.Hops to root:1
+96252810 ID:10 [INFO: App       ] M[10] ConvTime:33792 us
+96303035 ID:11 [INFO: App       ] M[11] Addresses [3 max]:2
+96306264 ID:11 [INFO: App       ] M[11] Min.Hops to root:1
+96309765 ID:11 [INFO: App       ] M[11] ConvTime:18304 us
+96348026 ID:12 [INFO: App       ] M[12] Addresses [3 max]:2
+96351255 ID:12 [INFO: App       ] M[12] Min.Hops to root:1
+96354755 ID:12 [INFO: App       ] M[12] ConvTime:17408 us
+96366120 ID:19 [INFO: App       ] M[19] Addresses [3 max]:2
+96369350 ID:19 [INFO: App       ] M[19] Min.Hops to root:1
+96371161 ID:15 [INFO: App       ] M[15] Addresses [3 max]:2
+96372872 ID:19 [INFO: App       ] M[19] ConvTime:33792 us
+96374390 ID:15 [INFO: App       ] M[15] Min.Hops to root:2
+96377890 ID:15 [INFO: App       ] M[15] ConvTime:17408 us
+96408995 ID:20 Periodic Statistics: M[20] Routes: 1 [26 max]
+96412418 ID:20 Periodic Statistics: M[20] | DAO: 3
+96416021 ID:7 [INFO: App       ] M[7] Addresses [3 max]:2
+96419100 ID:7 [INFO: App       ] M[7] Min.Hops to root:2
+96422451 ID:7 [INFO: App       ] M[7] ConvTime:33792 us
+96468077 ID:17 [INFO: App       ] M[17] Addresses [3 max]:2
+96471307 ID:17 [INFO: App       ] M[17] Min.Hops to root:1
+96474811 ID:17 [INFO: App       ] M[17] ConvTime:50176 us
+96501949 ID:24 [INFO: App       ] M[24] Addresses [3 max]:2
+96505178 ID:24 [INFO: App       ] M[24] Min.Hops to root:1
+96508683 ID:24 [INFO: App       ] M[24] ConvTime:50176 us
+96564330 ID:22 [INFO: App       ] M[22] Addresses [3 max]:2
+96567559 ID:22 [INFO: App       ] M[22] Min.Hops to root:2
+96571059 ID:22 [INFO: App       ] M[22] ConvTime:33792 us
+96604337 ID:6 [INFO: App       ] M[6] Addresses [3 max]:2
+96607417 ID:6 [INFO: App       ] M[6] Min.Hops to root:1
+96610608 ID:6 [INFO: App       ] M[6] ConvTime:1024 us
+98258031 ID:21 Periodic Statistics: M[21] | DIO: 7
+99199142 ID:16 Periodic Statistics: M[16] | DIO: 8
+99229645 ID:18 Periodic Statistics: M[18] Neighbors: 18 [26 max]
+99229660 ID:20 Periodic Statistics: M[20] Neighbors: 18 [26 max]
+99249304 ID:18 Periodic Statistics: M[18] Parents: 18 [26 max]
+99249319 ID:20 Periodic Statistics: M[20] Parents: 18 [26 max]
+Not converged
+TEST TIMEOUT
+TEST FAILED
+Test ended at simulation time: 100006364
