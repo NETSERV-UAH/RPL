@@ -1,0 +1,69 @@
+ INFO [main] (Cooja.java:1316) - > Starting Cooja
+ INFO [main] (Cooja.java:2857) - External tools default settings: /external_tools_linux.config
+ INFO [main] (Cooja.java:2887) - External tools user settings: /home/user/.cooja.user.properties
+ INFO [main] (Simulation.java:422) - Simulation random seed: 123467
+ INFO [main] (CompileContiki.java:140) - > make sink.sky TARGET=sky 
+Message:
+Message:> make sink.sky TARGET=sky 
+Message:make: 'sink.sky' is up to date.
+ INFO [main] (CompileContiki.java:140) - > make mote.sky TARGET=sky 
+Message:
+Message:> make mote.sky TARGET=sky 
+Message:make: 'mote.sky' is up to date.
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/sink.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (MspMote.java:235) - Loading firmware from: /home/user/contiki-ng/examples/rpl-storing/sky-testscript/code/mote.sky
+ INFO [main] (Cooja.java:1782) - Visualized plugin was not started: class org.contikios.cooja.plugins.SimControl
+ INFO [main] (Cooja.java:1782) - Visualized plugin was not started: class org.contikios.cooja.plugins.Visualizer
+ INFO [main] (Cooja.java:1782) - Visualized plugin was not started: class org.contikios.cooja.plugins.LogListener
+ INFO [main] (Cooja.java:1782) - Visualized plugin was not started: class org.contikios.cooja.plugins.TimeLine
+ INFO [main] (Cooja.java:1782) - Visualized plugin was not started: class org.contikios.cooja.plugins.Notes
+ INFO [main] (ScriptRunner.java:430) - Test script deactivated
+ INFO [main] (LogScriptEngine.java:265) - Script timeout in 100000 ms
+ INFO [main] (ScriptRunner.java:387) - Test script activated
+ INFO [Thread-2] (Simulation.java:253) - Simulation main loop started, system time: 1548230774529
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 5.00%, done in 375.2 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 10.00%, done in 295.7 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 15.00%, done in 247.4 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 20.00%, done in 254.3 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 25.00%, done in 197.9 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 30.00%, done in 178.9 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 35.00%, done in 170.6 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 40.00%, done in 147.1 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 45.00%, done in 123.4 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 50.00%, done in 107.7 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 55.00%, done in 91.8 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 60.00%, done in 79.2 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 65.00%, done in 66.2 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 70.00%, done in 54.2 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 75.00%, done in 43.3 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 80.00%, done in 33.8 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 85.00%, done in 24.5 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 90.00%, done in 15.7 sec
+ INFO [Thread-2] (LogScriptEngine.java:389) - Test script at 95.00%, done in 7.7 sec
+ INFO [Thread-2] (LogScriptEngine.java:375) - Timeout event @ 100000000
+ INFO [Thread-1] (LogScriptEngine.java:309) - Test script finished
+ INFO [Thread-2] (Simulation.java:312) - Simulation main loop stopped, system time: 1548230924262	Duration: 149733 ms	Simulated time 100003 ms	Ratio 0.6678754850300201
+ INFO [AWT-EventQueue-0] (ScriptRunner.java:430) - Test script deactivated

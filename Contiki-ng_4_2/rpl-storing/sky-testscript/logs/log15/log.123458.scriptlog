@@ -1,0 +1,435 @@
+Random seed: 123458
+303342 ID:7 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+306213 ID:7 [INFO: Main      ] - Routing: RPL Classic
+308742 ID:7 [INFO: Main      ] - Net: sicslowpan
+310861 ID:7 [INFO: Main      ] - MAC: CSMA
+314239 ID:7 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+317798 ID:7 [INFO: Main      ] - 802.15.4 Default channel: 26
+319912 ID:7 [INFO: Main      ] Node ID: 7
+325297 ID:7 [INFO: Main      ] Link-layer address: 0012.7407.0007.0707
+336955 ID:7 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7407:7:707
+340344 ID:7 [INFO: Sky       ] CC2420 CCA threshold -45
+420158 ID:10 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+423029 ID:10 [INFO: Main      ] - Routing: RPL Classic
+425558 ID:10 [INFO: Main      ] - Net: sicslowpan
+427677 ID:10 [INFO: Main      ] - MAC: CSMA
+431055 ID:10 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+434614 ID:10 [INFO: Main      ] - 802.15.4 Default channel: 26
+434719 ID:9 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+436878 ID:10 [INFO: Main      ] Node ID: 10
+437590 ID:9 [INFO: Main      ] - Routing: RPL Classic
+440119 ID:9 [INFO: Main      ] - Net: sicslowpan
+442238 ID:9 [INFO: Main      ] - MAC: CSMA
+442260 ID:10 [INFO: Main      ] Link-layer address: 0012.740a.000a.0a0a
+445617 ID:9 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+449176 ID:9 [INFO: Main      ] - 802.15.4 Default channel: 26
+451289 ID:9 [INFO: Main      ] Node ID: 9
+453922 ID:10 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740a:a:a0a
+456676 ID:9 [INFO: Main      ] Link-layer address: 0012.7409.0009.0909
+457311 ID:10 [INFO: Sky       ] CC2420 CCA threshold -45
+468332 ID:9 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7409:9:909
+471721 ID:9 [INFO: Sky       ] CC2420 CCA threshold -45
+547858 ID:12 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+550728 ID:12 [INFO: Main      ] - Routing: RPL Classic
+553258 ID:12 [INFO: Main      ] - Net: sicslowpan
+555377 ID:12 [INFO: Main      ] - MAC: CSMA
+558755 ID:12 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+562314 ID:12 [INFO: Main      ] - 802.15.4 Default channel: 26
+564578 ID:12 [INFO: Main      ] Node ID: 12
+567838 ID:8 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+569960 ID:12 [INFO: Main      ] Link-layer address: 0012.740c.000c.0c0c
+570709 ID:8 [INFO: Main      ] - Routing: RPL Classic
+573239 ID:8 [INFO: Main      ] - Net: sicslowpan
+575358 ID:8 [INFO: Main      ] - MAC: CSMA
+578736 ID:8 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+581621 ID:12 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740c:c:c0c
+582295 ID:8 [INFO: Main      ] - 802.15.4 Default channel: 26
+584408 ID:8 [INFO: Main      ] Node ID: 8
+585011 ID:12 [INFO: Sky       ] CC2420 CCA threshold -45
+589793 ID:8 [INFO: Main      ] Link-layer address: 0012.7408.0008.0808
+601447 ID:8 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7408:8:808
+604836 ID:8 [INFO: Sky       ] CC2420 CCA threshold -45
+837568 ID:14 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+840439 ID:14 [INFO: Main      ] - Routing: RPL Classic
+842968 ID:14 [INFO: Main      ] - Net: sicslowpan
+845087 ID:14 [INFO: Main      ] - MAC: CSMA
+848466 ID:14 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+852025 ID:14 [INFO: Main      ] - 802.15.4 Default channel: 26
+854289 ID:14 [INFO: Main      ] Node ID: 14
+859668 ID:14 [INFO: Main      ] Link-layer address: 0012.740e.000e.0e0e
+871332 ID:14 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740e:e:e0e
+874721 ID:14 [INFO: Sky       ] CC2420 CCA threshold -45
+880946 ID:11 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+883817 ID:11 [INFO: Main      ] - Routing: RPL Classic
+886346 ID:11 [INFO: Main      ] - Net: sicslowpan
+888465 ID:11 [INFO: Main      ] - MAC: CSMA
+891844 ID:11 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+895402 ID:11 [INFO: Main      ] - 802.15.4 Default channel: 26
+897667 ID:11 [INFO: Main      ] Node ID: 11
+903048 ID:11 [INFO: Main      ] Link-layer address: 0012.740b.000b.0b0b
+914712 ID:11 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740b:b:b0b
+918101 ID:11 [INFO: Sky       ] CC2420 CCA threshold -45
+918736 ID:15 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+921607 ID:15 [INFO: Main      ] - Routing: RPL Classic
+924136 ID:15 [INFO: Main      ] - Net: sicslowpan
+925738 ID:4 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+926255 ID:15 [INFO: Main      ] - MAC: CSMA
+928608 ID:4 [INFO: Main      ] - Routing: RPL Classic
+929633 ID:15 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+931138 ID:4 [INFO: Main      ] - Net: sicslowpan
+933192 ID:15 [INFO: Main      ] - 802.15.4 Default channel: 26
+933257 ID:4 [INFO: Main      ] - MAC: CSMA
+935456 ID:15 [INFO: Main      ] Node ID: 15
+936635 ID:4 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+940194 ID:4 [INFO: Main      ] - 802.15.4 Default channel: 26
+940836 ID:15 [INFO: Main      ] Link-layer address: 0012.740f.000f.0f0f
+942308 ID:4 [INFO: Main      ] Node ID: 4
+946948 ID:13 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+947693 ID:4 [INFO: Main      ] Link-layer address: 0012.7404.0004.0404
+949819 ID:13 [INFO: Main      ] - Routing: RPL Classic
+952348 ID:13 [INFO: Main      ] - Net: sicslowpan
+952502 ID:15 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740f:f:f0f
+954467 ID:13 [INFO: Main      ] - MAC: CSMA
+955891 ID:15 [INFO: Sky       ] CC2420 CCA threshold -45
+957846 ID:13 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+959346 ID:4 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7404:4:404
+961405 ID:13 [INFO: Main      ] - 802.15.4 Default channel: 26
+962736 ID:4 [INFO: Sky       ] CC2420 CCA threshold -45
+963669 ID:13 [INFO: Main      ] Node ID: 13
+969050 ID:13 [INFO: Main      ] Link-layer address: 0012.740d.000d.0d0d
+980714 ID:13 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:740d:d:d0d
+984103 ID:13 [INFO: Sky       ] CC2420 CCA threshold -45
+996818 ID:3 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+999689 ID:3 [INFO: Main      ] - Routing: RPL Classic
+1002218 ID:3 [INFO: Main      ] - Net: sicslowpan
+1004337 ID:3 [INFO: Main      ] - MAC: CSMA
+1007716 ID:3 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1011275 ID:3 [INFO: Main      ] - 802.15.4 Default channel: 26
+1013388 ID:3 [INFO: Main      ] Node ID: 3
+1018775 ID:3 [INFO: Main      ] Link-layer address: 0012.7403.0003.0303
+1030431 ID:3 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7403:3:303
+1033820 ID:3 [INFO: Sky       ] CC2420 CCA threshold -45
+1036658 ID:2 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+1039528 ID:2 [INFO: Main      ] - Routing: RPL Classic
+1042058 ID:2 [INFO: Main      ] - Net: sicslowpan
+1044177 ID:2 [INFO: Main      ] - MAC: CSMA
+1047555 ID:2 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1051114 ID:2 [INFO: Main      ] - 802.15.4 Default channel: 26
+1052058 ID:1 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+1053227 ID:2 [INFO: Main      ] Node ID: 2
+1054929 ID:1 [INFO: Main      ] - Routing: RPL Classic
+1057458 ID:1 [INFO: Main      ] - Net: sicslowpan
+1058612 ID:2 [INFO: Main      ] Link-layer address: 0012.7402.0002.0202
+1059577 ID:1 [INFO: Main      ] - MAC: CSMA
+1062956 ID:1 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1066514 ID:1 [INFO: Main      ] - 802.15.4 Default channel: 26
+1068628 ID:1 [INFO: Main      ] Node ID: 1
+1070266 ID:2 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7402:2:202
+1073655 ID:2 [INFO: Sky       ] CC2420 CCA threshold -45
+1074013 ID:1 [INFO: Main      ] Link-layer address: 0012.7401.0001.0101
+1075102 ID:5 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+1077973 ID:5 [INFO: Main      ] - Routing: RPL Classic
+1080502 ID:5 [INFO: Main      ] - Net: sicslowpan
+1082621 ID:5 [INFO: Main      ] - MAC: CSMA
+1085667 ID:1 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7401:1:101
+1086000 ID:5 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1089056 ID:1 [INFO: Sky       ] CC2420 CCA threshold -45
+1089558 ID:5 [INFO: Main      ] - 802.15.4 Default channel: 26
+1091672 ID:5 [INFO: Main      ] Node ID: 5
+1092008 ID:1 Periodic Statistics: Number of nodes: 15
+1095140 ID:1 Periodic Statistics: convergence time started
+1097057 ID:5 [INFO: Main      ] Link-layer address: 0012.7405.0005.0505
+1108713 ID:5 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7405:5:505
+1112102 ID:5 [INFO: Sky       ] CC2420 CCA threshold -45
+1268069 ID:6 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+1270939 ID:6 [INFO: Main      ] - Routing: RPL Classic
+1273469 ID:6 [INFO: Main      ] - Net: sicslowpan
+1275588 ID:6 [INFO: Main      ] - MAC: CSMA
+1278966 ID:6 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1282525 ID:6 [INFO: Main      ] - 802.15.4 Default channel: 26
+1284639 ID:6 [INFO: Main      ] Node ID: 6
+1290025 ID:6 [INFO: Main      ] Link-layer address: 0012.7406.0006.0606
+1301681 ID:6 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7406:6:606
+1305070 ID:6 [INFO: Sky       ] CC2420 CCA threshold -45
+4346041 ID:1 Periodic Statistics: M[1] | DIO: 1
+4397127 ID:6 Periodic Statistics: M[6] Neighbors: 1 [26 max]
+4397182 ID:2 Periodic Statistics: M[2] Neighbors: 1 [26 max]
+4397182 ID:5 Periodic Statistics: M[5] Neighbors: 1 [26 max]
+4397183 ID:8 Periodic Statistics: M[8] Neighbors: 1 [26 max]
+4397239 ID:4 Periodic Statistics: M[4] Neighbors: 1 [26 max]
+4397276 ID:14 Periodic Statistics: M[14] Neighbors: 1 [26 max]
+4401728 ID:6 Periodic Statistics: M[6] Parents: 1 [26 max]
+4401840 ID:4 Periodic Statistics: M[4] Parents: 1 [26 max]
+4401842 ID:2 Periodic Statistics: M[2] Parents: 1 [26 max]
+4401842 ID:5 Periodic Statistics: M[5] Parents: 1 [26 max]
+4401843 ID:8 Periodic Statistics: M[8] Parents: 1 [26 max]
+4402029 ID:14 Periodic Statistics: M[14] Parents: 1 [26 max]
+4406722 ID:6 Periodic Statistics: M[6] Default routes: 1
+4406776 ID:4 Periodic Statistics: M[4] Default routes: 1
+4406778 ID:2 Periodic Statistics: M[2] Default routes: 1
+4406778 ID:5 Periodic Statistics: M[5] Default routes: 1
+4406779 ID:8 Periodic Statistics: M[8] Default routes: 1
+4407114 ID:14 Periodic Statistics: M[14] Default routes: 1
+7483551 ID:14 Periodic Statistics: M[14] | DAO: 1
+7484220 ID:6 Periodic Statistics: M[6] | DAO: 1
+7485642 ID:4 Periodic Statistics: M[4] | DAO: 1
+7486563 ID:5 Periodic Statistics: M[5] | DAO: 1
+7487118 ID:8 Periodic Statistics: M[8] | DAO: 1
+7487185 ID:2 Periodic Statistics: M[2] | DAO: 1
+7509881 ID:1 Periodic Statistics: M[1] Neighbors: 1 [26 max]
+7513811 ID:1 Periodic Statistics: M[1] Routes: 1 [26 max]
+7604121 ID:1 Periodic Statistics: M[1] Neighbors: 2 [26 max]
+7608390 ID:1 Periodic Statistics: M[1] Routes: 2 [26 max]
+7631335 ID:1 Periodic Statistics: M[1] Neighbors: 3 [26 max]
+7636009 ID:1 Periodic Statistics: M[1] Routes: 3 [26 max]
+7649447 ID:4 Periodic Statistics: M[4] | DIO: 1
+7650415 ID:5 Periodic Statistics: M[5] | DIO: 1
+7650969 ID:8 Periodic Statistics: M[8] | DIO: 1
+7651036 ID:2 Periodic Statistics: M[2] | DIO: 1
+7655169 ID:14 Periodic Statistics: M[14] | DIO: 1
+7655837 ID:6 Periodic Statistics: M[6] | DIO: 1
+7668320 ID:2 Periodic Statistics: M[2] Neighbors: 2 [26 max]
+7668320 ID:5 Periodic Statistics: M[5] Neighbors: 2 [26 max]
+7668562 ID:14 Periodic Statistics: M[14] Neighbors: 2 [26 max]
+7669132 ID:6 Periodic Statistics: M[6] Neighbors: 2 [26 max]
+7674017 ID:2 Periodic Statistics: M[2] Parents: 2 [26 max]
+7674074 ID:5 Periodic Statistics: M[5] Parents: 2 [26 max]
+7674408 ID:14 Periodic Statistics: M[14] Parents: 2 [26 max]
+7674828 ID:6 Periodic Statistics: M[6] Parents: 2 [26 max]
+7688585 ID:1 Periodic Statistics: M[1] Neighbors: 4 [26 max]
+7693530 ID:1 Periodic Statistics: M[1] Routes: 4 [26 max]
+7695669 ID:9 Periodic Statistics: M[9] Neighbors: 1 [26 max]
+7695812 ID:10 Periodic Statistics: M[10] Neighbors: 1 [26 max]
+7695829 ID:12 Periodic Statistics: M[12] Neighbors: 1 [26 max]
+7697013 ID:8 Periodic Statistics: M[8] Neighbors: 2 [26 max]
+7697027 ID:4 Periodic Statistics: M[4] Neighbors: 2 [26 max]
+7697713 ID:2 Periodic Statistics: M[2] Neighbors: 3 [26 max]
+7697785 ID:5 Periodic Statistics: M[5] Neighbors: 3 [26 max]
+7697855 ID:14 Periodic Statistics: M[14] Neighbors: 3 [26 max]
+7700271 ID:9 Periodic Statistics: M[9] Parents: 1 [26 max]
+7700563 ID:10 Periodic Statistics: M[10] Parents: 1 [26 max]
+7700581 ID:12 Periodic Statistics: M[12] Parents: 1 [26 max]
+7702709 ID:8 Periodic Statistics: M[8] Parents: 2 [26 max]
+7702791 ID:4 Periodic Statistics: M[4] Parents: 2 [26 max]
+7704318 ID:2 Periodic Statistics: M[2] Parents: 3 [26 max]
+7704322 ID:5 Periodic Statistics: M[5] Parents: 3 [26 max]
+7704610 ID:14 Periodic Statistics: M[14] Parents: 3 [26 max]
+7705264 ID:9 Periodic Statistics: M[9] Default routes: 1
+7705649 ID:10 Periodic Statistics: M[10] Default routes: 1
+7705666 ID:12 Periodic Statistics: M[12] Default routes: 1
+7725472 ID:6 Periodic Statistics: M[6] Neighbors: 3 [26 max]
+7732010 ID:6 Periodic Statistics: M[6] Parents: 3 [26 max]
+7732541 ID:5 Periodic Statistics: M[5] Neighbors: 4 [26 max]
+7732615 ID:2 Periodic Statistics: M[2] Neighbors: 4 [26 max]
+7739982 ID:5 Periodic Statistics: M[5] Parents: 4 [26 max]
+7740056 ID:2 Periodic Statistics: M[2] Parents: 4 [26 max]
+7821728 ID:1 Periodic Statistics: M[1] Neighbors: 5 [26 max]
+7827008 ID:1 Periodic Statistics: M[1] Routes: 5 [26 max]
+7838893 ID:7 Periodic Statistics: M[7] Neighbors: 1 [26 max]
+7839041 ID:11 Periodic Statistics: M[11] Neighbors: 1 [26 max]
+7839100 ID:15 Periodic Statistics: M[15] Neighbors: 1 [26 max]
+7840294 ID:9 Periodic Statistics: M[9] Neighbors: 2 [26 max]
+7840441 ID:12 Periodic Statistics: M[12] Neighbors: 2 [26 max]
+7840444 ID:10 Periodic Statistics: M[10] Neighbors: 2 [26 max]
+7840987 ID:4 Periodic Statistics: M[4] Neighbors: 3 [26 max]
+7841682 ID:6 Periodic Statistics: M[6] Neighbors: 4 [26 max]
+7842371 ID:2 Periodic Statistics: M[2] Neighbors: 5 [26 max]
+7842371 ID:5 Periodic Statistics: M[5] Neighbors: 5 [26 max]
+7843495 ID:7 Periodic Statistics: M[7] Parents: 1 [26 max]
+7843796 ID:11 Periodic Statistics: M[11] Parents: 1 [26 max]
+7843852 ID:15 Periodic Statistics: M[15] Parents: 1 [26 max]
+7845991 ID:9 Periodic Statistics: M[9] Parents: 2 [26 max]
+7846287 ID:12 Periodic Statistics: M[12] Parents: 2 [26 max]
+7846288 ID:10 Periodic Statistics: M[10] Parents: 2 [26 max]
+7847582 ID:4 Periodic Statistics: M[4] Parents: 3 [26 max]
+7848488 ID:7 Periodic Statistics: M[7] Default routes: 1
+7848902 ID:11 Periodic Statistics: M[11] Default routes: 1
+7848938 ID:15 Periodic Statistics: M[15] Default routes: 1
+7849090 ID:6 Periodic Statistics: M[6] Parents: 4 [26 max]
+7850651 ID:2 Periodic Statistics: M[2] Parents: 5 [26 max]
+7850662 ID:5 Periodic Statistics: M[5] Parents: 5 [26 max]
+7856629 ID:10 Periodic Statistics: M[10] Default routes: 0
+7859940 ID:10 Periodic Statistics: M[10] Default routes: 1
+7863062 ID:10 Periodic Statistics: M[10] | DAO: 1
+8049941 ID:1 Periodic Statistics: M[1] Neighbors: 6 [26 max]
+8055618 ID:1 Periodic Statistics: M[1] Routes: 6 [26 max]
+8627357 ID:5 Periodic Statistics: M[5] | DIO: 2
+9150763 ID:5 Periodic Statistics: M[5] | DIO: 3
+9587373 ID:4 Periodic Statistics: M[4] | DIO: 2
+9971728 ID:2 Periodic Statistics: M[2] | DIO: 2
+10338262 ID:5 Periodic Statistics: M[5] | DIO: 4
+10783678 ID:9 Periodic Statistics: M[9] | DAO: 1
+10784925 ID:10 Periodic Statistics: M[10] | DAO: 2
+10788027 ID:12 Periodic Statistics: M[12] | DAO: 1
+10805349 ID:6 Periodic Statistics: M[6] Neighbors: 5 [26 max]
+10810553 ID:6 Periodic Statistics: M[6] Routes: 1 [26 max]
+10834970 ID:6 Periodic Statistics: M[6] Neighbors: 6 [26 max]
+10840490 ID:6 Periodic Statistics: M[6] Routes: 2 [26 max]
+10858032 ID:1 Periodic Statistics: M[1] Routes: 7 [26 max]
+10867842 ID:1 Periodic Statistics: M[1] Routes: 8 [26 max]
+10924095 ID:15 Periodic Statistics: M[15] | DAO: 1
+10925370 ID:11 Periodic Statistics: M[11] | DAO: 1
+10925753 ID:7 Periodic Statistics: M[7] | DAO: 1
+10947483 ID:9 Periodic Statistics: M[9] | DIO: 1
+10948744 ID:10 Periodic Statistics: M[10] | DIO: 1
+10951397 ID:12 Periodic Statistics: M[12] | DIO: 1
+10968987 ID:3 Periodic Statistics: M[3] Neighbors: 1 [26 max]
+10969136 ID:13 Periodic Statistics: M[13] Neighbors: 1 [26 max]
+10970332 ID:7 Periodic Statistics: M[7] Neighbors: 2 [26 max]
+10970481 ID:15 Periodic Statistics: M[15] Neighbors: 2 [26 max]
+10970482 ID:11 Periodic Statistics: M[11] Neighbors: 2 [26 max]
+10971022 ID:9 Periodic Statistics: M[9] Neighbors: 3 [26 max]
+10971172 ID:10 Periodic Statistics: M[10] Neighbors: 3 [26 max]
+10971867 ID:14 Periodic Statistics: M[14] Neighbors: 4 [26 max]
+10973158 ID:2 Periodic Statistics: M[2] Neighbors: 6 [26 max]
+10973161 ID:5 Periodic Statistics: M[5] Neighbors: 6 [26 max]
+10973589 ID:3 Periodic Statistics: M[3] Parents: 1 [26 max]
+10973889 ID:13 Periodic Statistics: M[13] Parents: 1 [26 max]
+10975124 ID:6 Periodic Statistics: M[6] Parents: 5 [26 max]
+10976028 ID:7 Periodic Statistics: M[7] Parents: 2 [26 max]
+10976327 ID:11 Periodic Statistics: M[11] Parents: 2 [26 max]
+10976328 ID:15 Periodic Statistics: M[15] Parents: 2 [26 max]
+10977558 ID:9 Periodic Statistics: M[9] Parents: 3 [26 max]
+10977861 ID:10 Periodic Statistics: M[10] Parents: 3 [26 max]
+10978590 ID:3 Periodic Statistics: M[3] Default routes: 1
+10978974 ID:13 Periodic Statistics: M[13] Default routes: 1
+10979458 ID:14 Periodic Statistics: M[14] Parents: 4 [26 max]
+10982284 ID:2 Periodic Statistics: M[2] Parents: 6 [26 max]
+10982288 ID:5 Periodic Statistics: M[5] Parents: 6 [26 max]
+10986208 ID:7 Periodic Statistics: M[7] Default routes: 0
+10986658 ID:11 Periodic Statistics: M[11] Default routes: 0
+10989369 ID:7 Periodic Statistics: M[7] Default routes: 1
+10989969 ID:11 Periodic Statistics: M[11] Default routes: 1
+10992341 ID:7 Periodic Statistics: M[7] | DAO: 2
+10993160 ID:11 Periodic Statistics: M[11] | DAO: 2
+11004238 ID:13 Periodic Statistics: M[13] Neighbors: 2 [26 max]
+11004912 ID:12 Periodic Statistics: M[12] Neighbors: 3 [26 max]
+11006140 ID:10 Periodic Statistics: M[10] Neighbors: 4 [26 max]
+11006745 ID:14 Periodic Statistics: M[14] Neighbors: 5 [26 max]
+11008049 ID:6 Periodic Statistics: M[6] Parents: 6 [26 max]
+11010084 ID:13 Periodic Statistics: M[13] Parents: 2 [26 max]
+11010396 ID:7 Periodic Statistics: M[7] Neighbors: 3 [26 max]
+11011291 ID:11 Periodic Statistics: M[11] Neighbors: 3 [26 max]
+11011657 ID:12 Periodic Statistics: M[12] Parents: 3 [26 max]
+11011934 ID:14 Periodic Statistics: M[14] Routes: 1 [26 max]
+11013731 ID:10 Periodic Statistics: M[10] Parents: 4 [26 max]
+11017001 ID:7 Periodic Statistics: M[7] Parents: 3 [26 max]
+11017976 ID:11 Periodic Statistics: M[11] Parents: 3 [26 max]
+11020422 ID:13 Periodic Statistics: M[13] Default routes: 0
+11023732 ID:13 Periodic Statistics: M[13] Default routes: 1
+11026854 ID:13 Periodic Statistics: M[13] | DAO: 1
+11064432 ID:1 Periodic Statistics: M[1] Routes: 9 [26 max]
+11095707 ID:15 Periodic Statistics: M[15] | DIO: 1
+11097074 ID:11 Periodic Statistics: M[11] | DIO: 1
+11097457 ID:7 Periodic Statistics: M[7] | DIO: 1
+11133858 ID:3 Periodic Statistics: M[3] Neighbors: 2 [26 max]
+11134701 ID:13 Periodic Statistics: M[13] Neighbors: 3 [26 max]
+11135248 ID:9 Periodic Statistics: M[9] Neighbors: 4 [26 max]
+11135317 ID:7 Periodic Statistics: M[7] Neighbors: 4 [26 max]
+11135340 ID:6 Periodic Statistics: M[6] Neighbors: 7 [26 max]
+11135401 ID:11 Periodic Statistics: M[11] Neighbors: 4 [26 max]
+11135953 ID:12 Periodic Statistics: M[12] Neighbors: 4 [26 max]
+11136995 ID:14 Periodic Statistics: M[14] Neighbors: 6 [26 max]
+11139554 ID:3 Periodic Statistics: M[3] Parents: 2 [26 max]
+11141446 ID:13 Periodic Statistics: M[13] Parents: 3 [26 max]
+11142630 ID:9 Periodic Statistics: M[9] Parents: 4 [26 max]
+11142721 ID:7 Periodic Statistics: M[7] Parents: 4 [26 max]
+11142938 ID:11 Periodic Statistics: M[11] Parents: 4 [26 max]
+11143927 ID:6 Periodic Statistics: M[6] Parents: 7 [26 max]
+11144201 ID:12 Periodic Statistics: M[12] Parents: 4 [26 max]
+11146229 ID:14 Periodic Statistics: M[14] Parents: 5 [26 max]
+11158145 ID:3 Periodic Statistics: M[3] Neighbors: 3 [26 max]
+11164683 ID:3 Periodic Statistics: M[3] Parents: 3 [26 max]
+11172111 ID:12 Periodic Statistics: M[12] Neighbors: 5 [26 max]
+11172206 ID:7 Periodic Statistics: M[7] Neighbors: 5 [26 max]
+11178441 ID:14 Periodic Statistics: M[14] Parents: 6 [26 max]
+11180487 ID:7 Periodic Statistics: M[7] Parents: 5 [26 max]
+11180928 ID:13 Periodic Statistics: M[13] Neighbors: 4 [26 max]
+11181201 ID:12 Periodic Statistics: M[12] Parents: 5 [26 max]
+11181467 ID:9 Periodic Statistics: M[9] Neighbors: 5 [26 max]
+11181619 ID:10 Periodic Statistics: M[10] Neighbors: 5 [26 max]
+11188530 ID:13 Periodic Statistics: M[13] Parents: 4 [26 max]
+11189688 ID:9 Periodic Statistics: M[9] Parents: 5 [26 max]
+11189989 ID:10 Periodic Statistics: M[10] Parents: 5 [26 max]
+11214000 ID:12 Periodic Statistics: M[12] Neighbors: 6 [26 max]
+11215266 ID:14 Periodic Statistics: M[14] Neighbors: 7 [26 max]
+11215624 ID:15 Periodic Statistics: M[15] Neighbors: 3 [26 max]
+11216170 ID:3 Periodic Statistics: M[3] Neighbors: 4 [26 max]
+11218252 ID:2 Periodic Statistics: M[2] Neighbors: 7 [26 max]
+11220978 ID:9 Periodic Statistics: M[9] Neighbors: 6 [26 max]
+11221000 ID:14 Periodic Statistics: M[14] Routes: 2 [26 max]
+11222369 ID:15 Periodic Statistics: M[15] Parents: 3 [26 max]
+11223611 ID:3 Periodic Statistics: M[3] Parents: 4 [26 max]
+11223867 ID:12 Periodic Statistics: M[12] Parents: 6 [26 max]
+11224592 ID:10 Periodic Statistics: M[10] Neighbors: 6 [26 max]
+11228181 ID:2 Periodic Statistics: M[2] Parents: 7 [26 max]
+11230105 ID:9 Periodic Statistics: M[9] Parents: 6 [26 max]
+11233879 ID:10 Periodic Statistics: M[10] Parents: 6 [26 max]
+11239852 ID:14 Periodic Statistics: M[14] Neighbors: 8 [26 max]
+11250815 ID:14 Periodic Statistics: M[14] Parents: 7 [26 max]
+11261587 ID:12 Periodic Statistics: M[12] Neighbors: 7 [26 max]
+11272371 ID:12 Periodic Statistics: M[12] Parents: 7 [26 max]
+11292771 ID:14 Periodic Statistics: M[14] Routes: 3 [26 max]
+11341914 ID:7 Periodic Statistics: M[7] Default routes: 0
+11345075 ID:7 Periodic Statistics: M[7] Default routes: 1
+11348080 ID:7 Periodic Statistics: M[7] | DAO: 3
+11392532 ID:14 Periodic Statistics: M[14] Routes: 4 [26 max]
+11431511 ID:1 Periodic Statistics: M[1] Routes: 10 [26 max]
+11509778 ID:1 Periodic Statistics: M[1] Routes: 11 [26 max]
+11595860 ID:1 Periodic Statistics: M[1] Routes: 12 [26 max]
+11605351 ID:11 Periodic Statistics: M[11] | DIO: 2
+11790466 ID:4 Periodic Statistics: M[4] | DIO: 3
+11803396 ID:12 Periodic Statistics: M[12] | DIO: 2
+11843256 ID:14 Periodic Statistics: M[14] | DIO: 2
+11923882 ID:11 Periodic Statistics: M[11] Default routes: 0
+11927193 ID:11 Periodic Statistics: M[11] Default routes: 1
+11930348 ID:11 Periodic Statistics: M[11] | DAO: 3
+12002602 ID:9 Periodic Statistics: M[9] | DIO: 2
+12173128 ID:7 Periodic Statistics: M[7] | DIO: 2
+12324194 ID:10 Periodic Statistics: M[10] | DIO: 2
+12518195 ID:9 Periodic Statistics: M[9] | DIO: 3
+12595654 ID:5 Periodic Statistics: M[5] | DIO: 5
+12648856 ID:8 Periodic Statistics: M[8] Neighbors: 3 [26 max]
+12649545 ID:4 Periodic Statistics: M[4] Neighbors: 4 [26 max]
+12652323 ID:6 Periodic Statistics: M[6] Neighbors: 8 [26 max]
+12652382 ID:2 Periodic Statistics: M[2] Neighbors: 8 [26 max]
+12653162 ID:14 Periodic Statistics: M[14] Neighbors: 9 [26 max]
+12655392 ID:8 Periodic Statistics: M[8] Parents: 3 [26 max]
+12656929 ID:4 Periodic Statistics: M[4] Parents: 4 [26 max]
+12663146 ID:6 Periodic Statistics: M[6] Parents: 8 [26 max]
+12663203 ID:2 Periodic Statistics: M[2] Parents: 8 [26 max]
+12664964 ID:14 Periodic Statistics: M[14] Parents: 8 [26 max]
+12667030 ID:12 Periodic Statistics: M[12] Neighbors: 8 [26 max]
+12678653 ID:12 Periodic Statistics: M[12] Parents: 8 [26 max]
+13022329 ID:14 Periodic Statistics: M[14] | DIO: 3
+13322838 ID:2 Periodic Statistics: M[2] | DIO: 3
+13322868 ID:9 Periodic Statistics: M[9] | DIO: 4
+13384540 ID:8 Periodic Statistics: M[8] Neighbors: 4 [26 max]
+13385287 ID:4 Periodic Statistics: M[4] Neighbors: 5 [26 max]
+13385926 ID:7 Periodic Statistics: M[7] Neighbors: 6 [26 max]
+13386698 ID:5 Periodic Statistics: M[5] Neighbors: 7 [26 max]
+13388719 ID:12 Periodic Statistics: M[12] Neighbors: 9 [26 max]
+13389001 ID:14 Periodic Statistics: M[14] Neighbors: 10 [26 max]
+13391927 ID:8 Periodic Statistics: M[8] Parents: 4 [26 max]
+13393567 ID:4 Periodic Statistics: M[4] Parents: 5 [26 max]
+13395052 ID:7 Periodic Statistics: M[7] Parents: 6 [26 max]
+13396680 ID:5 Periodic Statistics: M[5] Parents: 7 [26 max]
+13401178 ID:12 Periodic Statistics: M[12] Parents: 9 [26 max]
+13401649 ID:14 Periodic Statistics: M[14] Parents: 9 [26 max]
+13412963 ID:6 Periodic Statistics: M[6] Neighbors: 9 [26 max]
+13424622 ID:6 Periodic Statistics: M[6] Parents: 9 [26 max]
+14053900 ID:13 Periodic Statistics: M[13] | DAO: 2
+14056714 ID:3 Periodic Statistics: M[3] | DAO: 1
+14076617 ID:9 Periodic Statistics: M[9] Neighbors: 7 [26 max]
+14082184 ID:9 Periodic Statistics: M[9] Routes: 1 [26 max]
+14123833 ID:12 Periodic Statistics: M[12] Neighbors: 10 [26 max]
+14130481 ID:12 Periodic Statistics: M[12] Routes: 1 [26 max]
+14140682 ID:6 Periodic Statistics: M[6] Routes: 3 [26 max]
+14184690 ID:6 Periodic Statistics: M[6] Routes: 4 [26 max]
+14203172 ID:1 Periodic Statistics: M[1] Routes: 13 [26 max]
+14225485 ID:13 Periodic Statistics: M[13] | DIO: 1
+14228331 ID:3 Periodic Statistics: M[3] | DIO: 1
+14246146 ID:1 Periodic Statistics: M[1] Routes: 14 [26 max]
+14249143 ID:1 Periodic Statistics: convergence time ended
+TEST OK
+Test ended at simulation time: 14249143

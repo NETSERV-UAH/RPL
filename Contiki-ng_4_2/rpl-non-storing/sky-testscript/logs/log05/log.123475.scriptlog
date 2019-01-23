@@ -1,0 +1,102 @@
+Random seed: 123475
+553882 ID:3 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+556753 ID:3 [INFO: Main      ] - Routing: RPL Classic
+559282 ID:3 [INFO: Main      ] - Net: sicslowpan
+561401 ID:3 [INFO: Main      ] - MAC: CSMA
+564780 ID:3 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+568339 ID:3 [INFO: Main      ] - 802.15.4 Default channel: 26
+570452 ID:3 [INFO: Main      ] Node ID: 3
+575839 ID:3 [INFO: Main      ] Link-layer address: 0012.7403.0003.0303
+582266 ID:3 Periodic Statistics: M[3] SR-Entries: 0 [26 max]
+590646 ID:3 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7403:3:303
+594035 ID:3 [INFO: Sky       ] CC2420 CCA threshold -45
+663855 ID:4 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+666725 ID:4 [INFO: Main      ] - Routing: RPL Classic
+669255 ID:4 [INFO: Main      ] - Net: sicslowpan
+671374 ID:4 [INFO: Main      ] - MAC: CSMA
+674752 ID:4 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+678311 ID:4 [INFO: Main      ] - 802.15.4 Default channel: 26
+680425 ID:4 [INFO: Main      ] Node ID: 4
+685810 ID:4 [INFO: Main      ] Link-layer address: 0012.7404.0004.0404
+692236 ID:4 Periodic Statistics: M[4] SR-Entries: 0 [26 max]
+700614 ID:4 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7404:4:404
+704004 ID:4 [INFO: Sky       ] CC2420 CCA threshold -45
+833978 ID:2 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+836848 ID:2 [INFO: Main      ] - Routing: RPL Classic
+839378 ID:2 [INFO: Main      ] - Net: sicslowpan
+841497 ID:2 [INFO: Main      ] - MAC: CSMA
+844875 ID:2 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+848434 ID:2 [INFO: Main      ] - 802.15.4 Default channel: 26
+850547 ID:2 [INFO: Main      ] Node ID: 2
+855932 ID:2 [INFO: Main      ] Link-layer address: 0012.7402.0002.0202
+859175 ID:5 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+862046 ID:5 [INFO: Main      ] - Routing: RPL Classic
+862359 ID:2 Periodic Statistics: M[2] SR-Entries: 0 [26 max]
+864575 ID:5 [INFO: Main      ] - Net: sicslowpan
+866694 ID:5 [INFO: Main      ] - MAC: CSMA
+870073 ID:5 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+870737 ID:2 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7402:2:202
+873631 ID:5 [INFO: Main      ] - 802.15.4 Default channel: 26
+874126 ID:2 [INFO: Sky       ] CC2420 CCA threshold -45
+875745 ID:5 [INFO: Main      ] Node ID: 5
+881130 ID:5 [INFO: Main      ] Link-layer address: 0012.7405.0005.0505
+887557 ID:5 Periodic Statistics: M[5] SR-Entries: 0 [26 max]
+895937 ID:5 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7405:5:505
+899326 ID:5 [INFO: Sky       ] CC2420 CCA threshold -45
+934723 ID:1 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+937594 ID:1 [INFO: Main      ] - Routing: RPL Classic
+940123 ID:1 [INFO: Main      ] - Net: sicslowpan
+942242 ID:1 [INFO: Main      ] - MAC: CSMA
+945621 ID:1 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+949179 ID:1 [INFO: Main      ] - 802.15.4 Default channel: 26
+951293 ID:1 [INFO: Main      ] Node ID: 1
+956678 ID:1 [INFO: Main      ] Link-layer address: 0012.7401.0001.0101
+963105 ID:1 Periodic Statistics: M[1] SR-Entries: 0 [26 max]
+971483 ID:1 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7401:1:101
+974872 ID:1 [INFO: Sky       ] CC2420 CCA threshold -45
+977672 ID:1 Periodic Statistics: Number of nodes: 5
+980807 ID:1 Periodic Statistics: convergence time started
+4228706 ID:1 Periodic Statistics: M[1] | DIO: 1
+4279848 ID:2 Periodic Statistics: M[2] Neighbors: 1 [26 max]
+4279848 ID:5 Periodic Statistics: M[5] Neighbors: 1 [26 max]
+4279849 ID:3 Periodic Statistics: M[3] Neighbors: 1 [26 max]
+4279849 ID:4 Periodic Statistics: M[4] Neighbors: 1 [26 max]
+4284445 ID:5 Periodic Statistics: M[5] Parents: 1 [26 max]
+4284448 ID:3 Periodic Statistics: M[3] Parents: 1 [26 max]
+4284448 ID:4 Periodic Statistics: M[4] Parents: 1 [26 max]
+4284504 ID:2 Periodic Statistics: M[2] Parents: 1 [26 max]
+4289378 ID:5 Periodic Statistics: M[5] Default routes: 1
+4289381 ID:3 Periodic Statistics: M[3] Default routes: 1
+4289381 ID:4 Periodic Statistics: M[4] Default routes: 1
+4289436 ID:2 Periodic Statistics: M[2] Default routes: 1
+7363837 ID:3 Periodic Statistics: M[3] | DAO: 1
+7364438 ID:4 Periodic Statistics: M[4] | DAO: 1
+7364440 ID:5 Periodic Statistics: M[5] | DAO: 1
+7370496 ID:2 Periodic Statistics: M[2] | DAO: 1
+7392104 ID:1 Periodic Statistics: M[1] SR-Entries: 1 [26 max]
+7396225 ID:1 Periodic Statistics: M[1] SR-Entries: 2 [26 max]
+7407049 ID:1 Periodic Statistics: M[1] SR-Entries: 3 [26 max]
+7534247 ID:2 Periodic Statistics: M[2] | DIO: 1
+7535408 ID:3 Periodic Statistics: M[3] | DIO: 1
+7542805 ID:4 Periodic Statistics: M[4] | DIO: 1
+7543293 ID:5 Periodic Statistics: M[5] | DIO: 1
+7592999 ID:1 Periodic Statistics: M[1] Neighbors: 1 [26 max]
+7594516 ID:3 Periodic Statistics: M[3] Neighbors: 2 [26 max]
+7594516 ID:4 Periodic Statistics: M[4] Neighbors: 2 [26 max]
+7594516 ID:5 Periodic Statistics: M[5] Neighbors: 2 [26 max]
+7600262 ID:3 Periodic Statistics: M[3] Parents: 2 [26 max]
+7600262 ID:4 Periodic Statistics: M[4] Parents: 2 [26 max]
+7600262 ID:5 Periodic Statistics: M[5] Parents: 2 [26 max]
+7621084 ID:1 Periodic Statistics: M[1] Neighbors: 2 [26 max]
+7622668 ID:2 Periodic Statistics: M[2] Neighbors: 2 [26 max]
+7623359 ID:5 Periodic Statistics: M[5] Neighbors: 3 [26 max]
+7623371 ID:4 Periodic Statistics: M[4] Neighbors: 3 [26 max]
+7628414 ID:2 Periodic Statistics: M[2] Parents: 2 [26 max]
+7629886 ID:5 Periodic Statistics: M[5] Parents: 3 [26 max]
+7629923 ID:4 Periodic Statistics: M[4] Parents: 3 [26 max]
+7768544 ID:1 Periodic Statistics: M[1] SR-Entries: 4 [26 max]
+7780205 ID:1 Periodic Statistics: M[1] SR-Entries: 5 [26 max]
+7781701 ID:1 num null parents: 1 
+7784700 ID:1 Periodic Statistics: convergence time ended
+TEST OK
+Test ended at simulation time: 7784700

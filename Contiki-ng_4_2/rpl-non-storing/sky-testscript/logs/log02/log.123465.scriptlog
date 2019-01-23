@@ -1,0 +1,36 @@
+Random seed: 123465
+747930 ID:2 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+750800 ID:2 [INFO: Main      ] - Routing: RPL Classic
+753330 ID:2 [INFO: Main      ] - Net: sicslowpan
+755449 ID:2 [INFO: Main      ] - MAC: CSMA
+758827 ID:2 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+762386 ID:2 [INFO: Main      ] - 802.15.4 Default channel: 26
+764499 ID:2 [INFO: Main      ] Node ID: 2
+769884 ID:2 [INFO: Main      ] Link-layer address: 0012.7402.0002.0202
+776311 ID:2 Periodic Statistics: M[2] SR-Entries: 0 [26 max]
+784689 ID:2 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7402:2:202
+788078 ID:2 [INFO: Sky       ] CC2420 CCA threshold -45
+932987 ID:1 [INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+935858 ID:1 [INFO: Main      ] - Routing: RPL Classic
+938387 ID:1 [INFO: Main      ] - Net: sicslowpan
+940506 ID:1 [INFO: Main      ] - MAC: CSMA
+943885 ID:1 [INFO: Main      ] - 802.15.4 PANID: 0xabcd
+947443 ID:1 [INFO: Main      ] - 802.15.4 Default channel: 26
+949557 ID:1 [INFO: Main      ] Node ID: 1
+954942 ID:1 [INFO: Main      ] Link-layer address: 0012.7401.0001.0101
+961369 ID:1 Periodic Statistics: M[1] SR-Entries: 0 [26 max]
+969747 ID:1 [INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7401:1:101
+973135 ID:1 [INFO: Sky       ] CC2420 CCA threshold -45
+975935 ID:1 Periodic Statistics: Number of nodes: 2
+979070 ID:1 Periodic Statistics: convergence time started
+4226970 ID:1 Periodic Statistics: M[1] | DIO: 1
+4278112 ID:2 Periodic Statistics: M[2] Neighbors: 1 [26 max]
+4282768 ID:2 Periodic Statistics: M[2] Parents: 1 [26 max]
+4287701 ID:2 Periodic Statistics: M[2] Default routes: 1
+7362573 ID:2 Periodic Statistics: M[2] | DAO: 1
+7390779 ID:1 Periodic Statistics: M[1] SR-Entries: 1 [26 max]
+7394902 ID:1 Periodic Statistics: M[1] SR-Entries: 2 [26 max]
+7396399 ID:1 num null parents: 1 
+7399397 ID:1 Periodic Statistics: convergence time ended
+TEST OK
+Test ended at simulation time: 7399397
