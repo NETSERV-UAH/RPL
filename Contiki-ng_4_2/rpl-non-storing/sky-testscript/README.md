@@ -9,5 +9,6 @@ Repeatedly run the simulation(in Docker):
 log parser (script):
 
 ./a.out BASE_NAME SEED NUM_RUN
+
 ./a.out log 123456 20
 
