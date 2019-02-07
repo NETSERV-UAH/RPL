@@ -1,4 +1,4 @@
-Metrics is directly measured in the RPL code.
+Metrics are directly measured in the RPL code.
 
 Repeatedly run the simulation(in Docker):
 
