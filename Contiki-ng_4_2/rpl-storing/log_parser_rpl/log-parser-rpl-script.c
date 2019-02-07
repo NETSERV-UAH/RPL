@@ -39,6 +39,12 @@ int main(int argc, char *argv[])
             if (parser_log_fp = fopen("parser.log.txt", "w"))
               has_log = 1;
 
+           FILE *convergenceRate;
+           if((convergenceRate = fopen("../13_ConvergenceRate.txt","a"))== NULL){
+              fprintf(stderr,"\nCan't open destination file (../13_ConvergenceRate.txt)\n");
+              return 0;
+            }
+
             char base_name[20];
             char seed_str[10];
             char num_ok_run_str[5];
@@ -106,6 +112,7 @@ int main(int argc, char *argv[])
 
             printf("number of converged: %d\n", ok_count);
             printf("number of not converged: %d\n", not_converged);
+            fprintf(convergenceRate, "%f\n", (float)ok_count / (ok_count + not_converged));
             if (has_log){
               fprintf(parser_log_fp, "number of converged: %d\n", ok_count);
               fprintf(parser_log_fp, "number of not converged: %d\n", not_converged);
@@ -127,85 +134,85 @@ int log_file_parser(FILE *fp, char *destfile, char *seed){
 #if GLOBAL_STATISTICS == 1
 
     FILE *ConvergenceTime; //A file to save convergence time for all nodes
-    if((ConvergenceTime=fopen("01_ConvergenceTime.txt","a")) == NULL){
-       fprintf(stderr,"\nCan't open destination file (01_ConvergenceTime.txt)\n");
+    if((ConvergenceTime=fopen("../01_ConvergenceTime.txt","a")) == NULL){
+       fprintf(stderr,"\nCan't open destination file (../01_ConvergenceTime.txt)\n");
        return -1;
 
      }
 
      FILE *numberOfTableEntries;
-     if((numberOfTableEntries=fopen("02_NumberOfTableEntries.txt","a"))==NULL){
-        fprintf(stderr,"\nCan't open destination file (02_NumberOfTableEntries.txt)\n");
+     if((numberOfTableEntries=fopen("../02_NumberOfTableEntries.txt","a"))==NULL){
+        fprintf(stderr,"\nCan't open destination file (../02_NumberOfTableEntries.txt)\n");
         return -1;
 
      }
 
      FILE *numberOfMessages;
-     if((numberOfMessages=fopen("03_NumberOfMessages.txt","a"))==NULL){
-        fprintf(stderr,"\nCan't open destination file (03_NumberOfMessages.txt)\n");
+     if((numberOfMessages=fopen("../03_NumberOfMessages.txt","a"))==NULL){
+        fprintf(stderr,"\nCan't open destination file (../03_NumberOfMessages.txt)\n");
         return -1;
 
      }
 
      FILE *numberOfHops;
-     if((numberOfHops=fopen("04_NumberOfHops.txt","a"))==NULL){
-        fprintf(stderr,"\nCan't open destination file (04_NumberOfHops.txt)\n");
+     if((numberOfHops=fopen("../04_NumberOfHops.txt","a"))==NULL){
+        fprintf(stderr,"\nCan't open destination file (../04_NumberOfHops.txt)\n");
         return -1;
 
      }
 
      FILE *numberOfNeighbors;
-     if((numberOfNeighbors=fopen("05_NumberOfNeighbors.txt","a"))==NULL){
-        fprintf(stderr,"\nCan't open destination file (05_NumberOfNeighbors.txt)\n");
+     if((numberOfNeighbors=fopen("../05_NumberOfNeighbors.txt","a"))==NULL){
+        fprintf(stderr,"\nCan't open destination file (../05_NumberOfNeighbors.txt)\n");
         return -1;
 
      }
 
      FILE *numberOfParents;
-     if((numberOfParents=fopen("06_NumberOfParents.txt","a"))==NULL){
-        fprintf(stderr,"\nCan't open destination file (06_NumberOfParents.txt)\n");
+     if((numberOfParents=fopen("../06_NumberOfParents.txt","a"))==NULL){
+        fprintf(stderr,"\nCan't open destination file (../06_NumberOfParents.txt)\n");
         return -1;
 
      }
 
      FILE *numberOfDefaultRoutes;
-     if((numberOfDefaultRoutes=fopen("07_NumberOfDefaultRoutes.txt","a"))==NULL){
-        fprintf(stderr,"\nCan't open destination file (07_NumberOfDefaultRoutes.txt)\n");
+     if((numberOfDefaultRoutes=fopen("../07_NumberOfDefaultRoutes.txt","a"))==NULL){
+        fprintf(stderr,"\nCan't open destination file (../07_NumberOfDefaultRoutes.txt)\n");
         return -1;
 
      }
 
      FILE *numberOfRoutes;
-     if((numberOfRoutes=fopen("08_NumberOfRoutes.txt","a"))==NULL){
-        fprintf(stderr,"\nCan't open destination file (08_NumberOfRoutes.txt)\n");
+     if((numberOfRoutes=fopen("../08_NumberOfRoutes.txt","a"))==NULL){
+        fprintf(stderr,"\nCan't open destination file (../08_NumberOfRoutes.txt)\n");
         return -1;
 
      }
 
      FILE *numberOfSREntries;
-     if((numberOfSREntries=fopen("09_NumberOfSREntries.txt","a"))==NULL){
-        fprintf(stderr,"\nCan't open destination file (09_NumberOfSREntries.txt)\n");
+     if((numberOfSREntries=fopen("../09_NumberOfSREntries.txt","a"))==NULL){
+        fprintf(stderr,"\nCan't open destination file (../09_NumberOfSREntries.txt)\n");
         return -1;
 
      }
 
      FILE *numberOfDISMessages;
-     if((numberOfDISMessages=fopen("10_NumberOfDISMessages.txt","a"))==NULL){
-        fprintf(stderr,"\nCan't open destination file (10_NumberOfDISMessages.txt)\n");
+     if((numberOfDISMessages=fopen("../10_NumberOfDISMessages.txt","a"))==NULL){
+        fprintf(stderr,"\nCan't open destination file (../10_NumberOfDISMessages.txt)\n");
         return -1;
 
      }
 
      FILE *numberOfDIOMessages;
-     if((numberOfDIOMessages=fopen("11_NumberOfDIOMessages.txt","a"))==NULL){
-        fprintf(stderr,"\nCan't open destination file (11_NumberOfDIOMessages.txt)\n");
+     if((numberOfDIOMessages=fopen("../11_NumberOfDIOMessages.txt","a"))==NULL){
+        fprintf(stderr,"\nCan't open destination file (../11_NumberOfDIOMessages.txt)\n");
         return -1;
 
      }
 
      FILE *numberOfDAOMessages;
-     if((numberOfDAOMessages=fopen("12_NumberOfDAOMessages.txt","a"))==NULL){
-        fprintf(stderr,"\nCan't open destination file (12_NumberOfDAOMessages.txt)\n");
+     if((numberOfDAOMessages=fopen("../12_NumberOfDAOMessages.txt","a"))==NULL){
+        fprintf(stderr,"\nCan't open destination file (../12_NumberOfDAOMessages.txt)\n");
         return -1;
 
      }
@@ -449,7 +456,7 @@ void log_file_order(char * base_name, int seed , int last_seed ){  //To order pa
     system(command);
   }
 
-  for(int i=1; i < NUMBER_OF_STATS_FILES + 1; i ++){
+/*  for(int i=1; i < NUMBER_OF_STATS_FILES + 1; i ++){
     switch(i){
       case 1:
         strcpy(command, "mv 01_ConvergenceTime.txt ./Parsed_data/");
@@ -502,5 +509,6 @@ void log_file_order(char * base_name, int seed , int last_seed ){  //To order pa
     }
     
   }
+*/
 
 }
