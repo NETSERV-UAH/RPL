@@ -1,10 +1,13 @@
-Metrics is directly measured in the RPL code.
+Metrics are directly measured in the RPL code.
 
 Repeatedly run the simulation(in Docker):
 
-../.././simexec.sh ../../Scenario25.csc ../../../../.. log 1234 20
+If you use Docker, log in to Docker.
 
-../.././simexec2.sh ../../Scenario25.csc ../../../../.. log 1234 20
+./simexec-article.sh 
+
+../.././simexec.sh ../../Scenario25.csc ../../../../.. log 1234 1
+
 
 log parser (script):
 

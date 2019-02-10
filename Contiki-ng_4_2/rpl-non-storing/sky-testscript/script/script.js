@@ -8,7 +8,7 @@
 /* Make test automatically fail (timeout) after 100 simulated seconds */
 //TIMEOUT(100000); /* milliseconds. no action at timeout */
 //TIMEOUT(100000, log.log("last msg: " + msg + "\n")); /* milliseconds. print last msg at timeout */
-TIMEOUT(100000, log.log("Not converged\n")); /* milliseconds. print last msg at timeout */
+TIMEOUT(180000, log.log("Not converged\n")); /* milliseconds. print last msg at timeout */
 
 
 //log.log("first mote output: '" + msg + "'\n");
