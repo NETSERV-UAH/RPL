@@ -12,7 +12,7 @@ SIMULATIONS=(002) #(005) #(010) #(015) #(020) #(025) #(050) #(100) #(002 005 010
 #Scenario list
 SCENARIOS=(01 02 03 04 05 06 07 08 09 10)
 
-cd ~/contiki-ng/examples/rpl-non-storing/sky-testscript
+cd ~/contiki-ng/examples/rpl-non-storing/cooja-testscript
 mkdir logs
 cd logs
 
