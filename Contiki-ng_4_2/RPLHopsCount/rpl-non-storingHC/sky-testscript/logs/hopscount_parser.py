@@ -1,12 +1,15 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
+#Python 3 script :)
+
 import os
 import sys  
 import operator
 import argparse
 from collections import OrderedDict
 
+#Main fuction of the parser 
 def hopscount_parser(base_name):
 
     #Dir, files, and aux vars
@@ -98,16 +101,19 @@ def hopscount_parser(base_name):
                     print('Error, cannot create data struct in the file: '+ file)
 
                 try:
-
+                    
+                    #Read M[id] - M[id2]:hops\n
                     hops_count_per_file(file_to_parse,dic_motes)
 
-                    try: # Stats( Check if this simulation is OK )
+                    try: # Stats( Check if this simulation is:  OK / FAILED )
                         if get_state_of_sim(dic_motes,file_to_parse) :
                             sim_stats['sim_total_conv'] = str(int( sim_stats['sim_total_conv']) + 1)
                             sim_stats['sim_total_conv_seeds'].append(get_random_seed(file_to_parse))
+                            is_a_no_conv_sim = False
                         else:
                             sim_stats['sim_total_no_conv'] = str(int( sim_stats['sim_total_no_conv']) + 1)
                             sim_stats['sim_total_no_conv_seeds'].append(get_random_seed(file_to_parse))
+                            is_a_no_conv_sim = True
                         log_parser.write('INFO: Checking the state of the simulation in the file: '+ file +'\n')
                     except:
                         print('Error, cannot check the state of the simulation in the file: '+ file +'\n')
@@ -117,7 +123,7 @@ def hopscount_parser(base_name):
                         
                         #If there aren't info about the hops to the sink mote, 
                         #We can try to recover this info from ipv6
-                        sim_conv = complete_hops_allWall_ns(file_to_parse,dic_motes,dic_motes_ip, sim_stats)
+                        sim_conv = complete_hops_allWall_ns(file_to_parse,dic_motes,dic_motes_ip, sim_stats, is_a_no_conv_sim)
                         
                         #if the simulation didnt converge, just log it
                         if not sim_conv:
@@ -149,8 +155,12 @@ def hopscount_parser(base_name):
     add_stats_to_results_file(sim_stats,path)
     log_parser.close()
     #Just for order the dir tree
-    orderLogDir(path)
+    orderLogDir(path, sim_stats)
 
+
+
+
+#Returns the seed of the simulation
 def get_random_seed(file_to_parse):
     #   line == Random seed: 123486
     #   aux_line[1] ==  123486
@@ -162,6 +172,7 @@ def get_random_seed(file_to_parse):
 
     file_to_parse.seek()
 
+#Return the number of motes in the simulation
 def motes_count_per_file(file):
     aux_id = []
 
@@ -181,6 +192,8 @@ def motes_count_per_file(file):
 
     return len(aux_id)
 
+#Returns a dic with key: node_id , value: IPV6(local) 
+# (Ej: 2 nodes )--> {0 : 'Nothing here', 1:'fd00::212:7101:1:101',1:'fd00::212:7202:2:202'}
 def read_ip_modes(file_to_parse):
     dic = {0 : 'Nothing here'}
     ipv6_link_local = ''
@@ -204,19 +217,25 @@ def read_ip_modes(file_to_parse):
     file_to_parse.seek(0)
     return dic
 
+#Parse from ipv6 link local to ipv6 local ( fe80:: ) to ( fd00:: ) 
 def get_ipv6_local(ipv6_link_local):
 
     return ('fd00' + ipv6_link_local[4:])  
 
+#Returns True or Flase in function of the state of the simulation (True : TEST OK | True : TEST FAILED )
 def get_state_of_sim(dic_motes,file_to_parse):
-    
-    for i in range(2, motes_count_per_file(file_to_parse) + 1):
-        if dic_motes[1][str(i)] == '-':
+
+    for line in file_to_parse:
+        if line.count('TEST FAILED'):
+            file_to_parse.seek(0)
             return False
+        elif line.count('TEST OK'):
+            file_to_parse.seek(0)
+            return True
 
-    return True        
+      
 
-
+#Reads M[id]-M[id]:hops
 def hops_count_per_file(file_to_parse,dic_motes):
     mote_a = 0
     mote_b = 0
@@ -237,21 +256,25 @@ def hops_count_per_file(file_to_parse,dic_motes):
 
     file_to_parse.seek(0)
 
-def complete_hops_allWall_ns(file_to_parse,dic_motes, dic_ip, sim_stats):
+#Only in non-storing mode
+def complete_hops_allWall_ns(file_to_parse,dic_motes, dic_ip, sim_stats, is_a_no_conv_sim):
     bool_sim_conv = True
+    have_used_use_ip_hops_check = False
 
     #Initial check for hops to sink
     for i in range(2, motes_count_per_file(file_to_parse) + 1):
         if dic_motes[1][str(i)] == '-':
+            have_used_use_ip_hops_check = True
             bool_sim_conv = use_ip_hops_check(file_to_parse,dic_motes, dic_ip, str(i))
             if  not bool_sim_conv:
                 sim_stats['sim_total_no_recovered_seeds'].append(get_random_seed(file_to_parse))
                 sim_stats['sim_total_no_recovered'] = str(int( sim_stats['sim_total_no_recovered']) + 1)
                 return False
-            else:
-                sim_stats['sim_total_recovered_seeds'].append(get_random_seed(file_to_parse))
-                sim_stats['sim_total_recovered'] = str(int( sim_stats['sim_total_recovered']) + 1)
-                
+
+    if (have_used_use_ip_hops_check and is_a_no_conv_sim) or (( not have_used_use_ip_hops_check) and is_a_no_conv_sim):        
+        sim_stats['sim_total_recovered_seeds'].append(get_random_seed(file_to_parse))
+        sim_stats['sim_total_recovered'] = str(int( sim_stats['sim_total_recovered']) + 1)           
+    
 
     #Complete all posible paths 
     for i in range(2, motes_count_per_file(file_to_parse) + 1):
@@ -261,6 +284,7 @@ def complete_hops_allWall_ns(file_to_parse,dic_motes, dic_ip, sim_stats):
 
     return True
 
+#Generate parser stats
 def add_stats_to_results_file(sim_stats,path):
 
     temp_file = open(path+'/'+ 'ParserResults.txt', 'w')
@@ -268,7 +292,10 @@ def add_stats_to_results_file(sim_stats,path):
     temp_file.write('1.\tTotal simulations: '+ sim_stats['sim_total']+'\n')
     temp_file.write('2.\tTotal simulations conv: '+ sim_stats['sim_total_conv']+' ( {:.3f}% )\n'.format(100*float(int(sim_stats['sim_total_conv'])/int(sim_stats['sim_total']))))
     temp_file.write('3.\tTotal simulations no conv: '+sim_stats['sim_total_no_conv']+' ( {:.3f}% )\n'.format(100*float(int(sim_stats['sim_total_no_conv'])/int(sim_stats['sim_total']))))
-    temp_file.write('4.\tTotal simulations recovered: '+sim_stats['sim_total_recovered']+' ( {:.3f}% )\n'.format(100*float(int(sim_stats['sim_total_recovered'])/int(sim_stats['sim_total']))))
+    if int(sim_stats['sim_total_no_conv']) != 0 :
+        temp_file.write('4.\tTotal simulations recovered: '+sim_stats['sim_total_recovered']+' ( {:.3f}% )\n'.format(100*float(int(sim_stats['sim_total_recovered'])/int(sim_stats['sim_total_no_conv']))))
+    else:
+        temp_file.write('4.\tTotal simulations recovered: '+sim_stats['sim_total_recovered']+' ( {:.3f}% )\n'.format(100*float(int(sim_stats['sim_total_recovered'])/int(sim_stats['sim_total']))))
     temp_file.write('5.\tTotal simulations no recovered: '+sim_stats['sim_total_no_recovered']+' ( {:.3f}% )\n'.format(100*float(int(sim_stats['sim_total_no_recovered'])/int(sim_stats['sim_total'])))) 
     temp_file.write('\n\n-- Parser summary by seeds --\n\n')
     temp_file.write('|     Total simulations     |\n')
@@ -291,7 +318,7 @@ def add_stats_to_results_file(sim_stats,path):
     for i in range(0, len(sim_stats['sim_total_no_recovered_seeds'])):
         temp_file.write('\t\t\t\t\t' + sim_stats['sim_total_no_recovered_seeds'][i] + '\t|\n')
 
-
+#Reads Ip: ip hops\n
 def use_ip_hops_check(file_to_parse,dic_motes, dic_ip, key):
     bool_sim_conv = False
 
@@ -307,6 +334,7 @@ def use_ip_hops_check(file_to_parse,dic_motes, dic_ip, key):
 
     return bool_sim_conv
 
+#Write the parsed data
 def write_parsed_data(file_parsed,dic_motes,file,num_motes):
     file_parsed.write('File generated by hopscount_parser.py \n')
     file_parsed.write('Original file name: '+ file + '\n')
@@ -342,7 +370,8 @@ def write_parsed_data(file_parsed,dic_motes,file,num_motes):
     aux_avg /=  float(num_motes)
     file_parsed.write('\n|Total Hops avg all with all: '+str(aux_avg) +'\n') 
 
-def orderLogDir(path):
+#Just for order the dirs and parsed data 
+def orderLogDir(path, sim_stats):
     cooja_data = 'Cooja_logs'
     raw_data = 'Raw_data'
 
@@ -350,36 +379,39 @@ def orderLogDir(path):
     os.mkdir(path+'/'+ cooja_data + '/')
     os.mkdir(path +'/'+raw_data+'/')
     os.mkdir(path +'/'+raw_data+'/converged')
+    os.mkdir(path +'/'+raw_data+'/recovered')
     os.mkdir(path +'/'+raw_data+'/no_converged')
 
     #Move files
     os.system('mv ' + path + '/*.coojalog '+ path + '/' + cooja_data + '/')
-    #os.system('mv ' + path + '/no_conv_*.scriptlog '+ path + '/' + raw_data + '/no_converged')
-    os.system('mv ' + path + '/*.scriptlog '+ path + '/' + raw_data + '/converged')
+    for recovered_files in sim_stats['sim_total_recovered_seeds']:
+        os.system('mv ' + path + '/*'+recovered_files+'.scriptlog '+ path + '/' + raw_data + '/recovered')
+    if int(sim_stats['sim_total_no_recovered']) != 0:
+        os.system('mv ' + path + '/no_conv_*.scriptlog '+ path + '/' + raw_data + '/no_converged')
+    
 
+    os.system('mv ' + path + '/*.scriptlog '+ path + '/' + raw_data + '/converged')
+    
+
+#Change the name of no conv/recovered files
 def manage_not_converged_sim(file,path,result_dir):
 
     os.rename(path +'/'+ file, path +'/no_conv_' +file)
 
 
-
+#Main
 if __name__ == '__main__':
 
-
+    #Check args
     if(len(sys.argv) != 3):
         print('Error: usage: ' + sys.argv[0] + ' -[ns | s]  <dir_log>\n')
         sys.exit(0)
 
+    # sys.argv[2] == 'log05' for example
     base_name = sys.argv[2]
 
+    #Main function of the parser
     hopscount_parser(base_name)
+
     print('\nParser status: success')
 
-
-#   Notas a david del futuro, te queda por hacer:
-#   
-#   1. Meter la logica para diferenciar una simulacion recuperada(conv - no conv)
-#   2. Añadir * cuando venga de una simulación timeout
-#   3. Mejorar rendimiento -> optimizar bubles
-#   4. Comentar el código más para que Hedayat lo entienda más facilmente
-#   5. Terminar el handler para los no recuperados
