@@ -194,7 +194,7 @@ class IPv6NeighbourDiscoveryRPL : public cSimpleModule, public ILifecycle
     virtual void initialize(int stage) override;
     virtual void handleMessage(cMessage *msg) override;
     virtual void processNDMessage(ICMPv6Message *msg, IPv6ControlInfo *ctrlInfo);
-    virtual void processIncomingRPLMessage(IPv6ControlInfo *ctrlInfo); //EXTRA
+    virtual Neighbour *processIncomingRPLMessage(IPv6ControlInfo *ctrlInfo); //EXTRA
 
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
     virtual void finish() override;

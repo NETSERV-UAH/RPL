@@ -65,7 +65,7 @@ simsignal_t IPv6NeighbourDiscoveryRPL::startDADSignal = registerSignal("startDAD
 IPv6NeighbourDiscoveryRPL::IPv6NeighbourDiscoveryRPL()
     : neighbourCache(*this),
       staticLLAddressAssignment(true), //EXTRA
-      mop(MOP_STORING_NO_MULTICAST)
+      mop(MOP_STORING_NO_MULTICAST)  //Default value
 
 {
 }
@@ -277,10 +277,11 @@ void IPv6NeighbourDiscoveryRPL::handleMessage(cMessage *msg)
 }
 
 //EXTRA BEGIN
-void IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage(IPv6ControlInfo *ctrlInfo)
+Neighbour *IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage(IPv6ControlInfo *ctrlInfo)
 {
     EV << "->IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage()" << endl;  //EXTRA
 
+    Neighbour *neighbourEntry = nullptr;
     IPv6Address srcIPv6Addr = ctrlInfo->getSourceAddress().toIPv6();
 
     if (srcIPv6Addr.isUnspecified()) {
@@ -288,6 +289,7 @@ void IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage(IPv6ControlInfo *ctrlI
         throw cRuntimeError("IPv6NeighbourDiscoveryRPL::handleIncomingRPLMessage: No MAC Address specified in RPL control message.!");
     }
 
+    //Since controlInfo doesn't hold the MAC address, we used RPL manager to hold the MAC address.
     managerRPL *pManagerRPL = check_and_cast<managerRPL *>(getSimulation()->getSystemModule()->getSubmodule("managerRPL"));
     MACAddress srcMacAddress = pManagerRPL->getMacAddressFromIPAddress(srcIPv6Addr);
     //MACAddress srcMacAddress = ctrlInfo->getSourceAddress().toMAC();
@@ -298,20 +300,22 @@ void IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage(IPv6ControlInfo *ctrlI
         throw cRuntimeError("IPv6NeighbourDiscoveryRPL::handleIncomingRPLMessage: Duplicate Address Detected! Manual attention needed!");
     }
 
-    Neighbour *neighbourEntry = neighbourCache.lookup(srcIPv6Addr, ie->getInterfaceId());
+    neighbourEntry = neighbourCache.lookup(srcIPv6Addr, ie->getInterfaceId());
     if (!neighbourEntry) {
         //Source Address has not entry in Neighbour Cache
         EV_INFO << "Source address not found in Neighbour Cache\n";
         EV_INFO << "Add source address to Neighbour Cache.\n";
-        Neighbour *addedNeighbourEntry = neighbourCache.addNeighbour(srcIPv6Addr, ctrlInfo->getInterfaceId(), srcMacAddress);
-        if (addedNeighbourEntry){
-            addedNeighbourEntry->reachabilityState = IPv6NeighbourCacheRPL::REACHABLE;
-            EV_INFO << "Reachability confirmed through successful Addr Resolution: " << addedNeighbourEntry->reachabilityState << endl;
-            addedNeighbourEntry->reachabilityExpires = simTime() + ie->ipv6Data()->_getReachableTime();
+        neighbourEntry = neighbourCache.addNeighbour(srcIPv6Addr, ctrlInfo->getInterfaceId(), srcMacAddress);
+        if (neighbourEntry){
+            neighbourEntry->reachabilityState = IPv6NeighbourCacheRPL::REACHABLE;
+            EV_INFO << "Reachability confirmed through successful Addr Resolution: " << neighbourEntry->reachabilityState << endl;
+            neighbourEntry->reachabilityExpires = simTime() + ie->ipv6Data()->_getReachableTime();
             EV_INFO << "New neighbour (IP: " << srcIPv6Addr << ", MAC: " << srcMacAddress << ") was added successfully. Expiration time:" << ie->ipv6Data()->_getReachableTime() << endl;
+            neighbourEntry->isRouter = FALSE;
+            //neighbourEntry->reason = DIO/DIS/DAO;
         }else{
             EV_INFO << "New neighbour was not added successfully." << endl;
-            throw cRuntimeError("IPv6NeighbourDiscoveryRPL::handleIncomingRPLMessage: Neighbour can not added!");
+            throw cRuntimeError("IPv6NeighbourDiscoveryRPL::handleIncomingRPLMessage: Neighbour can not be added!");
         }
     }else{
         //Source Address has entry in Neighbour Cache
@@ -322,9 +326,12 @@ void IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage(IPv6ControlInfo *ctrlI
         EV_INFO << "Reachability confirmed through successful Addr Resolution: " << neighbourEntry->reachabilityState << endl;
         neighbourEntry->reachabilityExpires = simTime() + ie->ipv6Data()->_getReachableTime();
         EV_INFO << "New neighbour (IP: " << srcIPv6Addr << ", MAC: " << srcMacAddress << ") was updated successfully. Expiration time:" << ie->ipv6Data()->_getReachableTime() << endl;
+        neighbourEntry->isRouter = FALSE;
+        //neighbourEntry->reason = DIO/DIS/DAO;
     }
 
     delete ctrlInfo;
+    return neighbourEntry;
     EV << "<-IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage()" << endl;  //EXTRA
 
 }
