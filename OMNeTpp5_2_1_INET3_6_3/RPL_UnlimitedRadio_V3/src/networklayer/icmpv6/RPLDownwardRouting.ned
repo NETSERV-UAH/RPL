@@ -39,7 +39,7 @@
 //simple RPL extends BaseNetwLayer
 
 package rpl.src.networklayer.icmpv6;
-simple RPLRouting
+simple RPLDownwardRouting
 //EXTRA END
 {
     parameters:

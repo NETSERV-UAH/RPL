@@ -43,7 +43,7 @@
 
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/ModuleAccess.h"
-#include "src/routing/rpl/RPLRouting.h"
+#include "src/networklayer/icmpv6/RPLDownwardRouting.h"
 //#include "src/simulationManager/managerRPL.h"
 
 namespace rpl {
@@ -948,18 +948,7 @@ void RPLRouting::finish()
 
 }
 
-int RPLRouting::IsParent(const IPv6Address& id,int idrank)
-{
-    for(int i=0;i<NofParents[VersionNember];i++)
-      if (Parents[VersionNember][i].ParentId==id)
-      {
-          if (Parents[VersionNember][i].ParentRank==idrank)
-           return(EXIST);
-         else
-           return(SHOULD_BE_UPDATED);
-      }
-    return(NOT_EXIST);
-}
+
 
 int RPLRouting::getParentIndex(const IPv6Address& id)
 {
@@ -969,48 +958,6 @@ int RPLRouting::getParentIndex(const IPv6Address& id)
     return(-1);
 }
 
-void RPLRouting::AddParent(const IPv6Address& id,int idrank, unsigned char dtsn)
-{
-    if(!hasRoute[VersionNember]){
-        hasRoute[VersionNember] = true;
-        NodeStateLast->numPreferedParents_Upward++; // next condition is not a good place for this statement because when deleteParent() increaments NofParents[VersionNember], the condition is true, and numPreferedParents increaments twice or more
-    }
-    if(NofParents[VersionNember]==0)
-    {
-        Parents[VersionNember][0].ParentId=id;
-        Parents[VersionNember][0].ParentRank=idrank;
-        Parents[VersionNember][0].dtsn = dtsn;
-        PrParent=Parents[VersionNember][0].ParentId;
-        Rank=Parents[VersionNember][0].ParentRank+1;
-        NofParents[VersionNember]++;
-        NodeStateLast->numParents_Upward++;
-        return;
-    }else
-    {
-        if (NofParents[VersionNember]==MaxNofParents)
-        {
-           if (idrank >= Parents[VersionNember][NofParents[VersionNember]-1].ParentRank) return;
-           else{
-               NofParents[VersionNember]--;
-               NodeStateLast->numParents_Upward--;
-           }
-        }
-        int i=NofParents[VersionNember]-1;
-        while((i>=0)&&(idrank<Parents[VersionNember][i].ParentRank))
-        {
-            Parents[VersionNember][i+1]=Parents[VersionNember][i];
-            i--;
-        }
-        Parents[VersionNember][i+1].ParentId=id;
-        Parents[VersionNember][i+1].ParentRank=idrank;
-        Parents[VersionNember][i+1].dtsn = dtsn;
-        PrParent=Parents[VersionNember][0].ParentId;
-        Rank=Parents[VersionNember][0].ParentRank+1;
-        NofParents[VersionNember]++;
-        NodeStateLast->numParents_Upward++;
-    }
-    return;
-}
 void RPLRouting::DeleteParent(const IPv6Address& id)
 {
     for(int i=0;i<NofParents[VersionNember];i++)
@@ -1043,33 +990,6 @@ RPLRouting::DIOStatus* RPLRouting::CreateNewVersionDIO()
     return Temp;
 }
 
-RPLRouting::DISStatus* RPLRouting::CreateNewVersionDIS()
-{
-    DISStatus* Temp;
-    Temp = new DISStatus;
-    Temp->nbDISSent=0;
-    Temp->nbDISReceived=0;
-    Temp->nbDISSuppressed=0;
-    Temp->link=NULL;
-    return Temp;
-}
-
-void RPLRouting::DISHandler()
-{
-    Enter_Method("DISHandler()");
-    DISVersion = Version;
-    DISStatusNew = CreateNewVersionDIS();
-    if(DISStatusHeader == NULL)
-    {
-        DISStatusLast = DISStatusNew;
-        DISStatusHeader = DISStatusNew;
-    }
-    else
-    {
-        DISStatusLast->link = DISStatusNew;
-        DISStatusLast = DISStatusNew;
-    }
-}
 
 RPLRouting::DODAGJoiningtime* RPLRouting::CreateNewVersionJoiningTime()
 {

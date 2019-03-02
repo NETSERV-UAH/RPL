@@ -34,7 +34,7 @@ import inet.networklayer.contract.IxMIPv6Support;
 
 //EXTRA
 import rpl.src.networklayer.icmpv6.ICMPv6RPL;
-import rpl.src.networklayer.icmpv6.RPLRouting;
+import rpl.src.networklayer.icmpv6.RPLDownwardRouting;
 //import rpl.src.networklayer.ipv6.IPv6RPL;
 import inet.networklayer.ipv6.IPv6ErrorHandling;
 import rpl.src.networklayer.icmpv6.IPv6NeighbourDiscoveryRPL;
@@ -98,9 +98,9 @@ module IPv6NetworkLayerRPL like INetworkLayerRPL
             parameters:
                 @display("p=44,48");
         }
-        rplRouting: RPLRouting {
+        rplDownwardRouting: RPLDownwardRouting {
             parameters:
-                @display("p=280,152");
+                @display("p=311,152");
         }
 
     connections allowunconnected:  // FIXME remove 'nocheck'!
@@ -150,7 +150,7 @@ module IPv6NetworkLayerRPL like INetworkLayerRPL
 
         //EXTRA
         // ICMPv6 to RPL Routing
-        icmpv6.RPLIn <-- rplRouting.icmpv6Out;
-        icmpv6.RPLOut --> rplRouting.icmpv6In;
+        icmpv6.RPLIn <-- rplDownwardRouting.icmpv6Out;
+        icmpv6.RPLOut --> rplDownwardRouting.icmpv6In;
 }
 

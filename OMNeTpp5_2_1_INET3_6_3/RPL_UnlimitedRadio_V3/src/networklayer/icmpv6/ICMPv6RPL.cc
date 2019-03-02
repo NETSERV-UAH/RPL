@@ -281,6 +281,34 @@ void ICMPv6RPL::handleDISTimer(cMessage* msg)
     //EXTRA : if not joined || dis_c > dis redun || version < disversion == > suppressed
 }
 
+RPLDownwardRouting::DISStatus *ICMPv6RPL::CreateNewVersionDIS()
+{
+    DISStatus* Temp;
+    Temp = new DISStatus;
+    Temp->nbDISSent=0;
+    Temp->nbDISReceived=0;
+    Temp->nbDISSuppressed=0;
+    Temp->link=NULL;
+    return Temp;
+}
+
+void ICMPv6RPL::DISHandler()
+{
+    Enter_Method("DISHandler()");
+    DISVersion = Version;
+    DISStatusNew = CreateNewVersionDIS();
+    if(DISStatusHeader == NULL)
+    {
+        DISStatusLast = DISStatusNew;
+        DISStatusHeader = DISStatusNew;
+    }
+    else
+    {
+        DISStatusLast->link = DISStatusNew;
+        DISStatusLast = DISStatusNew;
+    }
+}
+
 //////////// DAO Operations ////////////////////
 void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6DAOMsg *msg)
 {
