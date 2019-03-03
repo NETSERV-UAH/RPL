@@ -18,6 +18,7 @@ package rpl.src.networklayer.icmpv6;
 simple ParentTableRPL
 {
     parameters:
+        int maxParents = default(-1); // -1 means the unlimited value
         @display("i=block/table2");
         @class(rpl::ParentTableRPL);
 }

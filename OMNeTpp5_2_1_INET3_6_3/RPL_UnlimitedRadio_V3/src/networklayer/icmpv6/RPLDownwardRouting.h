@@ -302,12 +302,6 @@ public:
     }**Parents;
     typedef ParentStructure Parent;
 
-    enum PARENT_TYPES
-    {
-      NOT_EXIST,
-      EXIST,
-      SHOULD_BE_UPDATED,
-    };
 
 
     /** @brief Copy constructor is not allowed.

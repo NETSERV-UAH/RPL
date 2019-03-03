@@ -1,4 +1,4 @@
-// Copyright (C) 2013 OpenSim Ltd.
+
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -31,14 +31,19 @@ using namespace inet;
 class ParentTableRPL : public cSimpleModule
 {
   protected:
+    int maxParents; //-1 means the unlimited value
+    IPv6Address prefParent;
+    int rank;
+
     struct ParentEntry
     {
         //IPv6NeighbourCacheRPL::Neighbour *neighbourEntry;    // A pointer to a neighbor entry to which the parent entry refers.
         int rank;    // Input port
         unsigned char dtsn;    // Arrival time of Lookup Address Table entry
+        unsigned int vid;    // Version ID
         ParentEntry() {}
-        ParentEntry(int rank, unsigned char dtsn) :
-            rank(rank), dtsn(dtsn) {}
+        ParentEntry(int rank, unsigned char dtsn, unsigned int vid) :
+            rank(rank), dtsn(dtsn), vid(vid) {}
     };
 
     friend std::ostream& operator<<(std::ostream& os, const ParentEntry& entry);
@@ -55,9 +60,15 @@ class ParentTableRPL : public cSimpleModule
             return ipAddress1 < ipAddress2; }
     };
 
+    /* Map or Vector? our search is based on the IPv6 address, so we choose Map, and key is the IPv6 Address.
+     * However, we must search the table based on the rank for finding the preferred parent and worst parent.
+     */
     typedef std::map<IPv6NeighbourCacheRPL::Neighbour *, ParentEntry, IP_compare> ParentTable;
+    typedef std::map<unsigned int, ParentTable *> VersionParentTable;
 
-    ParentTable *parentTable;
+    ParentTable *parentTable;  // Version-unaware parent lookup (version = 1)
+    VersionParentTable versionParentTable;    // Version-aware parent lookup
+
 
   protected:
 

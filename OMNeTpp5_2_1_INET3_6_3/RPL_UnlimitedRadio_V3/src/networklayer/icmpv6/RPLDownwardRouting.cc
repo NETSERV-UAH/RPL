@@ -683,10 +683,10 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)
     {
         ICMPv6DIOMsg* netwMsg = check_and_cast<ICMPv6DIOMsg*>(msg);
         ctrlInfo = check_and_cast<IPv6ControlInfo *>(netwMsg->removeControlInfo());
-        EV << "Received message is ICMPv6 DIO message, DODAGID address is " << netwMsg->getDODAGID() << ", src address is " << ctrlInfo->getSrcAddr() << endl;
+        EV << "Received message is ICMPv6 DIO message, DODAGID ID is " << netwMsg->getDODAGID() << ", src address is " << ctrlInfo->getSrcAddr() << endl;
 
        if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward)) NodeStateLast->DIO.Received++;  //if simulation is not end ...
-       if(myNetwAddr==sinkAddress)
+       if(myNetwAddr == sinkAddress) //I am the sink node, and DIO is deleted.
         {
             DIOStatusLast->nbDIOReceived++;
             char buf2[100];
@@ -747,7 +747,7 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)
                DIOIntMin=netwMsg->getIMin();
                DIORedun=netwMsg->getK();
                DODAGID=netwMsg->getDODAGID();
-               AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank(), netwMsg->getDTSN());
+               updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber());
                NodeStateNew->Rank[pManagerRPL->getIndexFromAddress(myNetwAddr)] = Rank;
 
                char buf0[50];
@@ -766,7 +766,7 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)
                     IsNodeJoined[pManagerRPL->getIndexFromAddress(myNetwAddr)] = true;
                     DeleteDIOTimer();
                     VersionNember=netwMsg->getVersionNumber();
-                    dtsnInstance ++;
+                    dtsnInstance ++; // To inform the down stream nodes. dtsnInstance is accommodated in the DIO msg, so the down stream nodes find out that they must send a new DAO because of the global repair ...
 
                     DIOStatusNew = CreateNewVersionDIO();
                     DIOStatusNew->nbDIOReceived++;
@@ -806,7 +806,7 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)
                     DIO_StofCurIntNext=DODAGJoinTimeLast_Upward->TimetoJoinDODAG;
                     DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
                     Grounded=netwMsg->getGrounded();
-                    AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank(), netwMsg->getDTSN());
+                    updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber());
                     NodeStateNew->Rank[pManagerRPL->getIndexFromAddress(myNetwAddr)] = Rank;
 
                     char buf0[50];
@@ -829,28 +829,29 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)
                     DIOIntDoubl=netwMsg->getNofDoub();
                     DIOIntMin=netwMsg->getIMin();
                     DIORedun=netwMsg->getK();
-                    switch(IsParent(ctrlInfo->getSrcAddr(),netwMsg->getRank()))
-                    {
-                        case NOT_EXIST:
-                            AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank(), netwMsg->getDTSN());
-                            break;
-                        case SHOULD_BE_UPDATED:
-                            if (IsNeedDAO(ctrlInfo->getSrcAddr(), netwMsg->getDTSN()))
-                            {
-                                dtsnInstance ++;
-                                scheduleNextDAOTransmission(DelayDAO, defaultLifeTime);
-                            }
-                            DeleteParent(ctrlInfo->getSrcAddr());
-                            AddParent(ctrlInfo->getSrcAddr(),netwMsg->getRank(), netwMsg->getDTSN());
-                            break;
-                        case EXIST:
-                            if (IsNeedDAO(ctrlInfo->getSrcAddr(), netwMsg->getDTSN()))
-                            {
-                                dtsnInstance ++;
-                                scheduleNextDAOTransmission(DelayDAO, defaultLifeTime);
-                            }
-                            break;
+
+                    bool needDAO = false;
+                    if (mop == 2)
+                        if ((getPrefParentNeighborCache(netwMsg->getVersionNumber())->nceKey->address == ctrlInfo->getSrcAddr()) && (netwMsg->getDTSN() > getPrefParentDTSN(netwMsg->getVersionNumber())))
+                            /* I get a good rank from my previous (stable) preferred parent, and it has increased
+                             * its DTSN (it tell me that I must send a DAO message to it), so I willsend a DAO
+                             */
+                            needDAO = true;
+
+                    if (updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber()) == 1){  //if table is updated (not creating a new entry)
+                        if (needDAO){
+                            /* dtsnInstance is accommodated in the next DIO msg, so the down stream nodes find out that
+                             * they must send a new DAO because I found a stable preferred (note that if needDAO == true, it is a preferred parent) parent (a preferred parent which is updated again) and want to introduce a downward
+                             * route from me to the sink node according to the stable parent, so my down stream nodes can also use my stable route to introduce
+                             * themselves to the sink node. Therefore, I increase my dtsnInstance to inform the down stream nodes.
+                             */
+                            dtsnInstance ++;
+                            scheduleNextDAOTransmission(DelayDAO, defaultLifeTime);
+                        }
+
+
                     }
+
                     char buf2[255];
                     sprintf(buf2, "A DIO received from node %d !", ctrlInfo->getSrcAddr());
                     host->bubble(buf2);
@@ -859,7 +860,7 @@ void RPLRouting::handleIncommingDIOMessage(cMessage* msg)
                     host->getDisplayString().setTagArg("t", 0, buf3);
                 }
                 else
-                    if(netwMsg->getVersionNumber()<VersionNember)
+                    if(netwMsg->getVersionNumber() < VersionNember) //This DIO is old. It has been sent before the global repair!
                     {
                         host->bubble("DIO deleted!!\nThe sender node should be updated.!!! ");
                     }
@@ -958,26 +959,6 @@ int RPLRouting::getParentIndex(const IPv6Address& id)
     return(-1);
 }
 
-void RPLRouting::DeleteParent(const IPv6Address& id)
-{
-    for(int i=0;i<NofParents[VersionNember];i++)
-        if (Parents[VersionNember][i].ParentId==id)
-        {
-            for(int j=i;j<NofParents[VersionNember]-1;j++)
-                Parents[VersionNember][j]=Parents[VersionNember][j+1];
-            break;
-        }
-    NofParents[VersionNember]--;
-    NodeStateLast->numParents_Upward--;
-}
-
-bool RPLRouting::IsNeedDAO(const IPv6Address parent, unsigned char dtsn)
-{
-    if ((Parents[VersionNember][0].ParentId == parent) && (dtsn > Parents[VersionNember][0].dtsn))
-            return true;
-    return false;
-
-}
 RPLRouting::DIOStatus* RPLRouting::CreateNewVersionDIO()
 {
     DIOStatus* Temp;
