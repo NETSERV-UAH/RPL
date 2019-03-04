@@ -32,7 +32,7 @@ namespace rpl {
 using namespace inet;
 
 
-class StatisticCollector
+class StatisticCollector : public cSimpleModule
 {
 
     struct NodeState{

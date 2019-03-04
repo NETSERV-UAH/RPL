@@ -41,6 +41,7 @@
 #include "src/networklayer/icmpv6/ICMPv6RPL.h"
 
 
+
 namespace inet {
 //foreign declarations:
 class IPv6Address;
@@ -55,11 +56,18 @@ void ICMPv6RPL::initialize(int stage)
 {
     cSimpleModule::initialize(stage);
 
+    //EXTRA BEGIN
+    if(stage == INITSTAGE_LOCAL){
+        host = getContainingNode(this);
+        mop = (RPLMOP)this->getParentModule()->getSubmodule("rplUpwardRouting")->par("modeOfOperation");  //EXTRA
+        rplUpwardRouting = check_and_cast<RPLUpwardRouting *>(this->getParentModule()->getSubmodule("rplUpwardRouting"));  //EXTRA
+    }
+    //EXTRA END
+
     if (stage == INITSTAGE_NETWORK_LAYER) {
         bool isOperational;
         NodeStatus *nodeStatus = dynamic_cast<NodeStatus *>(findContainingNode(this)->getSubmodule("status"));
         isOperational = (!nodeStatus) || nodeStatus->getState() == NodeStatus::UP;
-        mop = this->getParentModule()->getSubmodule("rplRouting")->par("modeOfOperation");  //EXTRA
         if (!isOperational)
             throw cRuntimeError("This module doesn't support starting in node DOWN state");
     }
@@ -130,7 +138,7 @@ void ICMPv6RPL::processICMPv6Message(ICMPv6Message *icmpv6msg)
         EV << "Message " << icmpv6msg->getName() << " received from IPv6 module is sent to RPL module."<< endl;
         sendToRPL(icmpv6msg);
     }else if (dynamic_cast<ICMPv6DAOMsg *>(icmpv6msg)){
-        if ((mop == MOP_STORING_NO_MULTICAST) || (mop == MOP_STORING_WITH_MULTICAST))
+        if ((mop ==     Storing_Mode_of_Operation_with_no_multicast_support) || (mop == Storing_Mode_of_Operation_with_multicast_support))
             processIncommingStoringDAOMessage(icmpv6msg);
     }else if (dynamic_cast<ICMPv6DISMsg *>(icmpv6msg)){
             processIncommingDISMessage(icmpv6msg);
@@ -141,50 +149,34 @@ void ICMPv6RPL::processICMPv6Message(ICMPv6Message *icmpv6msg)
 
 //EXTRA BEGIN
 //////////// DIS Operations ////////////////////
-void ICMPv6RPL::processIncommingDISMessage(ICMPv6DISMsg *msg)
+void ICMPv6RPL::processIncommingDISMessage(ICMPv6Message *msg)
 {
     EV << "->ICMPv6RPL::handleIncommingDISMessage()" << endl;
 
     ICMPv6DISMsg *netwMsg = check_and_cast<ICMPv6DISMsg *>(msg);
     IPv6ControlInfo *ctrlInfo = check_and_cast<IPv6ControlInfo *> (netwMsg->removeControlInfo());
 
-    //if ((msg->getKind() == DIS_FLOOD)&&(IsJoined))  //EXTRA
-    if ((msg->getKind() == DIS_FLOOD)&&(IsNodeJoined[pManagerRPL->getIndexFromAddress(myNetwAddr)]))  //EXTRA
-
-    {
+    if ((msg->getKind() == DIS_FLOOD) && (rplUpwardRouting->isNodeJoinedToDAG())){
         DIS_c++;
-        NodeStateLast->DIS.Received++;
-        //ICMPv6DISMsg *netwMsg = check_and_cast<ICMPv6DISMsg *>(msg);  //EXTRA
-        //ctrlInfo = check_and_cast<IPv6ControlInfo *> (netwMsg->removeControlInfo());  //EXTRA
+        numReceivedDIS++;
         char buf2[255];
-                sprintf(buf2, "A DIS message received from node %d!\nResetting Trickle timer!", ctrlInfo->getSrcAddr());
+        sprintf(buf2, "A DIS message received from node %d!\nResetting Trickle timer!", ctrlInfo->getSrcAddr());
         host->bubble(buf2);
-        TrickleReset();
-        //delete netwMsg;  //EXTRA
-        scheduleNextDIOTransmission();
+        rplUpwardRouting->TrickleReset();
+        rplUpwardRouting->scheduleNextDIOTransmission();
+    }else if ((msg->getKind() == DIS_FLOOD) && (!rplUpwardRouting->isNodeJoinedToDAG())){
+        DIS_c++;
+        numReceivedDIS++;
+        char buf2[255];
+        sprintf(buf2, "A DIS message received from node %s!\nBut I am not a member of any DODAG!", ctrlInfo->getSrcAddr());
+        host->bubble(buf2);
     }
-    else
-        //if ((msg->getKind() == DIS_FLOOD)&&(!IsJoined))  //EXTRA
-        if ((msg->getKind() == DIS_FLOOD)&&(!IsNodeJoined[pManagerRPL->getIndexFromAddress(myNetwAddr)]))  //EXTRA
-        {
-            DIS_c++;
-            NodeStateLast->DIS.Received++;
-            //ICMPv6DISMsg* netwMsg = check_and_cast<ICMPv6DISMsg*>(msg);  //EXTRA
-            //ctrlInfo = check_and_cast<IPv6ControlInfo *>(netwMsg->removeControlInfo());  //EXTRA
-            char buf2[255];
-            sprintf(buf2, "A DIS message received from node %s!\nBut I am not a member of any DODAG!", ctrlInfo->getSrcAddr());
-            host->bubble(buf2);
-            //delete netwMsg;
-        }
 
-    //if (ctrlInfo != NULL)    //EXTRA
     delete ctrlInfo;
 
     delete netwMsg;
 
     EV << "<-ICMPv6RPL::handleIncommingDISMessage()" << endl;
-
-
 }
 
 
@@ -228,7 +220,7 @@ void ICMPv6RPL::scheduleNextDISTransmission()
 void ICMPv6RPL::handleDISTimer(cMessage* msg)
 {
 
-    if(((!IsNodeJoined[pManagerRPL->getIndexFromAddress(myNetwAddr)])&&((DIS_c<DISRedun)||(DISRedun==0)))&&(DISVersion==Version)) //EXTRA
+    if(((!rplUpwardRouting->isNodeJoinedToDAG())&&((DIS_c<DISRedun)||(DISRedun==0)))&&(DISVersion== rplUpwardRouting->getVersion())) //EXTRA
     //if(((!IsJoined)&&((DIS_c<DISRedun)||(DISRedun==0)))&&(DISVersion==Version))  //EXTRA
     {
         ICMPv6DISMsg* pkt = new ICMPv6DISMsg("DIS", DIS_FLOOD);
@@ -236,12 +228,12 @@ void ICMPv6RPL::handleDISTimer(cMessage* msg)
         controlInfo->setSrcAddr(myNetwAddr);
         controlInfo->setDestAddr(IPv6Address::ALL_NODES_2);
         pkt->setByteLength(DISheaderLength);
-        pkt->setVersionNumber(VersionNember);
-        pkt->setDODAGID(DODAGID);
+        pkt->setVersionNumber(rplUpwardRouting->getVersion());
+        pkt->setDODAGID(rplUpwardRouting->getDODAGID()); ?? why dodagid!!?? since !isNodeJoinedToDAG??;
         pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
         controlInfo->setProtocol(IP_PROT_IPv6_ICMP);
         pkt->setControlInfo(controlInfo);
-        send(pkt, icmpv6OutGateId);
+        send(pkt, "ipv6Out");
 
         if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Sent++;
         DISStatusLast->nbDISSent++;
@@ -281,36 +273,8 @@ void ICMPv6RPL::handleDISTimer(cMessage* msg)
     //EXTRA : if not joined || dis_c > dis redun || version < disversion == > suppressed
 }
 
-RPLDownwardRouting::DISStatus *ICMPv6RPL::CreateNewVersionDIS()
-{
-    DISStatus* Temp;
-    Temp = new DISStatus;
-    Temp->nbDISSent=0;
-    Temp->nbDISReceived=0;
-    Temp->nbDISSuppressed=0;
-    Temp->link=NULL;
-    return Temp;
-}
-
-void ICMPv6RPL::DISHandler()
-{
-    Enter_Method("DISHandler()");
-    DISVersion = Version;
-    DISStatusNew = CreateNewVersionDIS();
-    if(DISStatusHeader == NULL)
-    {
-        DISStatusLast = DISStatusNew;
-        DISStatusHeader = DISStatusNew;
-    }
-    else
-    {
-        DISStatusLast->link = DISStatusNew;
-        DISStatusLast = DISStatusNew;
-    }
-}
-
 //////////// DAO Operations ////////////////////
-void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6DAOMsg *msg)
+void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
 {
 
     EV << "->ICMPV6RPL::processIncommingStoringDAOMessage()" << endl;

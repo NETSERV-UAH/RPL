@@ -20,7 +20,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "../statisticcollector/StatisticCollector.h"
+#include "src/statisticcollector/StatisticCollector.h"
 
 #include <vector>
 
@@ -218,6 +218,8 @@ for(int i=0;i<NumberofIterations+2;i++)
     }
 }
 */
+
+Define_Module(StatisticCollector);
 
 void StatisticCollector::initialize()
 {

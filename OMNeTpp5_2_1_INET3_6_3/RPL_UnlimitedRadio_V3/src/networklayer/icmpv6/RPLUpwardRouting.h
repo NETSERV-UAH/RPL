@@ -51,6 +51,8 @@
 #include "inet/common/lifecycle/NodeStatus.h"
 
 #include "src/simulationManager/managerRPL.h"
+#include "src/statisticcollector/StatisticCollector.h"
+
 
 
 namespace rpl {
@@ -68,12 +70,13 @@ using namespace inet;
 class RPLUpwardRouting : public cSimpleModule, public ILifecycle//, public INetfilter::IHook//, public cListener
 
 {
-public:
+protected:
 
     // environment
     IRoutingTable *routingTable = nullptr;
     IInterfaceTable *interfaceTable = nullptr;
     managerRPL *pManagerRPL = nullptr;
+    StatisticCollector *statistisCollector = nullptr;
     INetfilter *networkProtocol = nullptr;
     int interfaceID;
 
@@ -91,7 +94,6 @@ public:
      * Read from omnetpp.ini
      **/
     int DIOheaderLength;
-    int DISheaderLength;
     int DAOheaderLength;
     int headerLength;
 
@@ -112,13 +114,6 @@ public:
     int DIOIntDoubl;
     simtime_t DIOIMaxLength;
 
-    double DISIntMin;
-    double DISStartDelay;
-    int DISRedun;
-    int DISIntDoubl;
-    simtime_t DISIMaxLength;
-    int DISVersion;
-
     cModule *host;
 
     MACAddress macaddress;
@@ -134,12 +129,12 @@ public:
 
     cMessage* GRepairTimer;
     cMessage* DIOTimer;
-    cMessage* DISTimer;
     cMessage* DAOTimer;
     cMessage* DAOLifeTimer;
 
 
     bool IsJoined;
+    bool isNodeJoined;
 
     double GlobalRepairTimer;
 
@@ -150,20 +145,13 @@ public:
     int VersionNember;
     int Grounded;
     simtime_t TimetoSendDIO;
-    simtime_t TimetoSendDIS;
 
     int DIO_c;
     simtime_t DIO_CurIntsizeNow,DIO_CurIntsizeNext;
     simtime_t DIO_StofCurIntNow,DIO_StofCurIntNext;
     simtime_t DIO_EndofCurIntNow,DIO_EndofCurIntNext;
 
-    int DIS_c;
-    simtime_t DIS_CurIntsizeNow,DIS_CurIntsizeNext;
-    simtime_t DIS_StofCurIntNow,DIS_StofCurIntNext;
-    simtime_t DIS_EndofCurIntNow,DIS_EndofCurIntNext;
-
-
-
+public:
     /** @brief Copy constructor is not allowed.
      */
    // RPLRouting(const RPLRouting&);
@@ -182,26 +170,27 @@ public:
         , host(nullptr)
         , myLLNetwAddr(IPv6Address::UNSPECIFIED_ADDRESS)
         , myGlobalNetwAddr(IPv6Address::UNSPECIFIED_ADDRESS)
+        , DODAGID(IPv6Address::UNSPECIFIED_ADDRESS)
         , sinkAddress()
         , DISEnable(false)
         , refreshDAORoutes(false)
         , GRepairTimer(nullptr)
         , DIOTimer(nullptr)
-        , DISTimer(nullptr)
         , DAOTimer(nullptr)
         , DAOLifeTimer(nullptr)
-        , mop(MOP_STORING_NO_MULTICAST)
+        , mop(Storing_Mode_of_Operation_with_no_multicast_support)
     {};
 
+    virtual ~RPLUpwardRouting();
+
+protected:
     /** @brief Initialization of the module and some variables*/
     virtual void initialize(int) override;
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
 
-    void handleMessage(cMessage* msg) override;
+    virtual void handleMessage(cMessage* msg) override;
 
     virtual void finish() override;
-    friend NodeState* CreateNewNodeState(int Index, int VersionNo, simtime_t Time, int NodeRank);
-    virtual ~RPLUpwardRouting();
 
     /** @brief Handle messages from upper layer */
     virtual void handleUpperMsg(cMessage* msg);
@@ -235,15 +224,21 @@ public:
     /** @brief Decapsulate a message */
     cMessage* decapsMsg(ICMPv6DIOMsg *msg);
 
+public:
     /** @brief scheduling next DIO message transmission. */
     virtual void scheduleNextDIOTransmission();
+
+protected:
     void scheduleNextDISTransmission();
     virtual void scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime);
     virtual void scheduleDAOlifetimer(simtime_t LifeTime);
     void ScheduleNextGlobalRepair();
     void DeleteScheduledNextGlobalRepair();
 
+public:
     void TrickleReset();
+
+protected:
     void DeleteDIOTimer();
     void DeleteDAOTimers();
     void SetDIOParameters();
@@ -258,14 +253,15 @@ public:
     virtual bool IsNeedDAO(const IPv6Address parent, unsigned char dtsn);
     virtual void handleDIOTimer(cMessage* msg);
 
-    DIOStatus* CreateNewVersionDIO(void);
-    DISStatus* CreateNewVersionDIS(void);
-    void DISHandler();
-    DODAGJoiningtime* CreateNewVersionJoiningTime(void);
-
     virtual void sendDAOMessage(IPv6Address prefix, simtime_t lifetime);
 
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
+
+public:
+    virtual bool isNodeJoinedToDAG();
+    virtual int getVersion();
+    virtual IPv6Address getDODAGID();
+
 
 };
 

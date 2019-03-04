@@ -43,7 +43,7 @@
 
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/ModuleAccess.h"
-#include "RPLUpwardRouting.h"
+#include "src/networklayer/icmpv6/RPLUpwardRouting.h"
 //#include "src/simulationManager/managerRPL.h"
 
 namespace rpl {
@@ -63,6 +63,7 @@ void RPLUpwardRouting::initialize(int stage)
         interfaceTable = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
         networkProtocol = getModuleFromPar<INetfilter>(par("networkProtocolModule"), this);
         pManagerRPL = check_and_cast<managerRPL *>(getSimulation()->getSystemModule()->getSubmodule("managerRPL"));
+        statistisCollector = check_and_cast<StatisticCollector *>(getSimulation()->getSystemModule()->getSubmodule("statistisCollector"));
 
         icmpv6InGateId = findGate("icmpv6In");
         icmpv6OutGateId = findGate("icmpv6Out");
@@ -103,7 +104,8 @@ void RPLUpwardRouting::initialize(int stage)
             {
                 interfaceID = ie->getInterfaceId();
                 myLLNetwAddr = ie->ipv6Data()->getLinkLocalAddress();
-                EV << "my link local address is: " << myLLNetwAddr << endl;
+                myGlobalNetwAddr = ie->ipv6Data()->getGlobalAddress();
+                EV << "my link local address is: " << myLLNetwAddr << ", my global address is: " << myGlobalNetwAddr << endl;
 
             }
         }
@@ -113,7 +115,7 @@ void RPLUpwardRouting::initialize(int stage)
         if (myGlobalNetwAddr == IPv6Address::UNSPECIFIED_ADDRESS)
             throw cRuntimeError("RPLUpwardRouting::initialize: This node has not Global Address!");
         else if (myLLNetwAddr != IPv6Address::UNSPECIFIED_ADDRESS)
-            collector.registNode(host, myLLNetwAddr, myGlobalNetwAddr);
+            statistisCollector->registNode(host, myLLNetwAddr, myGlobalNetwAddr);
         else
             throw cRuntimeError("RPLUpwardRouting::initialize: This node has not Link Local Address!");
 
@@ -141,7 +143,7 @@ void RPLUpwardRouting::initialize(int stage)
 
            if (myLLNetwAddr == sinkAddress) // If I am the sink node
             {
-                collector->setConvergenceTimeStart(myLLNetwAddr, simTime());
+                statistisCollector->setConvergenceTimeStart(myLLNetwAddr, simTime());
                 IsJoined=true;
                 ? NodeStartTime = simTime();
                 VersionNember=1;
@@ -813,6 +815,21 @@ bool RPLUpwardRouting::handleOperationStage(LifecycleOperation *operation, int s
     */
 }
 
+bool RPLUpwardRouting::isNodeJoinedToDAG()
+{
+    return isNodeJoined;
+}
+
+int RPLUpwardRouting::getVersion()
+{
+    return VersionNember;
+}
+
+IPv6Address RPLUpwardRouting::getDODAGID()
+{
+    return DODAGID;
+}
+
 RPLUpwardRouting::~RPLUpwardRouting()
 {
     //cancelAndDelete(DIOTimer); //EXTRA
@@ -870,91 +887,5 @@ RPLUpwardRouting::~RPLUpwardRouting()
 
 }
 
-void Datasaving(int sinkAddressIndex, bool DISEnable)
-{
-    FileRecord.IterationsNumber = NofDODAGformationNormal;
-    char * temp = SetPath(MainPath,"IterationsNumber_K",K_value);
-    strcpy(Path, temp);
-    delete[] temp;
-    IterationsNumber = fopen(Path,Mode);
-    fprintf(IterationsNumber,"%d\n",NofDODAGformationNormal);
-
-
-    temp = SetPath(MainPath,"JoiningTime_Upward_K",K_value);
-    strcpy(Path, temp);
-    delete[] temp;
-    JoiningTime_Upward = fopen(Path,Mode);
-
-    temp = SetPath(MainPath,"DIOSent_K",K_value);
-    strcpy(Path, temp);
-    delete[] temp;
-    DIOSent = fopen(Path,Mode);
-
-    temp = SetPath(MainPath,"FormationTime_Upward_K",K_value);
-    strcpy(Path, temp);
-    delete[] temp;
-    FormationTime_Upward = fopen(Path,Mode);
-
-
-    temp = SetPath(MainPath,"numTableEntris_K",K_value);
-    strcpy(Path, temp);
-    delete[] temp;
-    numTableEntris = fopen(Path,Mode);
-
-    temp = SetPath(MainPath,"NodesRank_K",K_value);
-    strcpy(Path, temp);
-    delete[] temp;
-    NodesRank = fopen(Path,Mode);
-
-    temp = SetPath(MainPath,"numPreferedParent_Upward_K",K_value);
-    strcpy(Path, temp);
-    delete[] temp;
-    preferedParent_Upward = fopen(Path,Mode);
-
-    temp = SetPath(MainPath,"numParents_K",K_value);
-    strcpy(Path, temp);
-    delete[] temp;
-    numberOfParents = fopen(Path,Mode);
-
-
-    if (DISEnable)
-    {
-        temp = SetPath(MainPath,"DISSent_K",K_value);
-        strcpy(Path, temp);
-        delete[] temp;
-        DISSent = fopen(Path,Mode);
-        for(int j=0;j<NofDODAGformationNormal;j++)
-            fprintf(DISSent,"%d\n",FileRecord.DISSent[j]);
-    }
-
-    for(int j=0;j<NofDODAGformationNormal;j++)
-    {
-        fprintf(FormationTime_Upward,"%f\n",FileRecord.FormationTime_Upward[j]);
-        fprintf(DIOSent,"%d\n",FileRecord.DIOSent[j]);
-
-        fprintf(preferedParent_Upward,"%d\n",FileRecord.numPreferedParents[j]);
-        fprintf(numberOfParents,"%d\n",FileRecord.numParents[j]);
-        fprintf(numTableEntris,"%d\n",FileRecord.numParents[j] + FileRecord.numPreferedParents[j]);
-
-        for (int i=0; i<NodesNumber;i++)
-        {
-            if(i != sinkAddressIndex)
-            {
-                fprintf(JoiningTime_Upward,"%f\n",FileRecord.OtherFields[j].JoiningTime[i]);
-                fprintf(NodesRank,"%d\n",FileRecord.OtherFields[j].NodesRank[i]);
-            }
-        }
-    }
-
-    fclose(JoiningTime_Upward);
-    fclose(DIOSent);
-    fclose(DISSent);
-    fclose(FormationTime_Upward);
-    fclose(NodesRank);
-    fclose(IterationsNumber);
-    fclose(preferedParent_Upward);
-    fclose(numberOfParents);
-
-}
 
 } // namespace rpl

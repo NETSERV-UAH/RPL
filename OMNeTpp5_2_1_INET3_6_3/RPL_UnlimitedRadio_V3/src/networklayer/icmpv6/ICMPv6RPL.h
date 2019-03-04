@@ -27,14 +27,16 @@
 #define _RPL_SRC_NETWORKLAYER_ICMPV6_ICMPV6RPL_H
 
 #include "inet/common/INETDefs.h"
+#include "src/networklayer/contract/RPLDefs.h" //EXTRA
 
 #include "inet/common/lifecycle/ILifecycle.h"
-//EXTRA
 #include "inet/networklayer/icmpv6/ICMPv6Message_m.h"
-#include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
+#include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h" //EXTRA
 #include "inet/networklayer/contract/ipv6/IPv6Address.h"
 #include "inet/networklayer/contract/ipv6/IPv6ControlInfo.h"
 #include "inet/applications/pingapp/PingPayload_m.h"
+#include "src/networklayer/icmpv6/RPLUpwardRouting.h" //EXTRA
+
 
 
 
@@ -54,8 +56,38 @@ class inet::ICMPv6Message;
  */
 class ICMPv6RPL : public cSimpleModule, public ILifecycle
 {
+//EXTRA BEGIN
 protected:
-    enum RPLMOP mop;  //EXTRA
+    enum RPLMOP mop;
+    RPLUpwardRouting *rplUpwardRouting;
+
+    int DIS_c;
+    simtime_t DIS_CurIntsizeNow,DIS_CurIntsizeNext;
+    simtime_t DIS_StofCurIntNow,DIS_StofCurIntNext;
+    simtime_t DIS_EndofCurIntNow,DIS_EndofCurIntNext;
+    int DISheaderLength;
+    int numReceivedDIS;
+
+
+    cModule *host;
+
+    double DISIntMin;
+    double DISStartDelay;
+    int DISRedun;
+    int DISIntDoubl;
+    simtime_t DISIMaxLength;
+    int DISVersion;
+    cMessage* DISTimer;
+    simtime_t TimetoSendDIS;
+
+
+public:
+    ICMPv6RPL()
+        : mop(Storing_Mode_of_Operation_with_no_multicast_support)
+        , DISTimer(nullptr)
+            {};
+
+//EXTRA END
 
 public:
     /**
@@ -107,7 +139,16 @@ public:
      */
     virtual void handleMessage(cMessage *msg) override;
     virtual void processICMPv6Message(ICMPv6Message *);
-    void processIncommingStoringDAOMessage(ICMPv6DAOMsg *icmpv6msg); //EXTRA
+
+    //EXTRA BEGIN
+    virtual void processIncommingStoringDAOMessage(ICMPv6Message *icmpv6msg);
+    virtual void processIncommingDISMessage(ICMPv6Message *msg);
+    virtual void SetDISParameters();
+    virtual void scheduleNextDISTransmission();
+    virtual void handleDISTimer(cMessage* msg);
+
+    //EXTRA END
+
 
 
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
