@@ -86,7 +86,7 @@ class managerRPL : public cSimpleModule
 
    public:
       /**@brief return the index corresponding to the address */
-      int getIndexFromAddress(IPv6Address address);
+      int getIndexFromLLAddress(IPv6Address address);
 
       /**@brief return the address corresponding to the index */
       IPv6Address getAddressFromIndex(int index);

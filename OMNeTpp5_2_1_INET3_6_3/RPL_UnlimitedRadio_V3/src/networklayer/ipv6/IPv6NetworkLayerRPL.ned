@@ -34,7 +34,7 @@ import inet.networklayer.contract.IxMIPv6Support;
 
 //EXTRA
 import rpl.src.networklayer.icmpv6.ICMPv6RPL;
-import rpl.src.networklayer.icmpv6.RPLDownwardRouting;
+import rpl.src.networklayer.icmpv6.RPLUpwardRouting;
 //import rpl.src.networklayer.ipv6.IPv6RPL;
 import inet.networklayer.ipv6.IPv6ErrorHandling;
 import rpl.src.networklayer.icmpv6.IPv6NeighbourDiscoveryRPL;
@@ -98,7 +98,7 @@ module IPv6NetworkLayerRPL like INetworkLayerRPL
             parameters:
                 @display("p=44,48");
         }
-        rplDownwardRouting: RPLDownwardRouting {
+        rplUpwardRouting: RPLUpwardRouting {
             parameters:
                 @display("p=311,152");
         }
@@ -150,7 +150,7 @@ module IPv6NetworkLayerRPL like INetworkLayerRPL
 
         //EXTRA
         // ICMPv6 to RPL Routing
-        icmpv6.RPLIn <-- rplDownwardRouting.icmpv6Out;
-        icmpv6.RPLOut --> rplDownwardRouting.icmpv6In;
+        icmpv6.RPLIn <-- rplUpwardRouting.icmpv6Out;
+        icmpv6.RPLOut --> rplUpwardRouting.icmpv6In;
 }
 

@@ -22,9 +22,9 @@ namespace rpl {
 
 Define_Module(ParentTableRPL);
 
-std::ostream& operator<<(std::ostream& os, const ParentTable::ParentEntry& entry)
+std::ostream& operator<<(std::ostream& os, const ParentTableRPL::ParentEntry& entry)
 {
-    os << "{Rank=" << entry.rank << ", DTSN=" << entry.dtsn << "}";
+    os << "{Rank=" << entry.rank << ", DTSN=" << entry.dtsn << ", Version ID=" << entry.vid << "}";
     return os;
 }
 

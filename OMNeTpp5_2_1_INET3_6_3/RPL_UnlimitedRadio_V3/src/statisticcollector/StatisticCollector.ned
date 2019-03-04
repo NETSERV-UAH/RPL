@@ -1,24 +1,7 @@
-//
-// Copyright (C) 03/2012 Elisa Rojas
-//
-//
-// Copyright (C) 2018 Elisa Rojas(1), Hedayat Hosseini(2);
-//                    (1) GIST, University of Alcala, Spain.
-//                    (2) CEIT, Amirkabir University of Technology (Tehran Polytechnic), Iran.
-//                    INET 3.6.3 adaptation, also adapted for using in the wARP-PATH protocol  
-//
-// Copyright (C) 2018 Elisa Rojas(1), Hedayat Hosseini(2);
-//                    (1) GIST, University of Alcala, Spain.
-//                    (2) CEIT, Amirkabir University of Technology (Tehran Polytechnic), Iran.
-//                    INET 3.6.3 adaptation, also adapted for using in the IoTorii(WSN) protocol
-//
-//
-//
 // Copyright (C) 2018 Elisa Rojas(1), Hedayat Hosseini(2), Carles Gomez(3);
 //                    (1) GIST, University of Alcala, Spain.
 //                    (2) CEIT, Amirkabir University of Technology (Tehran Polytechnic), Iran.
 //                    (3) UPC, Castelldefels, Spain.
-//                    INET 3.6.3 adaptation, also adapted for using in the RPL protocol as a simulation manager module
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public License
@@ -34,12 +17,17 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-package rpl.src.simulationManager;
+package rpl.src.statisticcollector;
 
-simple managerRPL
+// This module is an UDP flow traffic generator. You can configure a generation frequency (lambda) and 
+// this will determine every time a new flow is created by the generator. The generator operates
+// with the UDPFlowHost modules at every host (StandardHostNew) in the network. Every time a new 
+// flow is created, the generator indicates the source host to start the flow (and its parameters)
+
+simple StatisticCollector
 {
     parameters:
-        @class(rpl::managerRPL);
+        @class(rpl::StatisticCollector);
         @display("i=block/cogwheel_s");
         @labels(node);
 }

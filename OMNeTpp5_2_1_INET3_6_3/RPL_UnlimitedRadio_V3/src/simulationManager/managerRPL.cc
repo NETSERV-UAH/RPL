@@ -127,7 +127,7 @@ void managerRPL::handleMessage(cMessage *msg)
     EV << "<-managerRPL::handleMessage()" << endl;
 }
 
-int managerRPL::getIndexFromAddress(IPv6Address address)
+int managerRPL::getIndexFromLLAddress(IPv6Address address)
 {
     EV << "->managerRPL::getIndexFromAddress()" << endl;
 

@@ -32,8 +32,8 @@ class ParentTableRPL : public cSimpleModule
 {
   protected:
     int maxParents; //-1 means the unlimited value
-    IPv6Address prefParent;
-    int rank;
+    //IPv6Address prefParent;
+    //int rank;
 
     struct ParentEntry
     {

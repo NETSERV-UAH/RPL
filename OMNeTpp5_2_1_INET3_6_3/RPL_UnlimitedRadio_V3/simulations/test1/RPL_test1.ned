@@ -25,6 +25,7 @@ import inet.networklayer.configurator.ipv6.FlatNetworkConfigurator6;
 //import inet.physicallayer.ieee802154.packetlevel.Ieee802154NarrowbandScalarRadioMedium;
 import rpl.src.physicallayer.simpleidealradio.SimpleIdealRadioMedium;
 import rpl.src.simulationManager.managerRPL;
+import rpl.src.statisticcollector.StatisticCollector;
 
 import rpl.src.node.rpl.RPLRouter;
 //import rpl.src.simulationmodels.flowmodels.UDPFlowGenerator;
@@ -34,22 +35,28 @@ network Net802154
 {
     parameters:
         int numHosts;
+        @display("bgb=262,202");
     submodules:
-    //    generator: UDPFlowGenerator {
-      //      @display("p=100,20");
-       // }
+        //    generator: UDPFlowGenerator {
+        //      @display("p=100,20");
+        // }
         configurator: FlatNetworkConfigurator6 {
             parameters:
-                @display("p=100,20");
+                @display("p=197,19");
         }
         managerRPL: managerRPL {
             parameters:
-                @display("p=100,30");
+                @display("p=34,19");
         }
-
-        radioMedium: SimpleIdealRadioMedium {
+        
+        statisticCollector: StatisticCollector {
             parameters:
                 @display("p=100,40");
+        }
+        
+        radioMedium: SimpleIdealRadioMedium {
+            parameters:
+                @display("p=112,19");
         }
         host[numHosts]: RPLRouter {
             parameters:
