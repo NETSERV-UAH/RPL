@@ -39,6 +39,7 @@ simple ICMPv6RPL
 {
     parameters:
         @class(rpl::ICMPv6RPL); //EXTRA
+        string routingTableModule;  //EXTRA - the path to the RoutingTable module
         string interfaceTableModule;   // The path to the InterfaceTable module
         @display("i=block/control");
     gates:

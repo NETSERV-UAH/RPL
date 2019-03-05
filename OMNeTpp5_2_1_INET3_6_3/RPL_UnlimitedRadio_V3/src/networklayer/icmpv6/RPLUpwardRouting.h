@@ -258,9 +258,15 @@ protected:
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
 
 public:
+
+    //The methods which is called in the icmpv6 module
     virtual bool isNodeJoinedToDAG();
     virtual int getVersion();
     virtual IPv6Address getDODAGID();
+    virtual IPv6Address getMyLLNetwAddr();
+    virtual IPv6Address getMyGlobalNetwAddr();
+
+
 
 
 };

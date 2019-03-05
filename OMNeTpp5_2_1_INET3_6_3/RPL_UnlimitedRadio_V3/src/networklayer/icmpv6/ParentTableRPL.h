@@ -80,11 +80,37 @@ class ParentTableRPL : public cSimpleModule
     ParentTableRPL();
     ~ParentTableRPL();
 
+  // Table management
+
+protected:
+    ParentTableRPL::ParentTable *getTableForVid(unsigned int vid);
+
+    void removeWorstParent(unsigned int vid);
+
+    bool willWorstRank(int rank, unsigned int vid);
+
+
   public:
-    // Table management
 
+    int getNumberOfParents(unsigned int vid);
 
+    bool updateTable(InterfaceEntry *ie, const IPv6Address& id, int rank, unsigned char dtsn, unsigned int vid);
 
+    const IPv6NeighbourCacheRPL::Neighbour *getParentNeighborCache(IPv6Address ip, unsigned int vid);
+
+    const IPv6NeighbourCacheRPL::Neighbour *getPrefParentNeighborCache(unsigned int vid);
+
+    bool isPrefParent(IPv6Address ipAddr, unsigned int vid);
+
+    const int getPrefParentDTSN(unsigned int vid);
+
+    const int getParentRank(IPv6Address ipAddr, unsigned int vid);
+
+    const int getRank(unsigned int vid);
+
+    void printState();
+
+    void clearTable();
 
 };
 

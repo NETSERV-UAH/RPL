@@ -36,9 +36,14 @@
 #include "inet/networklayer/contract/ipv6/IPv6ControlInfo.h"
 #include "inet/applications/pingapp/PingPayload_m.h"
 #include "src/networklayer/icmpv6/RPLUpwardRouting.h" //EXTRA
+#include "src/networklayer/icmpv6/ParentTableRPL.h" //EXTRA
+#include "inet/networklayer/contract/IRoutingTable.h" //EXTRA
+#include "inet/networklayer/contract/IInterfaceTable.h" //EXTRA
+#include "src/networklayer/icmpv6/IPv6NeighbourDiscoveryRPL.h"//EXTRA
 
 
 
+#include "inet/networklayer/ipv6/IPv6RoutingTable.h" //EXTRA
 
 namespace rpl {
 using namespace inet;
@@ -60,13 +65,20 @@ class ICMPv6RPL : public cSimpleModule, public ILifecycle
 protected:
     enum RPLMOP mop;
     RPLUpwardRouting *rplUpwardRouting;
-
+    IPv6NeighbourDiscoveryRPL *neighbourDiscoveryRPL;
+    ParentTableRPL *parentTableRPL;
+    IInterfaceTable *interfaceTable;
+    //IRoutingTable *routingTable;
+    IPv6RoutingTable *routingTable;
     int DIS_c;
     simtime_t DIS_CurIntsizeNow,DIS_CurIntsizeNext;
     simtime_t DIS_StofCurIntNow,DIS_StofCurIntNext;
     simtime_t DIS_EndofCurIntNow,DIS_EndofCurIntNext;
     int DISheaderLength;
     int numReceivedDIS;
+    int numSentDIS;
+    int numSuppressedDIS;
+
 
 
     cModule *host;

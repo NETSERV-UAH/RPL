@@ -830,6 +830,19 @@ IPv6Address RPLUpwardRouting::getDODAGID()
     return DODAGID;
 }
 
+
+
+IPv6Address RPLUpwardRouting::getMyLLNetwAddr()
+{
+    return myLLNetwAddr;
+}
+
+IPv6Address RPLUpwardRouting::getMyGlobalNetwAddr()
+{
+    return myGlobalNetwAddr;
+}
+
+
 RPLUpwardRouting::~RPLUpwardRouting()
 {
     //cancelAndDelete(DIOTimer); //EXTRA

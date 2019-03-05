@@ -39,8 +39,8 @@
 //#include "inet/applications/pingapp/PingPayload_m.h"
 //EXTRA
 #include "src/networklayer/icmpv6/ICMPv6RPL.h"
-
-
+#include "inet/networklayer/ipv6/IPv6RoutingTable.h" //EXTRA
+#include "inet/networklayer/ipv6/IPv6Route.h" //EXTRA
 
 namespace inet {
 //foreign declarations:
@@ -59,8 +59,13 @@ void ICMPv6RPL::initialize(int stage)
     //EXTRA BEGIN
     if(stage == INITSTAGE_LOCAL){
         host = getContainingNode(this);
-        mop = (RPLMOP)this->getParentModule()->getSubmodule("rplUpwardRouting")->par("modeOfOperation");  //EXTRA
-        rplUpwardRouting = check_and_cast<RPLUpwardRouting *>(this->getParentModule()->getSubmodule("rplUpwardRouting"));  //EXTRA
+        mop = (RPLMOP)this->getParentModule()->getSubmodule("rplUpwardRouting")->par("modeOfOperation");
+        rplUpwardRouting = check_and_cast<RPLUpwardRouting *>(this->getParentModule()->getSubmodule("rplUpwardRouting"));
+        neighbourDiscoveryRPL = check_and_cast<IPv6NeighbourDiscoveryRPL *>(this->getParentModule()->getSubmodule("neighbourDiscoveryRPL"));
+        parentTableRPL = check_and_cast<ParentTableRPL *>(this->getParentModule()->getSubmodule("parentTableRPL"));
+        //routingTable = getModuleFromPar<IRoutingTable>(par("routingTableModule"), this);
+        interfaceTable = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
+
     }
     //EXTRA END
 
@@ -220,12 +225,12 @@ void ICMPv6RPL::scheduleNextDISTransmission()
 void ICMPv6RPL::handleDISTimer(cMessage* msg)
 {
 
-    if(((!rplUpwardRouting->isNodeJoinedToDAG())&&((DIS_c<DISRedun)||(DISRedun==0)))&&(DISVersion== rplUpwardRouting->getVersion())) //EXTRA
+    if(((!rplUpwardRouting->isNodeJoinedToDAG())&&((DIS_c<DISRedun)||(DISRedun==0)))&&(DISVersion == rplUpwardRouting->getVersion())) //EXTRA
     //if(((!IsJoined)&&((DIS_c<DISRedun)||(DISRedun==0)))&&(DISVersion==Version))  //EXTRA
     {
         ICMPv6DISMsg* pkt = new ICMPv6DISMsg("DIS", DIS_FLOOD);
         IPv6ControlInfo *controlInfo = new IPv6ControlInfo;
-        controlInfo->setSrcAddr(myNetwAddr);
+        controlInfo->setSrcAddr(rplUpwardRouting->getMyLLNetwAddr());  ??LL or Global??;
         controlInfo->setDestAddr(IPv6Address::ALL_NODES_2);
         pkt->setByteLength(DISheaderLength);
         pkt->setVersionNumber(rplUpwardRouting->getVersion());
@@ -235,8 +240,7 @@ void ICMPv6RPL::handleDISTimer(cMessage* msg)
         pkt->setControlInfo(controlInfo);
         send(pkt, "ipv6Out");
 
-        if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Sent++;
-        DISStatusLast->nbDISSent++;
+        numSentDIS++;  ??;//if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Sent++;
         cancelAndDelete(DISTimer);
         //DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER); //EXTRA
         DISTimer = nullptr;  //EXTRA
@@ -245,11 +249,10 @@ void ICMPv6RPL::handleDISTimer(cMessage* msg)
     }
     else
         //if(((!IsJoined)&&(DIS_c>=DISRedun))&&(DISVersion==Version)) //EXTRA
-        if(((!IsNodeJoined[pManagerRPL->getIndexFromAddress(myNetwAddr)])&&(DIS_c>=DISRedun))&&(DISVersion==Version)) //EXTRA
+        if(((!rplUpwardRouting->isNodeJoinedToDAG())&&(DIS_c >= DISRedun))&&(DISVersion == rplUpwardRouting->getVersion())) //EXTRA
         {
-            if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Suppressed++;  // if !end simulation
-
-            DISStatusLast->nbDISSuppressed++;
+            ??;//if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Suppressed++;  // if !end simulation
+            numSuppressedDIS++;
             char buf1[100];
             sprintf(buf1, "DIS transmission suppressed!");
             host->bubble(buf1);
@@ -263,7 +266,7 @@ void ICMPv6RPL::handleDISTimer(cMessage* msg)
         }
         else
             //if(IsJoined) //EXTRA
-            if(IsNodeJoined[pManagerRPL->getIndexFromAddress(myNetwAddr)]) //EXTRA
+            if(rplUpwardRouting->isNodeJoinedToDAG()) //EXTRA
             {
                 cancelAndDelete(DISTimer);
                 //DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);  //EXTRA
@@ -287,18 +290,16 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
     int flagK = pkt->getKFlag();
     IPv6Address senderIPAddress = ctrlInfoIn->getSrcAddr(); //Sender address
 
-    EV << "Received message is ICMPv6 DAO message, DODAGID address is " << pkt->getDODAGID() << ", src address is " << ctrlInfoIn->getSrcAddr() << endl;
+    EV << "Received message is ICMPv6 DAO message, DODAGID ID is " << pkt->getDODAGID() << ", sender address is " << ctrlInfoIn->getSrcAddr() << endl;
 
-    int parentIndex = getParentIndex(senderIPAddress);
-
-    if (parentIndex >= 0){
-        if (Parents[VersionNember][parentIndex].ParentRank < Rank){
+    if (parentTableRPL->getParentNeighborCache(senderIPAddress, rplUpwardRouting->getVersion())){  //If senderIPAddress is a parent
+        if (parentTableRPL->getParentRank(senderIPAddress, rplUpwardRouting->getVersion()) < parentTableRPL->getRank(rplUpwardRouting->getVersion())){
             EV << "DAO message is received from a parent with a lower rank and discarded." << endl;
             delete msg;
             return;
         }
 
-        if (senderIPAddress == PrParent){ // parentIndex = 0
+        if (parentTableRPL->isPrefParent(senderIPAddress, rplUpwardRouting->getVersion())){  //If senderIPAddress is the preferred parent
             EV << "DAO message is received from the preferred parent and discarded." << endl;
             delete msg;
             return;
@@ -306,51 +307,61 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
 
     }
 
-    RoutingTable *routingTable = routingTables.at(VersionNember);
-
-
     if (lifeTime == ZERO_LIFETIME){ // && (flagK == 1)  //No-Path DAO  //FIXME: this situation must handle ACK message
-        auto iter = routingTable->find(prefix);
-        if (iter != routingTable->end()){   // prefix has a route
-            RoutingEntry& entry = iter->second;
-            bool removeable = false;
-            if ((!entry.NoPathReceived) && (entry.prefixLen == prefixLen) && (entry.nextHop == senderIPAddress)){
-                removeable = true;
-                EV << "No-Path DAO received from " << senderIPAddress <<" removes a route with the prefeix of " << prefix << endl;
-                entry.NoPathReceived = true;
-                //TODO: setting lifetime label on the route
-                routingTable->erase(prefix);
-            }
-            EV << "Deleting the entry :" << prefix << ", nextHop" << senderIPAddress << "\n";
+        EV << "No-Path DAO received from " << senderIPAddress <<" removes a route with the prefeix of " << prefix << endl;
+        /*
+        if ((routingTable->isPrefixPresent(prefix)) && (routingTable->getNextHopForDestination(prefix) == senderIPAddress) && (senderIPAddress != IPv6Address::UNSPECIFIED_ADDRESS)){ //routingTable->lookupDestCache(prefix, outInterfaceId);
+            EV << "No-Path DAO received from " << senderIPAddress <<" removes a route with the prefeix of " << prefix << endl;
+            IPv6Route *route = createNewRoute(destPrefix, prefixLength, IRoute::MANUAL);
+            if (routingTable->deleteRoute(route))
+                EV << "The entry :" << prefix << ", nextHop" << senderIPAddress << " was deleted from the routing table.\n";
+                */
+        const IPv6Route *route = routingTable->doLongestPrefixMatch(prefix);
+        if ((route) && (route->getNextHop() != IPv6Address::UNSPECIFIED_ADDRESS) && (route->getNextHop() == senderIPAddress) && (route->getPrefixLength() == prefixLen)){
+            if (routingTable->deleteRoute(route))
+                EV << "The entry :" << prefix << ", nextHop" << senderIPAddress << " was deleted from the routing table.\n";
         }
-    }else{
-        auto iter = routingTable->find(prefix);
-        if (iter == routingTable->end()){
-            // Add entry to table
-            EV << "Adding entry to Routing Table: " << prefix << " nextHop -->" << senderIPAddress << "\n";
-            (*routingTable)[prefix] = RoutingEntry( senderIPAddress, simTime() + lifeTime);
-        } else {
-            // Update existing entry
+    }else{ //Adding a DAO (Downward) route to the routing table
+        //First, add to neighbor table
+        if (!neighbourDiscoveryRPL->processIncomingRPLMessage(ctrlInfoIn))
+            throw cRuntimeError("ICMPv6RPL::processIncommingStoringDAOMessage: DAO Info can not be added to the Neighbor Discovery!");
+
+        //Then, add/update the routing table
+        const IPv6Route *route = routingTable->doLongestPrefixMatch(prefix);
+        if ((route) && (route->getPrefixLength() == prefixLen)){
+            // Update the existing entry
+            route->setNextHop(senderIPAddress);
+            route->setExpiryTime(lifeTime);
             EV << "Updating entry in Address Table: " << prefix << " nextHop -->" << senderIPAddress << "\n";
-            RoutingEntry& entry = iter->second;
-            entry.nextHop = senderIPAddress;
-            entry.lifeTime = simTime() + lifeTime;
+        } else {
+            // Add a new entry to the table
+            IPv6Route *route = createNewRoute(prefix, prefixLen, IRoute::ICMP_REDIRECT); //We used "ICMP_REDIRECT". It is better to introduce "RPL" in the Interface IRoute in the INET framework.
+            if(!route)
+                throw cRuntimeError("ICMPv6RPL::processIncommingStoringDAOMessage: DAO (Downward) route can not be added!");
+            else{
+                route->setNextHop(senderIPAddress);
+                route->setExpiryTime(lifeTime);
+                routingTable->addRoutingProtocolRoute(route);
+                EV << "Added entry to Routing Table: " << prefix << " nextHop -->" << senderIPAddress << "\n";
+            }
+
         }
     }
 
-
-    if (NofParents > 0){  //this node has a preferred parent, so DAO must forward to the preferred parent.
+    //Forward a DAO to the preferred parent
+    const IPv6NeighbourCacheRPL::Neighbour *neighbourEntry = parentTableRPL->getPrefParentNeighborCache(rplUpwardRouting->getVersion());
+    if (neighbourEntry){  //this node has a preferred parent, so DAO must be forwarded to the preferred parent.
         IPv6ControlInfo *ctrlInfoOut = new IPv6ControlInfo;
         pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
         ctrlInfoOut->setProtocol(IP_PROT_IPv6_ICMP);
-        ctrlInfoOut->setSrcAddr(myNetwAddr);
-        ctrlInfoOut->setDestAddr(Parents[VersionNember][0].ParentId);  //ctrlInfo->setDestAddr(PrParent)
+        ctrlInfoOut->setSrcAddr(rplUpwardRouting->getMyLLNetwAddr());
+        ctrlInfoOut->setDestAddr(neighbourEntry->nceKey->address);
         EV << "A DAO message is sent from : " << ctrlInfoOut->getSourceAddress() << " to parent : " << ctrlInfoOut->getDestinationAddress() << " to advertise prefix : " << prefix << "with prefix len : " << prefixLen << endl;
         pkt->setControlInfo(ctrlInfoOut);
-        send(pkt, icmpv6OutGateId);
+        send(pkt, "ipv6Out");
     }
     else{
-        EV<< "DAO can not be sent. There is no preferred parent." << endl;
+        EV<< "DAO can not be forwarded. There is no preferred parent." << endl;
         delete msg;
     }
 
