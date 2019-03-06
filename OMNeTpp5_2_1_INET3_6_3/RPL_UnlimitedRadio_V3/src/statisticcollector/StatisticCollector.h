@@ -65,8 +65,8 @@ public:
     StatisticCollector()
         : version(0)
         , convergenceTimeStart(0)
-        , convergenceTimeUpwardEnd(0)
-        , convergenceTimeDownwardEnd(0)
+        , convergenceTimeEndUpward(0)
+        , convergenceTimeEndDownward(0)
             {};
 
     ~StatisticCollector();
@@ -89,7 +89,7 @@ public:
 
     virtual void nodeJoinedUpward(IPv6Address linkLocalAddress, simtime_t time);
 
-    virtual void nodeJoinedDownnward(ip, time);
+    virtual void nodeJoinedDownnward(IPv6Address ip, simtime_t time);
 
 };
 

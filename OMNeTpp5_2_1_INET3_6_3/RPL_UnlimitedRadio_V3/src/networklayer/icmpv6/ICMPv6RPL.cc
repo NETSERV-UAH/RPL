@@ -59,12 +59,13 @@ void ICMPv6RPL::initialize(int stage)
     //EXTRA BEGIN
     if(stage == INITSTAGE_LOCAL){
         host = getContainingNode(this);
-        mop = (RPLMOP)this->getParentModule()->getSubmodule("rplUpwardRouting")->par("modeOfOperation");
+        int mOP = this->getParentModule()->getSubmodule("rplUpwardRouting")->par("modeOfOperation");
+        mop = (RPLMOP) mOP;
         rplUpwardRouting = check_and_cast<RPLUpwardRouting *>(this->getParentModule()->getSubmodule("rplUpwardRouting"));
         neighbourDiscoveryRPL = check_and_cast<IPv6NeighbourDiscoveryRPL *>(this->getParentModule()->getSubmodule("neighbourDiscoveryRPL"));
         parentTableRPL = check_and_cast<ParentTableRPL *>(this->getParentModule()->getSubmodule("parentTableRPL"));
-        //routingTable = getModuleFromPar<IRoutingTable>(par("routingTableModule"), this);
-        interfaceTable = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
+        routingTable = getModuleFromPar<IPv6RoutingTable>(par("routingTableModule"), this);
+        //interfaceTable = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
 
     }
     //EXTRA END
@@ -79,6 +80,10 @@ void ICMPv6RPL::initialize(int stage)
     if (stage == INITSTAGE_NETWORK_LAYER_2) {
         IPSocket socket(gate("ipv6Out"));
         socket.registerProtocol(IP_PROT_IPv6_ICMP);
+    }
+    //EXTRA
+    if(stage == INITSTAGE_NETWORK_LAYER_3){
+        interfaceID = rplUpwardRouting->getInterfaceID();
     }
 }
 
@@ -195,9 +200,9 @@ void ICMPv6RPL::SetDISParameters()
     }
 
     //DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);  EXTRA
-    DIS_CurIntsizeNext=DISIntMin;
-    DIS_StofCurIntNext =DISStartDelay+DODAGSartTime;
-    DIS_EndofCurIntNext=DIS_StofCurIntNext+DIS_CurIntsizeNext;
+    DIS_CurIntsizeNext = DISIntMin;
+    DIS_StofCurIntNext = DISStartDelay + rplUpwardRouting->getDODAGSartTime();   //Check before run
+    DIS_EndofCurIntNext = DIS_StofCurIntNext + DIS_CurIntsizeNext;
 }
 
 void ICMPv6RPL::scheduleNextDISTransmission()
@@ -230,17 +235,17 @@ void ICMPv6RPL::handleDISTimer(cMessage* msg)
     {
         ICMPv6DISMsg* pkt = new ICMPv6DISMsg("DIS", DIS_FLOOD);
         IPv6ControlInfo *controlInfo = new IPv6ControlInfo;
-        controlInfo->setSrcAddr(rplUpwardRouting->getMyLLNetwAddr());  ??LL or Global??;
+        controlInfo->setSrcAddr(rplUpwardRouting->getMyLLNetwAddr());     //Check before run
         controlInfo->setDestAddr(IPv6Address::ALL_NODES_2);
         pkt->setByteLength(DISheaderLength);
         pkt->setVersionNumber(rplUpwardRouting->getVersion());
-        pkt->setDODAGID(rplUpwardRouting->getDODAGID()); ?? why dodagid!!?? since !isNodeJoinedToDAG??;
+        pkt->setDODAGID(rplUpwardRouting->getDODAGID());    //Check before run why dodagid!!?? since !isNodeJoinedToDAG??;
         pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
         controlInfo->setProtocol(IP_PROT_IPv6_ICMP);
         pkt->setControlInfo(controlInfo);
         send(pkt, "ipv6Out");
 
-        numSentDIS++;  ??;//if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Sent++;
+        numSentDIS++;     //Check before run //if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Sent++;
         cancelAndDelete(DISTimer);
         //DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER); //EXTRA
         DISTimer = nullptr;  //EXTRA
@@ -251,7 +256,7 @@ void ICMPv6RPL::handleDISTimer(cMessage* msg)
         //if(((!IsJoined)&&(DIS_c>=DISRedun))&&(DISVersion==Version)) //EXTRA
         if(((!rplUpwardRouting->isNodeJoinedToDAG())&&(DIS_c >= DISRedun))&&(DISVersion == rplUpwardRouting->getVersion())) //EXTRA
         {
-            ??;//if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Suppressed++;  // if !end simulation
+            //Check before run //if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Suppressed++;  // if !end simulation
             numSuppressedDIS++;
             char buf1[100];
             sprintf(buf1, "DIS transmission suppressed!");
@@ -318,8 +323,13 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
                 */
         const IPv6Route *route = routingTable->doLongestPrefixMatch(prefix);
         if ((route) && (route->getNextHop() != IPv6Address::UNSPECIFIED_ADDRESS) && (route->getNextHop() == senderIPAddress) && (route->getPrefixLength() == prefixLen)){
-            if (routingTable->deleteRoute(route))
+            /*if (routingTable->deleteRoute(route))
                 EV << "The entry :" << prefix << ", nextHop" << senderIPAddress << " was deleted from the routing table.\n";
+            else
+                throw cRuntimeError("ICMPv6RPL::processIncommingStoringDAOMessage: no-path DAO route can not be deleted from the routing table!");
+                */
+            routingTable->deleteOnLinkPrefix(prefix, prefixLen);
+            EV << "The entry :" << prefix << ", nextHop" << senderIPAddress << " was deleted from the routing table.\n";
         }
     }else{ //Adding a DAO (Downward) route to the routing table
         //First, add to neighbor table
@@ -328,16 +338,16 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
 
         //Then, add/update the routing table
         const IPv6Route *route = routingTable->doLongestPrefixMatch(prefix);
-        if ((route) && (route->getPrefixLength() == prefixLen)){
+/*        if ((route) && (route->getPrefixLength() == prefixLen)){
             // Update the existing entry
             route->setNextHop(senderIPAddress);
             route->setExpiryTime(lifeTime);
             EV << "Updating entry in Address Table: " << prefix << " nextHop -->" << senderIPAddress << "\n";
         } else {
             // Add a new entry to the table
-            IPv6Route *route = createNewRoute(prefix, prefixLen, IRoute::ICMP_REDIRECT); //We used "ICMP_REDIRECT". It is better to introduce "RPL" in the Interface IRoute in the INET framework.
+            IPv6Route *route = routingTable->createNewRoute(prefix, prefixLen, IRoute::ICMP_REDIRECT); //We used "ICMP_REDIRECT". It is better to introduce "RPL" in the Interface IRoute in the INET framework.
             if(!route)
-                throw cRuntimeError("ICMPv6RPL::processIncommingStoringDAOMessage: DAO (Downward) route can not be added!");
+                throw cRuntimeError("ICMPv6RPL::processIncommingStoringDAOMessage: DAO (Downward) route can not be created!");
             else{
                 route->setNextHop(senderIPAddress);
                 route->setExpiryTime(lifeTime);
@@ -345,10 +355,31 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
                 EV << "Added entry to Routing Table: " << prefix << " nextHop -->" << senderIPAddress << "\n";
             }
 
+        }*/
+
+        //Delete old entry
+        if ((route) && (route->getPrefixLength() == prefixLen)){
+            routingTable->deleteOnLinkPrefix(prefix, prefixLen);
+            EV << "The entry :" << prefix << ", nextHop" << senderIPAddress << " was deleted from the routing table.\n";
         }
+
+        // Add/update an entry to the table
+/*        IPv6Route *route = routingTable->createNewRoute(prefix, prefixLen, IRoute::ICMP_REDIRECT); //We used "ICMP_REDIRECT". It is better to introduce "RPL" in the Interface IRoute in the INET framework.
+        if(!route)
+            throw cRuntimeError("ICMPv6RPL::processIncommingStoringDAOMessage: DAO (Downward) route can not be created!");
+        else{
+            route->setNextHop(senderIPAddress);
+            route->setExpiryTime(lifeTime);
+            routingTable->addRoutingProtocolRoute(route);
+            EV << "Added entry to Routing Table: " << prefix << " nextHop -->" << senderIPAddress << "\n";
+        }*/
+
+        routingTable->addOrUpdateOnLinkPrefix(prefix, prefixLen, interfaceID, lifeTime);
+        EV << "Added/updated entry to Routing Table: " << prefix << " nextHop -->" << senderIPAddress << ", lifeTime -->" << lifeTime << "\n";
+
     }
 
-    //Forward a DAO to the preferred parent
+    //Forward an updated DAO message to the preferred parent
     const IPv6NeighbourCacheRPL::Neighbour *neighbourEntry = parentTableRPL->getPrefParentNeighborCache(rplUpwardRouting->getVersion());
     if (neighbourEntry){  //this node has a preferred parent, so DAO must be forwarded to the preferred parent.
         IPv6ControlInfo *ctrlInfoOut = new IPv6ControlInfo;
@@ -371,44 +402,42 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
 
 }
 
-void ICMPV6RPL::sendDAOMessage(IPv6Address prefix, simtime_t lifetime)
+void ICMPv6RPL::sendDAOMessage(IPv6Address prefix, simtime_t lifetime)
 {
-
     EV << "->ICMPV6RPL::sendDAOMessage()" << endl;
 
-    if (NofParents[VersionNember] > 0){
+    const IPv6NeighbourCacheRPL::Neighbour *neighbourEntry = parentTableRPL->getPrefParentNeighborCache(rplUpwardRouting->getVersion());
+
+    if (neighbourEntry){
         ICMPv6DAOMsg* pkt = new ICMPv6DAOMsg("DAO", DAO);
         IPv6ControlInfo *ctrlInfo = new IPv6ControlInfo;
+        pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
         ctrlInfo->setProtocol(IP_PROT_IPv6_ICMP);
-        ctrlInfo->setSrcAddr(myNetwAddr);
-        ctrlInfo->setDestAddr(Parents[VersionNember][0].ParentId);  //ctrlInfo->setDestAddr(PrParent)
+        ctrlInfo->setSrcAddr(rplUpwardRouting->getMyLLNetwAddr());
+        ctrlInfo->setDestAddr(neighbourEntry->nceKey->address);  //ctrlInfo->setDestAddr(PrParent)
         pkt->setByteLength(DAOheaderLength);
         pkt->setDFlag(1); //spesified DAG
-        pkt->setDODAGID(DODAGID);
+        pkt->setDODAGID(rplUpwardRouting->getDODAGID());
 
         if (lifetime == ZERO_LIFETIME)
             pkt->setKFlag(1);
         else
             pkt->setKFlag(0);
 
-        pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
-        pkt->setPrefixLen(64); //link local address
+        pkt->setPrefixLen(64); //Check before run
         pkt->setPrefix(prefix);
         pkt->setLifeTime(lifetime);
         pkt->setControlInfo(ctrlInfo);
-        send(pkt, icmpv6OutGateId);
+        send(pkt, "ipv6Out");
     }else
         EV << "Cancel a generated DAO, there is no preferred parent." << endl;
 
-
     EV << "<-ICMPV6RPL::sendDAOMessage()" << endl;
-
 }
 
-void ICMPV6RPL::scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime)
+void ICMPv6RPL::scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime)
 {
     EV << "->ICMPV6RPL::scheduleNextDAOTransmission()" << endl;
-
 
     if (DAOTimer){
         EV << "DAO timer already scheduled." << endl;
@@ -439,9 +468,6 @@ void ICMPV6RPL::scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime)
 
         scheduleDAOlifetimer(LifeTime);
 
-
-
-
     /*      //2:
             if (!DAOLifeTimer){
                 EV << "DAOLifeTimer was not scheduled. It is scheduled." << endl;
@@ -459,7 +485,7 @@ void ICMPV6RPL::scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime)
 
 }
 
-void ICMPV6RPL::scheduleDAOlifetimer(simtime_t lifeTime)
+void ICMPv6RPL::scheduleDAOlifetimer(simtime_t lifeTime)
 {
     EV << "->ICMPV6RPL::scheduleDAOlifetimer()" << endl;
 
@@ -481,7 +507,7 @@ void ICMPV6RPL::scheduleDAOlifetimer(simtime_t lifeTime)
     EV << "->ICMPV6RPL::scheduleDAOlifetimer()" << endl;
 }
 
-void ICMPV6RPL::DeleteDAOTimers()
+void ICMPv6RPL::DeleteDAOTimers()
 {
     Enter_Method("DeleteDAOTimers()");
     if (DAOTimer){

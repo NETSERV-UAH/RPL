@@ -33,6 +33,7 @@
 
 #include "inet/common/INETDefs.h"
 //EXTRA
+#include "src/networklayer/contract/RPLDefs.h"
 //#include "src/networklayer/icmpv6/ICMPv6RPL.h"
 //#include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
 
@@ -43,11 +44,9 @@
 
 #include "inet/networklayer/xmipv6/xMIPv6.h"
 #include "src/networklayer/icmpv6/IPv6NeighbourCacheRPL.h"
-
-
-
-
+#include "src/networklayer/contract/RPLDefs.h"
 //EXTRA
+
 namespace rpl {
 using namespace inet;
 
@@ -118,7 +117,10 @@ class IPv6NeighbourDiscoveryRPL : public cSimpleModule, public ILifecycle
 
     IInterfaceTable *ift = nullptr;
     IPv6RoutingTable *rt6 = nullptr;
-    ICMPv6RPL *icmpv6 = nullptr;  //EXTRA
+    //EXTRA
+    ICMPv6RPL *icmpv6 = nullptr;
+    enum RPLMOP mop;
+    //EXTRA
 
     bool staticLLAddressAssignment; //EXTRA : assume that Link Local address is assigned statically
 

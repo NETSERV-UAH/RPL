@@ -37,13 +37,9 @@
 #include "inet/applications/pingapp/PingPayload_m.h"
 #include "src/networklayer/icmpv6/RPLUpwardRouting.h" //EXTRA
 #include "src/networklayer/icmpv6/ParentTableRPL.h" //EXTRA
-#include "inet/networklayer/contract/IRoutingTable.h" //EXTRA
+#include "inet/networklayer/ipv6/IPv6RoutingTable.h" //EXTRA
 #include "inet/networklayer/contract/IInterfaceTable.h" //EXTRA
 #include "src/networklayer/icmpv6/IPv6NeighbourDiscoveryRPL.h"//EXTRA
-
-
-
-#include "inet/networklayer/ipv6/IPv6RoutingTable.h" //EXTRA
 
 namespace rpl {
 using namespace inet;
@@ -64,12 +60,14 @@ class ICMPv6RPL : public cSimpleModule, public ILifecycle
 //EXTRA BEGIN
 protected:
     enum RPLMOP mop;
+    int interfaceID;
     RPLUpwardRouting *rplUpwardRouting;
     IPv6NeighbourDiscoveryRPL *neighbourDiscoveryRPL;
     ParentTableRPL *parentTableRPL;
-    IInterfaceTable *interfaceTable;
-    //IRoutingTable *routingTable;
+    //IInterfaceTable *interfaceTable;
     IPv6RoutingTable *routingTable;
+
+
     int DIS_c;
     simtime_t DIS_CurIntsizeNow,DIS_CurIntsizeNext;
     simtime_t DIS_StofCurIntNow,DIS_StofCurIntNext;
@@ -92,10 +90,27 @@ protected:
     cMessage* DISTimer;
     simtime_t TimetoSendDIS;
 
+    int DAOheaderLength;
+    cMessage* DAOTimer;
+    cMessage* DAOLifeTimer;
+    simtime_t DelayDAO;
+    simtime_t defaultLifeTime;  // only used for DAO
+    simtime_t ROUTE_INFINITE_LIFETIME;
+
+
+
+
 
 public:
     ICMPv6RPL()
         : mop(Storing_Mode_of_Operation_with_no_multicast_support)
+        , DISheaderLength(0)
+        , DAOheaderLength(0)
+        , defaultLifeTime(0)
+        , ROUTE_INFINITE_LIFETIME(0)
+        , DAOTimer(nullptr)
+        , DAOLifeTimer(nullptr)
+
         , DISTimer(nullptr)
             {};
 
@@ -154,6 +169,12 @@ public:
 
     //EXTRA BEGIN
     virtual void processIncommingStoringDAOMessage(ICMPv6Message *icmpv6msg);
+    virtual void sendDAOMessage(IPv6Address prefix, simtime_t lifetime);
+    virtual void scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime);
+    virtual void scheduleDAOlifetimer(simtime_t lifeTime);
+    virtual void DeleteDAOTimers();
+
+
     virtual void processIncommingDISMessage(ICMPv6Message *msg);
     virtual void SetDISParameters();
     virtual void scheduleNextDISTransmission();

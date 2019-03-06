@@ -63,9 +63,9 @@ Define_Module(IPv6NeighbourDiscoveryRPL);
 simsignal_t IPv6NeighbourDiscoveryRPL::startDADSignal = registerSignal("startDAD");
 
 IPv6NeighbourDiscoveryRPL::IPv6NeighbourDiscoveryRPL()
-    : neighbourCache(*this),
-      staticLLAddressAssignment(true), //EXTRA
-      mop(MOP_STORING_NO_MULTICAST)  //Default value
+    : neighbourCache(*this)
+    , staticLLAddressAssignment(true) //EXTRA
+    , mop(Storing_Mode_of_Operation_with_no_multicast_support)  //EXTRA //Default value
 
 {
 }
@@ -251,7 +251,7 @@ void IPv6NeighbourDiscoveryRPL::handleMessage(cMessage *msg)
             EV_INFO << "New " << msg->getName() << " is received\n";
             //ICMPv6Message* msg = check_and_cast<ICMPv6Message*>(msg);
             IPv6ControlInfo *ctrlInfo = check_and_cast<IPv6ControlInfo *>(msg->removeControlInfo());
-            if (ctrlInfo->getDestAddr() != IPv6Address::MULTICAST){
+            if (ctrlInfo->getDestAddr().getScope() != IPv6Address::MULTICAST){  //Check before run
                 EV_INFO << "Destination address of " << msg->getName() << " (" << ctrlInfo->getDestAddr() << ") is not a multicast address. Sender node is added as a neighbor.\n";
                 processIncomingRPLMessage(ctrlInfo);
             }else{
@@ -277,7 +277,7 @@ void IPv6NeighbourDiscoveryRPL::handleMessage(cMessage *msg)
 }
 
 //EXTRA BEGIN
-Neighbour *IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage(IPv6ControlInfo *ctrlInfo)
+IPv6NeighbourCacheRPL::Neighbour *IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage(IPv6ControlInfo *ctrlInfo)
 {
     EV << "->IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage()" << endl;  //EXTRA
 

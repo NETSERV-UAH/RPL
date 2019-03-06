@@ -842,6 +842,15 @@ IPv6Address RPLUpwardRouting::getMyGlobalNetwAddr()
     return myGlobalNetwAddr;
 }
 
+double RPLUpwardRouting::getDODAGSartTime()
+{
+    return dodagSartTime;
+}
+
+int RPLUpwardRouting::getInterfaceID()
+{
+    return interfaceID;
+}
 
 RPLUpwardRouting::~RPLUpwardRouting()
 {

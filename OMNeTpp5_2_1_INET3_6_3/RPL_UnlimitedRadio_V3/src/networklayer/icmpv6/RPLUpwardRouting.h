@@ -58,8 +58,6 @@
 namespace rpl {
 using namespace inet;
 
-#define ZERO_LIFETIME 0 // This feature is used for No-Path DAO.
-
 /**
  * @brief IPv6 Routing Protocol for LLNs (RPL)provides a mechanism whereby
  * multipoint-to-point traffic from devices inside the LLN towards a central
@@ -94,18 +92,14 @@ protected:
      * Read from omnetpp.ini
      **/
     int DIOheaderLength;
-    int DAOheaderLength;
     int headerLength;
 
     /**
      * @brief RPL setting parameters
      * Read from omnetpp.ini
      **/
-    simtime_t defaultLifeTime;  // only used for DAO
-    simtime_t ROUTE_INFINITE_LIFETIME;
 
     RPLMOP mop; //Mode Of Operation
-    simtime_t DelayDAO;
     bool DISEnable;
     bool refreshDAORoutes;
 
@@ -129,9 +123,6 @@ protected:
 
     cMessage* GRepairTimer;
     cMessage* DIOTimer;
-    cMessage* DAOTimer;
-    cMessage* DAOLifeTimer;
-
 
     bool IsJoined;
     bool isNodeJoined;
@@ -162,10 +153,6 @@ public:
 
     RPLUpwardRouting()
         : DIOheaderLength(0)
-        , DISheaderLength(0)
-        , DAOheaderLength(0)
-        , defaultLifeTime(0)
-        , ROUTE_INFINITE_LIFETIME(0)
         , macaddress()
         , host(nullptr)
         , myLLNetwAddr(IPv6Address::UNSPECIFIED_ADDRESS)
@@ -176,8 +163,6 @@ public:
         , refreshDAORoutes(false)
         , GRepairTimer(nullptr)
         , DIOTimer(nullptr)
-        , DAOTimer(nullptr)
-        , DAOLifeTimer(nullptr)
         , mop(Storing_Mode_of_Operation_with_no_multicast_support)
     {};
 
@@ -265,9 +250,8 @@ public:
     virtual IPv6Address getDODAGID();
     virtual IPv6Address getMyLLNetwAddr();
     virtual IPv6Address getMyGlobalNetwAddr();
-
-
-
+    virtual double getDODAGSartTime();
+    virtual int getInterfaceID();
 
 };
 

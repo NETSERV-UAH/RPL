@@ -16,6 +16,7 @@
 #ifndef _RPL_SRC_NETWORKLAYER_CONTRACT_RPLDEFS_H_
 #define _RPL_SRC_NETWORKLAYER_CONTRACT_RPLDEFS_H_
 
+#define ZERO_LIFETIME 0 // This feature is used for No-Path DAO.
 
 namespace rpl {
 
