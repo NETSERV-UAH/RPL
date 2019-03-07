@@ -37,12 +37,18 @@ ParentTableRPL::ParentTableRPL()
     maxParents = -1; //Unlimited
 }
 
-void ParentTableRPL::initialize()
+void ParentTableRPL::initialize(int stage)
 {
-    maxParents = par("maxParents");
+    cSimpleModule::initialize(stage);
 
-    ParentTable& parentTable = *this->parentTable;    // magic to hide the '*' from the name of the watch below
-    WATCH_MAP(parentTable);
+    if(stage == INITSTAGE_LOCAL){
+        neighbourDiscoveryRPL = check_and_cast<IPv6NeighbourDiscoveryRPL *>(this->getParentModule()->getSubmodule("neighbourDiscoveryRPL"));
+        maxParents = par("maxParents");
+
+        ParentTable& parentTable = *this->parentTable;    // magic to hide the '*' from the name of the watch below
+        WATCH_MAP(parentTable);
+    }
+
 }
 
 void ParentTableRPL::handleMessage(cMessage *)
@@ -82,7 +88,7 @@ bool ParentTableRPL::updateTable(InterfaceEntry *ie, const IPv6Address& id, int 
 {
     //Enter_Method("ParentTableRPL::updateTableWithAddress()");
 
-    IPv6NeighbourCacheRPL::Neighbour *neighbourEntry = neighbourCache.lookup(IPv6Address, ie->getInterfaceId());
+    IPv6NeighbourCacheRPL::Neighbour *neighbourEntry = neighbourDiscoveryRPL->neighbourCache.lookup(id, ie->getInterfaceId());
 
     if (!neighbourEntry){
         throw cRuntimeError("ParentTableRPL::updateTableWithAddress: This IPv6 Address doesn't any entry in Neighbor table!");
@@ -113,14 +119,14 @@ bool ParentTableRPL::updateTable(InterfaceEntry *ie, const IPv6Address& id, int 
             else //If my rank will not be the worst rank, remove the worst rank in the table, and add me instead of it.
                 removeWorstParent(vid);
         }
-            EV << "Adding entry to Parent Table: " << IPv6Address << " rank: " << rank << " DTSN: " << dtsn << "version: " << vid << "\n";
-            (*table)[neighbourEntry] = ParentEntry(idrank, dtsn, vid);
+            EV << "Adding entry to Parent Table: " << id << " rank: " << rank << " DTSN: " << dtsn << "version: " << vid << "\n";
+            (*table)[neighbourEntry] = ParentEntry(rank, dtsn, vid);
             return 0;
     }
     else {
         // Update existing entry
         ParentEntry& entry = iter->second;
-        EV << "Updating entry in Parent Table: "  << IPv6Address << " old rank: " << entry.rank << " old DTSN: " << entry.dtsn << " old version: " << entry.vid << " new rank: " << rank << " new DTSN: " << dtsn << "new version: " << vid << "\n";
+        EV << "Updating entry in Parent Table: "  << id << " old rank: " << entry.rank << " old DTSN: " << entry.dtsn << " old version: " << entry.vid << " new rank: " << rank << " new DTSN: " << dtsn << "new version: " << vid << "\n";
         entry.rank = rank;
         entry.dtsn = dtsn;
         entry.vid = vid;
@@ -129,12 +135,15 @@ bool ParentTableRPL::updateTable(InterfaceEntry *ie, const IPv6Address& id, int 
 
 }
 
-void ParentTableRPL::removeWorstParent(unsigned int vid)
+bool ParentTableRPL::removeWorstParent(unsigned int vid)
 {
     ParentTable *table = getTableForVid(vid);
     // Version ID vid does not exist
     if (table == nullptr)
-        return FALSE;
+        return false;
+
+    if (table->size() == 0)
+        return false;
 
     auto worst = table->begin();
     for (auto iter = table->begin(); iter != table->end(); iter++ ) {
@@ -144,6 +153,7 @@ void ParentTableRPL::removeWorstParent(unsigned int vid)
         }
     }
     table->erase(worst);
+    return true;
 }
 
 bool ParentTableRPL::willWorstRank(int rank, unsigned int vid)
@@ -151,15 +161,18 @@ bool ParentTableRPL::willWorstRank(int rank, unsigned int vid)
     ParentTable *table = getTableForVid(vid);
     // Version ID vid does not exist, and table is empty
     if (table == nullptr)
-        return FALSE;
+        return false;
+
+    if (table->size() == 0)
+        return false;
 
     for (auto iter = table->begin(); iter != table->end(); iter++ ) {
         ParentEntry& entry = iter->second;
         if (entry.rank > rank) {
-            return FALSE;
+            return false;
         }
     }
-    return TRUE;
+    return true;
 }
 
 /* If the ipAddr has an entry in the parent table, it returns a pointer to the Neighbour.
@@ -200,7 +213,7 @@ const IPv6NeighbourCacheRPL::Neighbour *ParentTableRPL::getPrefParentNeighborCac
 bool ParentTableRPL::isPrefParent(IPv6Address ipAddr, unsigned int vid)
 {
     const IPv6NeighbourCacheRPL::Neighbour *neighbor = getPrefParentNeighborCache(vid);
-    if ((neighbor) && (neighbor->nceKey->address))
+    if (neighbor)
         return true;
     return false;
 }
@@ -283,7 +296,7 @@ void ParentTableRPL::clearTable()
         delete elem.second;
 
     versionParentTable.clear();
-    parentarentTable = nullptr;
+    parentTable = nullptr;
 }
 
 ParentTableRPL::~ParentTableRPL()

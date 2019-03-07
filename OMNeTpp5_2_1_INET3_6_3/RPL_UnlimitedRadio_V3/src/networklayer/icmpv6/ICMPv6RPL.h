@@ -169,7 +169,10 @@ public:
 
     //EXTRA BEGIN
     virtual void processIncommingStoringDAOMessage(ICMPv6Message *icmpv6msg);
+    virtual void processIncommingRPLMessage(ICMPv6Message *msg);
+
     virtual void sendDAOMessage(IPv6Address prefix, simtime_t lifetime);
+    virtual void processIncommingNonStoringDAOMessage(ICMPv6Message *msg);
     virtual void scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime);
     virtual void scheduleDAOlifetimer(simtime_t lifeTime);
     virtual void DeleteDAOTimers();

@@ -56,8 +56,6 @@ simple RPLUpwardRouting
         //EXTRA END
         
         int DIOheaderLength @unit(byte) = default(73 Byte);
-        int DISheaderLength @unit(byte) = default(54 Byte);
-        int DAOheaderLength @unit(byte) = default(0 Byte); //EXTRA
         // debug switch
         //EXTRA BEGIN
         //bool debug = default(false);
@@ -77,18 +75,9 @@ simple RPLUpwardRouting
         int DISRedun= default(1);
         int DISIntDoubl= default(0);
         
-        //EXTRA BEGIN
+        //EXTRA
         bool refreshDAORoutes = default(true);
-        double DEFAULT_DAO_DELAY @unit(s) = 1 s;
-        double DelayDAO @unit(s) = default(DEFAULT_DAO_DELAY);
-        volatile double randomDelayDAO @unit(s) = uniform(0.5, 1.5) * DelayDAO; //randomDelayDAO = x~[0,1) * DelayDAO + delay/2 or x~[0.5,1.5) * DelayDAO
-        
-        double ROUTE_INFINITE_LIFETIME @unit(s) = 10000 s;
-        double defaultLifeTime @unit(s) = default(ROUTE_INFINITE_LIFETIME); // This feature was only implemented for downward routes by DAO messages. Upward routes uses ROUTE_INFINITE_LIFETIME.
-        volatile double randomDefaultLifeTime @unit(s) = uniform(0.5, 0.75) * defaultLifeTime; //randomDefaultLifeTime = x~[0.5,0.75) * lifeTime
-        //double ZERO_LIFETIME @unit(s) = 0 s;  // This feature is used for No-Path DAO, is not implemented yet.
-        //EXTRA END
-               
+              
 
  //EXTRA BEGIN       
         //@display("i=block/fork");

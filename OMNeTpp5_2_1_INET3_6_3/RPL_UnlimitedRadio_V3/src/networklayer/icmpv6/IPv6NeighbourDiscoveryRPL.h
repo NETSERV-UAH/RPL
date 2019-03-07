@@ -127,8 +127,17 @@ class IPv6NeighbourDiscoveryRPL : public cSimpleModule, public ILifecycle
 #ifdef WITH_xMIPv6
     xMIPv6 *mipv6 = nullptr;    // in case the node has MIP support
 #endif /* WITH_xMIPv6 */
-
+//EXTRA BEGIN
+    /*
+     * 'IPv6NeighbourCacheRPL' neighbourCache is protected.
+     *  Because we want to access 'IPv6NeighbourCacheRPL' in the 'parentTable', we changed it to 'public'.
+     *  A better solution is to move 'parentTable' to this module.
+     */
+    //IPv6NeighbourCacheRPL neighbourCache;
+  public:
     IPv6NeighbourCacheRPL neighbourCache;
+protected:
+//EXTRA END
     typedef std::set<cMessage *> RATimerList;    //FIXME add comparator for stable fingerprints!
 
     // stores information about a pending Duplicate Address Detection for

@@ -38,8 +38,24 @@ package rpl.src.networklayer.icmpv6;
 simple ICMPv6RPL
 {
     parameters:
-        @class(rpl::ICMPv6RPL); //EXTRA
-        string routingTableModule;  //EXTRA - the path to the RoutingTable module
+        //EXTRA BEGIN
+        @class(rpl::ICMPv6RPL);
+        //DAO Parameters
+        double DEFAULT_DAO_DELAY @unit(s) = 1 s;
+        double DelayDAO @unit(s) = default(DEFAULT_DAO_DELAY);
+        volatile double randomDelayDAO @unit(s) = uniform(0.5, 1.5) * DelayDAO; //randomDelayDAO = x~[0,1) * DelayDAO + delay/2 or x~[0.5,1.5) * DelayDAO      
+        double ROUTE_INFINITE_LIFETIME @unit(s) = 10000 s;
+        double defaultLifeTime @unit(s) = default(ROUTE_INFINITE_LIFETIME); // This feature was only implemented for downward routes by DAO messages. Upward routes uses ROUTE_INFINITE_LIFETIME.
+        volatile double randomDefaultLifeTime @unit(s) = uniform(0.5, 0.75) * defaultLifeTime; //randomDefaultLifeTime = x~[0.5,0.75) * lifeTime
+        //double ZERO_LIFETIME @unit(s) = 0 s;  // This feature is used for No-Path DAO.
+        int DAOheaderLength @unit(byte) = default(0 Byte); //EXTRA
+         
+ 		//DIS Parameters       
+        int DISheaderLength @unit(byte) = default(54 Byte);
+        
+        
+        string routingTableModule;  //The path to the RoutingTable module
+        //EXTRA END
         string interfaceTableModule;   // The path to the InterfaceTable module
         @display("i=block/control");
     gates:

@@ -70,27 +70,20 @@ void RPLUpwardRouting::initialize(int stage)
 
         sinkAddress = IPv6Address(par("sinkAddress"));
         EV << "sink address is " << sinkAddress << endl;
-        defaultLifeTime = par ("defaultLifeTime");
         mop = par ("modeOfOperation");
-        refreshDAORoutes = par ("refreshDAORoutes");
-        DelayDAO = par ("DelayDAO");
 
-        DAOheaderLength = par ("DAOheaderLength");
         DIOheaderLength = par ("DIOheaderLength");
-        DISheaderLength = par ("DISheaderLength");
 
         DIOIntMin = par ("DIOIntMin");
         DIOIntDoubl = par ("DIOIntDoubl");
         DIORedun = par ("DIORedun");
-        DISStartDelay = par("DISStartDelay");
-        DISIntMin = par ("DISIntMin");
-        DISIntDoubl = par ("DISIntDoubl");
-        DISRedun = par ("DISRedun");
+
         DISEnable = par ("DISEnable");
+
+        refreshDAORoutes = par ("refreshDAORoutes");
 
         NodeStartTime=par( "RPLStartTime" );
 
-        ROUTE_INFINITE_LIFETIME = par("ROUTE_INFINITE_LIFETIME");
     }
     else if (stage == INITSTAGE_NETWORK_LAYER_3){
         int nInterfaces = interfaceTable->getNumInterfaces();
@@ -110,7 +103,7 @@ void RPLUpwardRouting::initialize(int stage)
             }
         }
 
-        EV << "my Link Local address is " << myLLNetwAddr <<"; my index in the topology is " << pManagerRPL->getIndexFromAddress(myLLNetwAddr) << endl;
+        EV << "my Link Local address is " << myLLNetwAddr <<"; my index in the topology is " << pManagerRPL->getIndexFromLLAddress(myLLNetwAddr) << endl;
 
         if (myGlobalNetwAddr == IPv6Address::UNSPECIFIED_ADDRESS)
             throw cRuntimeError("RPLUpwardRouting::initialize: This node has not Global Address!");

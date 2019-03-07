@@ -67,6 +67,28 @@ void ICMPv6RPL::initialize(int stage)
         routingTable = getModuleFromPar<IPv6RoutingTable>(par("routingTableModule"), this);
         //interfaceTable = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
 
+        EV << "The node works in MOP#" << mop << endl;
+        if (mop == Storing_Mode_of_Operation_with_multicast_support)
+            throw cRuntimeError("ICMPv6RPL::initialize(): Unsopported MOP for the simulation. MOP Storing_Mode_of_Operation_with_multicast_support MOP#%d\n", (int)mop);
+        else
+            throw cRuntimeError("ICMPv6RPL::initialize(): Unknown MOP MOP#%d\n", (int)mop);
+
+
+        defaultLifeTime = par ("defaultLifeTime");
+
+        DelayDAO = par ("DelayDAO");
+        DAOheaderLength = par ("DAOheaderLength");
+
+        DISheaderLength = par ("DISheaderLength");
+
+        DISStartDelay = par("DISStartDelay");
+        DISIntMin = par ("DISIntMin");
+        DISIntDoubl = par ("DISIntDoubl");
+        DISRedun = par ("DISRedun");
+
+        ROUTE_INFINITE_LIFETIME = par("ROUTE_INFINITE_LIFETIME");
+
+
     }
     //EXTRA END
 
@@ -81,10 +103,11 @@ void ICMPv6RPL::initialize(int stage)
         IPSocket socket(gate("ipv6Out"));
         socket.registerProtocol(IP_PROT_IPv6_ICMP);
     }
-    //EXTRA
+    //EXTRA BEGIN
     if(stage == INITSTAGE_NETWORK_LAYER_3){
         interfaceID = rplUpwardRouting->getInterfaceID();
     }
+    //EXTRA END
 }
 
 void ICMPv6RPL::handleMessage(cMessage *msg)
@@ -144,20 +167,41 @@ void ICMPv6RPL::processICMPv6Message(ICMPv6Message *icmpv6msg)
         EV_INFO << "ICMPv6 Echo Reply Message Received." << endl;
         processEchoReply((ICMPv6EchoReplyMsg *)icmpv6msg);
     } //EXTRA BEGIN
-    else if (dynamic_cast<ICMPv6DIOMsg *>(icmpv6msg)){
-        EV << "Message " << icmpv6msg->getName() << " received from IPv6 module is sent to RPL module."<< endl;
-        sendToRPL(icmpv6msg);
-    }else if (dynamic_cast<ICMPv6DAOMsg *>(icmpv6msg)){
-        if ((mop ==     Storing_Mode_of_Operation_with_no_multicast_support) || (mop == Storing_Mode_of_Operation_with_multicast_support))
-            processIncommingStoringDAOMessage(icmpv6msg);
-    }else if (dynamic_cast<ICMPv6DISMsg *>(icmpv6msg)){
-            processIncommingDISMessage(icmpv6msg);
+    else if ((dynamic_cast<ICMPv6DIOMsg *>(icmpv6msg)) || (dynamic_cast<ICMPv6DISMsg *>(icmpv6msg)) || (dynamic_cast<ICMPv6DAOMsg *>(icmpv6msg))){
+        EV << "RPL control message (" << icmpv6msg->getName() << ") received from the IPv6 module"<< endl;
+        processIncommingRPLMessage(icmpv6msg);
     }else//EXTRA END
         throw cRuntimeError("Unknown message type received: (%s)%s.\n", icmpv6msg->getClassName(),icmpv6msg->getName());
     EV << "<-ICMPv6RPL::processICMPv6Message()" << endl;
 }
 
 //EXTRA BEGIN
+void ICMPv6RPL::processIncommingRPLMessage(ICMPv6Message *icmpv6msg)
+{
+
+    if (dynamic_cast<ICMPv6DIOMsg *>(icmpv6msg)){
+        if ((mop == No_Downward_Routes_maintained_by_RPL) || (mop == Non_Storing_Mode_of_Operation) || (mop == Storing_Mode_of_Operation_with_no_multicast_support)){
+            EV << "This node works in MOP#" << mop << ". Message is sent to the RPLUpwardRouting module."<< endl;
+            sendToRPL(icmpv6msg);
+        }
+    }else if (dynamic_cast<ICMPv6DISMsg *>(icmpv6msg)){
+        if ((mop == No_Downward_Routes_maintained_by_RPL) || (mop == Non_Storing_Mode_of_Operation) || (mop == Storing_Mode_of_Operation_with_no_multicast_support)){
+            EV << "This node works in MOP#" << mop << ". Message is sent to processIncommingDISMessage() to process."<< endl;
+            processIncommingDISMessage(icmpv6msg);
+        }
+    }else if (dynamic_cast<ICMPv6DAOMsg *>(icmpv6msg)){
+        if (mop == No_Downward_Routes_maintained_by_RPL)
+            throw cRuntimeError("ICMPv6RPL::processIncommingRPLMessage(): This MOP(No_Downward_Routes_maintained_by_RPL MOP#%d) doesn't handle a DAO message.\n", (int) mop);
+        if (mop == Non_Storing_Mode_of_Operation){
+            EV << "This node works in MOP#" << mop << ". Message is sent to processIncommingNonStoringDAOMessage() to process."<< endl;
+            processIncommingNonStoringDAOMessage(icmpv6msg);
+        }
+        else if (mop == Storing_Mode_of_Operation_with_no_multicast_support){
+            EV << "This node works in MOP#" << mop << ". Message is sent to processIncommingStoringDAOMessage() to process."<< endl;
+            processIncommingStoringDAOMessage(icmpv6msg);
+        }
+    }
+}
 //////////// DIS Operations ////////////////////
 void ICMPv6RPL::processIncommingDISMessage(ICMPv6Message *msg)
 {
@@ -433,6 +477,13 @@ void ICMPv6RPL::sendDAOMessage(IPv6Address prefix, simtime_t lifetime)
         EV << "Cancel a generated DAO, there is no preferred parent." << endl;
 
     EV << "<-ICMPV6RPL::sendDAOMessage()" << endl;
+}
+
+
+void ICMPv6RPL::processIncommingNonStoringDAOMessage(ICMPv6Message *msg)
+{
+
+
 }
 
 void ICMPv6RPL::scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime)

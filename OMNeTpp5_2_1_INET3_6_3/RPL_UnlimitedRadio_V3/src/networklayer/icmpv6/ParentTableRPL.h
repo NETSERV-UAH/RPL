@@ -17,8 +17,10 @@
 #ifndef _RPL_SRC_NETWORKLAYER_ICMPV6_PARENTTABLE_H
 #define _RPL_SRC_NETWORKLAYER_ICMPV6_PARENTTABLE_H
 
+#include "src/networklayer/icmpv6/IPv6NeighbourDiscoveryRPL.h"
 #include "src/networklayer/icmpv6/IPv6NeighbourCacheRPL.h"
 #include "inet/networklayer/contract/ipv6/IPv6Address.h"
+#include "inet/networklayer/common/InterfaceEntry.h"
 #include "inet/linklayer/common/MACAddress.h"
 
 
@@ -31,6 +33,7 @@ using namespace inet;
 class ParentTableRPL : public cSimpleModule
 {
   protected:
+    IPv6NeighbourDiscoveryRPL *neighbourDiscoveryRPL;
     int maxParents; //-1 means the unlimited value
     //IPv6Address prefParent;
     //int rank;
@@ -50,12 +53,12 @@ class ParentTableRPL : public cSimpleModule
 
     struct IP_compare
     {
-        bool operator()(const IPv6NeighbourCacheRPL::Neighbour& u1, const IPv6NeighbourCacheRPL::Neighbour& u2) const
+        bool operator()(const IPv6NeighbourCacheRPL::Neighbour *u1, const IPv6NeighbourCacheRPL::Neighbour *u2) const
         {
             //IPv6NeighbourCacheRPL::Key *key1 = u1.nceKey;
             //IPv6Address ipAddress1 = key1->address;
-            IPv6Address ipAddress1 = u1.nceKey->address;
-            IPv6Address ipAddress2 = u2.nceKey->address;
+            IPv6Address ipAddress1 = u1->nceKey->address;
+            IPv6Address ipAddress2 = u2->nceKey->address;
 
             return ipAddress1 < ipAddress2; }
     };
@@ -72,7 +75,8 @@ class ParentTableRPL : public cSimpleModule
 
   protected:
 
-    virtual void initialize() override;
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int stage) override;
     virtual void handleMessage(cMessage *msg) override;
 
   public:
@@ -85,7 +89,7 @@ class ParentTableRPL : public cSimpleModule
 protected:
     ParentTableRPL::ParentTable *getTableForVid(unsigned int vid);
 
-    void removeWorstParent(unsigned int vid);
+    bool removeWorstParent(unsigned int vid);
 
     bool willWorstRank(int rank, unsigned int vid);
 
