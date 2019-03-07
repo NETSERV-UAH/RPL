@@ -69,6 +69,15 @@ enum ICMPv6TypeRPL {
  * //     0x8A: Consistency Check (Section 6.6)
  * 
  * }
+ * 
+ * //EXTRA 
+ * //RPL Mode Of Operation
+ * //enum RPLMOP{
+ * //    No_Downward_Routes_maintained_by_RPL = 0;
+ * //    Non_Storing_Mode_of_Operation = 1;
+ * //    Storing_Mode_of_Operation_with_no_multicast_support = 2;
+ * //    Storing_Mode_of_Operation_with_multicast_support = 3;
+ * //}
  * </pre>
  */
 enum ICMPv6_RPL_CONTROL_MSG {
@@ -78,7 +87,7 @@ enum ICMPv6_RPL_CONTROL_MSG {
 };
 
 /**
- * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:73</tt> by nedtool.
+ * Enum generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:83</tt> by nedtool.
  * <pre>
  * //EXTRA
  * //DIS options RFC 6550 Section 6.2.3
@@ -128,7 +137,7 @@ enum RPL_OPTIONS {
 };
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:103</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:113</tt> by nedtool.
  * <pre>
  * //DIS control message for RPL
  * //message ICMPv6DISMsg extends ICMPv6Message
@@ -235,7 +244,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6DISMsg& obj) {o
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6DISMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:146</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:156</tt> by nedtool.
  * <pre>
  * //DIO control message for RPL
  * //message ICMPv6DIOMsg extends ICMPv6Message
@@ -248,7 +257,8 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6DISMsg& obj) {obj.p
  *     int rank = 0;
  *     int grounded;
  *     //0
- *     //MOP
+ *     //int MOP \@enum(RPLMOP);
+ *     int MOP;
  *     //Prf
  *     //int flags = 0; // RFC 6550, section 6.3.1
  *     //int reserved = 0; // RFC 6550, section 6.3.1
@@ -291,6 +301,7 @@ class ICMPv6DIOMsg : public ::inet::ICMPv6Message
     int versionNumber;
     int rank;
     int grounded;
+    int MOP;
     int DTSN;
     double IMin;
     int NofDoub;
@@ -323,6 +334,8 @@ class ICMPv6DIOMsg : public ::inet::ICMPv6Message
     virtual void setRank(int rank);
     virtual int getGrounded() const;
     virtual void setGrounded(int grounded);
+    virtual int getMOP() const;
+    virtual void setMOP(int MOP);
     virtual int getDTSN() const;
     virtual void setDTSN(int DTSN);
     virtual double getIMin() const;
@@ -342,7 +355,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6DIOMsg& obj) {o
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6DIOMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:194</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:205</tt> by nedtool.
  * <pre>
  * //EXTRA 
  * //The DAO control message for RPL, Section 6.4.1
@@ -366,6 +379,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6DIOMsg& obj) {obj.p
  *     int prefixLen;        //When options are RPL_Target = 0x05;  
  *     IPv6Address prefix;   //When options are RPL_Target = 0x05;         
  *     simtime_t lifeTime;     //When option are Transit_Information = 0x06;
+ *     IPv6Address daoParent;  //When option are Transit_Information; for Non-Storing
  * 
  * 
  * }
@@ -382,6 +396,7 @@ class ICMPv6DAOMsg : public ::inet::ICMPv6Message
     int prefixLen;
     IPv6Address prefix;
     ::omnetpp::simtime_t lifeTime;
+    IPv6Address daoParent;
 
   private:
     void copy(const ICMPv6DAOMsg& other);
@@ -418,6 +433,9 @@ class ICMPv6DAOMsg : public ::inet::ICMPv6Message
     virtual void setPrefix(const IPv6Address& prefix);
     virtual ::omnetpp::simtime_t getLifeTime() const;
     virtual void setLifeTime(::omnetpp::simtime_t lifeTime);
+    virtual IPv6Address& getDaoParent();
+    virtual const IPv6Address& getDaoParent() const {return const_cast<ICMPv6DAOMsg*>(this)->getDaoParent();}
+    virtual void setDaoParent(const IPv6Address& daoParent);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6DAOMsg& obj) {obj.parsimPack(b);}

@@ -65,6 +65,16 @@ enum ICMPv6_RPL_CONTROL_MSG
     
 }
 
+//EXTRA 
+//RPL Mode Of Operation
+//enum RPLMOP{
+//    No_Downward_Routes_maintained_by_RPL = 0;
+//    Non_Storing_Mode_of_Operation = 1;
+//    Storing_Mode_of_Operation_with_no_multicast_support = 2;
+//    Storing_Mode_of_Operation_with_multicast_support = 3;
+//}
+
+
 //EXTRA
 //DIS options RFC 6550 Section 6.2.3
 //DIO options RFC 6550 Section 6.3.3
@@ -151,7 +161,8 @@ packet ICMPv6DIOMsg extends ICMPv6Message
     int rank = 0;
     int grounded;
     //0
-    //MOP
+    //int MOP @enum(RPLMOP);
+    int MOP;
     //Prf
     //int flags = 0; // RFC 6550, section 6.3.1
     //int reserved = 0; // RFC 6550, section 6.3.1
@@ -209,6 +220,7 @@ packet ICMPv6DAOMsg extends ICMPv6Message
     int prefixLen;        //When options are RPL_Target = 0x05;  
     IPv6Address prefix;   //When options are RPL_Target = 0x05;         
     simtime_t lifeTime;     //When option are Transit_Information = 0x06;
+    IPv6Address daoParent;  //When option are Transit_Information; for Non-Storing
     
     
 }

@@ -24,8 +24,9 @@ enum RPLMOP{
     No_Downward_Routes_maintained_by_RPL = 0,
     Non_Storing_Mode_of_Operation,
     Storing_Mode_of_Operation_with_no_multicast_support,
-    Storing_Mode_of_Operation_with_multicast_support,
+    Storing_Mode_of_Operation_with_multicast_support
 };
+
 
 enum messagesTypes {
     UNKNOWN=0,
@@ -40,7 +41,7 @@ enum messagesTypes {
     RESET_Global_REPAIR_TIMER,
     DAO,
     SEND_DAO_TIMER,
-    DAO_LIFETIME_TIMER,
+    DAO_LIFETIME_TIMER
 };
 
 

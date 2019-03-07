@@ -446,44 +446,99 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
 
 }
 
+void ICMPv6RPL::processIncommingNonStoringDAOMessage(ICMPv6Message *msg)
+{
+    EV << "->ICMPV6RPL::processIncommingNonStoringDAOMessage()" << endl;
+
+    ICMPv6DAOMsg* pkt = check_and_cast<ICMPv6DAOMsg*>(msg);
+    IPv6ControlInfo *ctrlInfoIn = check_and_cast<IPv6ControlInfo *>(pkt->removeControlInfo());
+    IPv6Address senderIPAddress = ctrlInfoIn->getSrcAddr(); //Sender address
+    int flagK = pkt->getKFlag();
+    int flagD = pkt->getDFlag();
+    IPv6Address dodagID = pkt->getDODAGID();
+    IPv6Address prefix = pkt->getPrefix();
+    int prefixLen = pkt->getPrefixLen();
+    simtime_t lifeTime = pkt->getLifeTime();
+    IPv6Address daoParent = pkt->getDaoParent();
+
+    EV << "Received message is ICMPv6 DAO message, DODAGID ID is " << pkt->getDODAGID() << ", sender address is " << ctrlInfoIn->getSrcAddr() << endl;
+
+
+    if ((dodagID != rplUpwardRouting->getDODAGID()) && (flagD == 1))
+        throw cRuntimeError("ICMPv6RPL::processIncommingNonStoringDAOMessage: DAO`s DAG ID is different from nod`s DAG ID!");
+
+    if (lifeTime == ZERO_LIFETIME){ // && (flagK == 1)  //No-Path DAO  //FIXME: this situation must handle ACK message
+        EV << "No-Path DAO received from originator " << prefix << " and previous hop " << senderIPAddress <<",  removes a route with the prefeix of " << prefix << " and the DAO parent of " << daoParent<< endl;
+        //routingTable->deleteSREntry(prefix, daoParent);
+        EV << "The SR entry :" << prefix << ", daoParent" << daoParent << " was deleted from the routing table.\n";
+    }else{ //Adding/updateing a DAO (Downward) SR entry to the routing table
+        routingTable->deleteOnLinkPrefix(prefix, prefixLen);
+        EV << "The entry :" << prefix << ", nextHop" << senderIPAddress << " was deleted from the routing table.\n";
+        routingTable->addOrUpdateOnLinkPrefix(prefix, prefixLen, interfaceID, lifeTime);
+        EV << "Added/updated SR entry to Routing Table: " << prefix << " nextHop -->" << daoParent << ", lifeTime -->" << lifeTime << "\n";
+    }
+
+    /*@TO BE:  K flag to send ACK ....*/
+
+    delete msg;
+
+    delete ctrlInfoIn;
+
+    EV << "<-ICMPV6RPL::processIncommingNonStoringDAOMessage()" << endl;
+
+}
+
 void ICMPv6RPL::sendDAOMessage(IPv6Address prefix, simtime_t lifetime)
 {
     EV << "->ICMPV6RPL::sendDAOMessage()" << endl;
 
     const IPv6NeighbourCacheRPL::Neighbour *neighbourEntry = parentTableRPL->getPrefParentNeighborCache(rplUpwardRouting->getVersion());
+    IPv6Address prefParentAddr = neighbourEntry->nceKey->address;
+    IPv6Address dodagID = rplUpwardRouting->getDODAGID();
 
     if (neighbourEntry){
         ICMPv6DAOMsg* pkt = new ICMPv6DAOMsg("DAO", DAO);
         IPv6ControlInfo *ctrlInfo = new IPv6ControlInfo;
         pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
         ctrlInfo->setProtocol(IP_PROT_IPv6_ICMP);
+
         ctrlInfo->setSrcAddr(rplUpwardRouting->getMyLLNetwAddr());
-        ctrlInfo->setDestAddr(neighbourEntry->nceKey->address);  //ctrlInfo->setDestAddr(PrParent)
-        pkt->setByteLength(DAOheaderLength);
+
         pkt->setDFlag(1); //spesified DAG
-        pkt->setDODAGID(rplUpwardRouting->getDODAGID());
+        pkt->setDFlag(1); //We suppose RPL_DAO_SPECIFY_DAG = 1
+        pkt->setDODAGID(dodagID); //We suppose RPL_DAO_SPECIFY_DAG = 1
 
-        if (lifetime == ZERO_LIFETIME)
-            pkt->setKFlag(1);
+        if (lifetime == ZERO_LIFETIME) //for No-Path DAO
+            pkt->setKFlag(1);  //for ACK
         else
-            pkt->setKFlag(0);
+            pkt->setKFlag(0);  //We suppose RPL_WITH_DAO_ACK = 0
 
-        pkt->setPrefixLen(64); //Check before run
+        pkt->setPrefixLen(128); //Check before run
         pkt->setPrefix(prefix);
         pkt->setLifeTime(lifetime);
+
+        if (mop == Non_Storing_Mode_of_Operation){
+            ctrlInfo->setDestAddr(dodagID);
+            pkt->setByteLength(DAOheaderLength);
+            //pkt->setDaoParent(prefParentAddr); Link Local address, but we need the global addresses
+            //pkt->setDaoParent(prefParentAddr);
+            IPv6Address prefParentAddrGlobal;
+            prefParentAddrGlobal.setPrefix(dodagID, 64);
+            prefParentAddrGlobal.setSuffix(prefParentAddr, 64); //Global address for prefParentAddr
+            pkt->setDaoParent(prefParentAddrGlobal);
+            EV << "A new DAO message (Non-Storing mode) is sent to the root node(Global:" << dodagID << "), Prefix/child (Global: " << prefix << ", DAO parent address is (Link Local:  " << prefParentAddr << ", Global: " << prefParentAddrGlobal << ")"<< endl;
+        }else{
+            ctrlInfo->setDestAddr(prefParentAddr);  //ctrlInfo->setDestAddr(PrParent)
+            pkt->setByteLength(DAOheaderLength);
+            EV << "A new DAO message (Storing mode) is sent to the prefparent node(Link Local:" << prefParentAddr << "), Prefix (Global: " << prefix << ", parent address is (Link Local:  " << prefParentAddr << ", Global)"<< endl;
+        }
+
         pkt->setControlInfo(ctrlInfo);
         send(pkt, "ipv6Out");
     }else
         EV << "Cancel a generated DAO, there is no preferred parent." << endl;
 
     EV << "<-ICMPV6RPL::sendDAOMessage()" << endl;
-}
-
-
-void ICMPv6RPL::processIncommingNonStoringDAOMessage(ICMPv6Message *msg)
-{
-
-
 }
 
 void ICMPv6RPL::scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime)
