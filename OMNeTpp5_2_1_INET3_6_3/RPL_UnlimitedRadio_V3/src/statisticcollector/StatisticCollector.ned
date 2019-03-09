@@ -30,4 +30,5 @@ simple StatisticCollector
         @class(rpl::StatisticCollector);
         @display("i=block/cogwheel_s");
         @labels(node);
+        double globalRepairInterval @unit(s) = default(10000s);
 }

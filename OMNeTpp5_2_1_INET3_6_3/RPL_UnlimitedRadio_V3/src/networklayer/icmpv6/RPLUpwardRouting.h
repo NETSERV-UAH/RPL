@@ -79,7 +79,7 @@ protected:
     IRoutingTable *routingTable = nullptr;
     IInterfaceTable *interfaceTable = nullptr;
     managerRPL *pManagerRPL = nullptr;
-    StatisticCollector *statistisCollector = nullptr;
+    StatisticCollector *statisticCollector = nullptr;
     INetfilter *networkProtocol = nullptr;
     ICMPv6RPL *icmpv6RPL;
     ParentTableRPL *parentTableRPL;
@@ -131,7 +131,6 @@ protected:
 
     bool isSink;
 
-    cMessage* GRepairTimer;
     cMessage* DIOTimer;
 
     bool isJoinedFirstVersion;
@@ -181,7 +180,6 @@ public:
         , sinkAddress()
         , DISEnable(false)
         , refreshDAORoutes(false)
-        , GRepairTimer(nullptr)
         , DIOTimer(nullptr)
         , mop(Storing_Mode_of_Operation_with_no_multicast_support)
     {};
@@ -215,7 +213,6 @@ protected:
     virtual void handleSelfMsg(cMessage* msg);
 
     virtual void handleGlobalRepairTimer(cMessage* msg);
-
 
     /** @brief Handle control messages from lower layer */
     virtual void handleLowerControl(cMessage* msg);
@@ -263,6 +260,9 @@ protected:
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
 
 public:
+
+    //The methods which is called in the statisticsCollector module
+    virtual void setParametersBeforeGlobalRepair(simtime_t dodagSartTime);
 
     //The methods which is called in the icmpv6 module
     virtual bool isNodeJoinedToDAG() const;

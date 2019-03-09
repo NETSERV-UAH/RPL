@@ -62,8 +62,8 @@ void RPLUpwardRouting::initialize(int stage)
         interfaceTable = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
         networkProtocol = getModuleFromPar<INetfilter>(par("networkProtocolModule"), this);
         pManagerRPL = check_and_cast<managerRPL *>(getSimulation()->getSystemModule()->getSubmodule("managerRPL"));
-        statistisCollector = check_and_cast<StatisticCollector *>(getSimulation()->getSystemModule()->getSubmodule("statistisCollector"));
-        icmpv6RPL = check_and_cast<ICMPv6RPL *>(this->getParentModule()->getSubmodule("icmpv6RPL"));
+        statisticCollector = check_and_cast<StatisticCollector *>(getSimulation()->getSystemModule()->getSubmodule("statisticCollector"));
+        icmpv6RPL = check_and_cast<ICMPv6RPL *>(this->getParentModule()->getSubmodule("icmpv6"));
         parentTableRPL = check_and_cast<ParentTableRPL *>(this->getParentModule()->getSubmodule("parentTableRPL"));
 
         icmpv6InGateId = findGate("icmpv6In");
@@ -113,7 +113,7 @@ void RPLUpwardRouting::initialize(int stage)
         if (myGlobalNetwAddr == IPv6Address::UNSPECIFIED_ADDRESS)
             throw cRuntimeError("RPLUpwardRouting::initialize: This node has not Global Address!");
         else if (myLLNetwAddr != IPv6Address::UNSPECIFIED_ADDRESS)
-            statistisCollector->registNode(host, myLLNetwAddr, myGlobalNetwAddr);
+            statisticCollector->registNode(host, myLLNetwAddr, myGlobalNetwAddr);
         else
             throw cRuntimeError("RPLUpwardRouting::initialize: This node has not Link Local Address!");
 
@@ -138,7 +138,7 @@ void RPLUpwardRouting::initialize(int stage)
 
            if (myLLNetwAddr == sinkAddress) // If I am the sink node
             {
-               statistisCollector->startStatistics(mop, myLLNetwAddr, simTime());
+               statisticCollector->startStatistics(mop, myLLNetwAddr, simTime());
                isJoinedFirstVersion=true;
                VersionNember=1;
                Version=VersionNember;
@@ -237,7 +237,23 @@ void RPLUpwardRouting::DeleteDIOTimer()
 
 }
 
+/*
+ * Global Repair is a centralized approach in the simulation.
+ * This method is called by methods of StatisticCollector.
+ */
+void RPLUpwardRouting::setParametersBeforeGlobalRepair(simtime_t dodagSartTime){
+    VersionNember++;
+    Version = VersionNember;
+    dtsnInstance++;
+    Rank = 1;
+    DODAGID = myLLNetwAddr;
+    Grounded = 1;
 
+    DIO_CurIntsizeNext=DIOIntMin;
+    DIO_StofCurIntNext=dodagSartTime;
+    DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
+
+}
 void RPLUpwardRouting::handleMessage(cMessage* msg)
 {
     if (msg->isSelfMessage())
@@ -383,7 +399,7 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
         }else {
            if(!isJoinedFirstVersion) {
                isJoinedFirstVersion=true;
-               statistisCollector->nodeJoinedUpward(myLLNetwAddr, netwMsg->getArrivalTime());
+               statisticCollector->nodeJoinedUpward(myLLNetwAddr, netwMsg->getArrivalTime());
                VersionNember=netwMsg->getVersionNumber();
 
                DIO_CurIntsizeNext=DIOIntMin;
@@ -396,7 +412,7 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                DIORedun=netwMsg->getK();
                DODAGID=netwMsg->getDODAGID();
                parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber());
-               statistisCollector->updateRank(myLLNetwAddr, parentTableRPL->getRank(VersionNember));
+               statisticCollector->updateRank(myLLNetwAddr, parentTableRPL->getRank(VersionNember));
 
                char buf0[50];
                sprintf(buf0, "I joined DODAG%d via node %d !!", VersionNember,ctrlInfo->getSrcAddr());
@@ -412,7 +428,7 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 DeleteDIOTimer();
                 VersionNember=netwMsg->getVersionNumber();
                 dtsnInstance ++; // To inform the down stream nodes. dtsnInstance is accommodated in the DIO msg, so the down stream nodes find out that they must send a new DAO because of the global repair ...
-                statistisCollector->nodeJoinedUpward(myLLNetwAddr, netwMsg->getArrivalTime());
+                statisticCollector->nodeJoinedUpward(myLLNetwAddr, netwMsg->getArrivalTime());
 
                 DIOIntDoubl=netwMsg->getNofDoub();
                 DIOIntMin=netwMsg->getIMin();
@@ -423,7 +439,7 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
                 Grounded=netwMsg->getGrounded();
                 parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber());
-                statistisCollector->updateRank(myLLNetwAddr, parentTableRPL->getRank(VersionNember));
+                statisticCollector->updateRank(myLLNetwAddr, parentTableRPL->getRank(VersionNember));
 
                 char buf0[50];
                 sprintf(buf0, "I joined DODAG %d via node %d !!", VersionNember,ctrlInfo->getSrcAddr());

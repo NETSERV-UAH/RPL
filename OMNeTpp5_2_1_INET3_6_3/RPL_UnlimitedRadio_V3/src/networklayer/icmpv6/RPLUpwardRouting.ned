@@ -70,12 +70,6 @@ simple RPLUpwardRouting
         int DIOIntDoubl= default(20);
 
         bool DISEnable = default(false);
-        double DISStartDelay = default(0);
-        double DISIntMin @unit(s) = default(0.03s);
-        int DISRedun= default(1);
-        int DISIntDoubl= default(0);
-        
-        //EXTRA
         bool refreshDAORoutes = default(true);
               
 

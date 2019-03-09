@@ -45,100 +45,56 @@ void StatisticCollector::startStatistics(RPLMOP mop, IPv6Address sinkLLAddress, 
     //this->version = version;
     this->mop = mop;
 
-    if(GlobalRepairTimer!=0)
+    if (globalRepairInterval != 0)
     {
-        GRepairTimer = new cMessage("GRepair-timer", Global_REPAIR_TIMER);
-        scheduleAt(GlobalRepairTimer,GRepairTimer );
+        globalRepairTimer = new cMessage("globalRepairTimer", Global_REPAIR_TIMER);
+        scheduleAt(globalRepairInterval, globalRepairTimer );
     }
 
-    setConvergenceTimeStart(sinkLLAddress, time);
-
-}
-
-void StatisticCollector::setConvergenceTimeStart(IPv6Address sinkLLAddress, simtime_t time)
-{
     convergenceTimeStart = time;
     nodeJoinedUpward(sinkLLAddress, time);
+    sinkID = rplManager->getIndexFromLLAddress(sinkLLAddress);
+
 }
 
 //When a node receives a DIO message, it calls this method to indicate that it joined to the DAG and has a Upward route
 void StatisticCollector::nodeJoinedUpward(IPv6Address linkLocalAddress, simtime_t time)
 {
     int vectorIndex = rplManager->getIndexFromLLAddress(linkLocalAddress);
-    nodeStateList.at(vectorIndex).isJoin_Upward = true;
-    nodeStateList.at(vectorIndex).joiningTime_Upward = time;
-    EV << "Node" << vectorIndex+1 << "(Link Local Address: " << nodeStateList.at(vectorIndex).linklocalAddress << ", Global Address: " << nodeStateList.at(vectorIndex).globalAddress << " joins to DODAG." << endl;
-    if (mop == No_Downward_Routes_maintained_by_RPL)
-        if (isConvergedUpward())
-            saveStatistics();
-
-
-
-    if((!DAOEnable) && (NodeCounter_Upward[Version]==NodesNumber) && (!IsDODAGFormed_Upward))
-     {
-         FileRecordCounter++;
-         host->bubble("I'm the last node that joined DODAG! DODAG formed!!");
-         IsDODAGFormed_Upward=true;
-         NodeStateLast->DODAGsFormationTimeRecords_Upward = netwMsg->getArrivalTime()-dodagSartTime;
-         AvgDODAGFomationTime_Upward+=NodeStateLast->DODAGsFormationTimeRecords_Upward;
-         AvgAllDIOsSent+=NodeStateLast->DIO.Sent;
-         AvgAllDIOsReceived+=NodeStateLast->DIO.Received;
-         AvgAllDIOsSuppressed+=NodeStateLast->DIO.Suppressed;
-         NodeCounter_Upward[Version]++;
-         EV << "NodeCounter_Upward[" << VersionNember << "] = " << NodeCounter_Upward[VersionNember] << endl;
-         NofDODAGformationNormal++;
-         EV << "Number of DODAGformationNormal is " << NofDODAGformationNormal << endl;
-
-         if(NodeStateLast->DODAGsFormationTimeRecords_Upward!=0)
-         {
-             FileRecord.Collosion[FileRecordCounter] = NodeStateLast->Collision;
-             FileRecord.FormationTime_Upward[FileRecordCounter] = SIMTIME_DBL(NodeStateLast->DODAGsFormationTimeRecords_Upward);
-             FileRecord.DIOSent[FileRecordCounter] = NodeStateLast->DIO.Sent;
-             FileRecord.DISSent[FileRecordCounter] = NodeStateLast->DIS.Sent;
-             FileRecord.PacketLost[FileRecordCounter] = NodeStateLast->PacketLost;
-             FileRecord.numParents[FileRecordCounter] = NodeStateLast->numParents_Upward;
-             FileRecord.numPreferedParents[FileRecordCounter] = NodeStateLast->numPreferedParents_Upward;
-
-         }
-         if(NodeStateNew->DODAGsFormationTimeRecords_Upward!=0)
-         {
-             for (int i=0; i<NodesNumber;i++)
-             {
-                 if(i!=pManagerRPL->getIndexFromAddress(sinkAddress))
-                 {
-                     FileRecord.OtherFields[FileRecordCounter].JoiningTime[i] = SIMTIME_DBL(NodeStateLast->JoiningDODAGTime_Upward[i] - NodeStateLast->JoiningDODAGTime_Upward[pManagerRPL->getIndexFromAddress(sinkAddress)]);
-                     FileRecord.OtherFields[FileRecordCounter].NodesRank[i] = NodeStateLast->Rank[i];
-                 }
-                 FileRecord.OtherFields[FileRecordCounter].ConsumedPower[i] = NodeStateLast->PowerConsumption[i];
-             }
-         }
-         if (GlobalRepairTimer!=0)
-             NodesAddress[pManagerRPL->getIndexFromAddress(sinkAddress)]->DeleteScheduledNextGlobalRepair();
-         else
-             Datasaving(pManagerRPL->getIndexFromAddress(sinkAddress),DISEnable);
-     }
-
-     delete netwMsg;
-
-     if(GRT_Counter==NumberofIterations)
-     {
-         Datasaving(pManagerRPL->getIndexFromAddress(sinkAddress), DISEnable);
-         endSimulation();
-     }
-
-
-
-
+    if(!nodeStateList.at(vectorIndex).isJoin_Upward){
+        nodeStateList.at(vectorIndex).isJoin_Upward = true;
+        nodeStateList.at(vectorIndex).joiningTime_Upward = time;
+        EV << "Node" << vectorIndex+1 << "(Link Local Address: " << nodeStateList.at(vectorIndex).linklocalAddress << ", Global Address: " << nodeStateList.at(vectorIndex).globalAddress << " joins to DODAG, and has an Upward route to the root node." << endl;
+    }
+    if (isConverged){
+        EV << "This node is the last node that joined DODAG! DODAG formed!!" << endl;
+        saveStatistics();
+        if(numberOfGlogalRepaires == numberOfIterations){
+            endSimulation();
+        }else{
+            scheduleNewGlobalRepair();
+        }
+    }
 }
 
 //When the sink/root node receives a DAO message from a node, it calls this method to indicate that the node has a Downward route.
-void StatisticCollector::nodeJoinedDownnward(ip, time)
+void StatisticCollector::nodeJoinedDownnward(IPv6Address linkLocalAddress, simtime_t time)
 {
-
-    if (mop == Storing_Mode_of_Operation_with_no_multicast_support)
-        if (isConvergedDownward())
+    int vectorIndex = rplManager->getIndexFromLLAddress(linkLocalAddress);
+    if (!nodeStateList.at(vectorIndex).isJoin_Doward){
+        nodeStateList.at(vectorIndex).isJoin_Doward = true;
+        nodeStateList.at(vectorIndex).joiningTime_Downward = time;
+        EV << "Root has a Downward route to Node" << vectorIndex+1 << "(Link Local Address: " << nodeStateList.at(vectorIndex).linklocalAddress << ", Global Address: " << nodeStateList.at(vectorIndex).globalAddress << "." << endl;
+        if (isConverged){
+            EV << "This node is the last node that joined DODAG! DODAG formed!!" << endl;
             saveStatistics();
-
+            if(numberOfGlogalRepaires == numberOfIterations){
+                endSimulation();
+            }else{
+                scheduleNewGlobalRepair();
+            }
+        }
+    }
 }
 
 virtual void StatisticCollector::updateRank(IPv6Address ip, int rank)
@@ -147,108 +103,73 @@ virtual void StatisticCollector::updateRank(IPv6Address ip, int rank)
 }
 
 
-bool StatisticCollector::isConvergeedUpward()
+bool StatisticCollector::isConverged()
 {
     for (int i=0; i<nodeStateList.size(); i++){
-        if (!nodeStateList.at(i).isJoinUpward)
-            return false;
+        if (mop == No_Downward_Routes_maintained_by_RPL){
+            if (!nodeStateList.at(i).isJoinUpward)
+                return false;
+        }else{
+            if ((!nodeStateList.at(i).isJoinUpward) || (!nodeStateList.at(i).isJoinDownward))
+                return false;
+        }
     }
-    return true;
-}
 
-bool StatisticCollector::isConvergedDownward()
-{
-    for (int i=0; i<nodeStateList.size(); i++){
-        if (!nodeStateList.at(i).isJoinDownward)
-            return false;
-    }
+    numberOfDODAGformationNormal++;
+    EV << "Number of DODAGformationNormal is " << numberOfDODAGformationNormal << endl;
+
     return true;
 }
 
 void StatisticCollector::ScheduleNextGlobalRepair()
 {
 
-    for(int i=0;i<NodesNumber;i++)
-        IsNodeJoined[i] = false;
-    IsNodeJoined[pManagerRPL->getIndexFromAddress(sinkAddress)]=true;
-    VersionNember++;
-    Version=VersionNember;
-    dtsnInstance ++;
-    NodeCounter_Upward[Version]++;
-    EV << "NodeCounter_Upward[" << VersionNember << "] = " << NodeCounter_Upward[VersionNember] << endl;
-
-
-    DIOStatusNew = CreateNewVersionDIO();
-    DIOStatusLast->link = DIOStatusNew;
-    DIOStatusLast = DIOStatusNew;
-
-    Rank=1;
-    DODAGID=myLLNetwAddr;
-
-    Grounded=1;
-    DODAGJoinTimeNew_Upward = CreateNewVersionJoiningTime();
-    DODAGJoinTimeNew_Upward->TimetoJoinDODAG=simTime();
-    DODAGJoinTimeLast_Upward->link = DODAGJoinTimeNew_Upward;
-    DODAGJoinTimeLast_Upward = DODAGJoinTimeNew_Upward;
-
-    dodagSartTime=DODAGJoinTimeLast_Upward->TimetoJoinDODAG;
-    IsDODAGFormed_Upward= false;
-    NodeStateNew = new NodeState;
-    NodeStateNew = CreateNewNodeState(pManagerRPL->getIndexFromAddress(myLLNetwAddr),VersionNember,simTime(),Rank);
-    NodeStateNew->JoiningDODAGTime_Upward[pManagerRPL->getIndexFromAddress(myLLNetwAddr)] = DODAGJoinTimeLast_Upward->TimetoJoinDODAG;
-
-    if(NodeStateHeader==NULL)
-    {
-        NodeStateLast = NodeStateNew;
-        NodeStateHeader = NodeStateNew;
-    }
-    else
-    {
-        NodeStateLast ->Link = NodeStateNew;
-        NodeStateLast = NodeStateNew;
-    }
-
-    DIO_CurIntsizeNext=DIOIntMin;
-    DIO_StofCurIntNext=dodagSartTime;
-    DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
-    for (int i=0; i<NodesNumber;i++){
-        NodesAddress[i]->DeleteDIOTimer();
-        if (DAOEnable)
-            NodesAddress[i]->DeleteDAOTimers();
-    }
-
-    if (DISEnable)
-        for (int i=0; i<NodesNumber;i++)
-        {
-            NodesAddress[i]->SetDISParameters();
-            NodesAddress[i]->DISHandler();
-            NodesAddress[i]->scheduleNextDISTransmission();  //EXTRA
+    for (int i=0; i<nodeStateList.size(); i++){
+        if (i == sinkID){
+            nodeStateList.at(i).isJoinUpward = true;
+            nodeStateList.at(i).isJoinDownward = true;
+        }else{
+            nodeStateList.at(i).isJoinUpward = false;
+            nodeStateList.at(i).isJoinDownward = false;
         }
-    scheduleAt(simTime()+GlobalRepairTimer,GRepairTimer );
-    GRT_Counter++;
+        nodeStateList.at(i).joiningTimeUpward = SIMTIME_ZERO;
+        nodeStateList.at(i).joiningTimeDownward = SIMTIME_ZERO;
+        nodeStateList.at(i).hostModule->DeleteDIOTimer();
+        if (DISEnable){
+            nodeStateList.at(i).hostModule->getParentModule()->getSubmodule("icmpv6")->SetDISParameters();
+            nodeStateList.at(i).hostModule->getParentModule()->getSubmodule("icmpv6")->DISHandler();
+            nodeStateList.at(i).hostModule->getParentModule()->getSubmodule("icmpv6")->scheduleNextDISTransmission();
+        }
+        if (mop != No_Downward_Routes_maintained_by_RPL){
+            nodeStateList.at(i).hostModule->getParentModule()->getSubmodule("icmpv6")->DeleteDAOTimers();
+        }
+    }
+
+    convergenceTimeStart = simTime();
+    nodeJoinedUpward(sinkID, time);
+    RPLUpwardRouting->setParametersBeforeGlobalRepair(convergenceTimeStart);
+    nodeStateList.at(sinkID).hostModule->scheduleNextDIOTransmission();  // root node
+
+    scheduleAt(simTime() + globalRepairInterval, globalRepairTimer );
+    numberOfGlogbalRepaires++;
 }
 
-void StatisticCollector::DeleteScheduledNextGlobalRepair()
+void StatisticCollector::scheduleNewGlobalRepair()
 {
-    Enter_Method("DeleteScheduledNextGlobalRepair()");
 
-    cancelEvent(GRepairTimer);
-    scheduleAt(simTime(),GRepairTimer );
+    cancelEvent(globalRepairTimer);
+    scheduleAt(simTime(), globalRepairTimer );
 }
 
-void StatisticCollector::handleGlobalRepairTimer(cMessage* msg)
+void StatisticCollector::handleMessage(cMessage* msg)
 {
+    if (msg->getKind() == Global_REPAIR_TIMER)
+        scheduleNewGlobalRepair();
+    else{
+        EV << "Unknown self message is deleted." << endl;
+        delete msg;
+    }
 
-    //DeleteDIOTimer();  //EXTRA this method is called in the ScheduleNextGlobalRepair()
-    ScheduleNextGlobalRepair();
-   /* if (DISEnable)   //These are in the ScheduleNextGlobalRepair()
-        for (int i=0; i<NodesNumber;i++)
-            if(i != pManagerRPL->getIndexFromAddress(sinkAddress))
-            {
-                NodesAddress[i]->SetDISParameters();
-                NodesAddress[i]->scheduleNextDISTransmission();  // this is added to ScheduleNextGlobalRepair()
-            } */
-    scheduleNextDIOTransmission();  // root node must run it.
     return;
 
 }
@@ -365,7 +286,7 @@ void StatisticCollector::saveStatistics()
 }
 StatisticCollector::~StatisticCollector()
 {
-    cancelAndDelete(GRepairTimer);
+    cancelAndDelete(globalRepairTimer);
 
 
 }

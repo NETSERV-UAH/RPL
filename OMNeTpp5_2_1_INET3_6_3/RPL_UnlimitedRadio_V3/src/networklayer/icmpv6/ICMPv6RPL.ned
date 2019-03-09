@@ -52,6 +52,10 @@ simple ICMPv6RPL
          
  		//DIS Parameters       
         int DISheaderLength @unit(byte) = default(54 Byte);
+        double DISStartDelay = default(0);
+        double DISIntMin @unit(s) = default(0.03s);
+        int DISRedun= default(1);
+        int DISIntDoubl= default(0);
         
         
         string routingTableModule;  //The path to the RoutingTable module
