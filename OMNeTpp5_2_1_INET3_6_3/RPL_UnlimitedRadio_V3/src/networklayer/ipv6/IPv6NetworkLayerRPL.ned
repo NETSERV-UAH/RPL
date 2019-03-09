@@ -38,6 +38,8 @@ import rpl.src.networklayer.icmpv6.RPLUpwardRouting;
 //import rpl.src.networklayer.ipv6.IPv6RPL;
 import inet.networklayer.ipv6.IPv6ErrorHandling;
 import rpl.src.networklayer.icmpv6.IPv6NeighbourDiscoveryRPL;
+import rpl.src.networklayer.icmpv6.ParentTableRPL;
+
 
 
 
@@ -90,6 +92,12 @@ module IPv6NetworkLayerRPL like INetworkLayerRPL
             parameters:
                 @display("p=206,191");
         }
+        //EXTRA BEGIN
+        parentTableRPL: ParentTableRPL {
+            parameters:
+                @display("p=311,215");
+        }
+        //EXTRA END
         iptunneling: <default(firstAvailable("IPv6Tunneling"))> like IIPv6Tunneling {
             parameters:
                 @display("p=44,168");

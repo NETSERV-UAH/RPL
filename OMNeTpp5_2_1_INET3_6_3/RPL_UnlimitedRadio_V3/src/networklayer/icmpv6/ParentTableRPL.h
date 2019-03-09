@@ -87,32 +87,34 @@ class ParentTableRPL : public cSimpleModule
   // Table management
 
 protected:
-    ParentTableRPL::ParentTable *getTableForVid(unsigned int vid);
+    ParentTableRPL::ParentTable *getTableForVid(unsigned int vid) const;
 
     bool removeWorstParent(unsigned int vid);
 
-    bool willWorstRank(int rank, unsigned int vid);
+    bool willWorstRank(int rank, unsigned int vid) const;
 
 
   public:
 
-    int getNumberOfParents(unsigned int vid);
+    int getNumberOfParents(unsigned int vid) const;
 
-    bool updateTable(InterfaceEntry *ie, const IPv6Address& id, int rank, unsigned char dtsn, unsigned int vid);
+    bool updateTable(InterfaceEntry *ie, const IPv6Address &id, int rank, unsigned char dtsn, unsigned int vid);
 
-    const IPv6NeighbourCacheRPL::Neighbour *getParentNeighborCache(IPv6Address ip, unsigned int vid);
+    const IPv6NeighbourCacheRPL::Neighbour *getParentNeighborCache(const IPv6Address &ip, unsigned int vid) const;
 
-    const IPv6NeighbourCacheRPL::Neighbour *getPrefParentNeighborCache(unsigned int vid);
+    const IPv6NeighbourCacheRPL::Neighbour *getPrefParentNeighborCache(unsigned int vid) const;
 
-    bool isPrefParent(IPv6Address ipAddr, unsigned int vid);
+    IPv6Address getPrefParentIPAddress(unsigned int vid) const;
 
-    const int getPrefParentDTSN(unsigned int vid);
+    bool isPrefParent(const IPv6Address &ipAddr, unsigned int vid) const;
 
-    const int getParentRank(IPv6Address ipAddr, unsigned int vid);
+    int getPrefParentDTSN(unsigned int vid) const;
 
-    const int getRank(unsigned int vid);
+    int getParentRank(const IPv6Address &ipAddr, unsigned int vid) const;
 
-    void printState();
+    int getRank(unsigned int vid) const;
+
+    void printState() const;
 
     void clearTable();
 

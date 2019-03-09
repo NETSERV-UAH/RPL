@@ -114,6 +114,9 @@ public:
         , DISTimer(nullptr)
             {};
 
+    ~ICMPv6RPL();
+
+
 //EXTRA END
 
 public:
@@ -172,15 +175,23 @@ public:
 
     virtual void processIncommingNonStoringDAOMessage(ICMPv6Message *msg);
     virtual void processIncommingStoringDAOMessage(ICMPv6Message *icmpv6msg);
+  public:
     virtual void sendDAOMessage(IPv6Address prefix, simtime_t lifetime);
+  protected:
     virtual void scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime);
     virtual void scheduleDAOlifetimer(simtime_t lifeTime);
     virtual void DeleteDAOTimers();
+    virtual void handleDAOTimer(cMessage* msg);
+
 
 
     virtual void processIncommingDISMessage(ICMPv6Message *msg);
+  public:
     virtual void SetDISParameters();
     virtual void scheduleNextDISTransmission();
+    virtual void cancelAndDeleteDISTimer();
+
+  protected:
     virtual void handleDISTimer(cMessage* msg);
 
     //EXTRA END

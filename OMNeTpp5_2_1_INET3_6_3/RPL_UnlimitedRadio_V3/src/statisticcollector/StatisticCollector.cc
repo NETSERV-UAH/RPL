@@ -20,211 +20,16 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "src/statisticcollector/StatisticCollector.h"
-
 #include <vector>
+#include "src/statisticcollector/StatisticCollector.h"
 
 namespace rpl {
 using namespace inet;
 
-/*
-int AllDIOsSent=0,AllDIOsReceived=0,AllDIOsSuppressed=0,AvgAllDIOsSent=0;
-int AvgAllDIOsReceived=0,AvgAllDIOsSuppressed=0;
-
-int Version,NodesNumber,NumberofIterations,*NodeCounter_Upward=nullptr,GRT_Counter=0;  //initializing nullptr to deallocate memory
-
-static int NofDODAGformationNormal=0; //test11!!
-double AvgAllCollisionNarmal=0;
-FILE *JoiningTime_Upward,*Collosion,*DIOSent,*DISSent,*FormationTime_Upward,*PacketLost,*NodesRank,*ConsumedPower;
-FILE *IterationsNumber;
-FILE *preferedParent_Upward, *numberOfParents, *numTableEntris;
-
-RPLRouting **NodesAddress;
-
-bool* IsNodeJoined,GlobalRepairTimerReset=false,Flg=false,IsFirsttime=true;
-simtime_t DODAGSartTime,AvgDODAGFomationTime_Upward;
-
-struct SubDataStr
-{
-    float *JoiningTime,*ConsumedPower;
-    int *NodesRank;
-};
-
-struct DataStructure
-{
-    SubDataStr *OtherFields;
-    float *FormationTime_Upward;
-    int *Collosion,*DIOSent,*DISSent,*PacketLost;
-    int IterationsNumber;
-    //Variables for saving the number of table entries in each iteration
-    int *numPreferedParents = nullptr;
-    int *numParents = nullptr;
-
-}FileRecord;
-
-int FileRecordCounter=-1;
-
-void FileRecordMemoryAllocation(void)
-{
-    FileRecord.Collosion               = new int [NumberofIterations+10];
-    FileRecord.DIOSent                 = new int [NumberofIterations+10];
-    FileRecord.DISSent                 = new int [NumberofIterations+10];
-    FileRecord.PacketLost              = new int [NumberofIterations+10];
-    FileRecord.FormationTime_Upward    = new float [NumberofIterations+10];
-    //Variables for saving the number of table entries
-    FileRecord.numPreferedParents = new int[NumberofIterations+10];
-    FileRecord.numParents = new int[NumberofIterations+10];
-
-    FileRecord.OtherFields      = new SubDataStr [NumberofIterations+10];
-    for(int i =0;i<NumberofIterations+1;i++)
-    {
-        FileRecord.OtherFields[i].NodesRank     = new int [NodesNumber+10];
-        FileRecord.OtherFields[i].JoiningTime   = new float [NodesNumber+10];
-        FileRecord.OtherFields[i].ConsumedPower = new float [NodesNumber+10];
-    }
-}
-void FileRecordMemoryDeallocation(void)
-{
-    if (FileRecord.OtherFields){
-        for(int i =0;i<NumberofIterations+1;i++)
-        {
-            if (!FileRecord.OtherFields[i].NodesRank) delete [] FileRecord.OtherFields[i].NodesRank;
-            if (!FileRecord.OtherFields[i].JoiningTime) delete [] FileRecord.OtherFields[i].JoiningTime;
-            if (!FileRecord.OtherFields[i].ConsumedPower) delete [] FileRecord.OtherFields[i].ConsumedPower;
-        }
-        delete [] FileRecord.OtherFields;
-        FileRecord.OtherFields = nullptr;  //for mutual exclusion
-    }
-
-    if (!FileRecord.Collosion){
-        delete [] FileRecord.Collosion;
-        FileRecord.Collosion = nullptr;
-    }
-    if (!FileRecord.DIOSent){
-        delete [] FileRecord.DIOSent;
-        FileRecord.DIOSent = nullptr;
-    }
-    if (!FileRecord.DISSent){
-        delete [] FileRecord.DISSent;
-        FileRecord.DISSent = nullptr;
-    }
-    if (!FileRecord.PacketLost){
-        delete [] FileRecord.PacketLost;
-        FileRecord.PacketLost = nullptr;
-    }
-    if (!FileRecord.FormationTime_Upward){
-        delete [] FileRecord.FormationTime_Upward;
-        FileRecord.FormationTime_Upward = nullptr;
-    }
-
-    if (!FileRecord.numPreferedParents){
-        delete [] FileRecord.numPreferedParents;
-        FileRecord.numPreferedParents = nullptr;  //for mutual exclusion
-    }
-
-    if (!FileRecord.numParents){
-        delete [] FileRecord.numParents;
-        FileRecord.numParents = nullptr;  //for mutual exclusion
-    }
-
-}
-
-void Datasaving(int,bool);
-
-NodeState *CreateNewNodeState(int Index, int VersionNo, simtime_t Time, int NodeRank)
-{
-    NodeState* Temp;
-    Temp = new NodeState;
-
-    Temp->Rank = new int[NodesNumber];
-    Temp->JoiningDODAGTime_Upward = new simtime_t[NodesNumber];
-    Temp->PowerConsumption = new double[NodesNumber];
-
-    Temp->Version = VersionNo;
-    Temp->DIO.Sent=0;
-    Temp->DIO.Received = 0;
-    Temp->DIO.Suppressed = 0;
-    Temp->DIS.Sent=0;
-    Temp->DIS.Received = 0;
-    Temp->DIS.Suppressed = 0;
-    Temp->Collision = 0;
-    Temp->PacketLost = 0;
-    Temp->Rank[Index] = NodeRank;
-    Temp->JoiningDODAGTime_Upward[Index] = Time;
-    Temp->DODAGsFormationTimeRecords_Upward = 0;
-    Temp->PowerConsumption[Index] = 0;
-    Temp->numPreferedParents_Upward = 0;
-    Temp->numParents_Upward = 0;
-
-    Temp->Link=NULL;
-    return Temp;
-}
-
-char * SetPath(char* MainPath, const char* FileName, char* KValue)
-{
-    char *TempPath = new char[100];
-    strcpy(TempPath,MainPath);
-    strcat(TempPath,FileName);
-    strcat(TempPath,KValue);
-    strcat(TempPath,".txt");
-    return TempPath;
-}
-
-
-
-initialize
-GlobalRepairTimer = par ("GlobalRepairTimer");
-        double GlobalRepairTimer @unit(s) = default(10000 s);
-
-        NodesNumber=getParentModule()->getParentModule()->par( "numHosts" );  //NodesNumber=getParentModule()->getParentModule()->par( "numNodes" );
-        NumberofIterations = par ("NumberofIterations");
-        itoa(DIORedun, K_value, 10);
-        strcpy(MainPath,par("FilePath").stringValue());
-        NofParents = new int[NumberofIterations+2];
-        Parents = new ParentStructure* [NumberofIterations+2];
-        for( int i = 0 ; i < NumberofIterations+2 ; i++ )
-            Parents[i] = new ParentStructure [MaxNofParents];
-        if(IsFirsttime)
-        {
-            IsFirsttime = false;
-            NodesAddress = new RPLRouting* [NodesNumber] ;
-            IsNodeJoined = new bool[NodesNumber+1];
-            for(int i=0;i<NodesNumber+1;i++) IsNodeJoined[i] = false;
-            NodeCounter_Upward= new int[NumberofIterations+2];
-            for(int i=0;i<NumberofIterations+2;i++) NodeCounter_Upward[i] = 0;
-            FileRecordMemoryAllocation();
-        }
-
-        NodesAddress[pManagerRPL->getIndexFromAddress(myNetwAddr)] = this;
-init routing
-
-hasRoute = new bool[NumberofIterations+2];
-for(int i=0; i<NumberofIterations+2; i++)
-   hasRoute[i] = false;
-NofEntry=0;
-
-
-GRepairTimer = NULL;
-
-
-
-for(int i=0;i<NumberofIterations+2;i++)
-{
-    NofParents[i]=0;
-    for(int j=0;j<MaxNofParents;j++)
-    {
-        Parents[i][j].ParentId= IPv6Address::UNSPECIFIED_ADDRESS;
-        Parents[i][j].ParentRank=-1;
-    }
-}
-*/
-
 Define_Module(StatisticCollector);
 
-void StatisticCollector::initialize()
-{
-    mop = par("...");
-}
+    //if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward)) NodeStateLast->DIO.Received++;  //if simulation is not end ...
+
 void StatisticCollector::registNode(cModule *hostModule, IPv6Address linlklocalAddress, IPv6Address globalAddress)
 {
     int vectorIndex = rplManager->getIndexFromLLAddress(linlklocalAddress);
@@ -235,15 +40,18 @@ void StatisticCollector::registNode(cModule *hostModule, IPv6Address linlklocalA
     nodeStateList.at(vectorIndex).globalAddress = globalAddress;
 }
 
-void StatisticCollector::startStatistics(int version)
+void StatisticCollector::startStatistics(RPLMOP mop, IPv6Address sinkLLAddress, simtime_t time)
 {
-    this->version = version;
+    //this->version = version;
+    this->mop = mop;
 
     if(GlobalRepairTimer!=0)
     {
         GRepairTimer = new cMessage("GRepair-timer", Global_REPAIR_TIMER);
         scheduleAt(GlobalRepairTimer,GRepairTimer );
     }
+
+    setConvergenceTimeStart(sinkLLAddress, time);
 
 }
 
@@ -264,6 +72,63 @@ void StatisticCollector::nodeJoinedUpward(IPv6Address linkLocalAddress, simtime_
         if (isConvergedUpward())
             saveStatistics();
 
+
+
+    if((!DAOEnable) && (NodeCounter_Upward[Version]==NodesNumber) && (!IsDODAGFormed_Upward))
+     {
+         FileRecordCounter++;
+         host->bubble("I'm the last node that joined DODAG! DODAG formed!!");
+         IsDODAGFormed_Upward=true;
+         NodeStateLast->DODAGsFormationTimeRecords_Upward = netwMsg->getArrivalTime()-dodagSartTime;
+         AvgDODAGFomationTime_Upward+=NodeStateLast->DODAGsFormationTimeRecords_Upward;
+         AvgAllDIOsSent+=NodeStateLast->DIO.Sent;
+         AvgAllDIOsReceived+=NodeStateLast->DIO.Received;
+         AvgAllDIOsSuppressed+=NodeStateLast->DIO.Suppressed;
+         NodeCounter_Upward[Version]++;
+         EV << "NodeCounter_Upward[" << VersionNember << "] = " << NodeCounter_Upward[VersionNember] << endl;
+         NofDODAGformationNormal++;
+         EV << "Number of DODAGformationNormal is " << NofDODAGformationNormal << endl;
+
+         if(NodeStateLast->DODAGsFormationTimeRecords_Upward!=0)
+         {
+             FileRecord.Collosion[FileRecordCounter] = NodeStateLast->Collision;
+             FileRecord.FormationTime_Upward[FileRecordCounter] = SIMTIME_DBL(NodeStateLast->DODAGsFormationTimeRecords_Upward);
+             FileRecord.DIOSent[FileRecordCounter] = NodeStateLast->DIO.Sent;
+             FileRecord.DISSent[FileRecordCounter] = NodeStateLast->DIS.Sent;
+             FileRecord.PacketLost[FileRecordCounter] = NodeStateLast->PacketLost;
+             FileRecord.numParents[FileRecordCounter] = NodeStateLast->numParents_Upward;
+             FileRecord.numPreferedParents[FileRecordCounter] = NodeStateLast->numPreferedParents_Upward;
+
+         }
+         if(NodeStateNew->DODAGsFormationTimeRecords_Upward!=0)
+         {
+             for (int i=0; i<NodesNumber;i++)
+             {
+                 if(i!=pManagerRPL->getIndexFromAddress(sinkAddress))
+                 {
+                     FileRecord.OtherFields[FileRecordCounter].JoiningTime[i] = SIMTIME_DBL(NodeStateLast->JoiningDODAGTime_Upward[i] - NodeStateLast->JoiningDODAGTime_Upward[pManagerRPL->getIndexFromAddress(sinkAddress)]);
+                     FileRecord.OtherFields[FileRecordCounter].NodesRank[i] = NodeStateLast->Rank[i];
+                 }
+                 FileRecord.OtherFields[FileRecordCounter].ConsumedPower[i] = NodeStateLast->PowerConsumption[i];
+             }
+         }
+         if (GlobalRepairTimer!=0)
+             NodesAddress[pManagerRPL->getIndexFromAddress(sinkAddress)]->DeleteScheduledNextGlobalRepair();
+         else
+             Datasaving(pManagerRPL->getIndexFromAddress(sinkAddress),DISEnable);
+     }
+
+     delete netwMsg;
+
+     if(GRT_Counter==NumberofIterations)
+     {
+         Datasaving(pManagerRPL->getIndexFromAddress(sinkAddress), DISEnable);
+         endSimulation();
+     }
+
+
+
+
 }
 
 //When the sink/root node receives a DAO message from a node, it calls this method to indicate that the node has a Downward route.
@@ -275,6 +140,12 @@ void StatisticCollector::nodeJoinedDownnward(ip, time)
             saveStatistics();
 
 }
+
+virtual void StatisticCollector::updateRank(IPv6Address ip, int rank)
+{
+
+}
+
 
 bool StatisticCollector::isConvergeedUpward()
 {
@@ -292,6 +163,94 @@ bool StatisticCollector::isConvergedDownward()
             return false;
     }
     return true;
+}
+
+void StatisticCollector::ScheduleNextGlobalRepair()
+{
+
+    for(int i=0;i<NodesNumber;i++)
+        IsNodeJoined[i] = false;
+    IsNodeJoined[pManagerRPL->getIndexFromAddress(sinkAddress)]=true;
+    VersionNember++;
+    Version=VersionNember;
+    dtsnInstance ++;
+    NodeCounter_Upward[Version]++;
+    EV << "NodeCounter_Upward[" << VersionNember << "] = " << NodeCounter_Upward[VersionNember] << endl;
+
+
+    DIOStatusNew = CreateNewVersionDIO();
+    DIOStatusLast->link = DIOStatusNew;
+    DIOStatusLast = DIOStatusNew;
+
+    Rank=1;
+    DODAGID=myLLNetwAddr;
+
+    Grounded=1;
+    DODAGJoinTimeNew_Upward = CreateNewVersionJoiningTime();
+    DODAGJoinTimeNew_Upward->TimetoJoinDODAG=simTime();
+    DODAGJoinTimeLast_Upward->link = DODAGJoinTimeNew_Upward;
+    DODAGJoinTimeLast_Upward = DODAGJoinTimeNew_Upward;
+
+    dodagSartTime=DODAGJoinTimeLast_Upward->TimetoJoinDODAG;
+    IsDODAGFormed_Upward= false;
+    NodeStateNew = new NodeState;
+    NodeStateNew = CreateNewNodeState(pManagerRPL->getIndexFromAddress(myLLNetwAddr),VersionNember,simTime(),Rank);
+    NodeStateNew->JoiningDODAGTime_Upward[pManagerRPL->getIndexFromAddress(myLLNetwAddr)] = DODAGJoinTimeLast_Upward->TimetoJoinDODAG;
+
+    if(NodeStateHeader==NULL)
+    {
+        NodeStateLast = NodeStateNew;
+        NodeStateHeader = NodeStateNew;
+    }
+    else
+    {
+        NodeStateLast ->Link = NodeStateNew;
+        NodeStateLast = NodeStateNew;
+    }
+
+    DIO_CurIntsizeNext=DIOIntMin;
+    DIO_StofCurIntNext=dodagSartTime;
+    DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
+    for (int i=0; i<NodesNumber;i++){
+        NodesAddress[i]->DeleteDIOTimer();
+        if (DAOEnable)
+            NodesAddress[i]->DeleteDAOTimers();
+    }
+
+    if (DISEnable)
+        for (int i=0; i<NodesNumber;i++)
+        {
+            NodesAddress[i]->SetDISParameters();
+            NodesAddress[i]->DISHandler();
+            NodesAddress[i]->scheduleNextDISTransmission();  //EXTRA
+        }
+    scheduleAt(simTime()+GlobalRepairTimer,GRepairTimer );
+    GRT_Counter++;
+}
+
+void StatisticCollector::DeleteScheduledNextGlobalRepair()
+{
+    Enter_Method("DeleteScheduledNextGlobalRepair()");
+
+    cancelEvent(GRepairTimer);
+    scheduleAt(simTime(),GRepairTimer );
+}
+
+void StatisticCollector::handleGlobalRepairTimer(cMessage* msg)
+{
+
+    //DeleteDIOTimer();  //EXTRA this method is called in the ScheduleNextGlobalRepair()
+    ScheduleNextGlobalRepair();
+   /* if (DISEnable)   //These are in the ScheduleNextGlobalRepair()
+        for (int i=0; i<NodesNumber;i++)
+            if(i != pManagerRPL->getIndexFromAddress(sinkAddress))
+            {
+                NodesAddress[i]->SetDISParameters();
+                NodesAddress[i]->scheduleNextDISTransmission();  // this is added to ScheduleNextGlobalRepair()
+            } */
+    scheduleNextDIOTransmission();  // root node must run it.
+    return;
+
 }
 
 void StatisticCollector::saveStatistics()
@@ -406,6 +365,8 @@ void StatisticCollector::saveStatistics()
 }
 StatisticCollector::~StatisticCollector()
 {
+    cancelAndDelete(GRepairTimer);
+
 
 }
 

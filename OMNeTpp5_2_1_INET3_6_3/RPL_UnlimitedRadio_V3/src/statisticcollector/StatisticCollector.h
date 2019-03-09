@@ -35,6 +35,8 @@ using namespace inet;
 class StatisticCollector : public cSimpleModule
 {
 
+    //ICMPv6RPL *icmpv6RPL;
+
     struct NodeState{
         cModule *hostModule;
         IPv6Address linklocalAddress;
@@ -72,7 +74,7 @@ public:
     ~StatisticCollector();
 
 protected:
-    virtual void initialize() override;
+    virtual void setConvergenceTimeStart(IPv6Address sinkLLAddress, simtime_t time);
 
     virtual bool isConvergeedUpward();
 
@@ -80,16 +82,20 @@ protected:
 
     virtual void saveStatistics();
 
+    virtual void handleGlobalRepairTimer(cMessage* msg);
+
+
 public:
     virtual void registNode(cModule *hostModule, IPv6Address linlklocalAddress, IPv6Address globalAddress);
 
-    virtual void startStatistics(int version);
-
-    virtual void setConvergenceTimeStart(IPv6Address sinkLLAddress, simtime_t time);
+    virtual void startStatistics(RPLMOP mop);
 
     virtual void nodeJoinedUpward(IPv6Address linkLocalAddress, simtime_t time);
 
     virtual void nodeJoinedDownnward(IPv6Address ip, simtime_t time);
+
+    virtual void updateRank(IPv6Address ip, int rank);
+
 
 };
 

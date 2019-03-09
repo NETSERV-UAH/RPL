@@ -106,7 +106,14 @@ void ICMPv6RPL::initialize(int stage)
     //EXTRA BEGIN
     if(stage == INITSTAGE_NETWORK_LAYER_3){
         interfaceID = rplUpwardRouting->getInterfaceID();
+    }else if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
+        DISTimer = NULL;
+        DAOTimer = NULL;
+
+        DISIMaxLength=DISIntMin* int(pow (2.0,DISIntDoubl));
+
     }
+
     //EXTRA END
 }
 
@@ -271,6 +278,15 @@ void ICMPv6RPL::scheduleNextDISTransmission()
     DIS_c=0;
 }
 
+/*
+ * After being received a DIO message, the rplUpwardRouting module call this method to cancel the timer.
+ */
+void ICMPv6RPL::cancelAndDeleteDISTimer()
+{
+    cancelAndDelete(DISTimer);
+    DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
+}
+
 void ICMPv6RPL::handleDISTimer(cMessage* msg)
 {
 
@@ -337,6 +353,8 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
     int prefixLen = pkt->getPrefixLen();
     simtime_t lifeTime = pkt->getLifeTime();
     int flagK = pkt->getKFlag();
+    int flagD = pkt->getDFlag();
+
     IPv6Address senderIPAddress = ctrlInfoIn->getSrcAddr(); //Sender address
 
     EV << "Received message is ICMPv6 DAO message, DODAGID ID is " << pkt->getDODAGID() << ", sender address is " << ctrlInfoIn->getSrcAddr() << endl;
@@ -628,6 +646,31 @@ void ICMPv6RPL::DeleteDAOTimers()
 
 }
 
+
+void ICMPv6RPL::handleDAOTimer(cMessage* msg)
+{
+    if (mop != No_Downward_Routes_maintained_by_RPL){
+        if (parentTableRPL->getNumberOfParents(rplUpwardRouting->getVersion()) > 0)  //there is a prparent
+            sendDAOMessage(rplUpwardRouting->getMyGlobalNetwAddr(), defaultLifeTime);
+        else
+            EV<< "DAO can not be sent. There is no preferred parent." << endl;
+
+        if (DAOTimer){
+            cancelAndDelete(DAOTimer);
+        }
+
+        if (!DAOLifeTimer){
+            scheduleDAOlifetimer(defaultLifeTime);
+        }
+    }
+}
+
+ICMPv6RPL::~ICMPv6RPL()
+{
+    DeleteDAOTimers();
+    cancelAndDelete(DISTimer);
+
+}
 
 //EXTRA END
 

@@ -40,7 +40,9 @@
 
 #include <map>
 
+#include "src/statisticcollector/StatisticCollector.h"
 #include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
+//#include "src/networklayer/icmpv6/ICMPv6RPL.h" loop
 #include "inet/common/INETDefs.h"
 #include "src/networklayer/contract/RPLDefs.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
@@ -51,7 +53,8 @@
 #include "inet/common/lifecycle/NodeStatus.h"
 
 #include "src/simulationManager/managerRPL.h"
-#include "src/statisticcollector/StatisticCollector.h"
+#include "src/networklayer/icmpv6/ParentTableRPL.h"
+
 
 
 
@@ -65,6 +68,8 @@ using namespace inet;
  *
 **/
 
+class ICMPv6RPL;
+
 class RPLUpwardRouting : public cSimpleModule, public ILifecycle//, public INetfilter::IHook//, public cListener
 
 {
@@ -76,6 +81,9 @@ protected:
     managerRPL *pManagerRPL = nullptr;
     StatisticCollector *statistisCollector = nullptr;
     INetfilter *networkProtocol = nullptr;
+    ICMPv6RPL *icmpv6RPL;
+    ParentTableRPL *parentTableRPL;
+    InterfaceEntry *ie;
     int interfaceID;
 
     /** @brief Gate ids */
@@ -102,6 +110,8 @@ protected:
     RPLMOP mop; //Mode Of Operation
     bool DISEnable;
     bool refreshDAORoutes;
+    simtime_t DelayDAO;
+    simtime_t defaultLifeTime;
 
     double DIOIntMin;
     int DIORedun;
@@ -124,7 +134,7 @@ protected:
     cMessage* GRepairTimer;
     cMessage* DIOTimer;
 
-    bool IsJoined;
+    bool isJoinedFirstVersion;
     bool isNodeJoined;
 
     double GlobalRepairTimer;
@@ -134,13 +144,23 @@ protected:
     int Rank;
     simtime_t NodeStartTime;
     int VersionNember;
+    int Version;
     int Grounded;
     simtime_t TimetoSendDIO;
+    simtime_t dodagSartTime;
 
     int DIO_c;
     simtime_t DIO_CurIntsizeNow,DIO_CurIntsizeNext;
     simtime_t DIO_StofCurIntNow,DIO_StofCurIntNext;
     simtime_t DIO_EndofCurIntNow,DIO_EndofCurIntNext;
+
+    /** @brief Statistics */
+    //@{
+    int numSentDIO;
+    int numReceivedDIO;
+    int numSuppressedDIO;
+    //@}
+
 
 public:
     /** @brief Copy constructor is not allowed.
@@ -245,13 +265,13 @@ protected:
 public:
 
     //The methods which is called in the icmpv6 module
-    virtual bool isNodeJoinedToDAG();
-    virtual int getVersion();
-    virtual IPv6Address getDODAGID();
-    virtual IPv6Address getMyLLNetwAddr();
-    virtual IPv6Address getMyGlobalNetwAddr();
-    virtual double getDODAGSartTime();
-    virtual int getInterfaceID();
+    virtual bool isNodeJoinedToDAG() const;
+    virtual int getVersion() const;
+    virtual IPv6Address getDODAGID() const;
+    virtual IPv6Address getMyLLNetwAddr() const;
+    virtual IPv6Address getMyGlobalNetwAddr() const;
+    virtual simtime_t getDODAGSartTime() const;
+    virtual int getInterfaceID() const;
 
 };
 

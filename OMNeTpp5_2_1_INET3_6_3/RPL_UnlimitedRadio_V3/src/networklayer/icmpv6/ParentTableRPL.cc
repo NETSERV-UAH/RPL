@@ -56,10 +56,15 @@ void ParentTableRPL::handleMessage(cMessage *)
     throw cRuntimeError("ParentTableRPL::handleMessage: This module doesn't process messages");
 }
 
-int ParentTableRPL::getNumberOfParents(unsigned int vid)
+int ParentTableRPL::getNumberOfParents(unsigned int vid) const
 {
-    return versionParentTable[vid]->size();
+    //return versionParentTable[vid]->size();
 
+    const ParentTable *table = getTableForVid(vid);
+    if (table)
+        return table->size();
+
+    return 0;
 }
 
 /*
@@ -68,7 +73,7 @@ int ParentTableRPL::getNumberOfParents(unsigned int vid)
  * or nullptr pointer if it is not found
  */
 
-ParentTableRPL::ParentTable *ParentTableRPL::getTableForVid(unsigned int vid)
+ParentTableRPL::ParentTable *ParentTableRPL::getTableForVid(unsigned int vid) const
 {
     if (vid == 1)
         return parentTable;
@@ -156,9 +161,9 @@ bool ParentTableRPL::removeWorstParent(unsigned int vid)
     return true;
 }
 
-bool ParentTableRPL::willWorstRank(int rank, unsigned int vid)
+bool ParentTableRPL::willWorstRank(int rank, unsigned int vid) const
 {
-    ParentTable *table = getTableForVid(vid);
+    const ParentTable *table = getTableForVid(vid);
     // Version ID vid does not exist, and table is empty
     if (table == nullptr)
         return false;
@@ -167,7 +172,7 @@ bool ParentTableRPL::willWorstRank(int rank, unsigned int vid)
         return false;
 
     for (auto iter = table->begin(); iter != table->end(); iter++ ) {
-        ParentEntry& entry = iter->second;
+        const ParentEntry& entry = iter->second;
         if (entry.rank > rank) {
             return false;
         }
@@ -178,9 +183,9 @@ bool ParentTableRPL::willWorstRank(int rank, unsigned int vid)
 /* If the ipAddr has an entry in the parent table, it returns a pointer to the Neighbour.
  * Otherwise, it returns nullptr.
  */
-const IPv6NeighbourCacheRPL::Neighbour *ParentTableRPL::getParentNeighborCache(IPv6Address ipAddr, unsigned int vid)
+const IPv6NeighbourCacheRPL::Neighbour *ParentTableRPL::getParentNeighborCache(const IPv6Address &ipAddr, unsigned int vid) const
 {
-    ParentTable *table = getTableForVid(vid);
+    const ParentTable *table = getTableForVid(vid);
     // Version ID vid does not exist
     if (table == nullptr)
         return nullptr;
@@ -193,16 +198,16 @@ const IPv6NeighbourCacheRPL::Neighbour *ParentTableRPL::getParentNeighborCache(I
     return nullptr;
 }
 
-const IPv6NeighbourCacheRPL::Neighbour *ParentTableRPL::getPrefParentNeighborCache(unsigned int vid)
+const IPv6NeighbourCacheRPL::Neighbour *ParentTableRPL::getPrefParentNeighborCache(unsigned int vid) const
 {
-    ParentTable *table = getTableForVid(vid);
+    const ParentTable *table = getTableForVid(vid);
     // Version ID vid does not exist
     if (table == nullptr)
         return nullptr;
 
     auto bestRank = table->begin();
     for (auto iter = table->begin(); iter != table->end(); iter++ ) {
-        ParentEntry& entry = iter->second;
+        const ParentEntry &entry = iter->second;
         if (entry.rank < bestRank->second.rank) {
             bestRank = iter;
         }
@@ -210,7 +215,7 @@ const IPv6NeighbourCacheRPL::Neighbour *ParentTableRPL::getPrefParentNeighborCac
     return bestRank->first;
 }
 
-bool ParentTableRPL::isPrefParent(IPv6Address ipAddr, unsigned int vid)
+bool ParentTableRPL::isPrefParent(const IPv6Address &ipAddr, unsigned int vid) const
 {
     const IPv6NeighbourCacheRPL::Neighbour *neighbor = getPrefParentNeighborCache(vid);
     if (neighbor)
@@ -218,16 +223,27 @@ bool ParentTableRPL::isPrefParent(IPv6Address ipAddr, unsigned int vid)
     return false;
 }
 
-const int ParentTableRPL::getPrefParentDTSN(unsigned int vid)
+IPv6Address ParentTableRPL::getPrefParentIPAddress(unsigned int vid) const
 {
-    ParentTable *table = getTableForVid(vid);
+    const IPv6NeighbourCacheRPL::Neighbour *neighbor = getPrefParentNeighborCache(vid);
+
+    if (neighbor)
+        return neighbor->nceKey->address;
+
+    return IPv6Address::UNSPECIFIED_ADDRESS;
+
+}
+
+int ParentTableRPL::getPrefParentDTSN(unsigned int vid) const
+{
+    const ParentTable *table = getTableForVid(vid);
     // Version ID vid does not exist
     if (table == nullptr)
         throw cRuntimeError("ParentTableRPL::getRank: This Version has not any parent!");
 
     auto bestRank = table->begin();
     for (auto iter = table->begin(); iter != table->end(); iter++ ) {
-        ParentEntry& entry = iter->second;
+        const ParentEntry &entry = iter->second;
         if (entry.rank < bestRank->second.rank) {
             bestRank = iter;
         }
@@ -240,9 +256,9 @@ const int ParentTableRPL::getPrefParentDTSN(unsigned int vid)
  * Before using this method, we should use the method of
  * getParentNeighborCache() to check if ipAddr is a a parent or not.
  */
-const int ParentTableRPL::getParentRank(IPv6Address ipAddr, unsigned int vid)
+int ParentTableRPL::getParentRank(const IPv6Address &ipAddr, unsigned int vid) const
 {
-    ParentTable *table = getTableForVid(vid);
+    const ParentTable *table = getTableForVid(vid);
     // Version ID vid does not exist
     if (table == nullptr)
         throw cRuntimeError("ParentTableRPL::getParentRank: This Version has not any parent!");
@@ -258,16 +274,16 @@ const int ParentTableRPL::getParentRank(IPv6Address ipAddr, unsigned int vid)
 /*
  * Returne the DODAG rank (the best rank)
  */
-const int ParentTableRPL::getRank(unsigned int vid)
+int ParentTableRPL::getRank(unsigned int vid) const
 {
-    ParentTable *table = getTableForVid(vid);
+    const ParentTable *table = getTableForVid(vid);
     // Version ID vid does not exist
     if (table == nullptr)
         throw cRuntimeError("ParentTableRPL::getRank: This Version has not any parent!");
 
     auto bestRank = table->begin();
     for (auto iter = table->begin(); iter != table->end(); iter++ ) {
-        ParentEntry& entry = iter->second;
+        const ParentEntry &entry = iter->second;
         if (entry.rank < bestRank->second.rank) {
             bestRank = iter;
         }
@@ -279,7 +295,7 @@ const int ParentTableRPL::getRank(unsigned int vid)
  * Prints verbose information
  */
 
-void ParentTableRPL::printState()
+void ParentTableRPL::printState() const
 {
     EV << endl << "Parent Table" << endl;
     EV << "Version    IP Address    Rank    DTSN" << endl;
