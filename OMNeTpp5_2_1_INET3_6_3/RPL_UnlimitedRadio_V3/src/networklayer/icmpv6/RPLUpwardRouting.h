@@ -52,7 +52,7 @@
 #include "inet/networklayer/contract/INetfilter.h"
 #include "inet/common/lifecycle/NodeStatus.h"
 
-#include "src/simulationManager/managerRPL.h"
+#include "src/simulationManager/ManagerRPL.h"
 #include "src/networklayer/icmpv6/ParentTableRPL.h"
 
 
@@ -78,7 +78,7 @@ protected:
     // environment
     IRoutingTable *routingTable = nullptr;
     IInterfaceTable *interfaceTable = nullptr;
-    managerRPL *pManagerRPL = nullptr;
+    ManagerRPL *pManagerRPL = nullptr;
     StatisticCollector *statisticCollector = nullptr;
     INetfilter *networkProtocol = nullptr;
     ICMPv6RPL *icmpv6RPL;

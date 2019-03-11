@@ -40,7 +40,7 @@ import inet.power.contract.IEnergyStorage;
 import inet.node.inet.INetworkNode; //EXTRA
 import inet.linklayer.ieee802154.Ieee802154NarrowbandNic; //EXTRA
 import rpl.src.networklayer.ipv6.IPv6NetworkLayerRPL; //EXTRA
-import rpl.src.networklayer.contract.INetworkLayerRPL;
+import inet.networklayer.contract.INetworkLayer;
 
 
 //
@@ -107,7 +107,7 @@ module NodeBaseNew like INetworkNode  //EXTRA
                 @display("p=53,200");
         }
         // network layer
-        networkLayer: <networkLayerType> like INetworkLayerRPL {
+        networkLayer: <networkLayerType> like INetworkLayer {
             parameters:
                 @display("p=329,287;q=queue");
         }

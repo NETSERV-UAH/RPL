@@ -24,7 +24,7 @@ package rpl.simulations.article;
 import inet.networklayer.configurator.ipv6.FlatNetworkConfigurator6;
 //import inet.physicallayer.ieee802154.packetlevel.Ieee802154NarrowbandScalarRadioMedium;
 import rpl.src.physicallayer.simpleidealradio.SimpleIdealRadioMedium;
-import rpl.src.simulationManager.managerRPL;
+import rpl.src.simulationManager.ManagerRPL;
 import rpl.src.statisticcollector.StatisticCollector;
 
 import rpl.src.node.rpl.RPLRouter;
@@ -43,7 +43,7 @@ network Net802154
             parameters:
                 @display("p=100,20");
         }
-        managerRPL: managerRPL {
+        managerRPL: ManagerRPL {
             parameters:
                 @display("p=100,30");
         }

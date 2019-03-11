@@ -27,7 +27,7 @@
 #include "src/networklayer/contract/RPLDefs.h"
 #include "inet/networklayer/contract/ipv6/IPv6AddressType.h"
 //#include "src/networklayer/icmpv6/RPLUpwardRouting.h"
-#include "src/simulationManager/managerRPL.h"
+#include "src/simulationManager/ManagerRPL.h"
 #include "src/networklayer/icmpv6/ParentTableRPL.h"
 #include "inet/networklayer/contract/IRoutingTable.h"
 
@@ -47,7 +47,7 @@ class StatisticCollector : public cSimpleModule
 
 
     //ICMPv6RPL *icmpv6RPL;
-    managerRPL *rplManager;
+    ManagerRPL *rplManager;
 
     struct NodeState{
         cModule *host;

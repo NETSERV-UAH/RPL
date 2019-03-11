@@ -38,7 +38,7 @@
 #include "src/networklayer/icmpv6/IPv6NeighbourDiscoveryRPL.h"
 #include "src/networklayer/icmpv6/ICMPv6RPL.h"
 //#include "src/networklayer/icmpv6/ICMPv6MessageRPL_m.h"
-#include "src/simulationManager/managerRPL.h"
+#include "src/simulationManager/ManagerRPL.h"
 
 
 
@@ -290,7 +290,7 @@ IPv6NeighbourCacheRPL::Neighbour *IPv6NeighbourDiscoveryRPL::processIncomingRPLM
     }
 
     //Since controlInfo doesn't hold the MAC address, we used RPL manager to hold the MAC address.
-    managerRPL *pManagerRPL = check_and_cast<managerRPL *>(getSimulation()->getSystemModule()->getSubmodule("managerRPL"));
+    ManagerRPL *pManagerRPL = check_and_cast<ManagerRPL *>(getSimulation()->getSystemModule()->getSubmodule("managerRPL"));
     MACAddress srcMacAddress = pManagerRPL->getMacAddressFromIPAddress(srcIPv6Addr);
     //MACAddress srcMacAddress = ctrlInfo->getSourceAddress().toMAC();
 

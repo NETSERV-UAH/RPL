@@ -26,7 +26,7 @@
 package rpl.src.networklayer.ipv6;
 
 import inet.networklayer.contract.IIPv6Tunneling;
-import rpl.src.networklayer.contract.INetworkLayerRPL;
+import inet.networklayer.contract.INetworkLayer;
 import inet.networklayer.contract.IxMIPv6Support;
 //import inet.networklayer.icmpv6.IPv6NeighbourDiscovery;
 //import inet.networklayer.icmpv6.ICMPv6; 
@@ -50,7 +50,7 @@ import rpl.src.networklayer.icmpv6.ParentTableRPL;
 // The module has ports to connect to a higher layer (TCP, UDP) and
 // several network interfaces.
 //
-module IPv6NetworkLayerRPL like INetworkLayerRPL
+module IPv6NetworkLayerRPL like INetworkLayer
 {
     parameters:
         bool xMIPv6Support = default(false);

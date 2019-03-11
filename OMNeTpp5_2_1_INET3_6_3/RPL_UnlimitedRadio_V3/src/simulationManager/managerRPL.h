@@ -50,7 +50,7 @@ using namespace inet;
 
 class RPLRouting;
 
-class managerRPL : public cSimpleModule
+class ManagerRPL : public cSimpleModule
 {
     //friend class RPLRouting;
 

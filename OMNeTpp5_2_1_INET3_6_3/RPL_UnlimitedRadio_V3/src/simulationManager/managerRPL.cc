@@ -35,7 +35,7 @@
 // 
 
 #include <algorithm>
-#include "src/simulationManager/managerRPL.h"
+#include "src/simulationManager/ManagerRPL.h"
 
 #include "inet/networklayer/contract/IInterfaceTable.h"
 #include "inet/networklayer/common/L3AddressResolver.h"
@@ -45,21 +45,21 @@
 namespace rpl {
 using namespace inet;
 
-Define_Module(managerRPL);
+Define_Module(ManagerRPL);
 
-void managerRPL::initialize(int stage)
+void ManagerRPL::initialize(int stage)
 {
-    EV << "->managerRPL::initialize()" << endl;
+    EV << "->ManagerRPL::initialize()" << endl;
     if(stage == INITSTAGE_NETWORK_LAYER_3) // for preparing IP addresses of interface table
     {
         extractTopology();
     }
-    EV << "<-managerRPL::initialize()" << endl;
+    EV << "<-ManagerRPL::initialize()" << endl;
 }
 
-void managerRPL::extractTopology()
+void ManagerRPL::extractTopology()
 {
-    EV << "->managerRPL::extractTopology()" << endl;
+    EV << "->ManagerRPL::extractTopology()" << endl;
 
     // extract topology
     cTopology topo("topo");
@@ -114,24 +114,24 @@ void managerRPL::extractTopology()
     unsigned int n = wSNInfo.size();
     EV << "  and " << n << "(active)/" << nWSN << "(total) of those nodes are WSN node" << endl;
 
-    EV << "<-managerRPL::extractTopology()" << endl;
+    EV << "<-ManagerRPL::extractTopology()" << endl;
 }
 
 
-void managerRPL::handleMessage(cMessage *msg)
+void ManagerRPL::handleMessage(cMessage *msg)
 {
-    EV << "->managerRPL::handleMessage()" << endl;
+    EV << "->ManagerRPL::handleMessage()" << endl;
 
     throw cRuntimeError("This module doesn't handle message!");
 
-    EV << "<-managerRPL::handleMessage()" << endl;
+    EV << "<-ManagerRPL::handleMessage()" << endl;
 }
 
-int managerRPL::getIndexFromLLAddress(IPv6Address address)
+int ManagerRPL::getIndexFromLLAddress(IPv6Address address)
 {
-    EV << "->managerRPL::getIndexFromAddress()" << endl;
+    EV << "->ManagerRPL::getIndexFromAddress()" << endl;
 
-    Enter_Method("managerRPL::getIndexFromAddress()");
+    Enter_Method("ManagerRPL::getIndexFromAddress()");
     EV << "Vector size is " << wSNInfo.size() << endl;
 
     for (int i=0; i<wSNInfo.size(); i++){
@@ -140,17 +140,17 @@ int managerRPL::getIndexFromLLAddress(IPv6Address address)
     }
 
     //return -1;
-    throw cRuntimeError("managerRPL::getIndexFromAddress(): Address not found!");
+    throw cRuntimeError("ManagerRPL::getIndexFromAddress(): Address not found!");
 
 
-    EV << "<-managerRPL::getIndexFromAddress()" << endl;
+    EV << "<-ManagerRPL::getIndexFromAddress()" << endl;
 }
 
-MACAddress managerRPL::getMacAddressFromIPAddress(IPv6Address address)
+MACAddress ManagerRPL::getMacAddressFromIPAddress(IPv6Address address)
 {
-    EV << "->managerRPL::getMacAddressFromIPAddress()" << endl;
+    EV << "->ManagerRPL::getMacAddressFromIPAddress()" << endl;
 
-    Enter_Method("managerRPL::getMacAddressFromIPAddress()");
+    Enter_Method("ManagerRPL::getMacAddressFromIPAddress()");
 
     for (int i=0; i<wSNInfo.size(); i++){
         if (wSNInfo.at(i).ipAddress == address)
@@ -158,18 +158,18 @@ MACAddress managerRPL::getMacAddressFromIPAddress(IPv6Address address)
     }
 
     //return -1;
-    throw cRuntimeError("managerRPL::getMacAddressFromIPAddress(): Address not found!");
+    throw cRuntimeError("ManagerRPL::getMacAddressFromIPAddress(): Address not found!");
 
 
-    EV << "<-managerRPL::getIndexFromAddress()" << endl;
+    EV << "<-ManagerRPL::getIndexFromAddress()" << endl;
 }
 
 
-IPv6Address managerRPL::getAddressFromIndex(int index)
+IPv6Address ManagerRPL::getAddressFromIndex(int index)
 {
-    EV << "->managerRPL::getAddressFromIndex()" << endl;
+    EV << "->ManagerRPL::getAddressFromIndex()" << endl;
 
-    Enter_Method("managerRPL::getAddressFromIndex()");
+    Enter_Method("ManagerRPL::getAddressFromIndex()");
 
 
     //if ((index >= 0) && (index < wSNInfo.size()))
@@ -177,14 +177,14 @@ IPv6Address managerRPL::getAddressFromIndex(int index)
 
     //return IPv6Address::UNSPECIFIED_ADDRESS;
 
-    EV << "<-managerRPL::getAddressFromIndex()" << endl;
+    EV << "<-ManagerRPL::getAddressFromIndex()" << endl;
 }
 
-std::string managerRPL::getNameFromAddress(IPv6Address address)
+std::string ManagerRPL::getNameFromAddress(IPv6Address address)
 {
-    EV << "->managerRPL::getNameFromAddress()" << endl;
+    EV << "->ManagerRPL::getNameFromAddress()" << endl;
 
-    Enter_Method("managerRPL::getNameFromAddress()");
+    Enter_Method("ManagerRPL::getNameFromAddress()");
 
     for (int i=0; i<wSNInfo.size(); i++){
         if (wSNInfo.at(i).ipAddress == address)
@@ -193,27 +193,27 @@ std::string managerRPL::getNameFromAddress(IPv6Address address)
 
     return "Wrong Name";
 
-    EV << "<-managerRPL::getNameFromAddress()" << endl;
+    EV << "<-ManagerRPL::getNameFromAddress()" << endl;
 }
 
-std::string managerRPL::getNameFromIndex(int index)
+std::string ManagerRPL::getNameFromIndex(int index)
 {
-    EV << "->managerRPL::getNameFromIndex()" << endl;
+    EV << "->ManagerRPL::getNameFromIndex()" << endl;
 
-    Enter_Method("managerRPL::getNameFromIndex()");
+    Enter_Method("ManagerRPL::getNameFromIndex()");
 
 
     //if ((i > 0) && (i < wSNInfo.size()))
         return wSNInfo.at(index).fullName;
 
     //return "Wrong Index";
-    EV << "<-managerRPL::getNameFromIndex()" << endl;
+    EV << "<-ManagerRPL::getNameFromIndex()" << endl;
 
 }
 
-void managerRPL::finish()
+void ManagerRPL::finish()
 {
-    EV << "->managerRPL::finish()" << endl;
+    EV << "->ManagerRPL::finish()" << endl;
 
     std::string topoAddressInfo;
     FILE *destfp;
@@ -226,7 +226,7 @@ void managerRPL::finish()
     }
     fclose(destfp);
 
-    EV << "<-managerRPL::finish()" << endl;
+    EV << "<-ManagerRPL::finish()" << endl;
 }
 
 

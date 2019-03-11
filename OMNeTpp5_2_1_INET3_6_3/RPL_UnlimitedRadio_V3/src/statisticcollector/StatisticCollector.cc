@@ -36,7 +36,7 @@ Define_Module(StatisticCollector);
 void StatisticCollector::initialize(int stage)
 {
     if (stage == INITSTAGE_LOCAL){
-        rplManager = check_and_cast<managerRPL *>(getSimulation()->getSystemModule()->getSubmodule("managerRPL"));
+        rplManager = check_and_cast<ManagerRPL *>(getSimulation()->getSystemModule()->getSubmodule("managerRPL"));
 
         numberOfIterations = par("numberOfIterations");
     }

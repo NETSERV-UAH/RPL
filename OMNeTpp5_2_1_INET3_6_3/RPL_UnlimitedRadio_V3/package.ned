@@ -1,5 +1,5 @@
 package rpl;
 
-@namespace(rpl);
+//@namespace(rpl);
 
 @license(LGPL);

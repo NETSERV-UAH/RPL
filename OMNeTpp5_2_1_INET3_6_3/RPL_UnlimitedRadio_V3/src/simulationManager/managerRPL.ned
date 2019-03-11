@@ -36,10 +36,10 @@
 
 package rpl.src.simulationManager;
 
-simple managerRPL
+simple ManagerRPL
 {
     parameters:
-        @class(rpl::managerRPL);
+        @class(rpl::ManagerRPL);
         @display("i=block/cogwheel_s");
         @labels(node);
 }
