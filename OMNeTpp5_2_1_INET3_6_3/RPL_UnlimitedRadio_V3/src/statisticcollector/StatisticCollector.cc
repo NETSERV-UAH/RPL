@@ -22,6 +22,9 @@
 
 #include <vector>
 #include "src/statisticcollector/StatisticCollector.h"
+#include "src/networklayer/icmpv6/RPLUpwardRouting.h"
+#include "src/networklayer/icmpv6/ICMPv6RPL.h"
+
 
 namespace rpl {
 using namespace inet;
@@ -30,12 +33,25 @@ Define_Module(StatisticCollector);
 
     //if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward)) NodeStateLast->DIO.Received++;  //if simulation is not end ...
 
-void StatisticCollector::registNode(cModule *hostModule, IPv6Address linlklocalAddress, IPv6Address globalAddress)
+void StatisticCollector::initialize(int stage)
+{
+    if (stage == INITSTAGE_LOCAL){
+        rplManager = check_and_cast<managerRPL *>(getSimulation()->getSystemModule()->getSubmodule("managerRPL"));
+
+        numberOfIterations = par("numberOfIterations");
+    }
+
+}
+
+void StatisticCollector::registNode(cModule *host, RPLUpwardRouting *pRPLUpwardRouting, ParentTableRPL *parentTableRPL, IRoutingTable *routingTable, IPv6Address linlklocalAddress, IPv6Address globalAddress)
 {
     int vectorIndex = rplManager->getIndexFromLLAddress(linlklocalAddress);
     if(nodeStateList.size() < vectorIndex + 1)
         nodeStateList.resize(vectorIndex + 1);
-    nodeStateList.at(vectorIndex).hostModule = hostModule;
+    nodeStateList.at(vectorIndex).host = host;
+    nodeStateList.at(vectorIndex).pRPLUpwardRouting = pRPLUpwardRouting;
+    nodeStateList.at(vectorIndex).parentTableRPL = parentTableRPL;
+    nodeStateList.at(vectorIndex).routingTable = routingTable;
     nodeStateList.at(vectorIndex).linklocalAddress = linlklocalAddress;
     nodeStateList.at(vectorIndex).globalAddress = globalAddress;
 }
@@ -58,15 +74,14 @@ void StatisticCollector::startStatistics(RPLMOP mop, IPv6Address sinkLLAddress, 
 }
 
 //When a node receives a DIO message, it calls this method to indicate that it joined to the DAG and has a Upward route
-void StatisticCollector::nodeJoinedUpward(IPv6Address linkLocalAddress, simtime_t time)
+void StatisticCollector::nodeJoinedUpward(int nodeID, simtime_t time)
 {
-    int vectorIndex = rplManager->getIndexFromLLAddress(linkLocalAddress);
-    if(!nodeStateList.at(vectorIndex).isJoin_Upward){
-        nodeStateList.at(vectorIndex).isJoin_Upward = true;
-        nodeStateList.at(vectorIndex).joiningTime_Upward = time;
-        EV << "Node" << vectorIndex+1 << "(Link Local Address: " << nodeStateList.at(vectorIndex).linklocalAddress << ", Global Address: " << nodeStateList.at(vectorIndex).globalAddress << " joins to DODAG, and has an Upward route to the root node." << endl;
+    if(!nodeStateList.at(nodeID).isJoinUpward){
+        nodeStateList.at(nodeID).isJoinUpward = true;
+        nodeStateList.at(nodeID).joiningTimeUpward = time;
+        EV << "Node" << nodeID + 1 << "(Link Local Address: " << nodeStateList.at(nodeID).linklocalAddress << ", Global Address: " << nodeStateList.at(nodeID).globalAddress << " joins to DODAG, and has an Upward route to the root node." << endl;
     }
-    if (isConverged){
+    if (isConverged()){
         EV << "This node is the last node that joined DODAG! DODAG formed!!" << endl;
         saveStatistics();
         if(numberOfGlogalRepaires == numberOfIterations){
@@ -77,15 +92,21 @@ void StatisticCollector::nodeJoinedUpward(IPv6Address linkLocalAddress, simtime_
     }
 }
 
+void StatisticCollector::nodeJoinedUpward(IPv6Address linkLocalAddress, simtime_t time)
+{
+    int vectorIndex = rplManager->getIndexFromLLAddress(linkLocalAddress);
+    nodeJoinedUpward(vectorIndex, time);
+}
+
 //When the sink/root node receives a DAO message from a node, it calls this method to indicate that the node has a Downward route.
 void StatisticCollector::nodeJoinedDownnward(IPv6Address linkLocalAddress, simtime_t time)
 {
     int vectorIndex = rplManager->getIndexFromLLAddress(linkLocalAddress);
-    if (!nodeStateList.at(vectorIndex).isJoin_Doward){
-        nodeStateList.at(vectorIndex).isJoin_Doward = true;
-        nodeStateList.at(vectorIndex).joiningTime_Downward = time;
+    if (!nodeStateList.at(vectorIndex).isJoinDownward){
+        nodeStateList.at(vectorIndex).isJoinDownward = true;
+        nodeStateList.at(vectorIndex).joiningTimeDownward = time;
         EV << "Root has a Downward route to Node" << vectorIndex+1 << "(Link Local Address: " << nodeStateList.at(vectorIndex).linklocalAddress << ", Global Address: " << nodeStateList.at(vectorIndex).globalAddress << "." << endl;
-        if (isConverged){
+        if (isConverged()){
             EV << "This node is the last node that joined DODAG! DODAG formed!!" << endl;
             saveStatistics();
             if(numberOfGlogalRepaires == numberOfIterations){
@@ -97,7 +118,7 @@ void StatisticCollector::nodeJoinedDownnward(IPv6Address linkLocalAddress, simti
     }
 }
 
-virtual void StatisticCollector::updateRank(IPv6Address ip, int rank)
+void StatisticCollector::updateRank(IPv6Address ip, int rank)
 {
 
 }
@@ -134,24 +155,28 @@ void StatisticCollector::ScheduleNextGlobalRepair()
         }
         nodeStateList.at(i).joiningTimeUpward = SIMTIME_ZERO;
         nodeStateList.at(i).joiningTimeDownward = SIMTIME_ZERO;
-        nodeStateList.at(i).hostModule->DeleteDIOTimer();
-        if (DISEnable){
-            nodeStateList.at(i).hostModule->getParentModule()->getSubmodule("icmpv6")->SetDISParameters();
-            nodeStateList.at(i).hostModule->getParentModule()->getSubmodule("icmpv6")->DISHandler();
-            nodeStateList.at(i).hostModule->getParentModule()->getSubmodule("icmpv6")->scheduleNextDISTransmission();
+        nodeStateList.at(i).pRPLUpwardRouting->DeleteDIOTimer();
+        if (nodeStateList.at(i).pRPLUpwardRouting->par("DISEnable").boolValue()){
+            check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->SetDISParameters();
+            //check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->DISHandler();
+            check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->scheduleNextDISTransmission();
         }
         if (mop != No_Downward_Routes_maintained_by_RPL){
-            nodeStateList.at(i).hostModule->getParentModule()->getSubmodule("icmpv6")->DeleteDAOTimers();
+            check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->DeleteDAOTimers();
         }
     }
 
     convergenceTimeStart = simTime();
-    nodeJoinedUpward(sinkID, time);
-    RPLUpwardRouting->setParametersBeforeGlobalRepair(convergenceTimeStart);
-    nodeStateList.at(sinkID).hostModule->scheduleNextDIOTransmission();  // root node
+    convergenceTimeEndUpward = SIMTIME_ZERO; // DODAG formation time in MOP = 0.
+    convergenceTimeEndDownward = SIMTIME_ZERO; // DODAG formation time in MOP = 1, 2, or 3.
+
+    nodeJoinedUpward(sinkID, convergenceTimeStart);
+    //Global Repair is run/started by the root node
+    nodeStateList.at(sinkID).pRPLUpwardRouting->setParametersBeforeGlobalRepair(convergenceTimeStart); // root node
+    nodeStateList.at(sinkID).pRPLUpwardRouting->scheduleNextDIOTransmission();  // root node
 
     scheduleAt(simTime() + globalRepairInterval, globalRepairTimer );
-    numberOfGlogbalRepaires++;
+    numberOfGlogalRepaires++;
 }
 
 void StatisticCollector::scheduleNewGlobalRepair()
@@ -164,7 +189,7 @@ void StatisticCollector::scheduleNewGlobalRepair()
 void StatisticCollector::handleMessage(cMessage* msg)
 {
     if (msg->getKind() == Global_REPAIR_TIMER)
-        scheduleNewGlobalRepair();
+        ScheduleNextGlobalRepair();
     else{
         EV << "Unknown self message is deleted." << endl;
         delete msg;
@@ -174,6 +199,35 @@ void StatisticCollector::handleMessage(cMessage* msg)
 
 }
 
+void StatisticCollector::messageAction(messagesTypes type, MessageAction action){
+
+    if (type == DIO){
+        if (action == sent)
+            numSentDIO++;
+        else if (action == received)
+            numReceivedDIO++;
+        else if (action == suppressed)
+            numSuppressedDIO++;
+/*    }else if (type == DIS_UNICAST){
+        //Nothing, not imlemented
+*/
+    }else if (type == DIS_FLOOD){
+        if (action == sent)
+            numSentDIS++;
+        else if (action == received)
+            numReceivedDIS++;
+        else if (action == suppressed)
+            numSuppressedDIS++;
+    }else if (type == DAO){
+        if (action == sent)
+            numSentDAO++;
+        else if (action == received)
+            numReceivedDAO++;
+        else if (action == suppressed)
+            numSuppressedDAO++;
+    }
+
+}
 void StatisticCollector::saveStatistics()
 {
 
@@ -181,26 +235,26 @@ void StatisticCollector::saveStatistics()
     FILE *convergenceTimeStart, *convergenceTimeEndUpward, *convergenceTimeEndDownward, *joiningTimeUpward, *joiningTimeDownward;
 
     convergenceTimeStart = fopen("convergenceTimeStart.txt", "a");
-    fprintf(convergenceTimeStart, "%f\n", this->convergenceTimeStart);
+    fprintf(convergenceTimeStart, "%f\n", this->convergenceTimeStart.dbl());
     fclose(convergenceTimeStart);
 
     convergenceTimeEndUpward = fopen("convergenceTimeEndUpward.txt", "a");
-    fprintf(convergenceTimeEndUpward, "%f\n", this->convergenceTimeEndUpward);
+    fprintf(convergenceTimeEndUpward, "%f\n", this->convergenceTimeEndUpward.dbl());
     fclose(convergenceTimeEndUpward);
 
     convergenceTimeEndDownward = fopen("01_convergenceTimeEndDownward.txt", "a");
-    fprintf(convergenceTimeEndDownward, "%f\n", this->convergenceTimeEndDownward);
+    fprintf(convergenceTimeEndDownward, "%f\n", this->convergenceTimeEndDownward.dbl());
     fclose(convergenceTimeEndDownward);
 
     joiningTimeUpward = fopen("joiningTimeUpward.txt", "a");
-    for (int i=0; i<nodeStateList.size(); i++){
-        fprintf(joiningTimeUpward, "%f\n", nodeStateList.at(i).joiningTimeUpward);
+    for (unsigned int i=0; i<nodeStateList.size(); i++){
+        fprintf(joiningTimeUpward, "%f\n", nodeStateList.at(i).joiningTimeUpward.dbl());
     }
     fclose(joiningTimeUpward);
 
     joiningTimeDownward = fopen("joiningTimeDownward.txt", "a");
-    for (int i=0; i<nodeStateList.size(); i++){
-        fprintf(joiningTimeDownward, "%f\n", nodeStateList.at(i).joiningTimeDownward);
+    for (unsigned int i=0; i<nodeStateList.size(); i++){
+        fprintf(joiningTimeDownward, "%f\n", nodeStateList.at(i).joiningTimeDownward.dbl());
     }
     fclose(joiningTimeDownward);
 
@@ -209,24 +263,24 @@ void StatisticCollector::saveStatistics()
     float averageDIO = 0, averageDIS = 0, averageDAO = 0;
 
     averageSentDIO = fopen("averageSentDIO.txt", "a");
-    for (int i=0; i<nodeStateList.size(); i++){
-        averageDIO += nodeStateList.at(i).hostModule->getNumberOfsentDIOs();
+    for (unsigned int i=0; i<nodeStateList.size(); i++){
+        averageDIO += numSentDIO;
     }
     averageDIO /= nodeStateList.size();
     fprintf(averageSentDIO, "%f\n", averageDIO);
     fclose(averageSentDIO);
 
     averageSentDIS = fopen("averageSentDIS.txt", "a");
-    for (int i=0; i<nodeStateList.size(); i++){
-        averageDIS += nodeStateList.at(i).hostModule->getNumberOfsentDISs();
+    for (unsigned int i=0; i<nodeStateList.size(); i++){
+        averageDIS += numSentDIS;
     }
     averageDIS /= nodeStateList.size();
     fprintf(averageSentDIS, "%f\n", averageDIS);
     fclose(averageSentDIS);
 
     averageSentDAO = fopen("averageSentDAO.txt", "a");
-    for (int i=0; i<nodeStateList.size(); i++){
-        averageDAO += nodeStateList.at(i).hostModule->getNumberOfsentDAOs();
+    for (unsigned int i=0; i<nodeStateList.size(); i++){
+        averageDAO += numSentDAO;
     }
     averageDAO /= nodeStateList.size();
     fprintf(averageSentDAO, "%f\n", averageDAO);
@@ -243,8 +297,8 @@ void StatisticCollector::saveStatistics()
 
     averageNumberOfNeighbors = 0;
     averageNumberOfNeighborsFP = fopen("averageNumberOfNeighbors.txt", "a");
-    for (int i=0; i<nodeStateList.size(); i++){
-        averageNumberOfNeighbors += nodeStateList.at(i).hostModule->getsubmodule()->getNumberOfNeighbors();
+    for (unsigned int i=0; i<nodeStateList.size(); i++){
+       // averageNumberOfNeighbors += nodeStateList.at(i).pRPLUpwardRouting->getsubmodule()->getNumberOfNeighbors();
     }
     averageNumberOfNeighbors /= nodeStateList.size();
     fprintf(averageNumberOfNeighborsFP, "%f\n", averageNumberOfNeighbors);
@@ -252,33 +306,34 @@ void StatisticCollector::saveStatistics()
 
     averageNumberOfParents = 0;
     averageNumberOfParentsFP = fopen("averageNumberOfParents.txt", "a");
-    for (int i=0; i<nodeStateList.size(); i++){
-        averageNumberOfParents += nodeStateList.at(i).hostModule->getsubmodule()->getNumberOfParents();
+    for (unsigned int i=0; i<nodeStateList.size(); i++){
+        averageNumberOfParents += nodeStateList.at(i).parentTableRPL->getNumberOfParents(nodeStateList.at(i).pRPLUpwardRouting->getVersion());
     }
     averageNumberOfParents /= nodeStateList.size();
     fprintf(averageNumberOfParentsFP, "%f\n", averageNumberOfParents);
     fclose(averageNumberOfParentsFP);
 
-    averageNumberOfDefaultRoutes = 0;
+/*    averageNumberOfDefaultRoutes = 0;
     averageNumberOfDefaultRoutesFP = fopen("averageNumberOfDefaultRoutes.txt", "a");
-    for (int i=0; i<nodeStateList.size(); i++){
-        averageNumberOfDefaultRoutes += nodeStateList.at(i).hostModule->getsubmodule()->getNumberOfDefaultRoutes();
+    for (unsigned int i=0; i<nodeStateList.size(); i++){
+        averageNumberOfDefaultRoutes += nodeStateList.at(i).routingTable->getNumRoutes(); //needs getNumDefaultRoute() method
     }
     averageNumberOfDefaultRoutes /= nodeStateList.size();
     fprintf(averageNumberOfDefaultRoutesFP, "%f\n", averageNumberOfDefaultRoutes);
     fclose(averageNumberOfDefaultRoutesFP);
-
+*/
     averageNumberOfRoutes = 0;
     averageNumberOfRoutesFP = fopen("averageNumberOfRoutes.txt", "a");
-    for (int i=0; i<nodeStateList.size(); i++){
-        averageNumberOfRoutes += nodeStateList.at(i).hostModule->getsubmodule()->getNumberOfRoutes();
+    for (unsigned int i=0; i<nodeStateList.size(); i++){
+        averageNumberOfRoutes += nodeStateList.at(i).routingTable->getNumRoutes();
     }
     averageNumberOfRoutes /= nodeStateList.size();
     fprintf(averageNumberOfRoutesFP, "%f\n", averageNumberOfRoutes);
     fclose(averageNumberOfRoutesFP);
 
     averageNumberofTableEntriesFP = fopen("03_averageNumberofTableEntries.txt", "a");
-    fprintf(averageNumberofTableEntriesFP, "%f\n", averageNumberOfNeighbors + averageNumberOfParents + averageNumberOfDefaultRoutes + averageNumberOfRoutes);
+    //fprintf(averageNumberofTableEntriesFP, "%f\n", averageNumberOfNeighbors + averageNumberOfParents + averageNumberOfDefaultRoutes + averageNumberOfRoutes);
+    fprintf(averageNumberofTableEntriesFP, "%f\n", averageNumberOfNeighbors + averageNumberOfParents + averageNumberOfRoutes);
     fclose(averageNumberofTableEntriesFP);
 
     //Other statistics

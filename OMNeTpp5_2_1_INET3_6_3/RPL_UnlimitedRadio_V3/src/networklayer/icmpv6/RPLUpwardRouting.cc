@@ -37,7 +37,6 @@
 
 #include "inet/networklayer/ipv6/IPv6Route.h"
 #include "inet/networklayer/common/IPSocket.h"
-#include "inet/networklayer/ipv6/IPv6Route.h"
 #include "inet/networklayer/contract/ipv6/IPv6ControlInfo.h"
 #include "inet/networklayer/ipv6/IPv6InterfaceData.h"
 
@@ -113,7 +112,7 @@ void RPLUpwardRouting::initialize(int stage)
         if (myGlobalNetwAddr == IPv6Address::UNSPECIFIED_ADDRESS)
             throw cRuntimeError("RPLUpwardRouting::initialize: This node has not Global Address!");
         else if (myLLNetwAddr != IPv6Address::UNSPECIFIED_ADDRESS)
-            statisticCollector->registNode(host, myLLNetwAddr, myGlobalNetwAddr);
+            statisticCollector->registNode(host, this, parentTableRPL, routingTable, myLLNetwAddr, myGlobalNetwAddr);
         else
             throw cRuntimeError("RPLUpwardRouting::initialize: This node has not Link Local Address!");
 
@@ -266,7 +265,7 @@ void RPLUpwardRouting::handleSelfMsg(cMessage* msg)
 {
     if (msg->getKind() == SEND_DIO_TIMER)
         handleDIOTimer(msg);
-    else if (msg->getKind() == SEND_DIS_FLOOD_TIMER)
+/*    else if (msg->getKind() == SEND_DIS_FLOOD_TIMER)
         handleDISTimer(msg);
     else if (msg->getKind() == SEND_DAO_TIMER)
         handleDAOTimer(msg);
@@ -274,7 +273,7 @@ void RPLUpwardRouting::handleSelfMsg(cMessage* msg)
         handleDAOTimer(msg);
     else if (msg->getKind() == Global_REPAIR_TIMER)
         handleGlobalRepairTimer(msg);
-    else{
+*/    else{
         EV << "Unknown self message is deleted." << endl;
         delete msg;
     }
@@ -361,13 +360,13 @@ void RPLUpwardRouting::handleIncommingMessage(cMessage* msg)
     if(msg->getKind()==DIO)
     {
         handleIncommingDIOMessage(msg);
-    } else if(msg->getKind()==DIS_FLOOD)
+/*    } else if(msg->getKind()==DIS_FLOOD)
     {
         handleIncommingDISMessage(msg);
     } else if(msg->getKind()==DAO)
     {
         handleIncommingDAOMessage(msg);
-    } else
+ */   } else
         delete msg;
 
 
@@ -474,7 +473,7 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                          * themselves to the sink node. Therefore, I increase my dtsnInstance to inform the down stream nodes.
                          */
                         dtsnInstance ++;
-                        scheduleNextDAOTransmission(DelayDAO, defaultLifeTime);
+                        icmpv6RPL->scheduleNextDAOTransmission(DelayDAO, defaultLifeTime);
                     }
 
 

@@ -26,29 +26,59 @@
 #include "inet/common/INETDefs.h"
 #include "src/networklayer/contract/RPLDefs.h"
 #include "inet/networklayer/contract/ipv6/IPv6AddressType.h"
-
+//#include "src/networklayer/icmpv6/RPLUpwardRouting.h"
+#include "src/simulationManager/managerRPL.h"
+#include "src/networklayer/icmpv6/ParentTableRPL.h"
+#include "inet/networklayer/contract/IRoutingTable.h"
 
 namespace rpl {
 using namespace inet;
 
+class RPLUpwardRouting;
 
 class StatisticCollector : public cSimpleModule
 {
 
+    enum MessageAction{
+        sent,
+        received,
+        suppressed
+    };
+
+
     //ICMPv6RPL *icmpv6RPL;
+    managerRPL *rplManager;
 
     struct NodeState{
-        cModule *hostModule = nullptr;
-        IPv6Address linklocalAddress = IPv6Address::UNSPECIFIED_ADDRESS;
-        IPv6Address globalAddress = IPv6Address::UNSPECIFIED_ADDRESS;
-        int nodeIndex = -1; //According to RPL manager module
+        cModule *host;
+        RPLUpwardRouting *pRPLUpwardRouting;
+        ParentTableRPL *parentTableRPL;
+        IRoutingTable *routingTable;
+        IPv6Address linklocalAddress;
+        IPv6Address globalAddress;
+        int nodeIndex; //According to RPL manager module
 
         int rank;
 
-        bool isJoinUpward = false;
-        bool isJoinDownward = false;
-        simtime_t joiningTimeUpward = SIMTIME_ZERO; // By DIO
-        simtime_t joiningTimeDownward = SIMTIME_ZERO;  //By DAO
+        bool isJoinUpward;
+        bool isJoinDownward;
+        simtime_t joiningTimeUpward; // By DIO
+        simtime_t joiningTimeDownward;  //By DAO
+
+        NodeState()
+            : host(nullptr)
+            , pRPLUpwardRouting (nullptr)
+            , parentTableRPL (nullptr)
+            , routingTable (nullptr)
+            , linklocalAddress (IPv6Address::UNSPECIFIED_ADDRESS)
+            , globalAddress (IPv6Address::UNSPECIFIED_ADDRESS)
+            , nodeIndex (-1)
+            , rank (-1)
+            , isJoinUpward (false)
+            , isJoinDownward (false)
+            , joiningTimeUpward (SIMTIME_ZERO)
+            , joiningTimeDownward (SIMTIME_ZERO)
+            {};
 
     };
 
@@ -62,11 +92,24 @@ class StatisticCollector : public cSimpleModule
     simtime_t convergenceTimeStart;  //DODAG Sart Time
     simtime_t convergenceTimeEndUpward; // DODAG formation time in MOP = 0.
     simtime_t convergenceTimeEndDownward; // DODAG formation time in MOP = 1, 2, or 3.
+    int numSentDIO;
+    int numReceivedDIO;
+    int numSuppressedDIO;
+    int numSentDIS;
+    int numReceivedDIS;
+    int numSuppressedDIS;
+    int numSentDAO;
+    int numReceivedDAO;
+    int numSuppressedDAO;
 
-    RPLMOP mop; //Mode Of Operation
-
+    int numberOfIterations;
+    int numberOfGlogalRepaires; //Each Global Repair increments this variable.
     cMessage* globalRepairTimer;
     simtime_t globalRepairInterval;
+
+    int numberOfDODAGformationNormal;
+
+    RPLMOP mop; //Mode Of Operation
 
 public:
     StatisticCollector()
@@ -79,13 +122,13 @@ public:
 
 protected:
 
-    virtual bool isConvergeedUpward();
+    void initialize(int stage);
 
-    virtual bool isConvergedDownward();
+    virtual bool isConverged();
 
     virtual void saveStatistics();
 
-    virtual void handleGlobalRepairTimer(cMessage* msg);
+    void ScheduleNextGlobalRepair();
 
     virtual void scheduleNewGlobalRepair();
 
@@ -93,15 +136,20 @@ protected:
 
 
 public:
-    virtual void registNode(cModule *hostModule, IPv6Address linlklocalAddress, IPv6Address globalAddress);
+    virtual void registNode(cModule *host, RPLUpwardRouting *pRPLUpwardRouting, ParentTableRPL *parentTableRPL, IRoutingTable *routingTable, IPv6Address linlklocalAddress, IPv6Address globalAddress);
 
     virtual void startStatistics(RPLMOP mop, IPv6Address sinkLLAddress, simtime_t time);
 
+    virtual void nodeJoinedUpward(int nodeID, simtime_t time);
+
     virtual void nodeJoinedUpward(IPv6Address linkLocalAddress, simtime_t time);
 
-    virtual void nodeJoinedDownnward(IPv6Address ip, simtime_t time);
+    virtual void nodeJoinedDownnward(IPv6Address linkLocalAddress, simtime_t time);
 
     virtual void updateRank(IPv6Address ip, int rank);
+
+    void messageAction(messagesTypes type, MessageAction action);
+
 
 
 };

@@ -31,4 +31,5 @@ simple StatisticCollector
         @display("i=block/cogwheel_s");
         @labels(node);
         double globalRepairInterval @unit(s) = default(10000s);
+        int numberOfIterations = default(10);
 }

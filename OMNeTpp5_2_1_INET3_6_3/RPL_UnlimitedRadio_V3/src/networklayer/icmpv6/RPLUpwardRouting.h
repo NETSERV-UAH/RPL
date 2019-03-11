@@ -204,24 +204,12 @@ protected:
 
     virtual void handleIncommingDIOMessage(cMessage* msg);
 
-    virtual void handleIncommingDISMessage(cMessage* msg);
-
-    virtual void handleIncommingDAOMessage(cMessage* msg);
-
-
     /** @brief Handle self messages */
     virtual void handleSelfMsg(cMessage* msg);
 
-    virtual void handleGlobalRepairTimer(cMessage* msg);
 
     /** @brief Handle control messages from lower layer */
     virtual void handleLowerControl(cMessage* msg);
-
-    virtual void handleDISTimer(cMessage* msg);
-
-    virtual void handleDAOTimer(cMessage* msg);
-
-
 
     /** @brief Decapsulate a message */
     cMessage* decapsMsg(ICMPv6DIOMsg *msg);
@@ -230,32 +218,14 @@ public:
     /** @brief scheduling next DIO message transmission. */
     virtual void scheduleNextDIOTransmission();
 
-protected:
-    void scheduleNextDISTransmission();
-    virtual void scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime);
-    virtual void scheduleDAOlifetimer(simtime_t LifeTime);
-    void ScheduleNextGlobalRepair();
-    void DeleteScheduledNextGlobalRepair();
-
 public:
     void TrickleReset();
+    void DeleteDIOTimer();
 
 protected:
-    void DeleteDIOTimer();
-    void DeleteDAOTimers();
     void SetDIOParameters();
-    void SetDISParameters();
 
-    virtual int  IsParent(const IPv6Address& id,int idrank);
-    virtual void AddParent(const IPv6Address& id,int idrank, unsigned char dtsn);
-    virtual void DeleteParent(const IPv6Address& id);
-    virtual int getParentIndex(const IPv6Address& id);
-
-
-    virtual bool IsNeedDAO(const IPv6Address parent, unsigned char dtsn);
     virtual void handleDIOTimer(cMessage* msg);
-
-    virtual void sendDAOMessage(IPv6Address prefix, simtime_t lifetime);
 
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
 

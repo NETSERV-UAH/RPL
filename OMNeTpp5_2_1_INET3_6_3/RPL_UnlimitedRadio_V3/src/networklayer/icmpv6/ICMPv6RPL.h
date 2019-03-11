@@ -177,10 +177,13 @@ public:
     virtual void processIncommingStoringDAOMessage(ICMPv6Message *icmpv6msg);
   public:
     virtual void sendDAOMessage(IPv6Address prefix, simtime_t lifetime);
-  protected:
+
     virtual void scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime);
-    virtual void scheduleDAOlifetimer(simtime_t lifeTime);
+
     virtual void DeleteDAOTimers();
+
+  protected:
+    virtual void scheduleDAOlifetimer(simtime_t lifeTime);
     virtual void handleDAOTimer(cMessage* msg);
 
 
