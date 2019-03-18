@@ -54,9 +54,7 @@
 
 #include "src/simulationManager/ManagerRPL.h"
 #include "src/networklayer/icmpv6/ParentTableRPL.h"
-
-
-
+#include "src/networklayer/icmpv6/IPv6NeighbourDiscoveryRPL.h"
 
 namespace rpl {
 using namespace inet;
@@ -76,7 +74,8 @@ class RPLUpwardRouting : public cSimpleModule, public ILifecycle//, public INetf
 protected:
 
     // environment
-    IRoutingTable *routingTable = nullptr;
+    IPv6NeighbourDiscoveryRPL *neighbourDiscoveryRPL;
+    IRoutingTable *routingTable;
     IInterfaceTable *interfaceTable = nullptr;
     ManagerRPL *pManagerRPL = nullptr;
     StatisticCollector *statisticCollector = nullptr;
@@ -122,7 +121,8 @@ protected:
 
     MACAddress macaddress;
 
-    IPv6Address sinkAddress;
+    IPv6Address sinkLinkLocalAddress; //Link local addres
+    IPv6Address sinkGlobalAddress; //Global address
     IPv6Address myLLNetwAddr; //Link Local address
     IPv6Address myGlobalNetwAddr; //Global Address
     IPv6Address DODAGID;
@@ -135,8 +135,6 @@ protected:
 
     bool isJoinedFirstVersion;
     bool isNodeJoined;
-
-    double GlobalRepairTimer;
 
     unsigned char dtsnInstance;
 
@@ -171,17 +169,60 @@ public:
 
 
     RPLUpwardRouting()
-        : DIOheaderLength(0)
-        , macaddress()
+        : neighbourDiscoveryRPL(nullptr)
+        , routingTable(nullptr)
+        , interfaceTable (nullptr)
+        , pManagerRPL (nullptr)
+        , statisticCollector (nullptr)
+        , networkProtocol (nullptr)
+        , icmpv6RPL(nullptr)
+        , parentTableRPL(nullptr)
+        , ie(nullptr)
+        , interfaceID(-1)
+        , icmpv6InGateId(-1)
+        , icmpv6OutGateId(-1)
+        , isOperational (false)
+        , DIOheaderLength(-1)
+        , headerLength(-1)
+        , mop(Storing_Mode_of_Operation_with_no_multicast_support)
+        , DISEnable(false)
+        , refreshDAORoutes(false)
+        , DelayDAO(0)
+        , defaultLifeTime(0)
+        , DIOIntMin(0)
+        , DIORedun(0)
+        , DIOIntDoubl(0)
+        , DIOIMaxLength(0)
         , host(nullptr)
+        , macaddress(MACAddress::UNSPECIFIED_ADDRESS)
+        , sinkLinkLocalAddress(IPv6Address::UNSPECIFIED_ADDRESS)
+        , sinkGlobalAddress(IPv6Address::UNSPECIFIED_ADDRESS)
         , myLLNetwAddr(IPv6Address::UNSPECIFIED_ADDRESS)
         , myGlobalNetwAddr(IPv6Address::UNSPECIFIED_ADDRESS)
         , DODAGID(IPv6Address::UNSPECIFIED_ADDRESS)
-        , sinkAddress()
-        , DISEnable(false)
-        , refreshDAORoutes(false)
+        , PrParent(IPv6Address::UNSPECIFIED_ADDRESS)
+        , isSink(false)
         , DIOTimer(nullptr)
-        , mop(Storing_Mode_of_Operation_with_no_multicast_support)
+        , isJoinedFirstVersion(false)
+        , isNodeJoined(false)
+        , dtsnInstance(0)
+        , Rank(0)
+        , NodeStartTime(0)
+        , VersionNember(0)
+        , Version(0)
+        , Grounded(0)
+        , TimetoSendDIO(0)
+        , dodagSartTime(0)
+        , DIO_c(0)
+        , DIO_CurIntsizeNow(0)
+        , DIO_CurIntsizeNext(0)
+        , DIO_StofCurIntNow(0)
+        , DIO_StofCurIntNext(0)
+        , DIO_EndofCurIntNow(0)
+        , DIO_EndofCurIntNext(0)
+        , numSentDIO(0)
+        , numReceivedDIO(0)
+        , numSuppressedDIO(0)
     {};
 
     virtual ~RPLUpwardRouting();

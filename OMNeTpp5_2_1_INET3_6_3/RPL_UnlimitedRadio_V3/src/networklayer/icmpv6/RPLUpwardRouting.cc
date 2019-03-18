@@ -56,6 +56,8 @@ void RPLUpwardRouting::initialize(int stage)
     if (stage == INITSTAGE_LOCAL)
     {
         host = getContainingNode(this);
+        neighbourDiscoveryRPL = check_and_cast<IPv6NeighbourDiscoveryRPL *>(this->getParentModule()->getSubmodule("neighbourDiscovery"));
+
         routingTable = getModuleFromPar<IRoutingTable>(par("routingTableModule"), this);
 
         interfaceTable = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
@@ -68,8 +70,9 @@ void RPLUpwardRouting::initialize(int stage)
         icmpv6InGateId = findGate("icmpv6In");
         icmpv6OutGateId = findGate("icmpv6Out");
 
-        sinkAddress = IPv6Address(par("sinkAddress"));
-        EV << "sink address is " << sinkAddress << endl;
+        sinkLinkLocalAddress = IPv6Address(par("sinkLinkLocalAddress"));
+        sinkGlobalAddress = IPv6Address(par("sinkGlobalAddress"));
+        EV << "sink address is " << sinkLinkLocalAddress << endl;
 
         int mOP = par ("modeOfOperation");
         mop = (RPLMOP) mOP;
@@ -92,7 +95,7 @@ void RPLUpwardRouting::initialize(int stage)
         int nInterfaces = interfaceTable->getNumInterfaces();
         if(nInterfaces > 2) //If host has more than 2 interfaces...
             error("The host has more than 2 interfaces (one connected and loopback) and that's still not implemented!");
-        for (int k=0; k<nInterfaces; k++)
+        for (int k=0; k < nInterfaces; k++)
         {
             InterfaceEntry *ieTemp = interfaceTable->getInterface(k);
             //We add only the info about the entry which is not the loopback
@@ -102,7 +105,15 @@ void RPLUpwardRouting::initialize(int stage)
                 interfaceID = ie->getInterfaceId();
                 myLLNetwAddr = ie->ipv6Data()->getLinkLocalAddress();
                 myGlobalNetwAddr = ie->ipv6Data()->getGlobalAddress();
-                EV << "my link local address is: " << myLLNetwAddr << ", my global address is: " << myGlobalNetwAddr << endl;
+                if (myGlobalNetwAddr == IPv6Address::UNSPECIFIED_ADDRESS){
+                    IPv6Address globalAddress("fd00::");
+                    globalAddress.setSuffix(myLLNetwAddr, 64);
+                    ie->ipv6Data()->assignAddress(myGlobalNetwAddr, false, 100000, 100000);
+                    //myGlobalNetwAddr = ie->ipv6Data()->getGlobalAddress();
+                    //myGlobalNetwAddr = ie->ipv6Data()->getPreferredAddress();
+                    myGlobalNetwAddr = globalAddress;
+                }
+                EV << "interfaceID " << interfaceID << ": my link local address is: " << myLLNetwAddr << ", my global address is: " << myGlobalNetwAddr << endl;
 
             }
         }
@@ -127,27 +138,27 @@ void RPLUpwardRouting::initialize(int stage)
 
             DIOTimer = NULL;
 
-            isJoinedFirstVersion=false;
-            VersionNember=-1;
+            isJoinedFirstVersion = false;
+            VersionNember = -1;
             PrParent = IPv6Address::UNSPECIFIED_ADDRESS;
             DIOIMaxLength=DIOIntMin* int(pow (2.0,DIOIntDoubl));
 
             // Scheduling the sink node to the first DIO transmission!!
             //DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
 
-           if (myLLNetwAddr == sinkAddress) // If I am the sink node
+           if (myLLNetwAddr == sinkLinkLocalAddress) // If I am the sink node
             {
                statisticCollector->startStatistics(mop, myLLNetwAddr, simTime());
                isJoinedFirstVersion=true;
-               VersionNember=1;
-               Version=VersionNember;
+               VersionNember = 1;
+               Version = VersionNember;
                Rank=1; // The value of rank for Sink
-               DODAGID=myLLNetwAddr;
-               Grounded=1;
+               DODAGID = myGlobalNetwAddr;  //DODAGID is a Global address
+               Grounded = 1;
 
-               DIO_CurIntsizeNext=DIOIntMin;
-               DIO_StofCurIntNext=dodagSartTime;
-               DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
+               DIO_CurIntsizeNext = DIOIntMin;
+               DIO_StofCurIntNext = dodagSartTime;
+               DIO_EndofCurIntNext = DIO_StofCurIntNext+DIO_CurIntsizeNext;
 
                scheduleNextDIOTransmission();
                char buf[100];
@@ -178,9 +189,9 @@ void RPLUpwardRouting::TrickleReset()
         cancelEvent(DIOTimer);
     }
     //DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER); //EXTRA
-    DIO_CurIntsizeNext=DIOIntMin;
-    DIO_StofCurIntNext=simTime();
-    DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
+    DIO_CurIntsizeNext = DIOIntMin;
+    DIO_StofCurIntNext = simTime();
+    DIO_EndofCurIntNext = DIO_StofCurIntNext+DIO_CurIntsizeNext;
     EV << "Trickle is reset to Imin for next DIO, theoretical Imin : " << DIOIntMin << "practical Imin = Imin + simtime = : " << DIO_EndofCurIntNext << endl;
 
     EV << "<-RPLUpwardRouting::TrickleReset()" << endl;
@@ -204,18 +215,18 @@ void RPLUpwardRouting::scheduleNextDIOTransmission()
     else
         DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
 
-    scheduleAt(TimetoSendDIO,DIOTimer );
-    DIO_CurIntsizeNext*=2;
+    scheduleAt(TimetoSendDIO, DIOTimer);
+    DIO_CurIntsizeNext *= 2;
     EV << "New theoretical I = I * 2 = " << DIO_CurIntsizeNext << endl;
     if (DIO_CurIntsizeNext>DIOIMaxLength)
     {
         EV << "New theoretical I (" << DIO_CurIntsizeNext << " is higher than Imax (" << DIOIMaxLength << "), so I is not changed." << endl;
-        DIO_CurIntsizeNext=DIOIMaxLength;
+        DIO_CurIntsizeNext = DIOIMaxLength;
     }
 
     DIO_StofCurIntNext = DIO_EndofCurIntNext;
-    DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
-    DIO_c=0;
+    DIO_EndofCurIntNext = DIO_StofCurIntNext+DIO_CurIntsizeNext;
+    DIO_c = 0;
 
     EV << "<-RPLUpwardRouting::scheduleNextDIOTransmission()" << endl;
 }
@@ -241,16 +252,20 @@ void RPLUpwardRouting::DeleteDIOTimer()
  * This method is called by methods of StatisticCollector.
  */
 void RPLUpwardRouting::setParametersBeforeGlobalRepair(simtime_t dodagSartTime){
-    VersionNember++;
-    Version = VersionNember;
-    dtsnInstance++;
-    Rank = 1;
-    DODAGID = myLLNetwAddr;
-    Grounded = 1;
+    if (myLLNetwAddr == sinkLinkLocalAddress){  //Global Repair is run/started by the root node
+        VersionNember++;
+        Version = VersionNember;
+        dtsnInstance++;
+        Rank = 1;
+        DODAGID = myGlobalNetwAddr;
+        Grounded = 1;
 
-    DIO_CurIntsizeNext=DIOIntMin;
-    DIO_StofCurIntNext=dodagSartTime;
-    DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
+        DIO_CurIntsizeNext = DIOIntMin;
+        DIO_StofCurIntNext = dodagSartTime;
+        DIO_EndofCurIntNext = DIO_StofCurIntNext+DIO_CurIntsizeNext;
+    }else{
+        isNodeJoined = false;
+    }
 
 }
 void RPLUpwardRouting::handleMessage(cMessage* msg)
@@ -265,15 +280,7 @@ void RPLUpwardRouting::handleSelfMsg(cMessage* msg)
 {
     if (msg->getKind() == SEND_DIO_TIMER)
         handleDIOTimer(msg);
-/*    else if (msg->getKind() == SEND_DIS_FLOOD_TIMER)
-        handleDISTimer(msg);
-    else if (msg->getKind() == SEND_DAO_TIMER)
-        handleDAOTimer(msg);
-    else if (msg->getKind() == DAO_LIFETIME_TIMER)
-        handleDAOTimer(msg);
-    else if (msg->getKind() == Global_REPAIR_TIMER)
-        handleGlobalRepairTimer(msg);
-*/    else{
+    else{
         EV << "Unknown self message is deleted." << endl;
         delete msg;
     }
@@ -282,12 +289,14 @@ void RPLUpwardRouting::handleSelfMsg(cMessage* msg)
 void RPLUpwardRouting::handleDIOTimer(cMessage* msg)
 {
 
-    if(((DIO_c<DIORedun)&&(Version==VersionNember))||(DIORedun==0))
+    if((DIO_c < DIORedun) || (DIORedun == 0))
     {
+        EV << "TEST00\n";
+
         // Broadcast DIO message
         ICMPv6DIOMsg* pkt = new ICMPv6DIOMsg("DIO", DIO);
         IPv6ControlInfo *controlInfo = new IPv6ControlInfo;
-        controlInfo->setSrcAddr(myLLNetwAddr);
+        controlInfo->setSrcAddr(myLLNetwAddr); //Link local address
         controlInfo->setDestAddr(IPv6Address::ALL_NODES_2); // IPv6Address::ALL_NODES_2 is ff02::2 (scope 2 (link-local)), FIXME: ff02::1a for rpl
         pkt->setByteLength(DIOheaderLength);
         pkt->setVersionNumber(VersionNember);
@@ -298,7 +307,7 @@ void RPLUpwardRouting::handleDIOTimer(cMessage* msg)
         pkt->setNofDoub(DIOIntDoubl);
         pkt->setK(DIORedun);
         pkt->setDTSN(dtsnInstance);
-        if (myLLNetwAddr == sinkAddress && refreshDAORoutes)
+        if (myLLNetwAddr == sinkLinkLocalAddress && refreshDAORoutes)
             dtsnInstance ++;
         pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
         controlInfo->setProtocol(IP_PROT_IPv6_ICMP);
@@ -307,7 +316,7 @@ void RPLUpwardRouting::handleDIOTimer(cMessage* msg)
 
         numSentDIO++;
         char buf[100];
-        if(myLLNetwAddr==sinkAddress)
+        if(myLLNetwAddr == sinkLinkLocalAddress)
              sprintf(buf,"DODAG ROOT\nVerNum = %d\nRank = %d\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", VersionNember, Rank, numSentDIO, numReceivedDIO, numSuppressedDIO);
         else
             sprintf(buf,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", VersionNember, Rank, parentTableRPL->getPrefParentIPAddress(VersionNember).getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
@@ -317,38 +326,23 @@ void RPLUpwardRouting::handleDIOTimer(cMessage* msg)
         //DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER); //EXTRA
         scheduleNextDIOTransmission();
         return;
-    }
-    else
-    {
-        if((DIO_c >= DIORedun) && (Version == VersionNember))
-        {
-            //if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIO.Suppressed++;
-            numSuppressedDIO++;
-            char buf1[100];
-            sprintf(buf1, "DIO transmission suppressed!");
-            host->bubble(buf1);
-            char buf2[100];
-            sprintf(buf2,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", VersionNember, Rank, parentTableRPL->getPrefParentIPAddress(VersionNember).getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
-            host->getDisplayString().setTagArg("t", 0, buf2);
-            cancelAndDelete(DIOTimer);
-            DIOTimer = nullptr; //EXTRA
-            //DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER); //EXTRA
-            scheduleNextDIOTransmission();
-            return;
-        }
-        else
-        {
-            if((DIO_c<DIORedun)&&(Version-1==VersionNember))
-            {
-                cancelAndDelete(DIOTimer);
-                DIOTimer = nullptr; //EXTRA
-                //DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER); //EXTRA
-                scheduleNextDIOTransmission();
-                return;
-           }
-        }
-    }
+    }else if(DIO_c >= DIORedun){
+        EV << "TEST11\n";
 
+        //if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIO.Suppressed++;
+        numSuppressedDIO++;
+        char buf1[100];
+        sprintf(buf1, "DIO transmission suppressed!");
+        host->bubble(buf1);
+        char buf2[100];
+        sprintf(buf2,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", VersionNember, Rank, parentTableRPL->getPrefParentIPAddress(VersionNember).getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
+        host->getDisplayString().setTagArg("t", 0, buf2);
+        cancelAndDelete(DIOTimer);
+        DIOTimer = nullptr; //EXTRA
+        //DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER); //EXTRA
+        scheduleNextDIOTransmission();
+        return;
+    }
 }
 
 void RPLUpwardRouting::handleIncommingMessage(cMessage* msg)
@@ -357,18 +351,11 @@ void RPLUpwardRouting::handleIncommingMessage(cMessage* msg)
 
     EV << "An ICMPv6 message is received from the ICMPv6 module, the message name is " << msg->getName() << ", message kind is " << msg->getKind() << endl;
 
-    if(msg->getKind()==DIO)
+    if(msg->getKind() == DIO)
     {
         handleIncommingDIOMessage(msg);
-/*    } else if(msg->getKind()==DIS_FLOOD)
-    {
-        handleIncommingDISMessage(msg);
-    } else if(msg->getKind()==DAO)
-    {
-        handleIncommingDAOMessage(msg);
- */   } else
+    } else
         delete msg;
-
 
     EV << "<-RPLUpwardRouting::handleIncommingMessage()" << endl;
 }
@@ -379,14 +366,17 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
     EV << "->RPLUpwardRouting::handleIncommingDIOMessage()" << endl;
     IPv6ControlInfo *ctrlInfo = nullptr;
 
-    if(msg->getKind()==DIO)
+    if(msg->getKind() == DIO)
     {
         ICMPv6DIOMsg* netwMsg = check_and_cast<ICMPv6DIOMsg*>(msg);
         ctrlInfo = check_and_cast<IPv6ControlInfo *>(netwMsg->removeControlInfo());
         EV << "Received message is ICMPv6 DIO message, DODAGID ID is " << netwMsg->getDODAGID() << ", src address is " << ctrlInfo->getSrcAddr() << endl;
 
         numReceivedDIO++;
-       if(myLLNetwAddr == sinkAddress){ //I am the sink node, and DIO is deleted.
+       if(myLLNetwAddr == sinkLinkLocalAddress){ //I am the sink node, and DIO is deleted.
+           if (!neighbourDiscoveryRPL->addNeighborFromRPLMessage(ctrlInfo)){
+               throw cRuntimeError("RPLUpwardRouting::handleIncommingDIOMessage(): Neighbor can not be added!");
+           }
             char buf2[100];
             sprintf(buf2,"DODAG ROOT\nVerNum = %d\nRank = %d\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", VersionNember, Rank, numSentDIO, numReceivedDIO, numSuppressedDIO);
             host->getDisplayString().setTagArg("t", 0, buf2);
@@ -395,21 +385,25 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
             host->bubble(buf3);
             delete msg;
             return;
-        }else {
+        }else {  //I am not the sink node.
            if(!isJoinedFirstVersion) {
-               isJoinedFirstVersion=true;
+               if (!neighbourDiscoveryRPL->addNeighborFromRPLMessage(ctrlInfo)){
+                   throw cRuntimeError("RPLUpwardRouting::handleIncommingDIOMessage(): Neighbor can not be added!");
+               }
+               isJoinedFirstVersion = true; //for the first version
+               isNodeJoined = true; //For each version
                statisticCollector->nodeJoinedUpward(myLLNetwAddr, netwMsg->getArrivalTime());
-               VersionNember=netwMsg->getVersionNumber();
+               VersionNember = netwMsg->getVersionNumber();
 
-               DIO_CurIntsizeNext=DIOIntMin;
-               DIO_StofCurIntNext=netwMsg->getArrivalTime();
-               DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
+               DIO_CurIntsizeNext = DIOIntMin;
+               DIO_StofCurIntNext = netwMsg->getArrivalTime();
+               DIO_EndofCurIntNext = DIO_StofCurIntNext+DIO_CurIntsizeNext;
 
-               Grounded=netwMsg->getGrounded();
-               DIOIntDoubl=netwMsg->getNofDoub();
-               DIOIntMin=netwMsg->getIMin();
-               DIORedun=netwMsg->getK();
-               DODAGID=netwMsg->getDODAGID();
+               Grounded = netwMsg->getGrounded();
+               DIOIntDoubl = netwMsg->getNofDoub();
+               DIOIntMin = netwMsg->getIMin();
+               DIORedun = netwMsg->getK();
+               DODAGID = netwMsg->getDODAGID();
                parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber());
                statisticCollector->updateRank(myLLNetwAddr, parentTableRPL->getRank(VersionNember));
 
@@ -421,41 +415,48 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                host->getDisplayString().setTagArg("t", 0, buf1);
                icmpv6RPL->cancelAndDeleteDISTimer();
                scheduleNextDIOTransmission();
-            }else if(netwMsg->getVersionNumber()>VersionNember) {
+            }else if(netwMsg->getVersionNumber() > VersionNember) {
+                if (!neighbourDiscoveryRPL->addNeighborFromRPLMessage(ctrlInfo)){
+                    throw cRuntimeError("RPLUpwardRouting::handleIncommingDIOMessage(): Neighbor can not be added!");
+                }
                 //isJoinedFirstVersion = true;
                 //IsNodeJoined[pManagerRPL->getIndexFromLLAddress(myLLNetwAddr)] = true;
+                isNodeJoined = true; //isNodeJoined was being false when Global repair happened.
                 DeleteDIOTimer();
-                VersionNember=netwMsg->getVersionNumber();
+                VersionNember = netwMsg->getVersionNumber();
                 dtsnInstance ++; // To inform the down stream nodes. dtsnInstance is accommodated in the DIO msg, so the down stream nodes find out that they must send a new DAO because of the global repair ...
                 statisticCollector->nodeJoinedUpward(myLLNetwAddr, netwMsg->getArrivalTime());
 
-                DIOIntDoubl=netwMsg->getNofDoub();
-                DIOIntMin=netwMsg->getIMin();
-                DIORedun=netwMsg->getK();
-                DODAGID=netwMsg->getDODAGID();
-                DIO_CurIntsizeNext=DIOIntMin;
+                DIOIntDoubl = netwMsg->getNofDoub();
+                DIOIntMin = netwMsg->getIMin();
+                DIORedun = netwMsg->getK();
+                DODAGID = netwMsg->getDODAGID();
+                DIO_CurIntsizeNext = DIOIntMin;
                 DIO_StofCurIntNext = netwMsg->getArrivalTime();
-                DIO_EndofCurIntNext=DIO_StofCurIntNext+DIO_CurIntsizeNext;
-                Grounded=netwMsg->getGrounded();
+                DIO_EndofCurIntNext = DIO_StofCurIntNext+DIO_CurIntsizeNext;
+                Grounded = netwMsg->getGrounded();
                 parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber());
                 statisticCollector->updateRank(myLLNetwAddr, parentTableRPL->getRank(VersionNember));
 
                 char buf0[50];
-                sprintf(buf0, "I joined DODAG %d via node %d !!", VersionNember,ctrlInfo->getSrcAddr());
+                sprintf(buf0, "I joined DODAG %d via node %d !!", VersionNember, ctrlInfo->getSrcAddr());
                 host->bubble(buf0);
                 char buf1[100];
                 sprintf(buf1,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", VersionNember, Rank, parentTableRPL->getPrefParentIPAddress(VersionNember).getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
                 host->getDisplayString().setTagArg("t", 0, buf1);
                 icmpv6RPL->cancelAndDeleteDISTimer();
                 scheduleNextDIOTransmission();
-            }else if((netwMsg->getRank()<=Rank)&&(netwMsg->getVersionNumber()==VersionNember)) {
+            }else if((netwMsg->getRank() <= Rank) && (netwMsg->getVersionNumber() == VersionNember)) {
+                if (!neighbourDiscoveryRPL->addNeighborFromRPLMessage(ctrlInfo)){
+                    throw cRuntimeError("RPLUpwardRouting::handleIncommingDIOMessage(): Neighbor can not be added!");
+                }
                 numReceivedDIO++;
                 DIO_c++;
-                DODAGID=netwMsg->getDODAGID();
-                Grounded=netwMsg->getGrounded();
-                DIOIntDoubl=netwMsg->getNofDoub();
-                DIOIntMin=netwMsg->getIMin();
-                DIORedun=netwMsg->getK();
+                DODAGID = netwMsg->getDODAGID();
+                Grounded = netwMsg->getGrounded();
+                DIOIntDoubl = netwMsg->getNofDoub();
+                DIOIntMin = netwMsg->getIMin();
+                DIORedun = netwMsg->getK();
 
                 bool needDAO = false;
                 if (mop == 2)
@@ -475,8 +476,6 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                         dtsnInstance ++;
                         icmpv6RPL->scheduleNextDAOTransmission(DelayDAO, defaultLifeTime);
                     }
-
-
                 }
 
                 char buf2[255];
@@ -486,6 +485,9 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 sprintf(buf3,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", VersionNember, Rank, parentTableRPL->getPrefParentIPAddress(VersionNember).getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
                 host->getDisplayString().setTagArg("t", 0, buf3);
             }else if(netwMsg->getVersionNumber() < VersionNember){ //This DIO is old. It has been sent before the global repair!
+                if (!neighbourDiscoveryRPL->addNeighborFromRPLMessage(ctrlInfo)){
+                    throw cRuntimeError("RPLUpwardRouting::handleIncommingDIOMessage(): Neighbor can not be added!");
+                }
                 host->bubble("DIO deleted!!\nThe sender node should be updated.!!! ");
             }else {
                 numReceivedDIO++;

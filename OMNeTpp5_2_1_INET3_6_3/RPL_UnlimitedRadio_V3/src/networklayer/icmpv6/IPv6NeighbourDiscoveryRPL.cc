@@ -64,7 +64,7 @@ simsignal_t IPv6NeighbourDiscoveryRPL::startDADSignal = registerSignal("startDAD
 
 IPv6NeighbourDiscoveryRPL::IPv6NeighbourDiscoveryRPL()
     : neighbourCache(*this)
-    , staticLLAddressAssignment(true) //EXTRA
+    , staticAddressAssignment(true) //EXTRA
     , mop(Storing_Mode_of_Operation_with_no_multicast_support)  //EXTRA //Default value
 
 {
@@ -160,7 +160,8 @@ void IPv6NeighbourDiscoveryRPL::initialize(int stage)
             scheduleAt(simTime() + uniform(0.4, 1), msg); //Random Host bootup time
     }
 */
-        if (staticLLAddressAssignment){
+        staticAddressAssignment = par("staticAddressAssignment");
+        if (staticAddressAssignment){
             for (int i = 0; i < ift->getNumInterfaces(); i++) {
                 InterfaceEntry *ie = ift->getInterface(i);
 
@@ -169,7 +170,10 @@ void IPv6NeighbourDiscoveryRPL::initialize(int stage)
                     continue;
 
                 IPv6Address linkLocalAddr = ie->ipv6Data()->getLinkLocalAddress();
+                IPv6Address globalAddr = ie->ipv6Data()->getGlobalAddress();
+
                 EV << "Assigned link local address is: " << linkLocalAddr << endl;
+
                 if (linkLocalAddr.isUnspecified()) {
                     //if no link local address exists for this interface, we assign one to it.
                     EV_INFO << "No link local address exists. Forming one" << endl;
@@ -253,10 +257,13 @@ void IPv6NeighbourDiscoveryRPL::handleMessage(cMessage *msg)
             IPv6ControlInfo *ctrlInfo = check_and_cast<IPv6ControlInfo *>(msg->removeControlInfo());
             if (ctrlInfo->getDestAddr().getScope() != IPv6Address::MULTICAST){  //Check before run
                 EV_INFO << "Destination address of " << msg->getName() << " (" << ctrlInfo->getDestAddr() << ") is not a multicast address. Sender node is added as a neighbor.\n";
-                processIncomingRPLMessage(ctrlInfo);
+                addNeighborFromRPLMessage(ctrlInfo);
+                delete ctrlInfo;
             }else{
                 EV_INFO << "Destination address of " << msg->getName() << " (" << ctrlInfo->getDestAddr() << ") is a multicast address. Sender node isn't added as a neighbor.\n";
             }
+            delete msg;
+        }else if (dynamic_cast<ICMPv6DIOMsg *>(msg) || (dynamic_cast<ICMPv6DAOMsg *>(msg))){
             delete msg;
         }else{
         //EXTRA END
@@ -277,9 +284,9 @@ void IPv6NeighbourDiscoveryRPL::handleMessage(cMessage *msg)
 }
 
 //EXTRA BEGIN
-IPv6NeighbourCacheRPL::Neighbour *IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage(IPv6ControlInfo *ctrlInfo)
+IPv6NeighbourCacheRPL::Neighbour *IPv6NeighbourDiscoveryRPL::addNeighborFromRPLMessage(IPv6ControlInfo *ctrlInfo)
 {
-    EV << "->IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage()" << endl;  //EXTRA
+    EV << "->IPv6NeighbourDiscoveryRPL::addNeighborFromRPLMessage()" << endl;  //EXTRA
 
     Neighbour *neighbourEntry = nullptr;
     IPv6Address srcIPv6Addr = ctrlInfo->getSourceAddress().toIPv6();
@@ -330,9 +337,8 @@ IPv6NeighbourCacheRPL::Neighbour *IPv6NeighbourDiscoveryRPL::processIncomingRPLM
         //neighbourEntry->reason = DIO/DIS/DAO;
     }
 
-    delete ctrlInfo;
     return neighbourEntry;
-    EV << "<-IPv6NeighbourDiscoveryRPL::processIncomingRPLMessage()" << endl;  //EXTRA
+    EV << "<-IPv6NeighbourDiscoveryRPL::addNeighborFromRPLMessage()" << endl;  //EXTRA
 
 }
 //EXTRA END

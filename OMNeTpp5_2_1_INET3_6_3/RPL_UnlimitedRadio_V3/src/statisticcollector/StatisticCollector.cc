@@ -144,8 +144,15 @@ bool StatisticCollector::isConverged()
 
 void StatisticCollector::ScheduleNextGlobalRepair()
 {
+    convergenceTimeStart = simTime();
+    convergenceTimeEndUpward = SIMTIME_ZERO; // DODAG formation time in MOP = 0.
+    convergenceTimeEndDownward = SIMTIME_ZERO; // DODAG formation time in MOP = 1, 2, or 3.
+
+    nodeJoinedUpward(sinkID, convergenceTimeStart);
 
     for (int i=0; i<nodeStateList.size(); i++){
+        nodeStateList.at(i).pRPLUpwardRouting->setParametersBeforeGlobalRepair(convergenceTimeStart);
+        nodeStateList.at(i).pRPLUpwardRouting->scheduleNextDIOTransmission();
         if (i == sinkID){
             nodeStateList.at(i).isJoinUpward = true;
             nodeStateList.at(i).isJoinDownward = true;
@@ -166,19 +173,11 @@ void StatisticCollector::ScheduleNextGlobalRepair()
         }
     }
 
-    convergenceTimeStart = simTime();
-    convergenceTimeEndUpward = SIMTIME_ZERO; // DODAG formation time in MOP = 0.
-    convergenceTimeEndDownward = SIMTIME_ZERO; // DODAG formation time in MOP = 1, 2, or 3.
-
-    nodeJoinedUpward(sinkID, convergenceTimeStart);
-    //Global Repair is run/started by the root node
-    nodeStateList.at(sinkID).pRPLUpwardRouting->setParametersBeforeGlobalRepair(convergenceTimeStart); // root node
-    nodeStateList.at(sinkID).pRPLUpwardRouting->scheduleNextDIOTransmission();  // root node
-
     scheduleAt(simTime() + globalRepairInterval, globalRepairTimer );
     numberOfGlogalRepaires++;
 }
 
+//Close current Global Repair and schedule a new Global Repair.
 void StatisticCollector::scheduleNewGlobalRepair()
 {
 

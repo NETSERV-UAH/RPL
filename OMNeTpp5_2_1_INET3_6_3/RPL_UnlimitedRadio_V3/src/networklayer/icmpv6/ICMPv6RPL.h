@@ -171,6 +171,8 @@ public:
     virtual void processICMPv6Message(ICMPv6Message *);
 
     //EXTRA BEGIN
+    virtual void handleSelfMsg(cMessage *msg);
+
     virtual void processIncommingRPLMessage(ICMPv6Message *msg);
 
     virtual void processIncommingNonStoringDAOMessage(ICMPv6Message *msg);

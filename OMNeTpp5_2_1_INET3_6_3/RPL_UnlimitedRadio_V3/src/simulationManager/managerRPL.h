@@ -48,7 +48,7 @@
 namespace rpl {
 using namespace inet;
 
-class RPLRouting;
+class RPLUpwardRouting;
 
 class ManagerRPL : public cSimpleModule
 {

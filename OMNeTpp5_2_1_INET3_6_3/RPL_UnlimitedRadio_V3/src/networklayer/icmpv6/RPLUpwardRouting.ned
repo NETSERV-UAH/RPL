@@ -50,8 +50,9 @@ simple RPLUpwardRouting
         double RPLStartTime @unit(s) = default(0.03s);
         string routingTableModule;
         string interfaceTableModule;
-        string networkProtocolModule = default("^.networkLayer.ipv6");
-        string sinkAddress = default("fe80::8aa:ff:fe00:1");
+        string networkProtocolModule = default("^.ipv6");
+        string sinkLinkLocalAddress = default("fe80::8aa:ff:fe00:1");
+        string sinkGlobalAddress = default("fd00::8aa:ff:fe00:1");
         int modeOfOperation = default(2);
         //EXTRA END
         

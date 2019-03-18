@@ -37,7 +37,7 @@ simple IPv6NeighbourDiscoveryRPL
     parameters:
         //EXTRA BEGIN
         @class(rpl::IPv6NeighbourDiscoveryRPL);
-        bool staticLLAddressAssignment = default(true);  // assume that Link Local address is assigned statically
+        bool staticAddressAssignment = default(true);  // assume that Link Local address is assigned statically
         //EXTRA END
         string interfaceTableModule;   // The path to the InterfaceTable module
         string icmpv6Module;

@@ -42,7 +42,7 @@ void ParentTableRPL::initialize(int stage)
     cSimpleModule::initialize(stage);
 
     if(stage == INITSTAGE_LOCAL){
-        neighbourDiscoveryRPL = check_and_cast<IPv6NeighbourDiscoveryRPL *>(this->getParentModule()->getSubmodule("neighbourDiscoveryRPL"));
+        neighbourDiscoveryRPL = check_and_cast<IPv6NeighbourDiscoveryRPL *>(this->getParentModule()->getSubmodule("neighbourDiscovery"));
         maxParents = par("maxParents");
 
         ParentTable& parentTable = *this->parentTable;    // magic to hide the '*' from the name of the watch below
@@ -91,7 +91,7 @@ ParentTableRPL::ParentTable *ParentTableRPL::getTableForVid(unsigned int vid) co
 
 bool ParentTableRPL::updateTable(InterfaceEntry *ie, const IPv6Address& id, int rank, unsigned char dtsn, unsigned int vid)
 {
-    //Enter_Method("ParentTableRPL::updateTableWithAddress()");
+    Enter_Method("ParentTableRPL::updateTableWithAddress()");
 
     IPv6NeighbourCacheRPL::Neighbour *neighbourEntry = neighbourDiscoveryRPL->neighbourCache.lookup(id, ie->getInterfaceId());
 

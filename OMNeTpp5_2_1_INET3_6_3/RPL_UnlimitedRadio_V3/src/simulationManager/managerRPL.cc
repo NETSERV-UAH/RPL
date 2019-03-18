@@ -129,7 +129,6 @@ void ManagerRPL::handleMessage(cMessage *msg)
 
 int ManagerRPL::getIndexFromLLAddress(IPv6Address address)
 {
-    EV << "->ManagerRPL::getIndexFromAddress()" << endl;
 
     Enter_Method("ManagerRPL::getIndexFromAddress()");
     EV << "Vector size is " << wSNInfo.size() << endl;
@@ -142,13 +141,10 @@ int ManagerRPL::getIndexFromLLAddress(IPv6Address address)
     //return -1;
     throw cRuntimeError("ManagerRPL::getIndexFromAddress(): Address not found!");
 
-
-    EV << "<-ManagerRPL::getIndexFromAddress()" << endl;
 }
 
 MACAddress ManagerRPL::getMacAddressFromIPAddress(IPv6Address address)
 {
-    EV << "->ManagerRPL::getMacAddressFromIPAddress()" << endl;
 
     Enter_Method("ManagerRPL::getMacAddressFromIPAddress()");
 
@@ -161,13 +157,11 @@ MACAddress ManagerRPL::getMacAddressFromIPAddress(IPv6Address address)
     throw cRuntimeError("ManagerRPL::getMacAddressFromIPAddress(): Address not found!");
 
 
-    EV << "<-ManagerRPL::getIndexFromAddress()" << endl;
 }
 
 
 IPv6Address ManagerRPL::getAddressFromIndex(int index)
 {
-    EV << "->ManagerRPL::getAddressFromIndex()" << endl;
 
     Enter_Method("ManagerRPL::getAddressFromIndex()");
 
@@ -177,12 +171,10 @@ IPv6Address ManagerRPL::getAddressFromIndex(int index)
 
     //return IPv6Address::UNSPECIFIED_ADDRESS;
 
-    EV << "<-ManagerRPL::getAddressFromIndex()" << endl;
 }
 
 std::string ManagerRPL::getNameFromAddress(IPv6Address address)
 {
-    EV << "->ManagerRPL::getNameFromAddress()" << endl;
 
     Enter_Method("ManagerRPL::getNameFromAddress()");
 
@@ -193,12 +185,10 @@ std::string ManagerRPL::getNameFromAddress(IPv6Address address)
 
     return "Wrong Name";
 
-    EV << "<-ManagerRPL::getNameFromAddress()" << endl;
 }
 
 std::string ManagerRPL::getNameFromIndex(int index)
 {
-    EV << "->ManagerRPL::getNameFromIndex()" << endl;
 
     Enter_Method("ManagerRPL::getNameFromIndex()");
 
@@ -207,7 +197,6 @@ std::string ManagerRPL::getNameFromIndex(int index)
         return wSNInfo.at(index).fullName;
 
     //return "Wrong Index";
-    EV << "<-ManagerRPL::getNameFromIndex()" << endl;
 
 }
 

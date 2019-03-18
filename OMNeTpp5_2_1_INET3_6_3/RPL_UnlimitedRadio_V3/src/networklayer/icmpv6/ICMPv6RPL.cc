@@ -62,7 +62,7 @@ void ICMPv6RPL::initialize(int stage)
         int mOP = this->getParentModule()->getSubmodule("rplUpwardRouting")->par("modeOfOperation");
         mop = (RPLMOP) mOP;
         rplUpwardRouting = check_and_cast<RPLUpwardRouting *>(this->getParentModule()->getSubmodule("rplUpwardRouting"));
-        neighbourDiscoveryRPL = check_and_cast<IPv6NeighbourDiscoveryRPL *>(this->getParentModule()->getSubmodule("neighbourDiscoveryRPL"));
+        neighbourDiscoveryRPL = check_and_cast<IPv6NeighbourDiscoveryRPL *>(this->getParentModule()->getSubmodule("neighbourDiscovery"));
         parentTableRPL = check_and_cast<ParentTableRPL *>(this->getParentModule()->getSubmodule("parentTableRPL"));
         routingTable = getModuleFromPar<IPv6RoutingTable>(par("routingTableModule"), this);
         //interfaceTable = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
@@ -70,7 +70,7 @@ void ICMPv6RPL::initialize(int stage)
         EV << "The node works in MOP#" << mop << endl;
         if (mop == Storing_Mode_of_Operation_with_multicast_support)
             throw cRuntimeError("ICMPv6RPL::initialize(): Unsopported MOP for the simulation. MOP Storing_Mode_of_Operation_with_multicast_support MOP#%d\n", (int)mop);
-        else
+        else if (mop > 3)
             throw cRuntimeError("ICMPv6RPL::initialize(): Unknown MOP MOP#%d\n", (int)mop);
 
 
@@ -121,7 +121,14 @@ void ICMPv6RPL::handleMessage(cMessage *msg)
 {
     EV << "->ICMPv6RPL::handleMessage()" << endl;
 
-    ASSERT(!msg->isSelfMessage());    // no timers in ICMPv6
+    //EXTRA BEGIN
+    //ASSERT(!msg->isSelfMessage());    // no timers in ICMPv6
+
+    if (msg->isSelfMessage()){
+        handleSelfMsg(msg);
+        return;
+    }
+    //EXTRA END
 
     // process arriving ICMP message
     if (msg->getArrivalGate()->isName("ipv6In")) {
@@ -209,6 +216,19 @@ void ICMPv6RPL::processIncommingRPLMessage(ICMPv6Message *icmpv6msg)
         }
     }
 }
+
+void ICMPv6RPL::handleSelfMsg(cMessage *msg){
+
+    if (msg->getKind() == SEND_DIS_FLOOD_TIMER)
+            handleDISTimer(msg);
+    else if (msg->getKind() == SEND_DAO_TIMER)
+            handleDAOTimer(msg);
+    else if (msg->getKind() == DAO_LIFETIME_TIMER)
+            handleDAOTimer(msg);
+    //else if (msg->getKind() == Global_REPAIR_TIMER)
+            //handleGlobalRepairTimer(msg);
+}
+
 //////////// DIS Operations ////////////////////
 void ICMPv6RPL::processIncommingDISMessage(ICMPv6Message *msg)
 {
@@ -395,7 +415,7 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
         }
     }else{ //Adding a DAO (Downward) route to the routing table
         //First, add to neighbor table
-        if (!neighbourDiscoveryRPL->processIncomingRPLMessage(ctrlInfoIn))
+        if (!neighbourDiscoveryRPL->addNeighborFromRPLMessage(ctrlInfoIn))
             throw cRuntimeError("ICMPv6RPL::processIncommingStoringDAOMessage: DAO Info can not be added to the Neighbor Discovery!");
 
         //Then, add/update the routing table

@@ -122,7 +122,7 @@ class IPv6NeighbourDiscoveryRPL : public cSimpleModule, public ILifecycle
     enum RPLMOP mop;
     //EXTRA
 
-    bool staticLLAddressAssignment; //EXTRA : assume that Link Local address is assigned statically
+    bool staticAddressAssignment; //EXTRA : assume that Link Local address is assigned statically
 
 #ifdef WITH_xMIPv6
     xMIPv6 *mipv6 = nullptr;    // in case the node has MIP support
@@ -206,7 +206,7 @@ protected:
     virtual void handleMessage(cMessage *msg) override;
     virtual void processNDMessage(ICMPv6Message *msg, IPv6ControlInfo *ctrlInfo);
   public:
-    virtual Neighbour *processIncomingRPLMessage(IPv6ControlInfo *ctrlInfo); //EXTRA
+    virtual Neighbour *addNeighborFromRPLMessage(IPv6ControlInfo *ctrlInfo); //EXTRA
 protected:
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
     virtual void finish() override;
