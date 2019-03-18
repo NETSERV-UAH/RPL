@@ -148,16 +148,16 @@ void RPLUpwardRouting::initialize(int stage)
 
            if (myLLNetwAddr == sinkLinkLocalAddress) // If I am the sink node
             {
-               statisticCollector->startStatistics(mop, myLLNetwAddr, simTime());
+               simtime_t startTime = simTime();
+               statisticCollector->startStatistics(mop, myLLNetwAddr, startTime);
                isJoinedFirstVersion=true;
                VersionNember = 1;
-               Version = VersionNember;
                Rank=1; // The value of rank for Sink
                DODAGID = myGlobalNetwAddr;  //DODAGID is a Global address
                Grounded = 1;
 
                DIO_CurIntsizeNext = DIOIntMin;
-               DIO_StofCurIntNext = dodagSartTime;
+               DIO_StofCurIntNext = startTime;
                DIO_EndofCurIntNext = DIO_StofCurIntNext+DIO_CurIntsizeNext;
 
                scheduleNextDIOTransmission();
@@ -170,7 +170,7 @@ void RPLUpwardRouting::initialize(int stage)
               host->getDisplayString().setTagArg("t", 0, buf);
               if (DISEnable)
               {
-                  icmpv6RPL->SetDISParameters();
+                  icmpv6RPL->SetDISParameters(simTime());
                   icmpv6RPL->scheduleNextDISTransmission();
               }
           }
@@ -233,7 +233,6 @@ void RPLUpwardRouting::scheduleNextDIOTransmission()
 
 void RPLUpwardRouting::DeleteDIOTimer()
 {
-    Enter_Method("DeleteDIOTimer()");
     if (DIOTimer){
         if(DIOTimer->isScheduled()){
             cancelAndDelete(DIOTimer);
@@ -252,9 +251,11 @@ void RPLUpwardRouting::DeleteDIOTimer()
  * This method is called by methods of StatisticCollector.
  */
 void RPLUpwardRouting::setParametersBeforeGlobalRepair(simtime_t dodagSartTime){
+    Enter_Method("setParametersBeforeGlobalRepair()");
+
+    DeleteDIOTimer();
     if (myLLNetwAddr == sinkLinkLocalAddress){  //Global Repair is run/started by the root node
         VersionNember++;
-        Version = VersionNember;
         dtsnInstance++;
         Rank = 1;
         DODAGID = myGlobalNetwAddr;
@@ -263,6 +264,7 @@ void RPLUpwardRouting::setParametersBeforeGlobalRepair(simtime_t dodagSartTime){
         DIO_CurIntsizeNext = DIOIntMin;
         DIO_StofCurIntNext = dodagSartTime;
         DIO_EndofCurIntNext = DIO_StofCurIntNext+DIO_CurIntsizeNext;
+        scheduleNextDIOTransmission();
     }else{
         isNodeJoined = false;
     }
@@ -291,7 +293,6 @@ void RPLUpwardRouting::handleDIOTimer(cMessage* msg)
 
     if((DIO_c < DIORedun) || (DIORedun == 0))
     {
-        EV << "TEST00\n";
 
         // Broadcast DIO message
         ICMPv6DIOMsg* pkt = new ICMPv6DIOMsg("DIO", DIO);
@@ -327,7 +328,6 @@ void RPLUpwardRouting::handleDIOTimer(cMessage* msg)
         scheduleNextDIOTransmission();
         return;
     }else if(DIO_c >= DIORedun){
-        EV << "TEST11\n";
 
         //if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIO.Suppressed++;
         numSuppressedDIO++;
@@ -571,11 +571,6 @@ IPv6Address RPLUpwardRouting::getMyLLNetwAddr() const
 IPv6Address RPLUpwardRouting::getMyGlobalNetwAddr() const
 {
     return myGlobalNetwAddr;
-}
-
-simtime_t RPLUpwardRouting::getDODAGSartTime() const
-{
-    return dodagSartTime;
 }
 
 int RPLUpwardRouting::getInterfaceID() const

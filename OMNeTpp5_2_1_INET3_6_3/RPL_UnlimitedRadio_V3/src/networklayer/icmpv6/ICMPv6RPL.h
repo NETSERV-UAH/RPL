@@ -59,7 +59,7 @@ class ICMPv6RPL : public cSimpleModule, public ILifecycle
 {
 //EXTRA BEGIN
 protected:
-    enum RPLMOP mop;
+    enum RPLMOP mop;//
     int interfaceID;
     RPLUpwardRouting *rplUpwardRouting;
     IPv6NeighbourDiscoveryRPL *neighbourDiscoveryRPL;
@@ -85,17 +85,17 @@ protected:
     double DISStartDelay;
     int DISRedun;
     int DISIntDoubl;
-    simtime_t DISIMaxLength;
+    simtime_t DISIMaxLength;//
     int DISVersion;
-    cMessage* DISTimer;
+    cMessage* DISTimer;//
     simtime_t TimetoSendDIS;
 
-    int DAOheaderLength;
-    cMessage* DAOTimer;
-    cMessage* DAOLifeTimer;
+    int DAOheaderLength;//
+    cMessage* DAOTimer;//
+    cMessage* DAOLifeTimer;//
     simtime_t DelayDAO;
-    simtime_t defaultLifeTime;  // only used for DAO
-    simtime_t ROUTE_INFINITE_LIFETIME;
+    simtime_t defaultLifeTime;  // only used for DAO//
+    simtime_t ROUTE_INFINITE_LIFETIME;//
 
 
 
@@ -104,14 +104,36 @@ protected:
 public:
     ICMPv6RPL()
         : mop(Storing_Mode_of_Operation_with_no_multicast_support)
-        , DISheaderLength(0)
         , DAOheaderLength(0)
         , defaultLifeTime(0)
         , ROUTE_INFINITE_LIFETIME(0)
         , DAOTimer(nullptr)
         , DAOLifeTimer(nullptr)
-
         , DISTimer(nullptr)
+        , interfaceID(-1)
+        , rplUpwardRouting(nullptr)
+        , neighbourDiscoveryRPL(nullptr)
+        , parentTableRPL(nullptr)
+        , routingTable(nullptr)
+        , DIS_c(0)
+        , DIS_CurIntsizeNow(0)
+        , DIS_CurIntsizeNext(0)
+        , DIS_StofCurIntNow(0)
+        , DIS_StofCurIntNext(0)
+        , DIS_EndofCurIntNow(0)
+        , DIS_EndofCurIntNext(0)
+        , DISheaderLength(0)
+        , numReceivedDIS(0)
+        , numSentDIS(0)
+        , numSuppressedDIS(0)
+        , host(nullptr)
+        , DISIntMin(0)
+        , DISStartDelay(0)
+        , DISRedun(0)
+        , DISIntDoubl(00)
+        , DISVersion()
+        , TimetoSendDIS(0)
+        , DelayDAO(0)
             {};
 
     ~ICMPv6RPL();
@@ -192,7 +214,7 @@ public:
 
     virtual void processIncommingDISMessage(ICMPv6Message *msg);
   public:
-    virtual void SetDISParameters();
+    virtual void SetDISParameters(simtime_t dodagSartTime);
     virtual void scheduleNextDISTransmission();
     virtual void cancelAndDeleteDISTimer();
 

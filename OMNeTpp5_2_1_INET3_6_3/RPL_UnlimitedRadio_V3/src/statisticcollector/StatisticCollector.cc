@@ -39,12 +39,16 @@ void StatisticCollector::initialize(int stage)
         rplManager = check_and_cast<ManagerRPL *>(getSimulation()->getSystemModule()->getSubmodule("managerRPL"));
 
         numberOfIterations = par("numberOfIterations");
+        globalRepairInterval = par("globalRepairInterval");
+
     }
 
 }
 
 void StatisticCollector::registNode(cModule *host, RPLUpwardRouting *pRPLUpwardRouting, ParentTableRPL *parentTableRPL, IRoutingTable *routingTable, IPv6Address linlklocalAddress, IPv6Address globalAddress)
 {
+    Enter_Method("registNode()");
+
     int vectorIndex = rplManager->getIndexFromLLAddress(linlklocalAddress);
     if(nodeStateList.size() < vectorIndex + 1)
         nodeStateList.resize(vectorIndex + 1);
@@ -58,13 +62,15 @@ void StatisticCollector::registNode(cModule *host, RPLUpwardRouting *pRPLUpwardR
 
 void StatisticCollector::startStatistics(RPLMOP mop, IPv6Address sinkLLAddress, simtime_t time)
 {
+    Enter_Method("startStatistics()");
+
     //this->version = version;
     this->mop = mop;
 
     if (globalRepairInterval != 0)
     {
         globalRepairTimer = new cMessage("globalRepairTimer", Global_REPAIR_TIMER);
-        scheduleAt(globalRepairInterval, globalRepairTimer );
+        scheduleAt(time + globalRepairInterval, globalRepairTimer);
     }
 
     convergenceTimeStart = time;
@@ -76,6 +82,8 @@ void StatisticCollector::startStatistics(RPLMOP mop, IPv6Address sinkLLAddress, 
 //When a node receives a DIO message, it calls this method to indicate that it joined to the DAG and has a Upward route
 void StatisticCollector::nodeJoinedUpward(int nodeID, simtime_t time)
 {
+    Enter_Method("nodeJoinedUpward()");
+
     if(!nodeStateList.at(nodeID).isJoinUpward){
         nodeStateList.at(nodeID).isJoinUpward = true;
         nodeStateList.at(nodeID).joiningTimeUpward = time;
@@ -84,7 +92,7 @@ void StatisticCollector::nodeJoinedUpward(int nodeID, simtime_t time)
     if (isConverged()){
         EV << "This node is the last node that joined DODAG! DODAG formed!!" << endl;
         saveStatistics();
-        if(numberOfGlogalRepaires == numberOfIterations){
+        if(numberOfGlogalRepaires == numberOfIterations - 1){
             endSimulation();
         }else{
             scheduleNewGlobalRepair();
@@ -94,6 +102,8 @@ void StatisticCollector::nodeJoinedUpward(int nodeID, simtime_t time)
 
 void StatisticCollector::nodeJoinedUpward(IPv6Address linkLocalAddress, simtime_t time)
 {
+    Enter_Method("nodeJoinedUpward()");
+
     int vectorIndex = rplManager->getIndexFromLLAddress(linkLocalAddress);
     nodeJoinedUpward(vectorIndex, time);
 }
@@ -101,6 +111,8 @@ void StatisticCollector::nodeJoinedUpward(IPv6Address linkLocalAddress, simtime_
 //When the sink/root node receives a DAO message from a node, it calls this method to indicate that the node has a Downward route.
 void StatisticCollector::nodeJoinedDownnward(IPv6Address linkLocalAddress, simtime_t time)
 {
+    Enter_Method("nodeJoinedDownnward()");
+
     int vectorIndex = rplManager->getIndexFromLLAddress(linkLocalAddress);
     if (!nodeStateList.at(vectorIndex).isJoinDownward){
         nodeStateList.at(vectorIndex).isJoinDownward = true;
@@ -109,7 +121,7 @@ void StatisticCollector::nodeJoinedDownnward(IPv6Address linkLocalAddress, simti
         if (isConverged()){
             EV << "This node is the last node that joined DODAG! DODAG formed!!" << endl;
             saveStatistics();
-            if(numberOfGlogalRepaires == numberOfIterations){
+            if(numberOfGlogalRepaires == numberOfIterations - 1){
                 endSimulation();
             }else{
                 scheduleNewGlobalRepair();
@@ -120,6 +132,8 @@ void StatisticCollector::nodeJoinedDownnward(IPv6Address linkLocalAddress, simti
 
 void StatisticCollector::updateRank(IPv6Address ip, int rank)
 {
+    Enter_Method("updateRank()");
+
 
 }
 
@@ -142,7 +156,7 @@ bool StatisticCollector::isConverged()
     return true;
 }
 
-void StatisticCollector::ScheduleNextGlobalRepair()
+void StatisticCollector::scheduleNextGlobalRepair()
 {
     convergenceTimeStart = simTime();
     convergenceTimeEndUpward = SIMTIME_ZERO; // DODAG formation time in MOP = 0.
@@ -150,22 +164,21 @@ void StatisticCollector::ScheduleNextGlobalRepair()
 
     nodeJoinedUpward(sinkID, convergenceTimeStart);
 
-    for (int i=0; i<nodeStateList.size(); i++){
+    for (unsigned int i=0; i<nodeStateList.size(); i++){
         nodeStateList.at(i).pRPLUpwardRouting->setParametersBeforeGlobalRepair(convergenceTimeStart);
-        nodeStateList.at(i).pRPLUpwardRouting->scheduleNextDIOTransmission();
+        //nodeStateList.at(i).pRPLUpwardRouting->DeleteDIOTimer(); //in RPLUpwardRouting::setParametersBeforeGlobalRepair()
         if (i == sinkID){
             nodeStateList.at(i).isJoinUpward = true;
             nodeStateList.at(i).isJoinDownward = true;
+            //nodeStateList.at(i).pRPLUpwardRouting->scheduleNextDIOTransmission();  //in RPLUpwardRouting::setParametersBeforeGlobalRepair()
         }else{
             nodeStateList.at(i).isJoinUpward = false;
             nodeStateList.at(i).isJoinDownward = false;
         }
         nodeStateList.at(i).joiningTimeUpward = SIMTIME_ZERO;
         nodeStateList.at(i).joiningTimeDownward = SIMTIME_ZERO;
-        nodeStateList.at(i).pRPLUpwardRouting->DeleteDIOTimer();
         if (nodeStateList.at(i).pRPLUpwardRouting->par("DISEnable").boolValue()){
-            check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->SetDISParameters();
-            //check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->DISHandler();
+            check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->SetDISParameters(convergenceTimeStart);
             check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->scheduleNextDISTransmission();
         }
         if (mop != No_Downward_Routes_maintained_by_RPL){
@@ -173,7 +186,8 @@ void StatisticCollector::ScheduleNextGlobalRepair()
         }
     }
 
-    scheduleAt(simTime() + globalRepairInterval, globalRepairTimer );
+    cancelEvent(globalRepairTimer);
+    scheduleAt(convergenceTimeStart + globalRepairInterval, globalRepairTimer);
     numberOfGlogalRepaires++;
 }
 
@@ -187,9 +201,9 @@ void StatisticCollector::scheduleNewGlobalRepair()
 
 void StatisticCollector::handleMessage(cMessage* msg)
 {
-    if (msg->getKind() == Global_REPAIR_TIMER)
-        ScheduleNextGlobalRepair();
-    else{
+    if (msg->getKind() == Global_REPAIR_TIMER){
+        scheduleNextGlobalRepair();
+    }else{
         EV << "Unknown self message is deleted." << endl;
         delete msg;
     }

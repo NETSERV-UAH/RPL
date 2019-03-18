@@ -141,10 +141,8 @@ protected:
     int Rank;
     simtime_t NodeStartTime;
     int VersionNember;
-    int Version;
     int Grounded;
     simtime_t TimetoSendDIO;
-    simtime_t dodagSartTime;
 
     int DIO_c;
     simtime_t DIO_CurIntsizeNow,DIO_CurIntsizeNext;
@@ -209,10 +207,8 @@ public:
         , Rank(0)
         , NodeStartTime(0)
         , VersionNember(0)
-        , Version(0)
         , Grounded(0)
         , TimetoSendDIO(0)
-        , dodagSartTime(0)
         , DIO_c(0)
         , DIO_CurIntsizeNow(0)
         , DIO_CurIntsizeNext(0)
@@ -281,7 +277,6 @@ public:
     virtual IPv6Address getDODAGID() const;
     virtual IPv6Address getMyLLNetwAddr() const;
     virtual IPv6Address getMyGlobalNetwAddr() const;
-    virtual simtime_t getDODAGSartTime() const;
     virtual int getInterfaceID() const;
 
 };

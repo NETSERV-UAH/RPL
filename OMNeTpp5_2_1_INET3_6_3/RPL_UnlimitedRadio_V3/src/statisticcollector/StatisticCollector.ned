@@ -19,11 +19,6 @@
 
 package rpl.src.statisticcollector;
 
-// This module is an UDP flow traffic generator. You can configure a generation frequency (lambda) and 
-// this will determine every time a new flow is created by the generator. The generator operates
-// with the UDPFlowHost modules at every host (StandardHostNew) in the network. Every time a new 
-// flow is created, the generator indicates the source host to start the flow (and its parameters)
-
 simple StatisticCollector
 {
     parameters:
@@ -31,5 +26,5 @@ simple StatisticCollector
         @display("i=block/cogwheel_s");
         @labels(node);
         double globalRepairInterval @unit(s) = default(10000s);
-        int numberOfIterations = default(10);
+        int numberOfIterations = default(5);
 }

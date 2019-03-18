@@ -113,22 +113,39 @@ class StatisticCollector : public cSimpleModule
 
 public:
     StatisticCollector()
-        : convergenceTimeStart(0)
+        : rplManager(nullptr)
+        , sinkID(-1)
+        , convergenceTimeStart(0)
         , convergenceTimeEndUpward(0)
         , convergenceTimeEndDownward(0)
+        , numSentDIO(0)
+        , numReceivedDIO(0)
+        , numSuppressedDIO(0)
+        , numSentDIS(0)
+        , numReceivedDIS(0)
+        , numSuppressedDIS(0)
+        , numSentDAO(0)
+        , numReceivedDAO(0)
+        , numSuppressedDAO(0)
+        , numberOfIterations(0)
+        , numberOfGlogalRepaires(0)
+        , globalRepairTimer(nullptr)
+        , globalRepairInterval(0)
+        , numberOfDODAGformationNormal(0)
+        , mop(Storing_Mode_of_Operation_with_no_multicast_support)
             {};
 
     ~StatisticCollector();
 
 protected:
 
-    void initialize(int stage);
+    virtual void initialize(int stage);
 
     virtual bool isConverged();
 
     virtual void saveStatistics();
 
-    void ScheduleNextGlobalRepair();
+    virtual void scheduleNextGlobalRepair();
 
     virtual void scheduleNewGlobalRepair();
 

@@ -59,8 +59,6 @@ void ICMPv6RPL::initialize(int stage)
     //EXTRA BEGIN
     if(stage == INITSTAGE_LOCAL){
         host = getContainingNode(this);
-        int mOP = this->getParentModule()->getSubmodule("rplUpwardRouting")->par("modeOfOperation");
-        mop = (RPLMOP) mOP;
         rplUpwardRouting = check_and_cast<RPLUpwardRouting *>(this->getParentModule()->getSubmodule("rplUpwardRouting"));
         neighbourDiscoveryRPL = check_and_cast<IPv6NeighbourDiscoveryRPL *>(this->getParentModule()->getSubmodule("neighbourDiscovery"));
         parentTableRPL = check_and_cast<ParentTableRPL *>(this->getParentModule()->getSubmodule("parentTableRPL"));
@@ -73,6 +71,9 @@ void ICMPv6RPL::initialize(int stage)
         else if (mop > 3)
             throw cRuntimeError("ICMPv6RPL::initialize(): Unknown MOP MOP#%d\n", (int)mop);
 
+        //int mOP = this->getParentModule()->getSubmodule("rplUpwardRouting")->par("modeOfOperation");
+        int mOP = rplUpwardRouting->par("modeOfOperation");
+        mop = (RPLMOP) mOP;
 
         defaultLifeTime = par ("defaultLifeTime");
 
@@ -261,7 +262,7 @@ void ICMPv6RPL::processIncommingDISMessage(ICMPv6Message *msg)
 }
 
 
-void ICMPv6RPL::SetDISParameters()
+void ICMPv6RPL::SetDISParameters(simtime_t dodagSartTime)
 {
     Enter_Method("SetDISParameters()");
 
@@ -272,30 +273,32 @@ void ICMPv6RPL::SetDISParameters()
 
     //DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);  EXTRA
     DIS_CurIntsizeNext = DISIntMin;
-    DIS_StofCurIntNext = DISStartDelay + rplUpwardRouting->getDODAGSartTime();   //Check before run
+    DIS_StofCurIntNext = DISStartDelay + dodagSartTime;
     DIS_EndofCurIntNext = DIS_StofCurIntNext + DIS_CurIntsizeNext;
+
 }
 
 void ICMPv6RPL::scheduleNextDISTransmission()
 {
     Enter_Method("scheduleNextDISTransmission()");
+
     DIS_CurIntsizeNow = DIS_CurIntsizeNext;
     DIS_StofCurIntNow = DIS_StofCurIntNext;
     DIS_EndofCurIntNow = DIS_EndofCurIntNext;
-    TimetoSendDIS=DIS_StofCurIntNow+uniform(0,DIS_CurIntsizeNow/2)+(DIS_CurIntsizeNow/2);
+    TimetoSendDIS = DIS_StofCurIntNow + uniform(0, DIS_CurIntsizeNow / 2) + (DIS_CurIntsizeNow / 2);
 
     if (DISTimer)//EXTRA
         throw cRuntimeError("ICMPv6RPL::scheduleNextDISTransmission: DIS Timer must be nullptr.");
     else
         DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
 
-    scheduleAt(TimetoSendDIS,DISTimer );
-    DIS_CurIntsizeNext*=2;
-    if (DIS_CurIntsizeNext>DISIMaxLength)
-        DIS_CurIntsizeNext=DISIMaxLength;
+    scheduleAt(TimetoSendDIS, DISTimer);
+    DIS_CurIntsizeNext *= 2;
+    if (DIS_CurIntsizeNext > DISIMaxLength)
+        DIS_CurIntsizeNext = DISIMaxLength;
     DIS_StofCurIntNext = DIS_EndofCurIntNext;
-    DIS_EndofCurIntNext=DIS_StofCurIntNext+DIS_CurIntsizeNext;
-    DIS_c=0;
+    DIS_EndofCurIntNext = DIS_StofCurIntNext + DIS_CurIntsizeNext;
+    DIS_c = 0;
 }
 
 /*
@@ -654,6 +657,7 @@ void ICMPv6RPL::scheduleDAOlifetimer(simtime_t lifeTime)
 void ICMPv6RPL::DeleteDAOTimers()
 {
     Enter_Method("DeleteDAOTimers()");
+
     if (DAOTimer){
         cancelAndDelete(DAOTimer);
         DAOTimer = nullptr;
