@@ -126,6 +126,7 @@ void ICMPv6RPL::handleMessage(cMessage *msg)
     //ASSERT(!msg->isSelfMessage());    // no timers in ICMPv6
 
     if (msg->isSelfMessage()){
+        EV << "Test11\n";
         handleSelfMsg(msg);
         return;
     }
@@ -293,6 +294,7 @@ void ICMPv6RPL::scheduleNextDISTransmission()
         DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);
 
     scheduleAt(TimetoSendDIS, DISTimer);
+    EV << "Scheduling a DIS at t = " << TimetoSendDIS << "s." << endl;
     DIS_CurIntsizeNext *= 2;
     if (DIS_CurIntsizeNext > DISIMaxLength)
         DIS_CurIntsizeNext = DISIMaxLength;
@@ -313,19 +315,22 @@ void ICMPv6RPL::cancelAndDeleteDISTimer()
 void ICMPv6RPL::handleDISTimer(cMessage* msg)
 {
 
-    if(((!rplUpwardRouting->isNodeJoinedToDAG())&&((DIS_c<DISRedun)||(DISRedun==0)))&&(DISVersion == rplUpwardRouting->getVersion())) //EXTRA
     //if(((!IsJoined)&&((DIS_c<DISRedun)||(DISRedun==0)))&&(DISVersion==Version))  //EXTRA
+    //if(((!rplUpwardRouting->isNodeJoinedToDAG()) && ((DIS_c < DISRedun)||(DISRedun==0))) && (DISVersion == rplUpwardRouting->getVersion())) //EXTRA
+    if((!rplUpwardRouting->isNodeJoinedToDAG()) && ((DIS_c < DISRedun)||(DISRedun==0))) //EXTRA
     {
         ICMPv6DISMsg* pkt = new ICMPv6DISMsg("DIS", DIS_FLOOD);
         IPv6ControlInfo *controlInfo = new IPv6ControlInfo;
-        controlInfo->setSrcAddr(rplUpwardRouting->getMyLLNetwAddr());     //Check before run
+        controlInfo->setSrcAddr(rplUpwardRouting->getMyLLNetwAddr());
         controlInfo->setDestAddr(IPv6Address::ALL_NODES_2);
-        pkt->setByteLength(DISheaderLength);
-        pkt->setVersionNumber(rplUpwardRouting->getVersion());
-        pkt->setDODAGID(rplUpwardRouting->getDODAGID());    //Check before run why dodagid!!?? since !isNodeJoinedToDAG??;
-        pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
         controlInfo->setProtocol(IP_PROT_IPv6_ICMP);
         pkt->setControlInfo(controlInfo);
+        pkt->setByteLength(DISheaderLength);
+        //pkt->setVersionNumber(rplUpwardRouting->getVersion());
+        //pkt->setDODAGID(rplUpwardRouting->getDODAGID());    //Check before run why dodagid!!?? since !isNodeJoinedToDAG??;
+        pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
+        //pkt->setCode(DIS);
+        EV << "DIS is sent to the IPv6 module." << endl;
         send(pkt, "ipv6Out");
 
         numSentDIS++;     //Check before run //if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Sent++;
@@ -337,7 +342,8 @@ void ICMPv6RPL::handleDISTimer(cMessage* msg)
     }
     else
         //if(((!IsJoined)&&(DIS_c>=DISRedun))&&(DISVersion==Version)) //EXTRA
-        if(((!rplUpwardRouting->isNodeJoinedToDAG())&&(DIS_c >= DISRedun))&&(DISVersion == rplUpwardRouting->getVersion())) //EXTRA
+        //if(((!rplUpwardRouting->isNodeJoinedToDAG()) && (DIS_c >= DISRedun)) && (DISVersion == rplUpwardRouting->getVersion())) //EXTRA
+        if((!rplUpwardRouting->isNodeJoinedToDAG()) && (DIS_c >= DISRedun)) //EXTRA
         {
             //Check before run //if ((NodeCounter_Upward[Version]<NodesNumber)&&(!IsDODAGFormed_Upward))  NodeStateLast->DIS.Suppressed++;  // if !end simulation
             numSuppressedDIS++;
@@ -348,6 +354,7 @@ void ICMPv6RPL::handleDISTimer(cMessage* msg)
             cancelAndDelete(DISTimer);
             //DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER); //EXTRA
             DISTimer = nullptr;  //EXTRA
+            EV << "DIS is suppressed. Schedule another." << endl;
             scheduleNextDISTransmission();
             return;
 
@@ -359,9 +366,9 @@ void ICMPv6RPL::handleDISTimer(cMessage* msg)
                 cancelAndDelete(DISTimer);
                 //DISTimer = new cMessage("DIS-timer", SEND_DIS_FLOOD_TIMER);  //EXTRA
                 DISTimer = nullptr;  //EXTRA
+                EV << "DIS is deleted. The node joined to DAG" << endl;
+
             }
-    //EXTRA : addin a condition : if joined Version > disversion, disc < dis redun, disc=0 ==> send dio
-    //EXTRA : if not joined || dis_c > dis redun || version < disversion == > suppressed
 }
 
 //////////// DAO Operations ////////////////////

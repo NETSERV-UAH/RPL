@@ -200,6 +200,8 @@ void RPLUpwardRouting::TrickleReset()
 
 void RPLUpwardRouting::scheduleNextDIOTransmission()
 {
+    Enter_Method("scheduleNextDIOTransmission()"); //icmpv6::processIncommingDISMessage() calls this method
+
     EV << "->RPLUpwardRouting::scheduleNextDIOTransmission()" << endl;
 
     DIO_CurIntsizeNow = DIO_CurIntsizeNext;
@@ -209,11 +211,8 @@ void RPLUpwardRouting::scheduleNextDIOTransmission()
     EV << "Schedule next DIO : theoretical I = " << DIO_CurIntsizeNow << ", practical I = I + simtime = : " << DIO_EndofCurIntNow << endl;
     EV << "Time to send is random amount in the interval of [practical I/2 practicalI] uniformly :" << TimetoSendDIO << endl;
 
-
-    if (DIOTimer)//EXTRA
-        throw cRuntimeError("RPLUpwardRouting::scheduleNextDIOTransmission: DIO Timer must be nullptr.");
-    else
-        DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
+    DeleteDIOTimer();
+    DIOTimer = new cMessage("DIO-timer", SEND_DIO_TIMER);
 
     scheduleAt(TimetoSendDIO, DIOTimer);
     DIO_CurIntsizeNext *= 2;
@@ -251,9 +250,8 @@ void RPLUpwardRouting::DeleteDIOTimer()
  * This method is called by methods of StatisticCollector.
  */
 void RPLUpwardRouting::setParametersBeforeGlobalRepair(simtime_t dodagSartTime){
-    Enter_Method("setParametersBeforeGlobalRepair()");
+    Enter_Method("setParametersBeforeGlobalRepair()"); //StatisticCollector calls this method
 
-    DeleteDIOTimer();
     if (myLLNetwAddr == sinkLinkLocalAddress){  //Global Repair is run/started by the root node
         VersionNember++;
         dtsnInstance++;
@@ -266,9 +264,13 @@ void RPLUpwardRouting::setParametersBeforeGlobalRepair(simtime_t dodagSartTime){
         DIO_EndofCurIntNext = DIO_StofCurIntNext+DIO_CurIntsizeNext;
         scheduleNextDIOTransmission();
     }else{
+        DeleteDIOTimer();
         isNodeJoined = false;
     }
-
+    //Reset statistics
+    numSentDIO = 0;
+    numReceivedDIO = 0;
+    numSuppressedDIO = 0;
 }
 void RPLUpwardRouting::handleMessage(cMessage* msg)
 {
@@ -405,7 +407,8 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                DIORedun = netwMsg->getK();
                DODAGID = netwMsg->getDODAGID();
                parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber());
-               statisticCollector->updateRank(myLLNetwAddr, parentTableRPL->getRank(VersionNember));
+               Rank = parentTableRPL->getRank(VersionNember);
+               statisticCollector->updateRank(myLLNetwAddr, Rank);
 
                char buf0[50];
                sprintf(buf0, "I joined DODAG%d via node %d !!", VersionNember,ctrlInfo->getSrcAddr());
@@ -436,7 +439,8 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 DIO_EndofCurIntNext = DIO_StofCurIntNext+DIO_CurIntsizeNext;
                 Grounded = netwMsg->getGrounded();
                 parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber());
-                statisticCollector->updateRank(myLLNetwAddr, parentTableRPL->getRank(VersionNember));
+                Rank = parentTableRPL->getRank(VersionNember);
+                statisticCollector->updateRank(myLLNetwAddr, Rank);
 
                 char buf0[50];
                 sprintf(buf0, "I joined DODAG %d via node %d !!", VersionNember, ctrlInfo->getSrcAddr());
@@ -450,7 +454,6 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 if (!neighbourDiscoveryRPL->addNeighborFromRPLMessage(ctrlInfo)){
                     throw cRuntimeError("RPLUpwardRouting::handleIncommingDIOMessage(): Neighbor can not be added!");
                 }
-                numReceivedDIO++;
                 DIO_c++;
                 DODAGID = netwMsg->getDODAGID();
                 Grounded = netwMsg->getGrounded();
@@ -490,7 +493,6 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 }
                 host->bubble("DIO deleted!!\nThe sender node should be updated.!!! ");
             }else {
-                numReceivedDIO++;
                 char buf4[100];
                 sprintf(buf4,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", VersionNember, Rank, parentTableRPL->getPrefParentIPAddress(VersionNember).getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
                 host->getDisplayString().setTagArg("t", 0, buf4);

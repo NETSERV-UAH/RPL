@@ -148,15 +148,68 @@ enum RPL_OPTIONS {
  *     int flags; // RFC 6550, section 6.2.1: set to 0
  *     int reserved; // RFC 6550, section 6.2.1 set to 0
  * 
- *     int RPLInstanceID;          // The ID of the RPL instance
- *     int VersionNumber;          // DODAG version number
- *     int V;                      // Node's rank
- *     int I;                      // Type of the DODAG, Grounded or Flooding
- *     int D;                      // Destination Advertisement Trigger Sequence Number       
- *     int Flag;                   // The size of Imin in Trcikle algorithm
- *     IPv6Address DODAGID;   // IPv6 address set by DODAG root  
- * 
  *     int options \@enum(RPL_OPTIONS); //RFC 6550, section 6.2.1
+ * 
+ * //	 0                   1                   2                   3
+ * //	 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ * //	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ * //	|  Type = 0x07  |Opt Length = 19| RPLInstanceID |V|I|D|  Flags  |
+ * //	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ * //	|                                                               |
+ * //	+                                                               +
+ * //	|                                                               |
+ * //	+                          DODAGID                              +
+ * //	|                                                               |
+ * //	+                                                               +
+ * //	|                                                               |
+ * //	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ * //	|Version Number |
+ * //	+-+-+-+-+-+-+-+-+
+ * 
+ * 
+ * 	//RFC 6550, section 6.7.9. Solicited Information
+ * 
+ *      // The ’V’ flag is the Version predicate. The Version predicate is true if
+ *      // the receiver’s DODAGVersionNumber matches the requested Version Number.
+ *      // If the ’V’ flag is cleared, then the Version field is not valid and the
+ *      // Version field MUST be set to zero on transmission and ignored upon receipt.
+ *     int V;
+ * 
+ *     // The ’I’ flag is the InstanceID predicate. The InstanceID
+ * 	// predicate is true when the RPL node’s current RPLInstanceID
+ * 	// matches the requested RPLInstanceID. If the ’I’ flag is
+ * 	// cleared, then the RPLInstanceID field is not valid and the
+ * 	// RPLInstanceID field MUST be set to zero on transmission and
+ * 	// ignored upon receipt.
+ *     int I;
+ * 
+ *     // The ’D’ flag is the DODAGID predicate. The DODAGID predicate is
+ * 	// true if the RPL node’s parent set has the same DODAGID as the
+ * 	// DODAGID field. If the ’D’ flag is cleared, then the DODAGID
+ * 	// field is not valid and the DODAGID field MUST be set to zero on
+ * 	// transmission and ignored upon receipt.
+ *     int D;
+ * 
+ *     // The 5 bits remaining unused in the Flags field are reserved
+ * 	// for flags. The field MUST be initialized to zero by the sender
+ * 	// and MUST be ignored by the receiver.       
+ *     int Flag;
+ * 
+ *     // 8-bit unsigned integer containing the value of
+ * 	// DODAGVersionNumber that is being solicited when valid.
+ * 
+ *     int VersionNumber;
+ * 
+ * 	// 8-bit unsigned integer containing the RPLInstanceID
+ * 	// that is being solicited when valid.
+ * 
+ *     int RPLInstanceID;
+ * 
+ * 	// 128-bit unsigned integer containing the DODAGID that is
+ * 	// being solicited when valid.
+ * 
+ *     IPv6Address DODAGID;
+ * 
  * }
  * 
  * 
@@ -189,14 +242,14 @@ class ICMPv6DISMsg : public ::inet::ICMPv6Message
     int code;
     int flags;
     int reserved;
-    int RPLInstanceID;
-    int VersionNumber;
+    int options;
     int V;
     int I;
     int D;
     int Flag;
+    int VersionNumber;
+    int RPLInstanceID;
     IPv6Address DODAGID;
-    int options;
 
   private:
     void copy(const ICMPv6DISMsg& other);
@@ -221,10 +274,8 @@ class ICMPv6DISMsg : public ::inet::ICMPv6Message
     virtual void setFlags(int flags);
     virtual int getReserved() const;
     virtual void setReserved(int reserved);
-    virtual int getRPLInstanceID() const;
-    virtual void setRPLInstanceID(int RPLInstanceID);
-    virtual int getVersionNumber() const;
-    virtual void setVersionNumber(int VersionNumber);
+    virtual int getOptions() const;
+    virtual void setOptions(int options);
     virtual int getV() const;
     virtual void setV(int V);
     virtual int getI() const;
@@ -233,18 +284,20 @@ class ICMPv6DISMsg : public ::inet::ICMPv6Message
     virtual void setD(int D);
     virtual int getFlag() const;
     virtual void setFlag(int Flag);
+    virtual int getVersionNumber() const;
+    virtual void setVersionNumber(int VersionNumber);
+    virtual int getRPLInstanceID() const;
+    virtual void setRPLInstanceID(int RPLInstanceID);
     virtual IPv6Address& getDODAGID();
     virtual const IPv6Address& getDODAGID() const {return const_cast<ICMPv6DISMsg*>(this)->getDODAGID();}
     virtual void setDODAGID(const IPv6Address& DODAGID);
-    virtual int getOptions() const;
-    virtual void setOptions(int options);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6DISMsg& obj) {obj.parsimPack(b);}
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6DISMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:156</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:209</tt> by nedtool.
  * <pre>
  * //DIO control message for RPL
  * //message ICMPv6DIOMsg extends ICMPv6Message
@@ -355,7 +408,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ICMPv6DIOMsg& obj) {o
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ICMPv6DIOMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:205</tt> by nedtool.
+ * Class generated from <tt>src/networklayer/icmpv6/ICMPv6MessageRPL.msg:258</tt> by nedtool.
  * <pre>
  * //EXTRA 
  * //The DAO control message for RPL, Section 6.4.1

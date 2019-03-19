@@ -116,15 +116,68 @@ packet ICMPv6DISMsg extends ICMPv6Message
     int flags; // RFC 6550, section 6.2.1: set to 0
     int reserved; // RFC 6550, section 6.2.1 set to 0
     
-    int RPLInstanceID;          // The ID of the RPL instance
-    int VersionNumber;          // DODAG version number
-    int V;                      // Node's rank
-    int I;                      // Type of the DODAG, Grounded or Flooding
-    int D;                      // Destination Advertisement Trigger Sequence Number       
-    int Flag;                   // The size of Imin in Trcikle algorithm
-    IPv6Address DODAGID;   // IPv6 address set by DODAG root  
-    
     int options @enum(RPL_OPTIONS); //RFC 6550, section 6.2.1
+    
+//	 0                   1                   2                   3
+//	 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+//	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//	|  Type = 0x07  |Opt Length = 19| RPLInstanceID |V|I|D|  Flags  |
+//	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//	|                                                               |
+//	+                                                               +
+//	|                                                               |
+//	+                          DODAGID                              +
+//	|                                                               |
+//	+                                                               +
+//	|                                                               |
+//	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//	|Version Number |
+//	+-+-+-+-+-+-+-+-+
+    
+    
+	//RFC 6550, section 6.7.9. Solicited Information
+	
+     // The ’V’ flag is the Version predicate. The Version predicate is true if
+     // the receiver’s DODAGVersionNumber matches the requested Version Number.
+     // If the ’V’ flag is cleared, then the Version field is not valid and the
+     // Version field MUST be set to zero on transmission and ignored upon receipt.
+    int V;
+    
+    // The ’I’ flag is the InstanceID predicate. The InstanceID
+	// predicate is true when the RPL node’s current RPLInstanceID
+	// matches the requested RPLInstanceID. If the ’I’ flag is
+	// cleared, then the RPLInstanceID field is not valid and the
+	// RPLInstanceID field MUST be set to zero on transmission and
+	// ignored upon receipt.
+    int I;
+    
+    // The ’D’ flag is the DODAGID predicate. The DODAGID predicate is
+	// true if the RPL node’s parent set has the same DODAGID as the
+	// DODAGID field. If the ’D’ flag is cleared, then the DODAGID
+	// field is not valid and the DODAGID field MUST be set to zero on
+	// transmission and ignored upon receipt.
+    int D;
+    
+    // The 5 bits remaining unused in the Flags field are reserved
+	// for flags. The field MUST be initialized to zero by the sender
+	// and MUST be ignored by the receiver.       
+    int Flag;
+    
+    // 8-bit unsigned integer containing the value of
+	// DODAGVersionNumber that is being solicited when valid.
+
+	int VersionNumber;
+	
+	// 8-bit unsigned integer containing the RPLInstanceID
+	// that is being solicited when valid.
+	
+	int RPLInstanceID;
+	
+	// 128-bit unsigned integer containing the DODAGID that is
+	// being solicited when valid.
+	
+    IPv6Address DODAGID;
+    
 }
 
 

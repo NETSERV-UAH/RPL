@@ -104,6 +104,7 @@ class StatisticCollector : public cSimpleModule
 
     int numberOfIterations;
     int numberOfGlogalRepaires; //Each Global Repair increments this variable.
+    int numberOfConvergedGlogalRepaires;
     cMessage* globalRepairTimer;
     simtime_t globalRepairInterval;
 
@@ -129,6 +130,7 @@ public:
         , numSuppressedDAO(0)
         , numberOfIterations(0)
         , numberOfGlogalRepaires(0)
+        , numberOfConvergedGlogalRepaires(0)
         , globalRepairTimer(nullptr)
         , globalRepairInterval(0)
         , numberOfDODAGformationNormal(0)

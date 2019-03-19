@@ -35,31 +35,31 @@ network Net802154
 {
     parameters:
         int numHosts;
-        @display("bgb=262,202");
+        @display("bgb=179.99333,167.58");
     submodules:
         //    generator: UDPFlowGenerator {
         //      @display("p=100,20");
         // }
         configurator: FlatNetworkConfigurator6 {
             parameters:
-                @display("p=197,19");
+                @display("p=70.933334,18.62");
         }
         managerRPL: ManagerRPL {
             parameters:
                 @display("p=34,19");
         }
-        
+
         statisticCollector: StatisticCollector {
             parameters:
-                @display("p=100,40");
+                @display("p=119.700005,18.62");
         }
-        
+
         radioMedium: SimpleIdealRadioMedium {
             parameters:
-                @display("p=112,19");
+                @display("p=138.32,37.24");
         }
         host[numHosts]: RPLRouter {
             parameters:
-                @display("r=,,#707070;p=146,58");
+                @display("r=,,#707070;p=62.066666,109.06");
         }
 }

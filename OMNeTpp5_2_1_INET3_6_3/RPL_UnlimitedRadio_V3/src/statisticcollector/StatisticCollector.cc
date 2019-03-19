@@ -92,7 +92,7 @@ void StatisticCollector::nodeJoinedUpward(int nodeID, simtime_t time)
     if (isConverged()){
         EV << "This node is the last node that joined DODAG! DODAG formed!!" << endl;
         saveStatistics();
-        if(numberOfGlogalRepaires == numberOfIterations - 1){
+        if(numberOfConvergedGlogalRepaires == numberOfIterations - 1){
             endSimulation();
         }else{
             scheduleNewGlobalRepair();
@@ -121,7 +121,7 @@ void StatisticCollector::nodeJoinedDownnward(IPv6Address linkLocalAddress, simti
         if (isConverged()){
             EV << "This node is the last node that joined DODAG! DODAG formed!!" << endl;
             saveStatistics();
-            if(numberOfGlogalRepaires == numberOfIterations - 1){
+            if(numberOfConvergedGlogalRepaires == numberOfIterations - 1){
                 endSimulation();
             }else{
                 scheduleNewGlobalRepair();
@@ -174,21 +174,21 @@ void StatisticCollector::scheduleNextGlobalRepair()
         }else{
             nodeStateList.at(i).isJoinUpward = false;
             nodeStateList.at(i).isJoinDownward = false;
+            if (nodeStateList.at(i).pRPLUpwardRouting->par("DISEnable").boolValue()){
+                check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->SetDISParameters(convergenceTimeStart);
+                check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->scheduleNextDISTransmission();
+            }
+            if (mop != No_Downward_Routes_maintained_by_RPL){
+                check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->DeleteDAOTimers();
+            }
         }
         nodeStateList.at(i).joiningTimeUpward = SIMTIME_ZERO;
         nodeStateList.at(i).joiningTimeDownward = SIMTIME_ZERO;
-        if (nodeStateList.at(i).pRPLUpwardRouting->par("DISEnable").boolValue()){
-            check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->SetDISParameters(convergenceTimeStart);
-            check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->scheduleNextDISTransmission();
-        }
-        if (mop != No_Downward_Routes_maintained_by_RPL){
-            check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->DeleteDAOTimers();
-        }
     }
 
     cancelEvent(globalRepairTimer);
     scheduleAt(convergenceTimeStart + globalRepairInterval, globalRepairTimer);
-    numberOfGlogalRepaires++;
+    numberOfConvergedGlogalRepaires++;
 }
 
 //Close current Global Repair and schedule a new Global Repair.
@@ -202,6 +202,7 @@ void StatisticCollector::scheduleNewGlobalRepair()
 void StatisticCollector::handleMessage(cMessage* msg)
 {
     if (msg->getKind() == Global_REPAIR_TIMER){
+        numberOfGlogalRepaires++;
         scheduleNextGlobalRepair();
     }else{
         EV << "Unknown self message is deleted." << endl;

@@ -214,13 +214,13 @@ ICMPv6DISMsg::ICMPv6DISMsg(const char *name, short kind) : ::inet::ICMPv6Message
     this->code = 0;
     this->flags = 0;
     this->reserved = 0;
-    this->RPLInstanceID = 0;
-    this->VersionNumber = 0;
+    this->options = 0;
     this->V = 0;
     this->I = 0;
     this->D = 0;
     this->Flag = 0;
-    this->options = 0;
+    this->VersionNumber = 0;
+    this->RPLInstanceID = 0;
 }
 
 ICMPv6DISMsg::ICMPv6DISMsg(const ICMPv6DISMsg& other) : ::inet::ICMPv6Message(other)
@@ -245,14 +245,14 @@ void ICMPv6DISMsg::copy(const ICMPv6DISMsg& other)
     this->code = other.code;
     this->flags = other.flags;
     this->reserved = other.reserved;
-    this->RPLInstanceID = other.RPLInstanceID;
-    this->VersionNumber = other.VersionNumber;
+    this->options = other.options;
     this->V = other.V;
     this->I = other.I;
     this->D = other.D;
     this->Flag = other.Flag;
+    this->VersionNumber = other.VersionNumber;
+    this->RPLInstanceID = other.RPLInstanceID;
     this->DODAGID = other.DODAGID;
-    this->options = other.options;
 }
 
 void ICMPv6DISMsg::parsimPack(omnetpp::cCommBuffer *b) const
@@ -261,14 +261,14 @@ void ICMPv6DISMsg::parsimPack(omnetpp::cCommBuffer *b) const
     doParsimPacking(b,this->code);
     doParsimPacking(b,this->flags);
     doParsimPacking(b,this->reserved);
-    doParsimPacking(b,this->RPLInstanceID);
-    doParsimPacking(b,this->VersionNumber);
+    doParsimPacking(b,this->options);
     doParsimPacking(b,this->V);
     doParsimPacking(b,this->I);
     doParsimPacking(b,this->D);
     doParsimPacking(b,this->Flag);
+    doParsimPacking(b,this->VersionNumber);
+    doParsimPacking(b,this->RPLInstanceID);
     doParsimPacking(b,this->DODAGID);
-    doParsimPacking(b,this->options);
 }
 
 void ICMPv6DISMsg::parsimUnpack(omnetpp::cCommBuffer *b)
@@ -277,14 +277,14 @@ void ICMPv6DISMsg::parsimUnpack(omnetpp::cCommBuffer *b)
     doParsimUnpacking(b,this->code);
     doParsimUnpacking(b,this->flags);
     doParsimUnpacking(b,this->reserved);
-    doParsimUnpacking(b,this->RPLInstanceID);
-    doParsimUnpacking(b,this->VersionNumber);
+    doParsimUnpacking(b,this->options);
     doParsimUnpacking(b,this->V);
     doParsimUnpacking(b,this->I);
     doParsimUnpacking(b,this->D);
     doParsimUnpacking(b,this->Flag);
+    doParsimUnpacking(b,this->VersionNumber);
+    doParsimUnpacking(b,this->RPLInstanceID);
     doParsimUnpacking(b,this->DODAGID);
-    doParsimUnpacking(b,this->options);
 }
 
 int ICMPv6DISMsg::getCode() const
@@ -317,24 +317,14 @@ void ICMPv6DISMsg::setReserved(int reserved)
     this->reserved = reserved;
 }
 
-int ICMPv6DISMsg::getRPLInstanceID() const
+int ICMPv6DISMsg::getOptions() const
 {
-    return this->RPLInstanceID;
+    return this->options;
 }
 
-void ICMPv6DISMsg::setRPLInstanceID(int RPLInstanceID)
+void ICMPv6DISMsg::setOptions(int options)
 {
-    this->RPLInstanceID = RPLInstanceID;
-}
-
-int ICMPv6DISMsg::getVersionNumber() const
-{
-    return this->VersionNumber;
-}
-
-void ICMPv6DISMsg::setVersionNumber(int VersionNumber)
-{
-    this->VersionNumber = VersionNumber;
+    this->options = options;
 }
 
 int ICMPv6DISMsg::getV() const
@@ -377,6 +367,26 @@ void ICMPv6DISMsg::setFlag(int Flag)
     this->Flag = Flag;
 }
 
+int ICMPv6DISMsg::getVersionNumber() const
+{
+    return this->VersionNumber;
+}
+
+void ICMPv6DISMsg::setVersionNumber(int VersionNumber)
+{
+    this->VersionNumber = VersionNumber;
+}
+
+int ICMPv6DISMsg::getRPLInstanceID() const
+{
+    return this->RPLInstanceID;
+}
+
+void ICMPv6DISMsg::setRPLInstanceID(int RPLInstanceID)
+{
+    this->RPLInstanceID = RPLInstanceID;
+}
+
 IPv6Address& ICMPv6DISMsg::getDODAGID()
 {
     return this->DODAGID;
@@ -385,16 +395,6 @@ IPv6Address& ICMPv6DISMsg::getDODAGID()
 void ICMPv6DISMsg::setDODAGID(const IPv6Address& DODAGID)
 {
     this->DODAGID = DODAGID;
-}
-
-int ICMPv6DISMsg::getOptions() const
-{
-    return this->options;
-}
-
-void ICMPv6DISMsg::setOptions(int options)
-{
-    this->options = options;
 }
 
 class ICMPv6DISMsgDescriptor : public omnetpp::cClassDescriptor
@@ -483,8 +483,8 @@ unsigned int ICMPv6DISMsgDescriptor::getFieldTypeFlags(int field) const
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
-        FD_ISCOMPOUND,
         FD_ISEDITABLE,
+        FD_ISCOMPOUND,
     };
     return (field>=0 && field<11) ? fieldTypeFlags[field] : 0;
 }
@@ -501,14 +501,14 @@ const char *ICMPv6DISMsgDescriptor::getFieldName(int field) const
         "code",
         "flags",
         "reserved",
-        "RPLInstanceID",
-        "VersionNumber",
+        "options",
         "V",
         "I",
         "D",
         "Flag",
+        "VersionNumber",
+        "RPLInstanceID",
         "DODAGID",
-        "options",
     };
     return (field>=0 && field<11) ? fieldNames[field] : nullptr;
 }
@@ -520,14 +520,14 @@ int ICMPv6DISMsgDescriptor::findField(const char *fieldName) const
     if (fieldName[0]=='c' && strcmp(fieldName, "code")==0) return base+0;
     if (fieldName[0]=='f' && strcmp(fieldName, "flags")==0) return base+1;
     if (fieldName[0]=='r' && strcmp(fieldName, "reserved")==0) return base+2;
-    if (fieldName[0]=='R' && strcmp(fieldName, "RPLInstanceID")==0) return base+3;
-    if (fieldName[0]=='V' && strcmp(fieldName, "VersionNumber")==0) return base+4;
-    if (fieldName[0]=='V' && strcmp(fieldName, "V")==0) return base+5;
-    if (fieldName[0]=='I' && strcmp(fieldName, "I")==0) return base+6;
-    if (fieldName[0]=='D' && strcmp(fieldName, "D")==0) return base+7;
-    if (fieldName[0]=='F' && strcmp(fieldName, "Flag")==0) return base+8;
-    if (fieldName[0]=='D' && strcmp(fieldName, "DODAGID")==0) return base+9;
-    if (fieldName[0]=='o' && strcmp(fieldName, "options")==0) return base+10;
+    if (fieldName[0]=='o' && strcmp(fieldName, "options")==0) return base+3;
+    if (fieldName[0]=='V' && strcmp(fieldName, "V")==0) return base+4;
+    if (fieldName[0]=='I' && strcmp(fieldName, "I")==0) return base+5;
+    if (fieldName[0]=='D' && strcmp(fieldName, "D")==0) return base+6;
+    if (fieldName[0]=='F' && strcmp(fieldName, "Flag")==0) return base+7;
+    if (fieldName[0]=='V' && strcmp(fieldName, "VersionNumber")==0) return base+8;
+    if (fieldName[0]=='R' && strcmp(fieldName, "RPLInstanceID")==0) return base+9;
+    if (fieldName[0]=='D' && strcmp(fieldName, "DODAGID")==0) return base+10;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -549,8 +549,8 @@ const char *ICMPv6DISMsgDescriptor::getFieldTypeString(int field) const
         "int",
         "int",
         "int",
-        "IPv6Address",
         "int",
+        "IPv6Address",
     };
     return (field>=0 && field<11) ? fieldTypeStrings[field] : nullptr;
 }
@@ -568,7 +568,7 @@ const char **ICMPv6DISMsgDescriptor::getFieldPropertyNames(int field) const
             static const char *names[] = { "enum",  nullptr };
             return names;
         }
-        case 10: {
+        case 3: {
             static const char *names[] = { "enum",  nullptr };
             return names;
         }
@@ -588,7 +588,7 @@ const char *ICMPv6DISMsgDescriptor::getFieldProperty(int field, const char *prop
         case 0:
             if (!strcmp(propertyname,"enum")) return "inet::ICMPv6_RPL_CONTROL_MSG";
             return nullptr;
-        case 10:
+        case 3:
             if (!strcmp(propertyname,"enum")) return "inet::RPL_OPTIONS";
             return nullptr;
         default: return nullptr;
@@ -636,14 +636,14 @@ std::string ICMPv6DISMsgDescriptor::getFieldValueAsString(void *object, int fiel
         case 0: return enum2string(pp->getCode(), "inet::ICMPv6_RPL_CONTROL_MSG");
         case 1: return long2string(pp->getFlags());
         case 2: return long2string(pp->getReserved());
-        case 3: return long2string(pp->getRPLInstanceID());
-        case 4: return long2string(pp->getVersionNumber());
-        case 5: return long2string(pp->getV());
-        case 6: return long2string(pp->getI());
-        case 7: return long2string(pp->getD());
-        case 8: return long2string(pp->getFlag());
-        case 9: {std::stringstream out; out << pp->getDODAGID(); return out.str();}
-        case 10: return enum2string(pp->getOptions(), "inet::RPL_OPTIONS");
+        case 3: return enum2string(pp->getOptions(), "inet::RPL_OPTIONS");
+        case 4: return long2string(pp->getV());
+        case 5: return long2string(pp->getI());
+        case 6: return long2string(pp->getD());
+        case 7: return long2string(pp->getFlag());
+        case 8: return long2string(pp->getVersionNumber());
+        case 9: return long2string(pp->getRPLInstanceID());
+        case 10: {std::stringstream out; out << pp->getDODAGID(); return out.str();}
         default: return "";
     }
 }
@@ -661,13 +661,13 @@ bool ICMPv6DISMsgDescriptor::setFieldValueAsString(void *object, int field, int 
         case 0: pp->setCode((inet::ICMPv6_RPL_CONTROL_MSG)string2enum(value, "inet::ICMPv6_RPL_CONTROL_MSG")); return true;
         case 1: pp->setFlags(string2long(value)); return true;
         case 2: pp->setReserved(string2long(value)); return true;
-        case 3: pp->setRPLInstanceID(string2long(value)); return true;
-        case 4: pp->setVersionNumber(string2long(value)); return true;
-        case 5: pp->setV(string2long(value)); return true;
-        case 6: pp->setI(string2long(value)); return true;
-        case 7: pp->setD(string2long(value)); return true;
-        case 8: pp->setFlag(string2long(value)); return true;
-        case 10: pp->setOptions((inet::RPL_OPTIONS)string2enum(value, "inet::RPL_OPTIONS")); return true;
+        case 3: pp->setOptions((inet::RPL_OPTIONS)string2enum(value, "inet::RPL_OPTIONS")); return true;
+        case 4: pp->setV(string2long(value)); return true;
+        case 5: pp->setI(string2long(value)); return true;
+        case 6: pp->setD(string2long(value)); return true;
+        case 7: pp->setFlag(string2long(value)); return true;
+        case 8: pp->setVersionNumber(string2long(value)); return true;
+        case 9: pp->setRPLInstanceID(string2long(value)); return true;
         default: return false;
     }
 }
@@ -681,7 +681,7 @@ const char *ICMPv6DISMsgDescriptor::getFieldStructName(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 9: return omnetpp::opp_typename(typeid(IPv6Address));
+        case 10: return omnetpp::opp_typename(typeid(IPv6Address));
         default: return nullptr;
     };
 }
@@ -696,7 +696,7 @@ void *ICMPv6DISMsgDescriptor::getFieldStructValuePointer(void *object, int field
     }
     ICMPv6DISMsg *pp = (ICMPv6DISMsg *)object; (void)pp;
     switch (field) {
-        case 9: return (void *)(&pp->getDODAGID()); break;
+        case 10: return (void *)(&pp->getDODAGID()); break;
         default: return nullptr;
     }
 }
