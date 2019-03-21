@@ -47,7 +47,9 @@
 #include "src/networklayer/contract/RPLDefs.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
 #include "inet/networklayer/contract/ipv6/IPv6AddressType.h"
-#include "inet/networklayer/contract/IRoutingTable.h"
+//#include "inet/networklayer/contract/IRoutingTable.h" //doesn't support addDefaultRote()
+#include "inet/networklayer/ipv6/IPv6RoutingTable.h"
+
 #include "inet/common/lifecycle/ILifecycle.h"
 #include "inet/networklayer/contract/INetfilter.h"
 #include "inet/common/lifecycle/NodeStatus.h"
@@ -75,7 +77,7 @@ protected:
 
     // environment
     IPv6NeighbourDiscoveryRPL *neighbourDiscoveryRPL;
-    IRoutingTable *routingTable;
+    IPv6RoutingTable *routingTable;
     IInterfaceTable *interfaceTable = nullptr;
     ManagerRPL *pManagerRPL = nullptr;
     StatisticCollector *statisticCollector = nullptr;
@@ -140,7 +142,7 @@ protected:
 
     int Rank;
     simtime_t NodeStartTime;
-    int VersionNember;
+    int versionNember;
     int Grounded;
     simtime_t TimetoSendDIO;
 
@@ -206,7 +208,7 @@ public:
         , dtsnInstance(0)
         , Rank(0)
         , NodeStartTime(0)
-        , VersionNember(0)
+        , versionNember(0)
         , Grounded(0)
         , TimetoSendDIO(0)
         , DIO_c(0)
@@ -265,6 +267,9 @@ protected:
     virtual void handleDIOTimer(cMessage* msg);
 
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
+
+    virtual void updateRoutingTable(IPv6Address &PrParent);
+
 
 public:
 

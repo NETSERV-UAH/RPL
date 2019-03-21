@@ -19,7 +19,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package rpl.simulations.test1;
+package rpl.simulations.test1.mop2;
 
 import inet.networklayer.configurator.ipv6.FlatNetworkConfigurator6;
 //import inet.physicallayer.ieee802154.packetlevel.Ieee802154NarrowbandScalarRadioMedium;
@@ -31,7 +31,7 @@ import rpl.src.node.rpl.RPLRouter;
 //import rpl.src.simulationmodels.flowmodels.UDPFlowGenerator;
 
 
-network Net802154
+network NetIdeal
 {
     parameters:
         int numHosts;

@@ -126,7 +126,6 @@ void ICMPv6RPL::handleMessage(cMessage *msg)
     //ASSERT(!msg->isSelfMessage());    // no timers in ICMPv6
 
     if (msg->isSelfMessage()){
-        EV << "Test11\n";
         handleSelfMsg(msg);
         return;
     }
@@ -372,6 +371,19 @@ void ICMPv6RPL::handleDISTimer(cMessage* msg)
 }
 
 //////////// DAO Operations ////////////////////
+/*
+ * RFC 6550, March 2012, Section 9.8: Storing Mode
+ *
+ * 2. On receiving a unicast DAO, a node MUST compute if the DAO would
+ * change the set of prefixes that the node itself advertises. This
+ * computation SHOULD include consultation of the Path Sequence
+ * information in the Transit Information options associated with
+ * the DAO, to determine if the DAO message contains newer
+ * information that supersedes the information already stored at the
+ * node. If so, the node MUST generate a new DAO message and
+ * transmit it, following the rules in Section 9.5. Such a change
+ * includes receiving a No-Path DAO.
+ */
 void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
 {
 
@@ -471,7 +483,34 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
 
     }
 
-    //Forward an updated DAO message to the preferred parent
+    /*
+     * RFC 6550, March 2012, section 9.2.2: Generation of DAO Messages
+     *
+     * A node might send DAO messages <B> when it receives DAO messages,</B> as a
+     * result of changes in its DAO parent set, or in response to another
+     * event such as the expiry of a related prefix lifetime. In the case
+     * of receiving DAOs, it matters whether the DAO message is "new" or
+     * contains new information. In Non-Storing mode, every DAO message a
+     * node receives is "new". In Storing mode, a DAO message is "new" if
+     * it satisfies any of these criteria for a contained Target:
+     * 1. it has a newer Path Sequence number,
+     * 2. it has additional Path Control bits, or
+     * 3. it is a <B> No-Path DAO message </B> that removes the last Downward route to a prefix.
+     */
+    /*
+     * And also,
+     * RFC 6550, March 2012, section 9.5: DAO Transmission Scheduling
+     * receiving a unicast DAO can trigger sending
+     * a unicast DAO to a DAO parent.
+     */
+    /*
+     * RFC 6550, March 2012, Section 9.8: Storing Mode
+     *
+     * 3. When a node generates a new DAO, it SHOULD unicast it to each of
+     * its DAO parents. It MUST NOT unicast the DAO message to nodes
+     * that are not DAO parents.
+     */
+    //So, Forward a DAO message to the preferred parent
     const IPv6NeighbourCacheRPL::Neighbour *neighbourEntry = parentTableRPL->getPrefParentNeighborCache(rplUpwardRouting->getVersion());
     if (neighbourEntry){  //this node has a preferred parent, so DAO must be forwarded to the preferred parent.
         IPv6ControlInfo *ctrlInfoOut = new IPv6ControlInfo;
@@ -480,6 +519,25 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
         ctrlInfoOut->setSrcAddr(rplUpwardRouting->getMyLLNetwAddr());
         ctrlInfoOut->setDestAddr(neighbourEntry->nceKey->address);
         EV << "A DAO message is sent from : " << ctrlInfoOut->getSourceAddress() << " to parent : " << ctrlInfoOut->getDestinationAddress() << " to advertise prefix : " << prefix << "with prefix len : " << prefixLen << endl;
+        /*
+         * RFC 6550, March 2012, section 9.3:
+         * 1. If a node sends a DAO message with newer or different information
+         * than the prior DAO message transmission, it MUST increment the
+         * DAOSequence field by at least one. A DAO message transmission
+         * that is identical to the prior DAO message transmission MAY
+         * increment the DAOSequence field.
+         */
+        /* TODO:
+         * So, our physical layer is an ideal layer, so we don't use ACK and maintain
+         * the DAOSequence number in the simulation.
+         */
+
+        /*
+         * RFC 6550, March 2012, section 9.3:
+         * 2. The RPLInstanceID and DODAGID fields of a DAO message MUST be the
+         * same value as the members of the node’s parent set and the DIOs
+         * it transmits.
+         */
         pkt->setControlInfo(ctrlInfoOut);
         send(pkt, "ipv6Out");
     }
@@ -489,6 +547,15 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
     }
 
     delete ctrlInfoIn;
+
+    /* TODO:
+     * RFC 6550, March 2012, Section 9.2.2:
+     * A node that receives a DAO message from its sub-DODAG MAY suppress
+     * scheduling a DAO message transmission if that DAO message is not new.
+     */
+    /* TODO:
+     * Developing "Path Sequence number/control"
+     */
 
     EV << "<-ICMPV6RPL::processIncommingStoringDAOMessage()" << endl;
 
@@ -526,7 +593,7 @@ void ICMPv6RPL::processIncommingNonStoringDAOMessage(ICMPv6Message *msg)
         EV << "Added/updated SR entry to Routing Table: " << prefix << " nextHop -->" << daoParent << ", lifeTime -->" << lifeTime << "\n";
     }
 
-    /*@TO BE:  K flag to send ACK ....*/
+    /*TODO:  K flag to send ACK ....*/
 
     delete msg;
 
@@ -589,8 +656,35 @@ void ICMPv6RPL::sendDAOMessage(IPv6Address prefix, simtime_t lifetime)
     EV << "<-ICMPV6RPL::sendDAOMessage()" << endl;
 }
 
+/*
+ * RFC 6550, March 2012, Section 9.5: DAO Transmission Scheduling
+ *
+ * 1. On receiving a unicast DAO message with updated information, such
+ * as containing a Transit Information option with a new Path
+ * Sequence, a node SHOULD send a DAO. It SHOULD NOT send this DAO
+ * message immediately. It SHOULD delay sending the DAO message in
+ * order to aggregate DAO information from other nodes for which it
+ * is a DAO parent.
+ *
+ * 2. A node SHOULD delay sending a DAO message with a timer
+ * (DelayDAO). Receiving a DAO message starts the DelayDAO timer.
+ * DAO messages received while the DelayDAO timer is active do not
+ * reset the timer. When the DelayDAO timer expires, the node sends
+ * a DAO.
+ *
+ * DelayDAO’s value and calculation is implementation dependent.
+ * A default value of DEFAULT_DAO_DELAY is defined in this specification.
+ */
+/*
+ * RFC 6550, March 2012, Section 17: RPL Constants and Variables
+ *
+ * DEFAULT_DAO_DELAY: This is the default value for the DelayDAO Timer.
+ * DEFAULT_DAO_DELAY has a value of 1 second.
+ */
 void ICMPv6RPL::scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime)
 {
+    Enter_Method("scheduleNextDAOTransmission()");  //RPLUpwardRouting calls this method to trigger a DAO message
+
     EV << "->ICMPV6RPL::scheduleNextDAOTransmission()" << endl;
 
     if (DAOTimer){
@@ -663,7 +757,7 @@ void ICMPv6RPL::scheduleDAOlifetimer(simtime_t lifeTime)
 
 void ICMPv6RPL::DeleteDAOTimers()
 {
-    Enter_Method("DeleteDAOTimers()");
+    Enter_Method("DeleteDAOTimers()");  //Statistics Collector calls this method for Global Repair
 
     if (DAOTimer){
         cancelAndDelete(DAOTimer);
@@ -681,14 +775,15 @@ void ICMPv6RPL::DeleteDAOTimers()
 void ICMPv6RPL::handleDAOTimer(cMessage* msg)
 {
     if (mop != No_Downward_Routes_maintained_by_RPL){
-        if (parentTableRPL->getNumberOfParents(rplUpwardRouting->getVersion()) > 0)  //there is a prparent
+        if ((msg->getKind() == SEND_DAO_TIMER) && (parentTableRPL->getNumberOfParents(rplUpwardRouting->getVersion()) > 0))  //there is a prparent
             sendDAOMessage(rplUpwardRouting->getMyGlobalNetwAddr(), defaultLifeTime);
         else
             EV<< "DAO can not be sent. There is no preferred parent." << endl;
 
-        if (DAOTimer){
+        //scheduleNextDAOTransmission handles this part
+        /*if (DAOTimer){
             cancelAndDelete(DAOTimer);
-        }
+        }*/
 
         if (!DAOLifeTimer){
             scheduleDAOlifetimer(defaultLifeTime);
