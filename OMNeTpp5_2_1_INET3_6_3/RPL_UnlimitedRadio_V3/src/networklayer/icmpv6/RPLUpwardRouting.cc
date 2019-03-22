@@ -153,6 +153,13 @@ void RPLUpwardRouting::initialize(int stage)
         isOperational = !nodeStatus || nodeStatus->getState() == NodeStatus::UP;
 
         if (isOperational){
+            /*
+             * RFC 6550, March 2012, Section 9.6: Triggering DAO Messages
+             *
+             * Nodes can trigger their sub-DODAG to send DAO messages. Each node
+             * maintains a DAO Trigger Sequence Number (DTSN), which it communicates
+             * through DIO messages.
+             */
             dtsnInstance = 0;
 
             DIOTimer = NULL;
@@ -182,15 +189,6 @@ void RPLUpwardRouting::initialize(int stage)
                DODAGID = myGlobalNetwAddr;  //DODAGID is a Global address
                Grounded = 1;
 
-               /*
-                * RFC 6550, March 2012, Section 9.6: Triggering DAO Messages
-                *
-                * Nodes can trigger their sub-DODAG to send DAO messages. Each node
-                * maintains a DAO Trigger Sequence Number (DTSN), which it communicates
-                * through DIO messages.
-                */
-
-               dtsnInstance++;
                DIO_CurIntsizeNext = DIOIntMin;
                DIO_StofCurIntNext = startTime;
                DIO_EndofCurIntNext = DIO_StofCurIntNext+DIO_CurIntsizeNext;
@@ -289,7 +287,11 @@ void RPLUpwardRouting::setParametersBeforeGlobalRepair(simtime_t dodagSartTime){
 
     if (myLLNetwAddr == sinkLinkLocalAddress){  //Global Repair is run/started by the root node
         versionNember++;
-        dtsnInstance++;
+        /*
+         * Since our global repair is implemented by a centralized approach,
+         * we can use "dtsnInstance = 0" instead of "dtsnInstance++".
+         */
+        dtsnInstance++;  // To inform the down stream nodes. dtsnInstance is accommodated in the DIO msg, so the down stream nodes find out that they must send a new DAO because of the global repair ...
         Rank = 1;
         DODAGID = myGlobalNetwAddr;
         Grounded = 1;
@@ -462,7 +464,17 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                DIOIntMin = netwMsg->getIMin();
                DIORedun = netwMsg->getK();
                DODAGID = netwMsg->getDODAGID();
-               parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber());
+               if (parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber()) == 0){
+                   if (mop != No_Downward_Routes_maintained_by_RPL){
+                       /*
+                        * RFC 6550, March 2012, Section 9.5: DAO Transmission Scheduling
+                        *
+                        * When a node adds a node to its DAO parent set, it SHOULD schedule
+                        * a DAO message transmission.
+                        */
+                       icmpv6RPL->scheduleNextDAOTransmission(DelayDAO, defaultLifeTime);
+                   }
+               }
                PrParent = parentTableRPL->getPrefParentIPAddress(versionNember);
                //PrParent = ctrlInfo->getSrcAddr(); //sender address
                Rank = parentTableRPL->getRank(versionNember);
@@ -487,7 +499,7 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 isNodeJoined = true; //isNodeJoined was being false when Global repair happened.
                 DeleteDIOTimer();
                 versionNember = netwMsg->getVersionNumber();
-                dtsnInstance ++; // To inform the down stream nodes. dtsnInstance is accommodated in the DIO msg, so the down stream nodes find out that they must send a new DAO because of the global repair ...
+                //dtsnInstance ++; // added to setParametersBeforeGlobalRepair() // To inform the down stream nodes. dtsnInstance is accommodated in the DIO msg, so the down stream nodes find out that they must send a new DAO because of the global repair ...
                 statisticCollector->nodeJoinedUpward(myLLNetwAddr, netwMsg->getArrivalTime());
 
                 DIOIntDoubl = netwMsg->getNofDoub();
@@ -498,7 +510,17 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 DIO_StofCurIntNext = netwMsg->getArrivalTime();
                 DIO_EndofCurIntNext = DIO_StofCurIntNext+DIO_CurIntsizeNext;
                 Grounded = netwMsg->getGrounded();
-                parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber());
+                if (parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber()) == 0){
+                    if (mop != No_Downward_Routes_maintained_by_RPL){
+                        /*
+                          * RFC 6550, March 2012, Section 9.5: DAO Transmission Scheduling
+                          *
+                          * When a node adds a node to its DAO parent set, it SHOULD schedule
+                          * a DAO message transmission.
+                          */
+                         icmpv6RPL->scheduleNextDAOTransmission(DelayDAO, defaultLifeTime);
+                    }
+                }
                 PrParent = parentTableRPL->getPrefParentIPAddress(versionNember);
                 //PrParent = ctrlInfo->getSrcAddr(); //sender address
                 Rank = parentTableRPL->getRank(versionNember);
@@ -525,7 +547,6 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 DIOIntMin = netwMsg->getIMin();
                 DIORedun = netwMsg->getK();
 
-                bool needDAO = false;
                 /*
                  * RFC 6550, March 2012, Section 9.1: Destination Advertisement Parents
                  *
@@ -534,17 +555,18 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                  * parents". The collection of a node’s DAO parents is called the "DAO
                  * parent set".
                  */
-                /*
-                 * RFC 6550, March 2012, Section 9.5: DAO Transmission Scheduling
-                 *
-                 * When a node adds a node to its DAO parent set, it SHOULD schedule
-                 * a DAO message transmission.
-                 */
+                IPv6Address oldPrefParent = parentTableRPL->getPrefParentIPAddress(versionNember);
+                int oldDTSN = parentTableRPL->getPrefParentDTSN(versionNember);
+                IPv6Address senderAddr = ctrlInfo->getSrcAddr();
 
-                if (mop != No_Downward_Routes_maintained_by_RPL)
-                    //if (parentTableRPL->getPrefParentNeighborCache(netwMsg->getVersionNumber())->nceKey->address == ctrlInfo->getSrcAddr()){
-                    if (parentTableRPL->getPrefParentIPAddress(netwMsg->getVersionNumber()) == ctrlInfo->getSrcAddr()){
-                        if (netwMsg->getDTSN() > parentTableRPL->getPrefParentDTSN(netwMsg->getVersionNumber())){
+                parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber());
+                PrParent = parentTableRPL->getPrefParentIPAddress(versionNember);
+                Rank = parentTableRPL->getRank(versionNember);
+                updateRoutingTable(PrParent);
+
+                if (mop != No_Downward_Routes_maintained_by_RPL){
+                    if (oldPrefParent == PrParent){
+                        if ((senderAddr ==  PrParent) && (netwMsg->getDTSN() > oldDTSN)){
                             /*
                              * RFC 6550, March 2012, Section 9.6: Triggering DAO Messages
                              *
@@ -552,9 +574,9 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                              * node MUST schedule a DAO message transmission using rules in
                              * Sections 9.3 and 9.5.
                              */
-                            needDAO = true;
 
-                            /* 2. 2. In Non-Storing mode, if a node hears one of its DAO parents
+                            icmpv6RPL->scheduleNextDAOTransmission(DelayDAO, defaultLifeTime); //Because prefparent requested a new DAO by incrementing its dtsn
+                            /* 2. In Non-Storing mode, if a node hears one of its DAO parents
                              * increment its DTSN, the node <B>MUST</B> increment its own DTSN.
                              *
                              * In a Storing mode of operation, as part of routine routing table
@@ -562,9 +584,9 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                              * to reliably trigger a set of DAO updates from its immediate children.
                              *
                              */
-                            dtsnInstance ++;
+                            dtsnInstance++; //To inform the sub DODAG nodes.
                         }
-                    }else
+                    }else{
                         /*
                          * RFC 6550, March 2012, Section 9.8: Storing Mode
                          *
@@ -580,21 +602,15 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                          * whether a DAO message had been scheduled already or not.
                          * If so, No-Path DAO is not essential, and we must cancel the scheduled message.
                          */
-                        needNoPathDAO = true;
-
-                if (parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber()) == 1){  //if table is updated (not creating a new entry)
-                    PrParent = parentTableRPL->getPrefParentIPAddress(versionNember);
-                    Rank = parentTableRPL->getRank(versionNember);
-                    updateRoutingTable(PrParent);
-
-                    if (needDAO){
-                        icmpv6RPL->scheduleNextDAOTransmission(DelayDAO, defaultLifeTime); //Because prefparent requested a new DAO by incrementing its dtsn
+                        icmpv6RPL->sendDAOMessage(myGlobalNetwAddr, ZERO_LIFETIME, oldPrefParent); //No-Path DAO, to delete the route of this node in the Dao parent node.
+                        /*
+                         * RFC 6550, March 2012, Section 9.5: DAO Transmission Scheduling
+                         *
+                         * When a node adds a node to its DAO parent set, it SHOULD schedule
+                         * a DAO message transmission.
+                         */
+                        icmpv6RPL->scheduleNextDAOTransmission(DelayDAO, defaultLifeTime); //Because a new prefparent/DAO parent is detected.
                     }
-
-                   ?? if (parentTableRPL->getPrefParentIPAddress(netwMsg->getVersionNumber()) != ctrlInfo->getSrcAddr()){
-
-                    if (needNoPathDAO)
-                        icmpv6RPL->sendDAOMessage(myGlobalNetwAddr, ZERO_LIFETIME); //No-Path DAO
                 }
 
                 char buf2[255];

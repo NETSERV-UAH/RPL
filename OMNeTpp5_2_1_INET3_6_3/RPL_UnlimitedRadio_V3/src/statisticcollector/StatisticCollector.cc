@@ -73,9 +73,10 @@ void StatisticCollector::startStatistics(RPLMOP mop, IPv6Address sinkLLAddress, 
         scheduleAt(time + globalRepairInterval, globalRepairTimer);
     }
 
+    sinkID = rplManager->getIndexFromLLAddress(sinkLLAddress);
     convergenceTimeStart = time;
     nodeJoinedUpward(sinkLLAddress, time);
-    sinkID = rplManager->getIndexFromLLAddress(sinkLLAddress);
+    nodeJoinedDownnward(sinkID, time);
 
 }
 
@@ -87,7 +88,7 @@ void StatisticCollector::nodeJoinedUpward(int nodeID, simtime_t time)
     if(!nodeStateList.at(nodeID).isJoinUpward){
         nodeStateList.at(nodeID).isJoinUpward = true;
         nodeStateList.at(nodeID).joiningTimeUpward = time;
-        EV << "Node" << nodeID + 1 << "(Link Local Address: " << nodeStateList.at(nodeID).linklocalAddress << ", Global Address: " << nodeStateList.at(nodeID).globalAddress << " joins to DODAG, and has an Upward route to the root node." << endl;
+        EV << "Node" << nodeID << "(Link Local Address: " << nodeStateList.at(nodeID).linklocalAddress << ", Global Address: " << nodeStateList.at(nodeID).globalAddress << " joins to DODAG, and has an Upward route to the root node." << endl;
     }
     if (isConverged()){
         EV << "This node is the last node that joined DODAG! DODAG formed!!" << endl;
@@ -109,15 +110,43 @@ void StatisticCollector::nodeJoinedUpward(IPv6Address linkLocalAddress, simtime_
 }
 
 //When the sink/root node receives a DAO message from a node, it calls this method to indicate that the node has a Downward route.
-void StatisticCollector::nodeJoinedDownnward(IPv6Address linkLocalAddress, simtime_t time)
+void StatisticCollector::nodeJoinedDownnward(IPv6Address globalAddress, simtime_t time)
 {
     Enter_Method("nodeJoinedDownnward()");
 
-    int vectorIndex = rplManager->getIndexFromLLAddress(linkLocalAddress);
-    if (!nodeStateList.at(vectorIndex).isJoinDownward){
-        nodeStateList.at(vectorIndex).isJoinDownward = true;
-        nodeStateList.at(vectorIndex).joiningTimeDownward = time;
-        EV << "Root has a Downward route to Node" << vectorIndex+1 << "(Link Local Address: " << nodeStateList.at(vectorIndex).linklocalAddress << ", Global Address: " << nodeStateList.at(vectorIndex).globalAddress << "." << endl;
+    int vectorIndex = 0;
+    bool found = false;
+    while(vectorIndex < nodeStateList.size() && (!found)){
+        if (nodeStateList.at(vectorIndex).globalAddress == globalAddress){
+            found = true;
+
+            if (!nodeStateList.at(vectorIndex).isJoinDownward){
+                nodeStateList.at(vectorIndex).isJoinDownward = true;
+                nodeStateList.at(vectorIndex).joiningTimeDownward = time;
+                EV << "Root has a Downward route to Node" << vectorIndex << "(Link Local Address: " << nodeStateList.at(vectorIndex).linklocalAddress << ", Global Address: " << nodeStateList.at(vectorIndex).globalAddress << "." << endl;
+                if (isConverged()){
+                    EV << "This node is the last node that joined DODAG! DODAG formed!!" << endl;
+                    saveStatistics();
+                    if(numberOfConvergedGlogalRepaires == numberOfIterations - 1){
+                        endSimulation();
+                    }else{
+                        scheduleNewGlobalRepair();
+                    }
+                }
+            }
+        }
+        vectorIndex++;
+    }
+}
+
+void StatisticCollector::nodeJoinedDownnward(int nodeID, simtime_t time)
+{
+    Enter_Method("nodeJoinedDownnward(nodeID)");
+
+    if (!nodeStateList.at(nodeID).isJoinDownward){
+        nodeStateList.at(nodeID).isJoinDownward = true;
+        nodeStateList.at(nodeID).joiningTimeDownward = time;
+        EV << "Root has a Downward route to Node" << nodeID << "(Link Local Address: " << nodeStateList.at(nodeID).linklocalAddress << ", Global Address: " << nodeStateList.at(nodeID).globalAddress << "." << endl;
         if (isConverged()){
             EV << "This node is the last node that joined DODAG! DODAG formed!!" << endl;
             saveStatistics();

@@ -42,10 +42,10 @@ class ParentTableRPL : public cSimpleModule
     {
         //IPv6NeighbourCacheRPL::Neighbour *neighbourEntry;    // A pointer to a neighbor entry to which the parent entry refers.
         int rank;    // Input port
-        unsigned char dtsn;    // Arrival time of Lookup Address Table entry
+        int dtsn;    // Arrival time of Lookup Address Table entry
         unsigned int vid;    // Version ID
         ParentEntry() {}
-        ParentEntry(int rank, unsigned char dtsn, unsigned int vid) :
+        ParentEntry(int rank, int dtsn, unsigned int vid) :
             rank(rank), dtsn(dtsn), vid(vid) {}
     };
 
@@ -98,7 +98,7 @@ protected:
 
     int getNumberOfParents(unsigned int vid) const;
 
-    bool updateTable(InterfaceEntry *ie, const IPv6Address &id, int rank, unsigned char dtsn, unsigned int vid);
+    bool updateTable(InterfaceEntry *ie, const IPv6Address &id, int rank, int dtsn, unsigned int vid);
 
     const IPv6NeighbourCacheRPL::Neighbour *getParentNeighborCache(const IPv6Address &ip, unsigned int vid) const;
 

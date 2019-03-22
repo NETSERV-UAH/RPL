@@ -78,10 +78,10 @@ protected:
     // environment
     IPv6NeighbourDiscoveryRPL *neighbourDiscoveryRPL;
     IPv6RoutingTable *routingTable;
-    IInterfaceTable *interfaceTable = nullptr;
-    ManagerRPL *pManagerRPL = nullptr;
-    StatisticCollector *statisticCollector = nullptr;
-    INetfilter *networkProtocol = nullptr;
+    IInterfaceTable *interfaceTable;
+    ManagerRPL *pManagerRPL;
+    StatisticCollector *statisticCollector;
+    INetfilter *networkProtocol;
     ICMPv6RPL *icmpv6RPL;
     ParentTableRPL *parentTableRPL;
     InterfaceEntry *ie;
@@ -94,7 +94,7 @@ protected:
     //@}
 
     // lifecycle
-    bool isOperational = false;
+    bool isOperational;
 
     /**
      * @brief Length of the NetwPkt header

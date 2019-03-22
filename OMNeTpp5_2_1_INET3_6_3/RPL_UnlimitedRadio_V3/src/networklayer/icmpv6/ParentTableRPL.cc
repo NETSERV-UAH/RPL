@@ -89,7 +89,7 @@ ParentTableRPL::ParentTable *ParentTableRPL::getTableForVid(unsigned int vid) co
  * -1 if not added. 0 if it is new. 1 if it is updated.
  */
 
-bool ParentTableRPL::updateTable(InterfaceEntry *ie, const IPv6Address& id, int rank, unsigned char dtsn, unsigned int vid)
+bool ParentTableRPL::updateTable(InterfaceEntry *ie, const IPv6Address& id, int rank, int dtsn, unsigned int vid)
 {
     Enter_Method("ParentTableRPL::updateTableWithAddress()");
 
@@ -124,7 +124,7 @@ bool ParentTableRPL::updateTable(InterfaceEntry *ie, const IPv6Address& id, int 
             else //If my rank will not be the worst rank, remove the worst rank in the table, and add me instead of it.
                 removeWorstParent(vid);
         }
-            EV << "Adding entry to Parent Table: " << id << " rank: " << rank << " DTSN: " << dtsn << "version: " << vid << "\n";
+            EV << "Adding entry to Parent Table: " << id << " rank: " << rank << " DTSN: " << dtsn << " version: " << vid << "\n";
             (*table)[neighbourEntry] = ParentEntry(rank, dtsn, vid);
             return 0;
     }

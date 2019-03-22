@@ -163,7 +163,9 @@ public:
 
     virtual void nodeJoinedUpward(IPv6Address linkLocalAddress, simtime_t time);
 
-    virtual void nodeJoinedDownnward(IPv6Address linkLocalAddress, simtime_t time);
+    virtual void nodeJoinedDownnward(IPv6Address globalAddress, simtime_t time);
+
+    virtual void nodeJoinedDownnward(int nodeID, simtime_t time);
 
     virtual void updateRank(IPv6Address ip, int rank);
 

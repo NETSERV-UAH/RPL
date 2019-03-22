@@ -61,6 +61,7 @@ void ICMPv6RPL::initialize(int stage)
         host = getContainingNode(this);
         rplUpwardRouting = check_and_cast<RPLUpwardRouting *>(this->getParentModule()->getSubmodule("rplUpwardRouting"));
         neighbourDiscoveryRPL = check_and_cast<IPv6NeighbourDiscoveryRPL *>(this->getParentModule()->getSubmodule("neighbourDiscovery"));
+        statisticCollector = check_and_cast<StatisticCollector *>(getSimulation()->getSystemModule()->getSubmodule("statisticCollector"));
         parentTableRPL = check_and_cast<ParentTableRPL *>(this->getParentModule()->getSubmodule("parentTableRPL"));
         routingTable = getModuleFromPar<IPv6RoutingTable>(par("routingTableModule"), this);
         //interfaceTable = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
@@ -542,6 +543,9 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
         send(pkt, "ipv6Out");
     }
     else{
+        if (rplUpwardRouting->getMyGlobalNetwAddr() == pkt->getDODAGID()){ //If I am the sink node
+            statisticCollector->nodeJoinedDownnward(prefix, msg->getArrivalTime());
+        }
         EV<< "DAO can not be forwarded. There is no preferred parent." << endl;
         delete msg;
     }
@@ -603,7 +607,7 @@ void ICMPv6RPL::processIncommingNonStoringDAOMessage(ICMPv6Message *msg)
 
 }
 
-void ICMPv6RPL::sendDAOMessage(IPv6Address prefix, simtime_t lifetime)
+void ICMPv6RPL::sendDAOMessage(IPv6Address prefix, simtime_t lifetime, IPv6Address parent)
 {
     EV << "->ICMPV6RPL::sendDAOMessage()" << endl;
 
@@ -639,11 +643,18 @@ void ICMPv6RPL::sendDAOMessage(IPv6Address prefix, simtime_t lifetime)
             //pkt->setDaoParent(prefParentAddr);
             IPv6Address prefParentAddrGlobal;
             prefParentAddrGlobal.setPrefix(dodagID, 64);
-            prefParentAddrGlobal.setSuffix(prefParentAddr, 64); //Global address for prefParentAddr
+            if (parent == IPv6Address::UNSPECIFIED_ADDRESS)
+                prefParentAddrGlobal.setSuffix(prefParentAddr, 64); //Global address for prefParentAddr
+            else
+                prefParentAddrGlobal.setSuffix(parent, 64); //Global address for the staled parent (used for No-Path DAO)
             pkt->setDaoParent(prefParentAddrGlobal);
             EV << "A new DAO message (Non-Storing mode) is sent to the root node(Global:" << dodagID << "), Prefix/child (Global: " << prefix << ", DAO parent address is (Link Local:  " << prefParentAddr << ", Global: " << prefParentAddrGlobal << ")"<< endl;
         }else{
-            ctrlInfo->setDestAddr(prefParentAddr);  //ctrlInfo->setDestAddr(PrParent)
+            if (parent == IPv6Address::UNSPECIFIED_ADDRESS)
+                ctrlInfo->setDestAddr(prefParentAddr);
+            else
+                ctrlInfo->setDestAddr(parent);  //Link local address for the staled parent (used for No-Path DAO)
+
             pkt->setByteLength(DAOheaderLength);
             EV << "A new DAO message (Storing mode) is sent to the prefparent node(Link Local:" << prefParentAddr << "), Prefix (Global: " << prefix << ", parent address is (Link Local:  " << prefParentAddr << ", Global)"<< endl;
         }
