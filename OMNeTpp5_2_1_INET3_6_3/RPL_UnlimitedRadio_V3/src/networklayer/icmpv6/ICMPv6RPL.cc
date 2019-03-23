@@ -215,7 +215,9 @@ void ICMPv6RPL::processIncommingRPLMessage(ICMPv6Message *icmpv6msg)
         else if (mop == Storing_Mode_of_Operation_with_no_multicast_support){
             EV << "This node works in MOP#" << mop << ". Message is sent to processIncommingStoringDAOMessage() to process."<< endl;
             processIncommingStoringDAOMessage(icmpv6msg);
-        }
+        }else
+            throw cRuntimeError("ICMPv6RPL::processIncommingRPLMessage(): unknown/unsupported Mode Of Operation (MOP#%d).\n", (int) mop);
+
     }
 }
 
@@ -482,6 +484,8 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
         routingTable->addOrUpdateOnLinkPrefix(prefix, prefixLen, interfaceID, lifeTime);
         EV << "Added/updated entry to Routing Table: " << prefix << " nextHop -->" << senderIPAddress << ", lifeTime -->" << lifeTime << "\n";
 
+        if (rplUpwardRouting->getMyGlobalNetwAddr() == pkt->getDODAGID()) //If I am the sink node
+            statisticCollector->nodeJoinedDownnward(prefix, msg->getArrivalTime());
     }
 
     /*
@@ -541,11 +545,7 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
          */
         pkt->setControlInfo(ctrlInfoOut);
         send(pkt, "ipv6Out");
-    }
-    else{
-        if (rplUpwardRouting->getMyGlobalNetwAddr() == pkt->getDODAGID()){ //If I am the sink node
-            statisticCollector->nodeJoinedDownnward(prefix, msg->getArrivalTime());
-        }
+    }else{
         EV<< "DAO can not be forwarded. There is no preferred parent." << endl;
         delete msg;
     }
@@ -586,6 +586,19 @@ void ICMPv6RPL::processIncommingNonStoringDAOMessage(ICMPv6Message *msg)
     if ((dodagID != rplUpwardRouting->getDODAGID()) && (flagD == 1))
         throw cRuntimeError("ICMPv6RPL::processIncommingNonStoringDAOMessage: DAO`s DAG ID is different from nod`s DAG ID!");
 
+    if (!neighbourDiscoveryRPL->addNeighborFromRPLMessage(ctrlInfoIn))
+        throw cRuntimeError("ICMPv6RPL::processIncommingStoringDAOMessage: DAO Info can not be added to the Neighbor Discovery!");
+    /*
+     * RFC 6550, March 2012, Section 9.7. Non-Storing Mode
+     *
+     * 3. When a node removes a node from its DAO parent set, it MAY
+     * generate a new DAO message with an updated Transit Information option.
+     */
+    /*
+     * So according to the RFC, Non-Storing mode does't use the No-Path DAOs message,
+     * but Contiki-NG uses the No-Path DAOs message!
+     */
+
     if (lifeTime == ZERO_LIFETIME){ // && (flagK == 1)  //No-Path DAO  //FIXME: this situation must handle ACK message
         EV << "No-Path DAO received from originator " << prefix << " and previous hop " << senderIPAddress <<",  removes a route with the prefeix of " << prefix << " and the DAO parent of " << daoParent<< endl;
         //routingTable->deleteSREntry(prefix, daoParent);
@@ -595,6 +608,9 @@ void ICMPv6RPL::processIncommingNonStoringDAOMessage(ICMPv6Message *msg)
         EV << "The entry :" << prefix << ", nextHop" << senderIPAddress << " was deleted from the routing table.\n";
         routingTable->addOrUpdateOnLinkPrefix(prefix, prefixLen, interfaceID, lifeTime);
         EV << "Added/updated SR entry to Routing Table: " << prefix << " nextHop -->" << daoParent << ", lifeTime -->" << lifeTime << "\n";
+
+        statisticCollector->nodeJoinedDownnward(prefix, msg->getArrivalTime());
+
     }
 
     /*TODO:  K flag to send ACK ....*/
@@ -623,8 +639,7 @@ void ICMPv6RPL::sendDAOMessage(IPv6Address prefix, simtime_t lifetime, IPv6Addre
 
         ctrlInfo->setSrcAddr(rplUpwardRouting->getMyLLNetwAddr());
 
-        pkt->setDFlag(1); //spesified DAG
-        pkt->setDFlag(1); //We suppose RPL_DAO_SPECIFY_DAG = 1
+        pkt->setDFlag(1); //spesified DAG, We suppose RPL_DAO_SPECIFY_DAG = 1
         pkt->setDODAGID(dodagID); //We suppose RPL_DAO_SPECIFY_DAG = 1
 
         if (lifetime == ZERO_LIFETIME) //for No-Path DAO
@@ -637,17 +652,27 @@ void ICMPv6RPL::sendDAOMessage(IPv6Address prefix, simtime_t lifetime, IPv6Addre
         pkt->setLifeTime(lifetime);
 
         if (mop == Non_Storing_Mode_of_Operation){
-            ctrlInfo->setDestAddr(dodagID);
             pkt->setByteLength(DAOheaderLength);
             //pkt->setDaoParent(prefParentAddr); Link Local address, but we need the global addresses
             //pkt->setDaoParent(prefParentAddr);
             IPv6Address prefParentAddrGlobal;
             prefParentAddrGlobal.setPrefix(dodagID, 64);
-            if (parent == IPv6Address::UNSPECIFIED_ADDRESS)
-                prefParentAddrGlobal.setSuffix(prefParentAddr, 64); //Global address for prefParentAddr
-            else
-                prefParentAddrGlobal.setSuffix(parent, 64); //Global address for the staled parent (used for No-Path DAO)
+            prefParentAddrGlobal.setSuffix(prefParentAddr, 64); //Global address for prefParentAddr
+
+            /*
+             * RFC 6550, March 2012, Section 9.7. Non-Storing Mode
+             * 1. The DODAG Parent Address subfield of a Transit Information option
+             * MUST contain one or more addresses. All of these addresses MUST
+             * be addresses of DAO parents of the sender.
+             */
             pkt->setDaoParent(prefParentAddrGlobal);
+            /*
+             * RFC 6550, March 2012, Section 9.7. Non-Storing Mode
+             *
+             * 2. DAOs are sent directly to the <B>root</B> along a default route
+             * installed as part of the parent selection.
+             */
+            ctrlInfo->setDestAddr(dodagID);
             EV << "A new DAO message (Non-Storing mode) is sent to the root node(Global:" << dodagID << "), Prefix/child (Global: " << prefix << ", DAO parent address is (Link Local:  " << prefParentAddr << ", Global: " << prefParentAddrGlobal << ")"<< endl;
         }else{
             if (parent == IPv6Address::UNSPECIFIED_ADDRESS)
@@ -704,18 +729,18 @@ void ICMPv6RPL::scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime)
         DAOTimer = new cMessage("DAO-timer", SEND_DAO_TIMER);
         simtime_t expirationTime;
         if (delay == 0){
-            expirationTime = 0;
+            expirationTime = simTime() + 0;
             EV << "Next DAO message is scheduled at t = " << expirationTime << ", delay parameter = " << delay << endl;
         }
         else if (delay == DelayDAO){
-            expirationTime = par("randomDelayDAO"); //expirationTime = x~[0,1) * delay + delay/2 or x~[0.5,1.5) * delay
+            expirationTime = simTime() + par("randomDelayDAO"); //expirationTime = x~[0,1) * delay + delay/2 or x~[0.5,1.5) * delay
             EV << "DAO message is scheduled at t = " << expirationTime << ", delay parameter = DelayDAO = " << DelayDAO << endl;
         }else{
             throw cRuntimeError("ICMPV6RPL::scheduleNextDAOTransmission: the value of the delay parameter is wrong! delay = %e'", delay);
         }
         scheduleAt(expirationTime, DAOTimer);
 
-        //based on the Contiki-ng ambiguity, there is 3 interpretation:
+        //based on the Contiki-ng, there is 3 interpretation:
         //1:
         if (DAOLifeTimer){
             EV << "DAOLifeTimer already scheduled. It is again rescheduled now." << endl;
@@ -723,7 +748,7 @@ void ICMPv6RPL::scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime)
             cancelAndDelete(DAOLifeTimer);
             DAOLifeTimer = nullptr;
         }else
-            EV << "DAOLifeTimer was not scheduled. It is scheduled now." << endl;
+            EV << "DAOLifeTimer has not been scheduled. It is scheduled now." << endl;
 
         scheduleDAOlifetimer(LifeTime);
 
@@ -753,7 +778,7 @@ void ICMPv6RPL::scheduleDAOlifetimer(simtime_t lifeTime)
     }else if (!DAOLifeTimer){
         DAOLifeTimer = new cMessage("DAO-life-timer", DAO_LIFETIME_TIMER);
         if (lifeTime == defaultLifeTime){
-               simtime_t expirationTime = par("randomDefaultLifeTime"); //expirationTime = x~[0.5,0.75) * lifeTime
+               simtime_t expirationTime = simTime() + par("randomDefaultLifeTime"); //expirationTime = x~[0.5,0.75) * lifeTime
                scheduleAt(expirationTime, DAOLifeTimer);
                EV << "The DAO life time is not infinit. The next DAO is scheduled at t = " << expirationTime << ", the lifeTime parameter = defaultLifeTime = " << defaultLifeTime << endl;
            }else{
@@ -785,21 +810,30 @@ void ICMPv6RPL::DeleteDAOTimers()
 
 void ICMPv6RPL::handleDAOTimer(cMessage* msg)
 {
+    EV << "->ICMPV6RPL::handleDAOTimer()" << endl;
     if (mop != No_Downward_Routes_maintained_by_RPL){
-        if ((msg->getKind() == SEND_DAO_TIMER) && (parentTableRPL->getNumberOfParents(rplUpwardRouting->getVersion()) > 0))  //there is a prparent
-            sendDAOMessage(rplUpwardRouting->getMyGlobalNetwAddr(), defaultLifeTime);
-        else
-            EV<< "DAO can not be sent. There is no preferred parent." << endl;
+        if ((msg->getKind() == SEND_DAO_TIMER) || (msg->getKind() == DAO_LIFETIME_TIMER))
+            if (parentTableRPL->getNumberOfParents(rplUpwardRouting->getVersion()) > 0){  //there is a prparent
+                sendDAOMessage(rplUpwardRouting->getMyGlobalNetwAddr(), defaultLifeTime);
+            }else
+                EV<< "DAO can not be sent. There is no preferred parent." << endl;
 
-        //scheduleNextDAOTransmission handles this part
-        /*if (DAOTimer){
+        if (msg->getKind() == SEND_DAO_TIMER){
             cancelAndDelete(DAOTimer);
-        }*/
+            DAOTimer = nullptr;
+        }
 
-        if (!DAOLifeTimer){
+        //To schedule a next DAO transmission after defaultLifeTime
+        if (msg->getKind() == DAO_LIFETIME_TIMER){
+            cancelAndDelete(DAOLifeTimer);
+            DAOLifeTimer = nullptr;
             scheduleDAOlifetimer(defaultLifeTime);
         }
+
+
     }
+    EV << "<-ICMPV6RPL::handleDAOTimer()" << endl;
+
 }
 
 ICMPv6RPL::~ICMPv6RPL()

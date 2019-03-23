@@ -464,8 +464,19 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                DIOIntMin = netwMsg->getIMin();
                DIORedun = netwMsg->getK();
                DODAGID = netwMsg->getDODAGID();
+               char buf0[50];
+               sprintf(buf0, "I joined DODAG%d via node %s !!", versionNember, ctrlInfo->getSrcAddr().str().c_str());
                if (parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber()) == 0){
                    if (mop != No_Downward_Routes_maintained_by_RPL){
+                       /*
+                        * RFC 6550, March 2012, Section 9.1: Destination Advertisement Parents
+                        *
+                        * To establish Downward routes, RPL nodes send DAO messages Upward.
+                        * The next-hop destinations of these DAO messages are called "DAO
+                        * parents". The collection of a node’s DAO parents is called the "DAO
+                        * parent set".
+                        */
+
                        /*
                         * RFC 6550, March 2012, Section 9.5: DAO Transmission Scheduling
                         *
@@ -473,8 +484,12 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                         * a DAO message transmission.
                         */
                        icmpv6RPL->scheduleNextDAOTransmission(DelayDAO, defaultLifeTime);
+                       sprintf(buf0 + strlen(buf0), " Schedule a DAO! A new preferred parent was added.");
+                       EV << "Preferred parent/ DAO parent was added. A DAO message is scheduled to" << ctrlInfo->getSrcAddr() << endl;
                    }
                }
+               host->bubble(buf0);
+
                PrParent = parentTableRPL->getPrefParentIPAddress(versionNember);
                //PrParent = ctrlInfo->getSrcAddr(); //sender address
                Rank = parentTableRPL->getRank(versionNember);
@@ -482,9 +497,6 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                updateRoutingTable(PrParent);
                statisticCollector->updateRank(myLLNetwAddr, Rank);
 
-               char buf0[50];
-               sprintf(buf0, "I joined DODAG%d via node %d !!", versionNember,ctrlInfo->getSrcAddr());
-               host->bubble(buf0);
                char buf1[100];
                sprintf(buf1,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, parentTableRPL->getPrefParentIPAddress(versionNember).getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
                host->getDisplayString().setTagArg("t", 0, buf1);
@@ -510,6 +522,8 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 DIO_StofCurIntNext = netwMsg->getArrivalTime();
                 DIO_EndofCurIntNext = DIO_StofCurIntNext+DIO_CurIntsizeNext;
                 Grounded = netwMsg->getGrounded();
+                char buf0[50];
+                sprintf(buf0, "I joined DODAG %d via node %s !!", versionNember, ctrlInfo->getSrcAddr().str().c_str());
                 if (parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber()) == 0){
                     if (mop != No_Downward_Routes_maintained_by_RPL){
                         /*
@@ -519,8 +533,12 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                           * a DAO message transmission.
                           */
                          icmpv6RPL->scheduleNextDAOTransmission(DelayDAO, defaultLifeTime);
+                         sprintf(buf0 + strlen(buf0), " Schedule a DAO! A new preferred parent was added.");
+                         EV << "Preferred parent/ DAO parent was added. A DAO message is scheduled to" << ctrlInfo->getSrcAddr() << endl;
                     }
                 }
+                host->bubble(buf0);
+
                 PrParent = parentTableRPL->getPrefParentIPAddress(versionNember);
                 //PrParent = ctrlInfo->getSrcAddr(); //sender address
                 Rank = parentTableRPL->getRank(versionNember);
@@ -528,9 +546,6 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 updateRoutingTable(PrParent);
                 statisticCollector->updateRank(myLLNetwAddr, Rank);
 
-                char buf0[50];
-                sprintf(buf0, "I joined DODAG %d via node %d !!", versionNember, ctrlInfo->getSrcAddr());
-                host->bubble(buf0);
                 char buf1[100];
                 sprintf(buf1,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, parentTableRPL->getPrefParentIPAddress(versionNember).getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
                 host->getDisplayString().setTagArg("t", 0, buf1);
@@ -547,14 +562,6 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 DIOIntMin = netwMsg->getIMin();
                 DIORedun = netwMsg->getK();
 
-                /*
-                 * RFC 6550, March 2012, Section 9.1: Destination Advertisement Parents
-                 *
-                 * To establish Downward routes, RPL nodes send DAO messages Upward.
-                 * The next-hop destinations of these DAO messages are called "DAO
-                 * parents". The collection of a node’s DAO parents is called the "DAO
-                 * parent set".
-                 */
                 IPv6Address oldPrefParent = parentTableRPL->getPrefParentIPAddress(versionNember);
                 int oldDTSN = parentTableRPL->getPrefParentDTSN(versionNember);
                 IPv6Address senderAddr = ctrlInfo->getSrcAddr();
@@ -563,6 +570,9 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 PrParent = parentTableRPL->getPrefParentIPAddress(versionNember);
                 Rank = parentTableRPL->getRank(versionNember);
                 updateRoutingTable(PrParent);
+
+                char buf2[255];
+                sprintf(buf2, "A DIO received from node %s !", ctrlInfo->getSrcAddr().str().c_str());
 
                 if (mop != No_Downward_Routes_maintained_by_RPL){
                     if (oldPrefParent == PrParent){
@@ -576,6 +586,7 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                              */
 
                             icmpv6RPL->scheduleNextDAOTransmission(DelayDAO, defaultLifeTime); //Because prefparent requested a new DAO by incrementing its dtsn
+                            //host->bubble("Schedule a DAO! Preferred parent incremented its DTSN.");
                             /* 2. In Non-Storing mode, if a node hears one of its DAO parents
                              * increment its DTSN, the node <B>MUST</B> increment its own DTSN.
                              *
@@ -585,24 +596,40 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                              *
                              */
                             dtsnInstance++; //To inform the sub DODAG nodes.
+                            sprintf(buf2 + strlen(buf2), " Schedule a DAO, increase DTSN!");
+                            EV << "Preferred parent/ DAO parent(" << PrParent << ") incremented its DTSN. This node increase its DTSN to " << dtsnInstance << endl;
+
                         }
                     }else{
-                        /*
-                         * RFC 6550, March 2012, Section 9.8: Storing Mode
-                         *
-                         * 4. When a node removes a node from its DAO parent set, it SHOULD
-                         * send a No-Path DAO message (Section 6.4.3) to that removed DAO
-                         * parent to invalidate the existing route.
-                         */
-                        /*
-                         * TODO:
-                         * To reduce the number of unessential messages, it is better to check
-                         * whether a DAO message had been sent already or not.
-                         * If so, No-Path DAO is essential. Otherwise, it is better to check
-                         * whether a DAO message had been scheduled already or not.
-                         * If so, No-Path DAO is not essential, and we must cancel the scheduled message.
-                         */
-                        icmpv6RPL->sendDAOMessage(myGlobalNetwAddr, ZERO_LIFETIME, oldPrefParent); //No-Path DAO, to delete the route of this node in the Dao parent node.
+                        if (mop != Non_Storing_Mode_of_Operation){
+                            /*
+                             * RFC 6550, March 2012, Section 9.8: Storing Mode
+                             *
+                             * 4. When a node removes a node from its DAO parent set, it SHOULD
+                             * send a No-Path DAO message (Section 6.4.3) to that removed DAO
+                             * parent to invalidate the existing route.
+                             */
+                            /*
+                             * TODO:
+                             * To reduce the number of unessential messages, it is better to check
+                             * whether a DAO message had been sent already or not.
+                             * If so, No-Path DAO is essential. Otherwise, it is better to check
+                             * whether a DAO message had been scheduled already or not.
+                             * If so, No-Path DAO is not essential, and we must cancel the scheduled message.
+                             */
+                            icmpv6RPL->sendDAOMessage(myGlobalNetwAddr, ZERO_LIFETIME, oldPrefParent); //No-Path DAO, to delete the route of this node in the Dao parent node.
+
+                            /*
+                             * RFC 6550, March 2012, Section 9.7. Non-Storing Mode
+                             *
+                             * 3. When a node removes a node from its DAO parent set, it MAY
+                             * generate a new DAO message with an updated Transit Information option.
+                             */
+                            /*
+                             * So according to the RFC, Non-Storing mode does't use the No-Path DAOs message.
+                             */
+
+                        }
                         /*
                          * RFC 6550, March 2012, Section 9.5: DAO Transmission Scheduling
                          *
@@ -610,11 +637,10 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                          * a DAO message transmission.
                          */
                         icmpv6RPL->scheduleNextDAOTransmission(DelayDAO, defaultLifeTime); //Because a new prefparent/DAO parent is detected.
+                        sprintf(buf2 + strlen(buf2), " Schedule a No-Path DAO and DAO!");
+                        EV << "Preferred parent/ DAO parent was changed. A No-Path DAO is sent to" << oldPrefParent << ", and a DAO message is schedulated to " << PrParent << endl;
                     }
                 }
-
-                char buf2[255];
-                sprintf(buf2, "A DIO received from node %d !", ctrlInfo->getSrcAddr());
                 host->bubble(buf2);
                 char buf3[100];
                 sprintf(buf3,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, parentTableRPL->getPrefParentIPAddress(versionNember).getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
@@ -646,9 +672,6 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
      * similar failure, a node MAY mark the address as unreachable and
      * generate an appropriate No-Path DAO.
      */
-
-
-
 
     EV << "<-RPLUpwardRouting::handleIncommingDIOMessage()" << endl;
 }
@@ -698,9 +721,8 @@ bool RPLUpwardRouting::handleOperationStage(LifecycleOperation *operation, int s
     else {
         throw cRuntimeError("Unsupported operation '%s'", operation->getClassName());
     }
-
+*/
     return true;
-    */
 }
 
 bool RPLUpwardRouting::isNodeJoinedToDAG() const
