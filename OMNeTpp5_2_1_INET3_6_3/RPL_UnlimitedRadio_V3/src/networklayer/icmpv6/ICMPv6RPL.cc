@@ -397,8 +397,11 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
     IPv6Address prefix = pkt->getPrefix();
     int prefixLen = pkt->getPrefixLen();
     simtime_t lifeTime = pkt->getLifeTime();
-    int flagK = pkt->getKFlag();
-    int flagD = pkt->getDFlag();
+    //int flagK = pkt->getKFlag();
+    //int flagD = pkt->getDFlag();
+
+    bool checkConvergence = false;
+    simtime_t convergenceTime;
 
     IPv6Address senderIPAddress = ctrlInfoIn->getSrcAddr(); //Sender address
 
@@ -421,22 +424,18 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
 
     if (lifeTime == ZERO_LIFETIME){ // && (flagK == 1)  //No-Path DAO  //FIXME: this situation must handle ACK message
         EV << "No-Path DAO received from " << senderIPAddress <<" removes a route with the prefeix of " << prefix << endl;
-        /*
-        if ((routingTable->isPrefixPresent(prefix)) && (routingTable->getNextHopForDestination(prefix) == senderIPAddress) && (senderIPAddress != IPv6Address::UNSPECIFIED_ADDRESS)){ //routingTable->lookupDestCache(prefix, outInterfaceId);
-            EV << "No-Path DAO received from " << senderIPAddress <<" removes a route with the prefeix of " << prefix << endl;
-            IPv6Route *route = createNewRoute(destPrefix, prefixLength, IRoute::MANUAL);
-            if (routingTable->deleteRoute(route))
-                EV << "The entry :" << prefix << ", nextHop" << senderIPAddress << " was deleted from the routing table.\n";
-                */
         const IPv6Route *route = routingTable->doLongestPrefixMatch(prefix);
         if ((route) && (route->getNextHop() != IPv6Address::UNSPECIFIED_ADDRESS) && (route->getNextHop() == senderIPAddress) && (route->getPrefixLength() == prefixLen)){
-            /*if (routingTable->deleteRoute(route))
-                EV << "The entry :" << prefix << ", nextHop" << senderIPAddress << " was deleted from the routing table.\n";
-            else
-                throw cRuntimeError("ICMPv6RPL::processIncommingStoringDAOMessage: no-path DAO route can not be deleted from the routing table!");
-                */
-            routingTable->deleteOnLinkPrefix(prefix, prefixLen);
-            EV << "The entry :" << prefix << ", nextHop" << senderIPAddress << " was deleted from the routing table.\n";
+            //routingTable->deleteOnLinkPrefix(prefix, prefixLen);
+            for (int i = 0; i < routingTable->getNumRoutes(); i++) {
+                IPv6Route *route2 = check_and_cast<IPv6Route *>(routingTable->getRoute(i));
+                if (route == route2){
+                    if (routingTable->deleteRoute(route2))
+                        EV << "The entry :" << prefix << ", nextHop" << senderIPAddress << " was deleted from the routing table.\n";
+                    else
+                        throw cRuntimeError("ICMPv6RPL::processIncommingStoringDAOMessage: no-path DAO route can not be deleted from the routing table!");
+                }
+            }
         }
     }else{ //Adding a DAO (Downward) route to the routing table
         //First, add to neighbor table
@@ -444,48 +443,46 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
             throw cRuntimeError("ICMPv6RPL::processIncommingStoringDAOMessage: DAO Info can not be added to the Neighbor Discovery!");
 
         //Then, add/update the routing table
-        const IPv6Route *route = routingTable->doLongestPrefixMatch(prefix);
-/*        if ((route) && (route->getPrefixLength() == prefixLen)){
-            // Update the existing entry
-            route->setNextHop(senderIPAddress);
-            route->setExpiryTime(lifeTime);
-            EV << "Updating entry in Address Table: " << prefix << " nextHop -->" << senderIPAddress << "\n";
-        } else {
-            // Add a new entry to the table
-            IPv6Route *route = routingTable->createNewRoute(prefix, prefixLen, IRoute::ICMP_REDIRECT); //We used "ICMP_REDIRECT". It is better to introduce "RPL" in the Interface IRoute in the INET framework.
-            if(!route)
-                throw cRuntimeError("ICMPv6RPL::processIncommingStoringDAOMessage: DAO (Downward) route can not be created!");
-            else{
-                route->setNextHop(senderIPAddress);
-                route->setExpiryTime(lifeTime);
-                routingTable->addRoutingProtocolRoute(route);
-                EV << "Added entry to Routing Table: " << prefix << " nextHop -->" << senderIPAddress << "\n";
+        const IPv6Route *oldRoute = routingTable->doLongestPrefixMatch(prefix);
+        if ((oldRoute) && (oldRoute->getPrefixLength() == prefixLen)){
+            // Delete the existing entry
+            for (int i = 0; i < routingTable->getNumRoutes(); i++) {
+                IPv6Route *oldRoute2 = check_and_cast<IPv6Route *>(routingTable->getRoute(i));
+                if (oldRoute == oldRoute2){
+                    if (routingTable->deleteRoute(oldRoute2))
+                        EV << "The entry :" << prefix << ", nextHop" << senderIPAddress << " was deleted from the routing table.\n";
+                    else
+                        throw cRuntimeError("ICMPv6RPL::processIncommingStoringDAOMessage: no-path DAO route can not be deleted from the routing table!");
+                }
             }
-
-        }*/
-
-        //Delete old entry
-        if ((route) && (route->getPrefixLength() == prefixLen)){
-            routingTable->deleteOnLinkPrefix(prefix, prefixLen);
-            EV << "The entry :" << prefix << ", nextHop" << senderIPAddress << " was deleted from the routing table.\n";
         }
+        // Add a new entry to the table
+        IRoute *route = routingTable->createRoute();
 
-        // Add/update an entry to the table
-/*        IPv6Route *route = routingTable->createNewRoute(prefix, prefixLen, IRoute::ICMP_REDIRECT); //We used "ICMP_REDIRECT". It is better to introduce "RPL" in the Interface IRoute in the INET framework.
         if(!route)
             throw cRuntimeError("ICMPv6RPL::processIncommingStoringDAOMessage: DAO (Downward) route can not be created!");
         else{
+            IInterfaceTable *it = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
+            route->setInterface(it->getInterfaceById(interfaceID));
+            route->setDestination(prefix);
+            route->setSourceType(IRoute::ICMP_REDIRECT);  //We used "ICMP_REDIRECT". It is better to introduce "RPL" in the Interface IRoute in the INET framework.
+            route->setSource(this);
+            //route->setProtocolData(newProtocolData);
+            //route->setMetric(hopCount);
             route->setNextHop(senderIPAddress);
-            route->setExpiryTime(lifeTime);
-            routingTable->addRoutingProtocolRoute(route);
-            EV << "Added entry to Routing Table: " << prefix << " nextHop -->" << senderIPAddress << "\n";
-        }*/
+            route->setPrefixLength(prefixLen);
+            //route->setExpiryTime(lifeTime);
+            IPv6Route *route2 = check_and_cast<IPv6Route *>(route);
+            route2->setExpiryTime(lifeTime);
+            routingTable->addRoute(route);
+            EV << "Added new entry to Routing Table: " << prefix << " nextHop -->" << senderIPAddress << "\n";
+        }
 
-        routingTable->addOrUpdateOnLinkPrefix(prefix, prefixLen, interfaceID, lifeTime);
-        EV << "Added/updated entry to Routing Table: " << prefix << " nextHop -->" << senderIPAddress << ", lifeTime -->" << lifeTime << "\n";
+        checkConvergence = true;
+        convergenceTime = msg->getArrivalTime();
 
-        if (rplUpwardRouting->getMyGlobalNetwAddr() == pkt->getDODAGID()) //If I am the sink node
-            statisticCollector->nodeJoinedDownnward(prefix, msg->getArrivalTime());
+        //if (rplUpwardRouting->getMyGlobalNetwAddr() == pkt->getDODAGID()) //If I am the sink node
+          //  statisticCollector->nodeJoinedDownnward(prefix, msg->getArrivalTime()); //This must be after delete msg to avoid memory leakage.
     }
 
     /*
@@ -552,6 +549,11 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
 
     delete ctrlInfoIn;
 
+    if (checkConvergence){
+        if (rplUpwardRouting->getMyGlobalNetwAddr() == pkt->getDODAGID()) //If I am the sink node
+            statisticCollector->nodeJoinedDownnward(prefix, convergenceTime);
+    }
+
     /* TODO:
      * RFC 6550, March 2012, Section 9.2.2:
      * A node that receives a DAO message from its sub-DODAG MAY suppress
@@ -580,6 +582,9 @@ void ICMPv6RPL::processIncommingNonStoringDAOMessage(ICMPv6Message *msg)
     simtime_t lifeTime = pkt->getLifeTime();
     IPv6Address daoParent = pkt->getDaoParent();
 
+    bool checkConvergence = false;
+    simtime_t convergenceTime;
+
     EV << "Received message is ICMPv6 DAO message, DODAGID ID is " << pkt->getDODAGID() << ", sender address is " << ctrlInfoIn->getSrcAddr() << endl;
 
 
@@ -604,12 +609,15 @@ void ICMPv6RPL::processIncommingNonStoringDAOMessage(ICMPv6Message *msg)
         //routingTable->deleteSREntry(prefix, daoParent);
         EV << "The SR entry :" << prefix << ", daoParent" << daoParent << " was deleted from the routing table.\n";
     }else{ //Adding/updateing a DAO (Downward) SR entry to the routing table
-        routingTable->deleteOnLinkPrefix(prefix, prefixLen);
-        EV << "The entry :" << prefix << ", nextHop" << senderIPAddress << " was deleted from the routing table.\n";
-        routingTable->addOrUpdateOnLinkPrefix(prefix, prefixLen, interfaceID, lifeTime);
-        EV << "Added/updated SR entry to Routing Table: " << prefix << " nextHop -->" << daoParent << ", lifeTime -->" << lifeTime << "\n";
+        //routingTable->deleteSREntry(prefix, prefixLen);
+        EV << "The entry :" << prefix << ", daoParent" << senderIPAddress << " was deleted from the routing table.\n";
+        //routingTable->addSREntry(prefix, prefixLen, interfaceID, lifeTime);
+        EV << "Added/updated SR entry to Routing Table: " << prefix << " daoParent -->" << daoParent << ", lifeTime -->" << lifeTime << "\n";
 
-        statisticCollector->nodeJoinedDownnward(prefix, msg->getArrivalTime());
+        checkConvergence = true;
+        convergenceTime = msg->getArrivalTime();
+
+        //statisticCollector->nodeJoinedDownnward(prefix, msg->getArrivalTime()); //This must be after delete msg to avoid memory leakage.
 
     }
 
@@ -618,6 +626,10 @@ void ICMPv6RPL::processIncommingNonStoringDAOMessage(ICMPv6Message *msg)
     delete msg;
 
     delete ctrlInfoIn;
+
+    if (checkConvergence){
+        statisticCollector->nodeJoinedDownnward(prefix, convergenceTime);
+    }
 
     EV << "<-ICMPV6RPL::processIncommingNonStoringDAOMessage()" << endl;
 

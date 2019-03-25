@@ -356,15 +356,17 @@ void StatisticCollector::saveStatistics()
     fprintf(averageNumberOfParentsFP, "%f\n", averageNumberOfParents);
     fclose(averageNumberOfParentsFP);
 
-/*    averageNumberOfDefaultRoutes = 0;
+/*    //DefaultRoutes
+    averageNumberOfDefaultRoutes = 0;
     averageNumberOfDefaultRoutesFP = fopen("averageNumberOfDefaultRoutes.txt", "a");
     for (unsigned int i=0; i<nodeStateList.size(); i++){
-        averageNumberOfDefaultRoutes += nodeStateList.at(i).routingTable->getNumRoutes(); //needs getNumDefaultRoute() method
+        averageNumberOfDefaultRoutes += nodeStateList.at(i).routingTable->getNum; //needs getNumDefaultRoute() method
     }
     averageNumberOfDefaultRoutes /= nodeStateList.size();
     fprintf(averageNumberOfDefaultRoutesFP, "%f\n", averageNumberOfDefaultRoutes);
     fclose(averageNumberOfDefaultRoutesFP);
 */
+    //Routes
     averageNumberOfRoutes = 0;
     averageNumberOfRoutesFP = fopen("averageNumberOfRoutes.txt", "a");
     for (unsigned int i=0; i<nodeStateList.size(); i++){

@@ -122,15 +122,16 @@ void RPLUpwardRouting::initialize(int stage)
                  * addresses of a DAO message MUST be a unique-local or a global
                  * address.
                  */
-                myLLNetwAddr = ie->ipv6Data()->getLinkLocalAddress();
+                myLLNetwAddr = ie->ipv6Data()->getLinkLocalAddress(); //We statically assigned a link local address to the interface table in the NeighborDiscovery module already.
                 myGlobalNetwAddr = ie->ipv6Data()->getGlobalAddress();
                 if (myGlobalNetwAddr == IPv6Address::UNSPECIFIED_ADDRESS){
                     IPv6Address globalAddress("fd00::");
                     globalAddress.setSuffix(myLLNetwAddr, 64);
-                    ie->ipv6Data()->assignAddress(myGlobalNetwAddr, false, 100000, 100000);
-                    //myGlobalNetwAddr = ie->ipv6Data()->getGlobalAddress();
+                    ie->ipv6Data()->assignAddress(globalAddress, false, simTime() + 100000, simTime() + 100000, true);
+
+                    myGlobalNetwAddr = ie->ipv6Data()->getGlobalAddress();
                     //myGlobalNetwAddr = ie->ipv6Data()->getPreferredAddress();
-                    myGlobalNetwAddr = globalAddress;
+                    //myGlobalNetwAddr = globalAddress;
                 }
                 EV << "interfaceID " << interfaceID << ": my link local address is: " << myLLNetwAddr << ", my global address is: " << myGlobalNetwAddr << endl;
 
@@ -141,11 +142,10 @@ void RPLUpwardRouting::initialize(int stage)
 
         if (myGlobalNetwAddr == IPv6Address::UNSPECIFIED_ADDRESS)
             throw cRuntimeError("RPLUpwardRouting::initialize: This node has not Global Address!");
-        else if (myLLNetwAddr != IPv6Address::UNSPECIFIED_ADDRESS)
-            statisticCollector->registNode(host, this, parentTableRPL, routingTable, myLLNetwAddr, myGlobalNetwAddr);
-        else
+        else if (myLLNetwAddr == IPv6Address::UNSPECIFIED_ADDRESS)
             throw cRuntimeError("RPLUpwardRouting::initialize: This node has not Link Local Address!");
-
+        else
+            statisticCollector->registNode(host, this, parentTableRPL, routingTable, myLLNetwAddr, myGlobalNetwAddr);
 
     }
      else if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
