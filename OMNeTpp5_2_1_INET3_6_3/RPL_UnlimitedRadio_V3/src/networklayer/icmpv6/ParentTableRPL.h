@@ -40,83 +40,71 @@ class ParentTableRPL : public cSimpleModule
 
     struct ParentEntry
     {
-        //IPv6NeighbourCacheRPL::Neighbour *neighbourEntry;    // A pointer to a neighbor entry to which the parent entry refers.
+        IPv6NeighbourCacheRPL::Neighbour *neighbourEntry;    // A pointer to a neighbor entry to which the parent entry refers.
         int rank;    // Input port
         int dtsn;    // Arrival time of Lookup Address Table entry
-        unsigned int vid;    // Version ID
+        //unsigned int vid;    // Version ID
         ParentEntry() {}
-        ParentEntry(int rank, int dtsn, unsigned int vid) :
-            rank(rank), dtsn(dtsn), vid(vid) {}
+        ParentEntry(IPv6NeighbourCacheRPL::Neighbour *neighbourEntry, int rank, int dtsn) :
+            neighbourEntry(neighbourEntry), rank(rank), dtsn(dtsn) {}
     };
 
     friend std::ostream& operator<<(std::ostream& os, const ParentEntry& entry);
 
-    struct IP_compare
-    {
-        bool operator()(const IPv6NeighbourCacheRPL::Neighbour *u1, const IPv6NeighbourCacheRPL::Neighbour *u2) const
-        {
-            //IPv6NeighbourCacheRPL::Key *key1 = u1.nceKey;
-            //IPv6Address ipAddress1 = key1->address;
-            IPv6Address ipAddress1 = u1->nceKey->address;
-            IPv6Address ipAddress2 = u2->nceKey->address;
+    typedef std::vector<ParentEntry> ParentTable;
 
-            return ipAddress1 < ipAddress2; }
-    };
-
-    /* Map or Vector? our search is based on the IPv6 address, so we choose Map, and key is the IPv6 Address.
-     * However, we must search the table based on the rank for finding the preferred parent and worst parent.
-     */
-    typedef std::map<IPv6NeighbourCacheRPL::Neighbour *, ParentEntry, IP_compare> ParentTable;
-    typedef std::map<unsigned int, ParentTable *> VersionParentTable;
-
-    ParentTable *parentTable;  // Version-unaware parent lookup (version = 1)
-    VersionParentTable versionParentTable;    // Version-aware parent lookup
+    ParentTable parentTable;
 
 
   protected:
 
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+
     virtual void initialize(int stage) override;
+
     virtual void handleMessage(cMessage *msg) override;
 
   public:
 
     ParentTableRPL();
+
     ~ParentTableRPL();
 
   // Table management
 
 protected:
-    ParentTableRPL::ParentTable *getTableForVid(unsigned int vid) const;
 
-    bool removeWorstParent(unsigned int vid);
+    virtual const ParentEntry *getParentEntry(const IPv6Address &ipAddr) const;
 
-    bool willWorstRank(int rank, unsigned int vid) const;
+    virtual const ParentEntry *getPrefParentEntry() const;
 
+    virtual bool removeWorstParent();
+
+    virtual bool willWorstRank(int rank) const;
 
   public:
 
-    int getNumberOfParents(unsigned int vid) const;
+    virtual int getNumberOfParents() const;
 
-    bool updateTable(InterfaceEntry *ie, const IPv6Address &id, int rank, int dtsn, unsigned int vid);
+    virtual bool updateTable(InterfaceEntry *ie, const IPv6Address &id, int rank, int dtsn);
 
-    const IPv6NeighbourCacheRPL::Neighbour *getParentNeighborCache(const IPv6Address &ip, unsigned int vid) const;
+    virtual const IPv6NeighbourCacheRPL::Neighbour *getParentNeighborCache(const IPv6Address &ip) const;
 
-    const IPv6NeighbourCacheRPL::Neighbour *getPrefParentNeighborCache(unsigned int vid) const;
+    virtual const IPv6NeighbourCacheRPL::Neighbour *getPrefParentNeighborCache() const;
 
-    IPv6Address getPrefParentIPAddress(unsigned int vid) const;
+    virtual IPv6Address getPrefParentIPAddress() const;
 
-    bool isPrefParent(const IPv6Address &ipAddr, unsigned int vid) const;
+    virtual bool isPrefParent(const IPv6Address &ipAddr) const;
 
-    int getPrefParentDTSN(unsigned int vid) const;
+    virtual int getPrefParentDTSN() const;
 
-    int getParentRank(const IPv6Address &ipAddr, unsigned int vid) const;
+    virtual int getParentRank(const IPv6Address &ipAddr) const;
 
-    int getRank(unsigned int vid) const;
+    virtual int getRank() const;
 
-    void printState() const;
+    virtual void printState() const;
 
-    void clearTable();
+    virtual void clearTable();
 
 };
 

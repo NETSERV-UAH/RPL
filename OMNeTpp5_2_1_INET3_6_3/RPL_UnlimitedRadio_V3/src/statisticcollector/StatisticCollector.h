@@ -86,7 +86,7 @@ class StatisticCollector : public cSimpleModule
     NodeStateList nodeStateList;
 
     //int version;
-    int sinkID;
+    unsigned int sinkID;
     //IPv6Address sinkLLAddress;
 
     simtime_t convergenceTimeStart;  //DODAG Sart Time
@@ -101,6 +101,7 @@ class StatisticCollector : public cSimpleModule
     int numSentDAO;
     int numReceivedDAO;
     int numSuppressedDAO;
+    float averageNumberofHopCount;
 
     int numberOfIterations;
     int numberOfGlogalRepaires; //Each Global Repair increments this variable.
@@ -111,6 +112,26 @@ class StatisticCollector : public cSimpleModule
     int numberOfDODAGformationNormal;
 
     RPLMOP mop; //Mode Of Operation
+
+    //Varibales to calculate Hop Count
+    std::vector <std::vector <int>> hopCountMat;
+
+    struct Node{
+        int nodeIndex;
+        int rank;
+    };
+    /*
+     * A map between the node IDs and hopCount matrix indices
+     * For the hopCount matrix, Indices are the ordered sequence of ranks
+     */
+    std::vector <struct Node> mapping;
+
+    /* Compares two Node according to nodeIndex.
+     * It's used to sort the mapping array.
+     */
+    struct compareNodes {
+      bool operator() (struct Node n1, struct Node n2) { return (n1.rank < n2.rank);}
+    } mapCompare;
 
 public:
     StatisticCollector()
@@ -128,6 +149,7 @@ public:
         , numSentDAO(0)
         , numReceivedDAO(0)
         , numSuppressedDAO(0)
+        , averageNumberofHopCount(0)
         , numberOfIterations(0)
         , numberOfGlogalRepaires(0)
         , numberOfConvergedGlogalRepaires(0)
@@ -153,6 +175,13 @@ protected:
 
     virtual void handleMessage(cMessage* msg);
 
+    virtual void calculateHopCountStoring();
+
+    virtual int nodeIndexToOrderedIndex(int nodeIndex);
+
+    virtual int orderedIndexToNodeIndex(unsigned int orderedIndex);
+
+    virtual int findFirstCommonAncestor(int nodei, int nodej);
 
 public:
     virtual void registNode(cModule *host, RPLUpwardRouting *pRPLUpwardRouting, ParentTableRPL *parentTableRPL, IRoutingTable *routingTable, IPv6Address linlklocalAddress, IPv6Address globalAddress);

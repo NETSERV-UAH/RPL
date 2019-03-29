@@ -14,7 +14,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-#include <map>
+#include <vector>
 
 #include "src/networklayer/icmpv6/ParentTableRPL.h"
 
@@ -24,16 +24,12 @@ Define_Module(ParentTableRPL);
 
 std::ostream& operator<<(std::ostream& os, const ParentTableRPL::ParentEntry& entry)
 {
-    os << "{Rank=" << entry.rank << ", DTSN=" << entry.dtsn << ", Version ID=" << entry.vid << "}";
+    os << "{IP Address=" << entry.neighbourEntry->nceKey->address << "Rank=" << entry.rank << ", DTSN=" << entry.dtsn << "}";
     return os;
 }
 
 ParentTableRPL::ParentTableRPL()
 {
-    parentTable = new ParentTable();
-    // Set parentTable for Version ID 1
-    versionParentTable[1] = parentTable;
-
     maxParents = -1; //Unlimited
 }
 
@@ -45,8 +41,7 @@ void ParentTableRPL::initialize(int stage)
         neighbourDiscoveryRPL = check_and_cast<IPv6NeighbourDiscoveryRPL *>(this->getParentModule()->getSubmodule("neighbourDiscovery"));
         maxParents = par("maxParents");
 
-        ParentTable& parentTable = *this->parentTable;    // magic to hide the '*' from the name of the watch below
-        WATCH_MAP(parentTable);
+        WATCH_VECTOR(parentTable);
     }
 
 }
@@ -56,40 +51,18 @@ void ParentTableRPL::handleMessage(cMessage *)
     throw cRuntimeError("ParentTableRPL::handleMessage: This module doesn't process messages");
 }
 
-int ParentTableRPL::getNumberOfParents(unsigned int vid) const
+int ParentTableRPL::getNumberOfParents() const
 {
-    //return versionParentTable[vid]->size();
-
-    const ParentTable *table = getTableForVid(vid);
-    if (table)
-        return table->size();
-
-    return 0;
+    return parentTable.size();
 }
 
-/*
- * getTableForVid
- * Returns a parent Table for a specified Version ID
- * or nullptr pointer if it is not found
- */
-
-ParentTableRPL::ParentTable *ParentTableRPL::getTableForVid(unsigned int vid) const
-{
-    if (vid == 1)
-        return parentTable;
-
-    auto iter = versionParentTable.find(vid);
-    if (iter != versionParentTable.end())
-        return iter->second;
-    return nullptr;
-}
 
 /*
  * Register a new parent at parentTable.
  * -1 if not added. 0 if it is new. 1 if it is updated.
  */
 
-bool ParentTableRPL::updateTable(InterfaceEntry *ie, const IPv6Address& id, int rank, int dtsn, unsigned int vid)
+bool ParentTableRPL::updateTable(InterfaceEntry *ie, const IPv6Address& id, int rank, int dtsn)
 {
     Enter_Method("ParentTableRPL::updateTableWithAddress()");
 
@@ -99,80 +72,53 @@ bool ParentTableRPL::updateTable(InterfaceEntry *ie, const IPv6Address& id, int 
         throw cRuntimeError("ParentTableRPL::updateTableWithAddress: This IPv6 Address doesn't any entry in Neighbor table!");
     }
 
-    ParentTable::iterator iter;
-    ParentTable *table = getTableForVid(vid);
-
-    if (table == nullptr) {
-        // Parent Table does not exist for Version ID vid, so we create it
-        table = new ParentTable();
-
-        // set 'the parentTable' to Version 1
-        if (vid == 1)
-            parentTable = table;
-
-        versionParentTable[vid] = table;
-        iter = table->end();
-    }
-    else
-        iter = table->find(neighbourEntry);
-
-
-    if (iter == table->end()) { //So, it is a new entry. Add entry to table.
-        if ((maxParents != -1) && (getNumberOfParents(vid) == maxParents)){ //If there is not a room,
-            if (willWorstRank(rank, vid)) //If my rank will be the worst rank, don't add me to the table.
-                return -1;
-            else //If my rank will not be the worst rank, remove the worst rank in the table, and add me instead of it.
-                removeWorstParent(vid);
+    for (unsigned int i = 0; i < parentTable.size(); i++){
+        if (neighbourEntry == parentTable.at(i).neighbourEntry){
+            // Update existing entry
+            ParentEntry &entry = parentTable.at(i);
+            EV << "Updating entry in Parent Table: "  << id << " old rank: " << entry.rank << " old DTSN: " << entry.dtsn << " new rank: " << rank << " new DTSN: " << dtsn << "\n";
+            entry.rank = rank;
+            entry.dtsn = dtsn;
+            return 1;
         }
-            EV << "Adding entry to Parent Table: " << id << " rank: " << rank << " DTSN: " << dtsn << " version: " << vid << "\n";
-            (*table)[neighbourEntry] = ParentEntry(rank, dtsn, vid);
-            return 0;
     }
-    else {
-        // Update existing entry
-        ParentEntry& entry = iter->second;
-        EV << "Updating entry in Parent Table: "  << id << " old rank: " << entry.rank << " old DTSN: " << entry.dtsn << " old version: " << entry.vid << " new rank: " << rank << " new DTSN: " << dtsn << "new version: " << vid << "\n";
-        entry.rank = rank;
-        entry.dtsn = dtsn;
-        entry.vid = vid;
-    }
-    return 1;
 
+    if ((maxParents != -1) && (getNumberOfParents() == maxParents)){ //If there is not a room,
+        if (willWorstRank(rank)) //If my rank will be the worst rank, don't add me to the table.
+            return -1;
+        else //If my rank will not be the worst rank, remove the worst rank in the table, and add me instead of it.
+            removeWorstParent();
+    }
+    EV << "Adding entry to Parent Table: " << id << " rank: " << rank << " DTSN: " << dtsn << "\n";
+    parentTable.push_back(ParentEntry(neighbourEntry, rank, dtsn));
+    return 0;
 }
 
-bool ParentTableRPL::removeWorstParent(unsigned int vid)
+bool ParentTableRPL::removeWorstParent()
 {
-    ParentTable *table = getTableForVid(vid);
-    // Version ID vid does not exist
-    if (table == nullptr)
+    if (parentTable.size() == 0)
         return false;
 
-    if (table->size() == 0)
-        return false;
-
-    auto worst = table->begin();
-    for (auto iter = table->begin(); iter != table->end(); iter++ ) {
-        ParentEntry& entry = iter->second;
-        if (entry.rank > worst->second.rank) {
-            worst = iter;
+    ParentEntry worst = parentTable.at(0);
+    unsigned int worstIndex = 0;
+    for (unsigned int i = 0; i < parentTable.size(); i++ ) {
+        ParentEntry &entry = parentTable.at(i);
+        if (entry.rank > worst.rank) {
+            worst = entry;
+            worstIndex = i;
         }
     }
-    table->erase(worst);
+    parentTable.erase(parentTable.begin() + worstIndex);
     return true;
 }
 
-bool ParentTableRPL::willWorstRank(int rank, unsigned int vid) const
+bool ParentTableRPL::willWorstRank(int rank) const
 {
-    const ParentTable *table = getTableForVid(vid);
-    // Version ID vid does not exist, and table is empty
-    if (table == nullptr)
+    if (parentTable.size() == 0)
         return false;
 
-    if (table->size() == 0)
-        return false;
-
-    for (auto iter = table->begin(); iter != table->end(); iter++ ) {
-        const ParentEntry& entry = iter->second;
+    for (unsigned int i = 0; i < parentTable.size(); i++) {
+        const ParentEntry &entry = parentTable.at(i);
         if (entry.rank > rank) {
             return false;
         }
@@ -180,52 +126,66 @@ bool ParentTableRPL::willWorstRank(int rank, unsigned int vid) const
     return true;
 }
 
-/* If the ipAddr has an entry in the parent table, it returns a pointer to the Neighbour.
- * Otherwise, it returns nullptr.
- */
-const IPv6NeighbourCacheRPL::Neighbour *ParentTableRPL::getParentNeighborCache(const IPv6Address &ipAddr, unsigned int vid) const
+const ParentTableRPL::ParentEntry *ParentTableRPL::getParentEntry(const IPv6Address &ipAddr) const
 {
-    const ParentTable *table = getTableForVid(vid);
-    // Version ID vid does not exist
-    if (table == nullptr)
+    if (parentTable.size() == 0)
         return nullptr;
 
-    for (auto iter = table->begin(); iter != table->end(); iter++ ) {
-        if (iter->first->nceKey->address == ipAddr) {
-            return iter->first;
+    for (unsigned int i = 0; i < parentTable.size(); i++) {
+        if (parentTable.at(i).neighbourEntry->nceKey->address == ipAddr) {
+            return &parentTable.at(i);
         }
     }
     return nullptr;
 }
 
-const IPv6NeighbourCacheRPL::Neighbour *ParentTableRPL::getPrefParentNeighborCache(unsigned int vid) const
+/* If the ipAddr has an entry in the parent table, it returns a pointer to the Neighbour.
+ * Otherwise, it returns nullptr.
+ */
+const IPv6NeighbourCacheRPL::Neighbour *ParentTableRPL::getParentNeighborCache(const IPv6Address &ipAddr) const
 {
-    const ParentTable *table = getTableForVid(vid);
-    // Version ID vid does not exist
-    if (table == nullptr)
-        return nullptr;
+    const ParentEntry *parentEntry = getParentEntry(ipAddr);
 
-    auto bestRank = table->begin();
-    for (auto iter = table->begin(); iter != table->end(); iter++ ) {
-        const ParentEntry &entry = iter->second;
-        if (entry.rank < bestRank->second.rank) {
-            bestRank = iter;
-        }
-    }
-    return bestRank->first;
+    if (parentEntry)
+        return parentEntry->neighbourEntry;
+    return nullptr;
 }
 
-bool ParentTableRPL::isPrefParent(const IPv6Address &ipAddr, unsigned int vid) const
+const ParentTableRPL::ParentEntry *ParentTableRPL::getPrefParentEntry() const
 {
-    const IPv6NeighbourCacheRPL::Neighbour *neighbor = getPrefParentNeighborCache(vid);
-    if (neighbor)
+    if (parentTable.size() == 0)
+        return nullptr;
+
+    unsigned int bestRankIdex = 0;
+    for (unsigned int i = 0; i < parentTable.size(); i++) {
+        if (parentTable.at(i).rank < parentTable.at(bestRankIdex).rank) {
+            bestRankIdex = i;
+        }
+    }
+    return &parentTable.at(bestRankIdex);
+}
+
+const IPv6NeighbourCacheRPL::Neighbour *ParentTableRPL::getPrefParentNeighborCache() const
+{
+    const ParentEntry *parentEntry = getPrefParentEntry();
+
+    if (parentEntry)
+        return parentEntry->neighbourEntry;
+    return nullptr;
+}
+
+bool ParentTableRPL::isPrefParent(const IPv6Address &ipAddr) const
+{
+    const IPv6NeighbourCacheRPL::Neighbour *neighbor = getPrefParentNeighborCache();
+
+    if ((neighbor) && (neighbor->nceKey->address == ipAddr))
         return true;
     return false;
 }
 
-IPv6Address ParentTableRPL::getPrefParentIPAddress(unsigned int vid) const
+IPv6Address ParentTableRPL::getPrefParentIPAddress() const
 {
-    const IPv6NeighbourCacheRPL::Neighbour *neighbor = getPrefParentNeighborCache(vid);
+    const IPv6NeighbourCacheRPL::Neighbour *neighbor = getPrefParentNeighborCache();
 
     if (neighbor)
         return neighbor->nceKey->address;
@@ -234,21 +194,15 @@ IPv6Address ParentTableRPL::getPrefParentIPAddress(unsigned int vid) const
 
 }
 
-int ParentTableRPL::getPrefParentDTSN(unsigned int vid) const
+int ParentTableRPL::getPrefParentDTSN() const
 {
-    const ParentTable *table = getTableForVid(vid);
-    // Version ID vid does not exist
-    if (table == nullptr)
-        throw cRuntimeError("ParentTableRPL::getRank: This Version has not any parent!");
+    const ParentEntry *parentEntry = getPrefParentEntry();
 
-    auto bestRank = table->begin();
-    for (auto iter = table->begin(); iter != table->end(); iter++ ) {
-        const ParentEntry &entry = iter->second;
-        if (entry.rank < bestRank->second.rank) {
-            bestRank = iter;
-        }
-    }
-    return bestRank->second.dtsn;
+    if (parentEntry)
+        return parentEntry->dtsn;
+
+    //return -1;
+    throw cRuntimeError("ParentTableRPL::getPrefParentDTSN(): there is not any parent!");
 }
 
 /*
@@ -256,39 +210,29 @@ int ParentTableRPL::getPrefParentDTSN(unsigned int vid) const
  * Before using this method, we should use the method of
  * getParentNeighborCache() to check if ipAddr is a a parent or not.
  */
-int ParentTableRPL::getParentRank(const IPv6Address &ipAddr, unsigned int vid) const
+int ParentTableRPL::getParentRank(const IPv6Address &ipAddr) const
 {
-    const ParentTable *table = getTableForVid(vid);
-    // Version ID vid does not exist
-    if (table == nullptr)
-        throw cRuntimeError("ParentTableRPL::getParentRank: This Version has not any parent!");
+    const ParentEntry *parentEntry = getParentEntry(ipAddr);
 
-    for (auto iter = table->begin(); iter != table->end(); iter++ ) {
-        if (iter->first->nceKey->address == ipAddr) {
-            return iter->second.rank;
-        }
-    }
-    throw cRuntimeError("ParentTableRPL::getParentRank: ipAddr not found!");
+    if (parentEntry)
+        return parentEntry->rank;
+
+    //return -1;
+    throw cRuntimeError("ParentTableRPL::getPrefParentDTSN(): there is not any parent/IP address(%s)!", ipAddr.getSuffix(128).str());
 }
 
 /*
- * Returne the DODAG rank (the best rank)
+ * return the DODAG rank (the best rank) in a non-root node.
  */
-int ParentTableRPL::getRank(unsigned int vid) const
+int ParentTableRPL::getRank() const
 {
-    const ParentTable *table = getTableForVid(vid);
-    // Version ID vid does not exist
-    if (table == nullptr)
-        throw cRuntimeError("ParentTableRPL::getRank: This Version has not any parent!");
+    const ParentEntry *parentEntry = getPrefParentEntry();
 
-    auto bestRank = table->begin();
-    for (auto iter = table->begin(); iter != table->end(); iter++ ) {
-        const ParentEntry &entry = iter->second;
-        if (entry.rank < bestRank->second.rank) {
-            bestRank = iter;
-        }
-    }
-    return bestRank->second.rank + 1;
+    if (parentEntry)
+        return parentEntry->rank + 1;
+
+    //return -1;
+    throw cRuntimeError("ParentTableRPL::getPrefParentDTSN(): there is not any parent!");
 }
 
 /*
@@ -298,27 +242,20 @@ int ParentTableRPL::getRank(unsigned int vid) const
 void ParentTableRPL::printState() const
 {
     EV << endl << "Parent Table" << endl;
-    EV << "Version    IP Address    Rank    DTSN" << endl;
-    for (auto & elem : versionParentTable) {
-        ParentTable *table = elem.second;
-        for (auto & table_j : *table)
-            EV << table_j.second.vid << "   " << table_j.first->nceKey->address << "   " << table_j.second.rank << "   " << table_j.second.dtsn << endl;
+    EV << "IP Address    Rank    DTSN" << endl;
+    for (unsigned int i = 0; i < parentTable.size(); i++){
+        EV << parentTable.at(i).neighbourEntry->nceKey->address << "   " << parentTable.at(i).rank << "   " << parentTable.at(i).dtsn << endl;
     }
 }
 
 void ParentTableRPL::clearTable()
 {
-    for (auto & elem : versionParentTable)
-        delete elem.second;
-
-    versionParentTable.clear();
-    parentTable = nullptr;
+    parentTable.clear();
 }
 
 ParentTableRPL::~ParentTableRPL()
 {
-    for (auto & elem : versionParentTable)
-        delete elem.second;
+    clearTable();
 }
 
 

@@ -186,6 +186,7 @@ void RPLUpwardRouting::initialize(int stage)
                 * that DAGRank(ROOT_RANK) is 1.
                 */
                Rank = 1; // The value of rank for Sink
+               statisticCollector->updateRank(myLLNetwAddr, Rank);
                DODAGID = myGlobalNetwAddr;  //DODAGID is a Global address
                Grounded = 1;
 
@@ -293,6 +294,7 @@ void RPLUpwardRouting::setParametersBeforeGlobalRepair(simtime_t dodagSartTime){
          */
         dtsnInstance++;  // To inform the down stream nodes. dtsnInstance is accommodated in the DIO msg, so the down stream nodes find out that they must send a new DAO because of the global repair ...
         Rank = 1;
+        statisticCollector->updateRank(myLLNetwAddr, Rank);
         DODAGID = myGlobalNetwAddr;
         Grounded = 1;
 
@@ -377,7 +379,7 @@ void RPLUpwardRouting::handleDIOTimer(cMessage* msg)
         if(myLLNetwAddr == sinkLinkLocalAddress)
              sprintf(buf,"DODAG ROOT\nVerNum = %d\nRank = %d\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, numSentDIO, numReceivedDIO, numSuppressedDIO);
         else
-            sprintf(buf,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, parentTableRPL->getPrefParentIPAddress(versionNember).getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
+            sprintf(buf,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, parentTableRPL->getPrefParentIPAddress().getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
         host->getDisplayString().setTagArg("t", 0, buf);
         cancelAndDelete(DIOTimer);
         DIOTimer = nullptr; //EXTRA
@@ -392,7 +394,7 @@ void RPLUpwardRouting::handleDIOTimer(cMessage* msg)
         sprintf(buf1, "DIO transmission suppressed!");
         host->bubble(buf1);
         char buf2[100];
-        sprintf(buf2,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, parentTableRPL->getPrefParentIPAddress(versionNember).getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
+        sprintf(buf2,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, parentTableRPL->getPrefParentIPAddress().getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
         host->getDisplayString().setTagArg("t", 0, buf2);
         cancelAndDelete(DIOTimer);
         DIOTimer = nullptr; //EXTRA
@@ -466,7 +468,7 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                DODAGID = netwMsg->getDODAGID();
                char buf0[50];
                sprintf(buf0, "I joined DODAG%d via node %s !!", versionNember, ctrlInfo->getSrcAddr().str().c_str());
-               if (parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber()) == 0){
+               if (parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN()) == 0){
                    if (mop != No_Downward_Routes_maintained_by_RPL){
                        /*
                         * RFC 6550, March 2012, Section 9.1: Destination Advertisement Parents
@@ -490,15 +492,15 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                }
                host->bubble(buf0);
 
-               PrParent = parentTableRPL->getPrefParentIPAddress(versionNember);
+               PrParent = parentTableRPL->getPrefParentIPAddress();
                //PrParent = ctrlInfo->getSrcAddr(); //sender address
-               Rank = parentTableRPL->getRank(versionNember);
+               Rank = parentTableRPL->getRank();
                //Rank = netwMsg->getRank() + 1;
                updateRoutingTable(PrParent);
                statisticCollector->updateRank(myLLNetwAddr, Rank);
 
                char buf1[100];
-               sprintf(buf1,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, parentTableRPL->getPrefParentIPAddress(versionNember).getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
+               sprintf(buf1,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, parentTableRPL->getPrefParentIPAddress().getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
                host->getDisplayString().setTagArg("t", 0, buf1);
                icmpv6RPL->cancelAndDeleteDISTimer();
                scheduleNextDIOTransmission();
@@ -524,7 +526,7 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 Grounded = netwMsg->getGrounded();
                 char buf0[50];
                 sprintf(buf0, "I joined DODAG %d via node %s !!", versionNember, ctrlInfo->getSrcAddr().str().c_str());
-                if (parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber()) == 0){
+                if (parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN()) == 0){
                     if (mop != No_Downward_Routes_maintained_by_RPL){
                         /*
                           * RFC 6550, March 2012, Section 9.5: DAO Transmission Scheduling
@@ -539,15 +541,15 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 }
                 host->bubble(buf0);
 
-                PrParent = parentTableRPL->getPrefParentIPAddress(versionNember);
+                PrParent = parentTableRPL->getPrefParentIPAddress();
                 //PrParent = ctrlInfo->getSrcAddr(); //sender address
-                Rank = parentTableRPL->getRank(versionNember);
+                Rank = parentTableRPL->getRank();
                 //Rank = netwMsg->getRank() + 1;
                 updateRoutingTable(PrParent);
                 statisticCollector->updateRank(myLLNetwAddr, Rank);
 
                 char buf1[100];
-                sprintf(buf1,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, parentTableRPL->getPrefParentIPAddress(versionNember).getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
+                sprintf(buf1,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, parentTableRPL->getPrefParentIPAddress().getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
                 host->getDisplayString().setTagArg("t", 0, buf1);
                 icmpv6RPL->cancelAndDeleteDISTimer();
                 scheduleNextDIOTransmission();
@@ -562,13 +564,13 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 DIOIntMin = netwMsg->getIMin();
                 DIORedun = netwMsg->getK();
 
-                IPv6Address oldPrefParent = parentTableRPL->getPrefParentIPAddress(versionNember);
-                int oldDTSN = parentTableRPL->getPrefParentDTSN(versionNember);
+                IPv6Address oldPrefParent = parentTableRPL->getPrefParentIPAddress();
+                int oldDTSN = parentTableRPL->getPrefParentDTSN();
                 IPv6Address senderAddr = ctrlInfo->getSrcAddr();
 
-                parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN(), netwMsg->getVersionNumber());
-                PrParent = parentTableRPL->getPrefParentIPAddress(versionNember);
-                Rank = parentTableRPL->getRank(versionNember);
+                parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN());
+                PrParent = parentTableRPL->getPrefParentIPAddress();
+                Rank = parentTableRPL->getRank();
                 updateRoutingTable(PrParent);
 
                 char buf2[255];
@@ -643,7 +645,7 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 }
                 host->bubble(buf2);
                 char buf3[100];
-                sprintf(buf3,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, parentTableRPL->getPrefParentIPAddress(versionNember).getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
+                sprintf(buf3,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, parentTableRPL->getPrefParentIPAddress().getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
                 host->getDisplayString().setTagArg("t", 0, buf3);
             }else if(netwMsg->getVersionNumber() < versionNember){ //This DIO is old. It has been sent before the global repair!
                 if (!neighbourDiscoveryRPL->addNeighborFromRPLMessage(ctrlInfo)){
@@ -652,7 +654,7 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 host->bubble("DIO deleted!!\nThe sender node should be updated.!!! ");
             }else {
                 char buf4[100];
-                sprintf(buf4,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, parentTableRPL->getPrefParentIPAddress(versionNember).getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
+                sprintf(buf4,"Joined!\nVerNum = %d\nRank = %d\nPrf.Parent = %s\nnumSentDIO = %d\nnumReceivedDIO = %d\nnumSuppressedDIO = %d", versionNember, Rank, parentTableRPL->getPrefParentIPAddress().getSuffix(96).str().c_str(), numSentDIO, numReceivedDIO, numSuppressedDIO);
                 host->getDisplayString().setTagArg("t", 0, buf4);
                 host->bubble("DIO deleted!!");
             }

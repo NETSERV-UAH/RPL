@@ -402,19 +402,21 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
 
     bool checkConvergence = false;
     simtime_t convergenceTime;
+    IPv6Address DODAGID;
 
     IPv6Address senderIPAddress = ctrlInfoIn->getSrcAddr(); //Sender address
 
-    EV << "Received message is ICMPv6 DAO message, DODAGID ID is " << pkt->getDODAGID() << ", sender address is " << ctrlInfoIn->getSrcAddr() << endl;
+    DODAGID = pkt->getDODAGID();
+    EV << "Received message is ICMPv6 DAO message, DODAGID ID is " << DODAGID << ", sender address is " << ctrlInfoIn->getSrcAddr() << endl;
 
-    if (parentTableRPL->getParentNeighborCache(senderIPAddress, rplUpwardRouting->getVersion())){  //If senderIPAddress is a parent
-        if (parentTableRPL->getParentRank(senderIPAddress, rplUpwardRouting->getVersion()) < parentTableRPL->getRank(rplUpwardRouting->getVersion())){
+    if (parentTableRPL->getParentNeighborCache(senderIPAddress)){  //If senderIPAddress is a parent
+        if (parentTableRPL->getParentRank(senderIPAddress) < parentTableRPL->getRank()){
             EV << "DAO message is received from a parent with a lower rank and discarded." << endl;
             delete msg;
             return;
         }
 
-        if (parentTableRPL->isPrefParent(senderIPAddress, rplUpwardRouting->getVersion())){  //If senderIPAddress is the preferred parent
+        if (parentTableRPL->isPrefParent(senderIPAddress)){  //If senderIPAddress is the preferred parent
             EV << "DAO message is received from the preferred parent and discarded." << endl;
             delete msg;
             return;
@@ -513,7 +515,7 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
      * that are not DAO parents.
      */
     //So, Forward a DAO message to the preferred parent
-    const IPv6NeighbourCacheRPL::Neighbour *neighbourEntry = parentTableRPL->getPrefParentNeighborCache(rplUpwardRouting->getVersion());
+    const IPv6NeighbourCacheRPL::Neighbour *neighbourEntry = parentTableRPL->getPrefParentNeighborCache();
     if (neighbourEntry){  //this node has a preferred parent, so DAO must be forwarded to the preferred parent.
         IPv6ControlInfo *ctrlInfoOut = new IPv6ControlInfo;
         pkt->setType(ICMPv6_RPL_CONTROL_MESSAGE);
@@ -550,7 +552,7 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
     delete ctrlInfoIn;
 
     if (checkConvergence){
-        if (rplUpwardRouting->getMyGlobalNetwAddr() == pkt->getDODAGID()) //If I am the sink node
+        if (rplUpwardRouting->getMyGlobalNetwAddr() == DODAGID) //If I am the sink node
             statisticCollector->nodeJoinedDownnward(prefix, convergenceTime);
     }
 
@@ -639,7 +641,7 @@ void ICMPv6RPL::sendDAOMessage(IPv6Address prefix, simtime_t lifetime, IPv6Addre
 {
     EV << "->ICMPV6RPL::sendDAOMessage()" << endl;
 
-    const IPv6NeighbourCacheRPL::Neighbour *neighbourEntry = parentTableRPL->getPrefParentNeighborCache(rplUpwardRouting->getVersion());
+    const IPv6NeighbourCacheRPL::Neighbour *neighbourEntry = parentTableRPL->getPrefParentNeighborCache();
     IPv6Address prefParentAddr = neighbourEntry->nceKey->address;
     IPv6Address dodagID = rplUpwardRouting->getDODAGID();
 
@@ -825,7 +827,7 @@ void ICMPv6RPL::handleDAOTimer(cMessage* msg)
     EV << "->ICMPV6RPL::handleDAOTimer()" << endl;
     if (mop != No_Downward_Routes_maintained_by_RPL){
         if ((msg->getKind() == SEND_DAO_TIMER) || (msg->getKind() == DAO_LIFETIME_TIMER))
-            if (parentTableRPL->getNumberOfParents(rplUpwardRouting->getVersion()) > 0){  //there is a prparent
+            if (parentTableRPL->getNumberOfParents() > 0){  //there is a prparent
                 sendDAOMessage(rplUpwardRouting->getMyGlobalNetwAddr(), defaultLifeTime);
             }else
                 EV<< "DAO can not be sent. There is no preferred parent." << endl;

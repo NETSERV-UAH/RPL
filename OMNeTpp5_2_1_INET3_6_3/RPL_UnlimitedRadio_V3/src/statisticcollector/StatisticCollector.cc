@@ -24,6 +24,7 @@
 #include "src/statisticcollector/StatisticCollector.h"
 #include "src/networklayer/icmpv6/RPLUpwardRouting.h"
 #include "src/networklayer/icmpv6/ICMPv6RPL.h"
+#include <algorithm>    // std::sort
 
 
 namespace rpl {
@@ -49,7 +50,7 @@ void StatisticCollector::registNode(cModule *host, RPLUpwardRouting *pRPLUpwardR
 {
     Enter_Method("registNode()");
 
-    int vectorIndex = rplManager->getIndexFromLLAddress(linlklocalAddress);
+    unsigned int vectorIndex = rplManager->getIndexFromLLAddress(linlklocalAddress);
     if(nodeStateList.size() < vectorIndex + 1)
         nodeStateList.resize(vectorIndex + 1);
     nodeStateList.at(vectorIndex).host = host;
@@ -58,6 +59,7 @@ void StatisticCollector::registNode(cModule *host, RPLUpwardRouting *pRPLUpwardR
     nodeStateList.at(vectorIndex).routingTable = routingTable;
     nodeStateList.at(vectorIndex).linklocalAddress = linlklocalAddress;
     nodeStateList.at(vectorIndex).globalAddress = globalAddress;
+    nodeStateList.at(vectorIndex).nodeIndex = vectorIndex;
 }
 
 void StatisticCollector::startStatistics(RPLMOP mop, IPv6Address sinkLLAddress, simtime_t time)
@@ -114,7 +116,7 @@ void StatisticCollector::nodeJoinedDownnward(IPv6Address globalAddress, simtime_
 {
     Enter_Method("nodeJoinedDownnward()");
 
-    int vectorIndex = 0;
+    unsigned int vectorIndex = 0;
     bool found = false;
     while(vectorIndex < nodeStateList.size() && (!found)){
         if (nodeStateList.at(vectorIndex).globalAddress == globalAddress){
@@ -149,6 +151,7 @@ void StatisticCollector::nodeJoinedDownnward(int nodeID, simtime_t time)
         EV << "Root has a Downward route to Node" << nodeID << "(Link Local Address: " << nodeStateList.at(nodeID).linklocalAddress << ", Global Address: " << nodeStateList.at(nodeID).globalAddress << "." << endl;
         if (isConverged()){
             EV << "This node is the last node that joined DODAG! DODAG formed!!" << endl;
+            EV << "Statistics are calculated and saved." << endl;
             saveStatistics();
             if(numberOfConvergedGlogalRepaires == numberOfIterations - 1){
                 endSimulation();
@@ -162,14 +165,15 @@ void StatisticCollector::nodeJoinedDownnward(int nodeID, simtime_t time)
 void StatisticCollector::updateRank(IPv6Address ip, int rank)
 {
     Enter_Method("updateRank()");
-
-
+    for (unsigned int i = 0; i < nodeStateList.size(); i++){
+        if (nodeStateList.at(i).linklocalAddress == ip)
+            nodeStateList.at(i).rank = rank;
+    }
 }
-
 
 bool StatisticCollector::isConverged()
 {
-    for (int i=0; i<nodeStateList.size(); i++){
+    for (unsigned int i=0; i<nodeStateList.size(); i++){
         if (mop == No_Downward_Routes_maintained_by_RPL){
             if (!nodeStateList.at(i).isJoinUpward)
                 return false;
@@ -271,6 +275,86 @@ void StatisticCollector::messageAction(messagesTypes type, MessageAction action)
     }
 
 }
+
+void StatisticCollector::calculateHopCountStoring()
+{
+    //Initialize the map array
+    mapping.resize(nodeStateList.size());
+    for (unsigned int i = 0; i < mapping.size(); i++){
+        mapping.at(i).nodeIndex = nodeStateList.at(i).nodeIndex;
+        mapping.at(i).rank = nodeStateList.at(i).rank - 1;  //The root rank is 1, but we need that the rank is started from 0 for the hop count calculation
+    }
+
+    //Sort map in increasing order of rank
+    sort(mapping.begin(), mapping.end(), mapCompare);
+
+    //Initialize hopCountMat
+    hopCountMat.resize(nodeStateList.size());
+    for (unsigned int i = 0; i < hopCountMat.size(); i++){
+        hopCountMat.at(i).resize(nodeStateList.size());
+    }
+    for (unsigned int i = 0; i < hopCountMat.size(); i++){
+        for (unsigned int j = 0; j < hopCountMat.at(i).size(); j++){
+            if (i == j)
+                hopCountMat.at(0).at(i) = 0;
+            else
+                hopCountMat.at(i).at(j) = -1;
+        }
+    }
+
+    EV << "hopcount size: " << hopCountMat.size() << ", mapping size: " << mapping.size() << endl;
+
+    //Insert rank to hopCountMat
+    for (unsigned int i = 0; i < hopCountMat.size(); i++){
+        hopCountMat.at(0).at(i) = hopCountMat.at(i).at(0) = mapping.at(i).rank;
+    }
+
+    //Insert adjacency(or preferred parent) to hopCountMat
+    for (unsigned int i = 0; i < nodeStateList.size(); i++){
+        IPv6Address prefParent = nodeStateList.at(i).parentTableRPL->getPrefParentIPAddress();
+        if (prefParent != IPv6Address::UNSPECIFIED_ADDRESS){  //because root has not any prefparent
+            hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(rplManager->getIndexFromLLAddress(prefParent))) = hopCountMat.at(nodeIndexToOrderedIndex(rplManager->getIndexFromLLAddress(prefParent))).at(nodeIndexToOrderedIndex(i)) = 1;
+        }
+    }
+
+    //Calcullate other elements of the hopCountArray
+    for (unsigned int i = 1; i < hopCountMat.size(); i++){ // The first column an row have been filled already.
+        for (unsigned int j = i + 1; j < hopCountMat.size(); j++){
+            if (hopCountMat.at(i).at(j) == -1){
+                hopCountMat.at(i).at(j) = hopCountMat.at(j).at(i) = findFirstCommonAncestor (i, j);
+            }
+        }
+    }
+}
+
+int StatisticCollector::nodeIndexToOrderedIndex(int nodeIndex)
+{
+    for (unsigned int i = 0; i < nodeStateList.size(); i++){
+        if (mapping.at(i).nodeIndex == nodeIndex){
+            return i;
+        }
+    }
+    throw cRuntimeError("StatisticCollector::nodeIndexToOrderedIndex(%d) is out of range!", nodeIndex);
+}
+
+int StatisticCollector::orderedIndexToNodeIndex(unsigned int orderedIndex)
+{
+    if ((orderedIndex >= 0) && (orderedIndex < nodeStateList.size()))
+        return mapping.at(orderedIndex).nodeIndex;
+    throw cRuntimeError("StatisticCollector::orderedIndexToNodeIndex(%d) is out of range!", orderedIndex);
+}
+
+int StatisticCollector::findFirstCommonAncestor(int nodei, int nodej)
+{
+    int firstCommonAncestor = nodeIndexToOrderedIndex(sinkID); //We assume the first common ancestor is the root node. Then, we update it.
+    for (unsigned int i = 0; i < nodeStateList.size(); i++){
+        if (hopCountMat.at(nodei).at(i) + hopCountMat.at(nodej).at(i) < hopCountMat.at(nodei).at(nodeIndexToOrderedIndex(sinkID)) + hopCountMat.at(nodej).at(nodeIndexToOrderedIndex(sinkID))){
+            firstCommonAncestor = i;
+        }
+    }
+    return firstCommonAncestor;
+}
+
 void StatisticCollector::saveStatistics()
 {
 
@@ -350,7 +434,7 @@ void StatisticCollector::saveStatistics()
     averageNumberOfParents = 0;
     averageNumberOfParentsFP = fopen("averageNumberOfParents.txt", "a");
     for (unsigned int i=0; i<nodeStateList.size(); i++){
-        averageNumberOfParents += nodeStateList.at(i).parentTableRPL->getNumberOfParents(nodeStateList.at(i).pRPLUpwardRouting->getVersion());
+        averageNumberOfParents += nodeStateList.at(i).parentTableRPL->getNumberOfParents();
     }
     averageNumberOfParents /= nodeStateList.size();
     fprintf(averageNumberOfParentsFP, "%f\n", averageNumberOfParents);
@@ -380,6 +464,34 @@ void StatisticCollector::saveStatistics()
     //fprintf(averageNumberofTableEntriesFP, "%f\n", averageNumberOfNeighbors + averageNumberOfParents + averageNumberOfDefaultRoutes + averageNumberOfRoutes);
     fprintf(averageNumberofTableEntriesFP, "%f\n", averageNumberOfNeighbors + averageNumberOfParents + averageNumberOfRoutes);
     fclose(averageNumberofTableEntriesFP);
+
+    //Hop count statistics
+    if (mop == Storing_Mode_of_Operation_with_no_multicast_support){
+        calculateHopCountStoring();
+        EV << "hopcount size: " << hopCountMat.size() << ", mapping size: " << mapping.size() << endl;
+
+
+        FILE *numberofHopCountFP, *averageNumberofHopCountFP;
+        numberofHopCountFP = fopen("numberofHopCount.txt", "a");
+        averageNumberofHopCount = 0;
+        int numflows = 0;
+        for (unsigned int i = 0; i < nodeStateList.size(); i++){
+            for (unsigned int j = 0; j < nodeStateList.size(); j++){
+                fprintf(numberofHopCountFP, "%3d\t", hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(j)));  //hopCountMat must be converted from ordered to non-ordered
+                if (i != j){
+                    averageNumberofHopCount += hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(j));
+                    numflows++; // Finally, numflows will be nodeStateList.size() ^ 2 - nodeStateList.size()
+                }
+            }
+            fprintf(numberofHopCountFP, "\n");
+        }
+        fclose(numberofHopCountFP);
+        averageNumberofHopCount /= numflows;
+
+        averageNumberofHopCountFP = fopen("04_averageNumberofHopCount.txt", "a");
+        fprintf(averageNumberofHopCountFP, "%f\n", averageNumberofHopCount);
+        fclose(averageNumberofHopCountFP);
+    }
 
     //Other statistics
     //FILE *preferedParent, *nodeRank;
