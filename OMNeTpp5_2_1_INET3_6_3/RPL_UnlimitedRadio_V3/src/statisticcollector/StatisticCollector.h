@@ -181,7 +181,7 @@ protected:
 
     virtual int orderedIndexToNodeIndex(unsigned int orderedIndex);
 
-    virtual int findFirstCommonAncestor(int nodei, int nodej);
+    virtual int hopCount(int nodei, int nodej);
 
 public:
     virtual void registNode(cModule *host, RPLUpwardRouting *pRPLUpwardRouting, ParentTableRPL *parentTableRPL, IRoutingTable *routingTable, IPv6Address linlklocalAddress, IPv6Address globalAddress);

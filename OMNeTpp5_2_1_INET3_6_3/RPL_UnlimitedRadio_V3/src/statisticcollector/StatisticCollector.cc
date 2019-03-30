@@ -321,7 +321,7 @@ void StatisticCollector::calculateHopCountStoring()
     for (unsigned int i = 1; i < hopCountMat.size(); i++){ // The first column an row have been filled already.
         for (unsigned int j = i + 1; j < hopCountMat.size(); j++){
             if (hopCountMat.at(i).at(j) == -1){
-                hopCountMat.at(i).at(j) = hopCountMat.at(j).at(i) = findFirstCommonAncestor (i, j);
+                hopCountMat.at(i).at(j) = hopCountMat.at(j).at(i) = hopCount (i, j);
             }
         }
     }
@@ -344,15 +344,18 @@ int StatisticCollector::orderedIndexToNodeIndex(unsigned int orderedIndex)
     throw cRuntimeError("StatisticCollector::orderedIndexToNodeIndex(%d) is out of range!", orderedIndex);
 }
 
-int StatisticCollector::findFirstCommonAncestor(int nodei, int nodej)
+int StatisticCollector::hopCount(int nodei, int nodej)
 {
     int firstCommonAncestor = nodeIndexToOrderedIndex(sinkID); //We assume the first common ancestor is the root node. Then, we update it.
-    for (unsigned int i = 0; i < nodeStateList.size(); i++){
-        if (hopCountMat.at(nodei).at(i) + hopCountMat.at(nodej).at(i) < hopCountMat.at(nodei).at(nodeIndexToOrderedIndex(sinkID)) + hopCountMat.at(nodej).at(nodeIndexToOrderedIndex(sinkID))){
-            firstCommonAncestor = i;
-        }
+    int minHopCount = hopCountMat.at(nodei).at(firstCommonAncestor) + hopCountMat.at(nodej).at(firstCommonAncestor);
+    for (unsigned int i = 0; i < hopCountMat.size(); i++){
+        if ((hopCountMat.at(nodei).at(i) != -1) && (hopCountMat.at(nodej).at(i) != -1))
+            if ((hopCountMat.at(nodei).at(i) + hopCountMat.at(nodej).at(i) < minHopCount)){
+                firstCommonAncestor = i;
+                minHopCount = hopCountMat.at(nodei).at(i) + hopCountMat.at(nodej).at(i);
+            }
     }
-    return firstCommonAncestor;
+    return minHopCount;
 }
 
 void StatisticCollector::saveStatistics()
