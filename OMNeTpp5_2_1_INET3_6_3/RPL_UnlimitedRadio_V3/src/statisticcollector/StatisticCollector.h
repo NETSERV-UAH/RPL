@@ -175,13 +175,13 @@ protected:
 
     virtual void handleMessage(cMessage* msg);
 
-    virtual void calculateHopCountStoring();
+    virtual void calculateHopCount();
 
     virtual int nodeIndexToOrderedIndex(int nodeIndex);
 
     virtual int orderedIndexToNodeIndex(unsigned int orderedIndex);
 
-    virtual int hopCount(int nodei, int nodej);
+    virtual int minHopCount(int nodei, int nodej);
 
 public:
     virtual void registNode(cModule *host, RPLUpwardRouting *pRPLUpwardRouting, ParentTableRPL *parentTableRPL, IRoutingTable *routingTable, IPv6Address linlklocalAddress, IPv6Address globalAddress);

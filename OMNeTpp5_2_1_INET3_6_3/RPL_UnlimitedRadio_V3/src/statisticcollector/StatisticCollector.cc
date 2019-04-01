@@ -276,7 +276,7 @@ void StatisticCollector::messageAction(messagesTypes type, MessageAction action)
 
 }
 
-void StatisticCollector::calculateHopCountStoring()
+void StatisticCollector::calculateHopCount()
 {
     //Initialize the map array
     mapping.resize(nodeStateList.size());
@@ -296,35 +296,56 @@ void StatisticCollector::calculateHopCountStoring()
     for (unsigned int i = 0; i < hopCountMat.size(); i++){
         for (unsigned int j = 0; j < hopCountMat.at(i).size(); j++){
             if (i == j)
-                hopCountMat.at(0).at(i) = 0;
+                hopCountMat.at(i).at(j) = 0;
             else
                 hopCountMat.at(i).at(j) = -1;
         }
     }
 
-    EV << "hopcount size: " << hopCountMat.size() << ", mapping size: " << mapping.size() << endl;
-
     //Insert rank to hopCountMat
-    for (unsigned int i = 0; i < hopCountMat.size(); i++){
-        hopCountMat.at(0).at(i) = hopCountMat.at(i).at(0) = mapping.at(i).rank;
+    /* Inserting the rank is not necessary.
+     * The algorithm can calculate the rank based on the adjacency/(or preferred parent) info.
+     */
+/*    for (unsigned int i = 0; i < hopCountMat.size(); i++){
+        hopCountMat.at(0).at(i) = hopCountMat.at(i).at(0) = mapping.at(i).rank;  //For storing mode
     }
+*/
 
     //Insert adjacency(or preferred parent) to hopCountMat
     for (unsigned int i = 0; i < nodeStateList.size(); i++){
         IPv6Address prefParent = nodeStateList.at(i).parentTableRPL->getPrefParentIPAddress();
         if (prefParent != IPv6Address::UNSPECIFIED_ADDRESS){  //because root has not any prefparent
-            hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(rplManager->getIndexFromLLAddress(prefParent))) = hopCountMat.at(nodeIndexToOrderedIndex(rplManager->getIndexFromLLAddress(prefParent))).at(nodeIndexToOrderedIndex(i)) = 1;
+            if (mop == Storing_Mode_of_Operation_with_no_multicast_support){
+                hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(rplManager->getIndexFromLLAddress(prefParent))) = hopCountMat.at(nodeIndexToOrderedIndex(rplManager->getIndexFromLLAddress(prefParent))).at(nodeIndexToOrderedIndex(i)) = 1;  //DAO parent & preferred parent are alike. Upward & Downward adjacency.
+            }else if (mop == Non_Storing_Mode_of_Operation){
+                hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(rplManager->getIndexFromLLAddress(prefParent))) = 1;  // For a adjacency between node i and preferred parent. Upward adjacency.
+            }
+        }
+        if (mop == Non_Storing_Mode_of_Operation){
+            hopCountMat.at(0).at(i) = mapping.at(i).rank;  // For a n-hop adjacency between node 0/root and Node i. Downward adjacency.
         }
     }
 
+
     //Calcullate other elements of the hopCountArray
-    for (unsigned int i = 1; i < hopCountMat.size(); i++){ // The first column an row have been filled already.
-        for (unsigned int j = i + 1; j < hopCountMat.size(); j++){
-            if (hopCountMat.at(i).at(j) == -1){
-                hopCountMat.at(i).at(j) = hopCountMat.at(j).at(i) = hopCount (i, j);
+    if (mop == Storing_Mode_of_Operation_with_no_multicast_support){
+        for (unsigned int i = 0; i < hopCountMat.size(); i++){ // If we had inserted the rank to hopCountMat, the first column and row have been filled already, so it could be "unsigned int i = 1";
+            for (unsigned int j = i + 1; j < hopCountMat.size(); j++){
+                if (hopCountMat.at(i).at(j) == -1){
+                    hopCountMat.at(i).at(j) = hopCountMat.at(j).at(i) = minHopCount (i, j);
+                }
+            }
+        }
+    }else if (mop == Non_Storing_Mode_of_Operation){
+        for (unsigned int i = 0; i < hopCountMat.size(); i++){ // The first column an row have been filled already.
+            for (unsigned int j = 0; j < hopCountMat.size(); j++){
+                if (hopCountMat.at(i).at(j) == -1){
+                    hopCountMat.at(i).at(j) = minHopCount (i, j);
+                }
             }
         }
     }
+
 }
 
 int StatisticCollector::nodeIndexToOrderedIndex(int nodeIndex)
@@ -344,16 +365,28 @@ int StatisticCollector::orderedIndexToNodeIndex(unsigned int orderedIndex)
     throw cRuntimeError("StatisticCollector::orderedIndexToNodeIndex(%d) is out of range!", orderedIndex);
 }
 
-int StatisticCollector::hopCount(int nodei, int nodej)
+int StatisticCollector::minHopCount(int nodei, int nodej)
 {
-    int firstCommonAncestor = nodeIndexToOrderedIndex(sinkID); //We assume the first common ancestor is the root node. Then, we update it.
-    int minHopCount = hopCountMat.at(nodei).at(firstCommonAncestor) + hopCountMat.at(nodej).at(firstCommonAncestor);
+    int firstCommonAncestor = -1;  // nodeIndexToOrderedIndex(sinkID); //We assume the first common ancestor is the root node. Then, we update it.
+    int minHopCount = -1;  // hopCountMat.at(nodei).at(firstCommonAncestor) + hopCountMat.at(nodej).at(firstCommonAncestor);
     for (unsigned int i = 0; i < hopCountMat.size(); i++){
-        if ((hopCountMat.at(nodei).at(i) != -1) && (hopCountMat.at(nodej).at(i) != -1))
-            if ((hopCountMat.at(nodei).at(i) + hopCountMat.at(nodej).at(i) < minHopCount)){
-                firstCommonAncestor = i;
-                minHopCount = hopCountMat.at(nodei).at(i) + hopCountMat.at(nodej).at(i);
-            }
+        if ((mop == Storing_Mode_of_Operation_with_no_multicast_support) || (mop == Non_Storing_Mode_of_Operation)){
+            /* For Storing Mode, both the following approach is true
+             * because storing mode potentially uses symmetric paths
+             * in bidirectional communication.
+             * Result: Storing Mode doesn't need all elements of N*N matrix. It only uses (N*N - N)/2 enties of (N*N) matrix.
+             */
+            //if ((hopCountMat.at(nodei).at(i) != -1) && (hopCountMat.at(nodej).at(i) != -1))
+                //if ((minHopCount == -1) || (hopCountMat.at(nodei).at(i) + hopCountMat.at(nodej).at(i) < minHopCount)){
+                    //firstCommonAncestor = i;
+                    //minHopCount = hopCountMat.at(nodei).at(i) + hopCountMat.at(nodej).at(i);  // Hop Count(nodei-->nodej) = Hop Count(nodei-->k) + Hop Count(k-->nodej)
+                //}
+            if ((hopCountMat.at(nodei).at(i) != -1) && (hopCountMat.at(i).at(nodej) != -1))
+                if ((minHopCount == -1) || (hopCountMat.at(nodei).at(i) + hopCountMat.at(i).at(nodej) < minHopCount)){
+                    firstCommonAncestor = i;
+                    minHopCount = hopCountMat.at(nodei).at(i) + hopCountMat.at(i).at(nodej);  // Hop Count(nodei-->nodej) = Hop Count(nodei-->k) + Hop Count(k-->nodej)
+                }
+        }
     }
     return minHopCount;
 }
@@ -469,10 +502,8 @@ void StatisticCollector::saveStatistics()
     fclose(averageNumberofTableEntriesFP);
 
     //Hop count statistics
-    if (mop == Storing_Mode_of_Operation_with_no_multicast_support){
-        calculateHopCountStoring();
-        EV << "hopcount size: " << hopCountMat.size() << ", mapping size: " << mapping.size() << endl;
-
+    if ((mop == Storing_Mode_of_Operation_with_no_multicast_support) || (mop == Non_Storing_Mode_of_Operation)){
+        calculateHopCount();
 
         FILE *numberofHopCountFP, *averageNumberofHopCountFP;
         numberofHopCountFP = fopen("numberofHopCount.txt", "a");
