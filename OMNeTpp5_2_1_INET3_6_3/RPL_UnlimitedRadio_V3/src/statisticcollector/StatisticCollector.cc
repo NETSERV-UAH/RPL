@@ -90,10 +90,14 @@ void StatisticCollector::nodeJoinedUpward(int nodeID, simtime_t time)
     if(!nodeStateList.at(nodeID).isJoinUpward){
         nodeStateList.at(nodeID).isJoinUpward = true;
         nodeStateList.at(nodeID).joiningTimeUpward = time;
+        if (convergenceTimeEndUpward < time){
+            convergenceTimeEndUpward = time;
+        }
         EV << "Node" << nodeID << "(Link Local Address: " << nodeStateList.at(nodeID).linklocalAddress << ", Global Address: " << nodeStateList.at(nodeID).globalAddress << " joins to DODAG, and has an Upward route to the root node." << endl;
     }
     if (isConverged()){
         EV << "This node is the last node that joined DODAG! DODAG formed!!" << endl;
+        collectOtherMetrics();
         saveStatistics();
         if(numberOfConvergedGlogalRepaires == numberOfIterations - 1){
             endSimulation();
@@ -125,9 +129,13 @@ void StatisticCollector::nodeJoinedDownnward(IPv6Address globalAddress, simtime_
             if (!nodeStateList.at(vectorIndex).isJoinDownward){
                 nodeStateList.at(vectorIndex).isJoinDownward = true;
                 nodeStateList.at(vectorIndex).joiningTimeDownward = time;
+                if (convergenceTimeEndDownward < time){
+                    convergenceTimeEndDownward = time;
+                }
                 EV << "Root has a Downward route to Node" << vectorIndex << "(Link Local Address: " << nodeStateList.at(vectorIndex).linklocalAddress << ", Global Address: " << nodeStateList.at(vectorIndex).globalAddress << "." << endl;
                 if (isConverged()){
                     EV << "This node is the last node that joined DODAG! DODAG formed!!" << endl;
+                    collectOtherMetrics();
                     saveStatistics();
                     if(numberOfConvergedGlogalRepaires == numberOfIterations - 1){
                         endSimulation();
@@ -168,6 +176,59 @@ void StatisticCollector::updateRank(IPv6Address ip, int rank)
     for (unsigned int i = 0; i < nodeStateList.size(); i++){
         if (nodeStateList.at(i).linklocalAddress == ip)
             nodeStateList.at(i).rank = rank;
+    }
+}
+/*
+void StatisticCollector::messageAction(messagesTypes type, MessageAction action){
+
+    if (type == DIO){
+        if (action == sent)
+            numSentDIO++;
+        else if (action == received)
+            numReceivedDIO++;
+        else if (action == suppressed)
+            numSuppressedDIO++;
+//    }else if (type == DIS_UNICAST){
+        //Nothing, not imlemented
+//
+    }else if (type == DIS_FLOOD){
+        if (action == sent)
+            numSentDIS++;
+        else if (action == received)
+            numReceivedDIS++;
+        else if (action == suppressed)
+            numSuppressedDIS++;
+    }else if (type == DAO){
+        if (action == sent)
+            numSentDAO++;
+        else if (action == received)
+            numReceivedDAO++;
+        else if (action == suppressed)
+            numSuppressedDAO++;
+    }
+}
+*/
+void StatisticCollector::collectOtherMetrics()
+{
+    for (unsigned int i = 0; i < nodeStateList.size(); i++){
+        //Collects message statistics
+        nodeStateList.at(i).pRPLUpwardRouting->getDIOStatistics(nodeStateList.at(i).numSentDIO, nodeStateList.at(i).numReceivedDIO, nodeStateList.at(i).numSuppressedDIO);
+        numSentDIO += nodeStateList.at(i).numSentDIO;
+        numReceivedDIO += nodeStateList.at(i).numReceivedDIO;
+        numSuppressedDIO += nodeStateList.at(i).numSuppressedDIO;
+
+        check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->getDISStatistics(nodeStateList.at(i).numSentDIS, nodeStateList.at(i).numReceivedDIS, nodeStateList.at(i).numSuppressedDIS);
+        numSentDIS += nodeStateList.at(i).numSentDIS;
+        numReceivedDIS += nodeStateList.at(i).numReceivedDIS;
+        numSuppressedDIS += nodeStateList.at(i).numSuppressedDIS;
+
+        check_and_cast<ICMPv6RPL *>(nodeStateList.at(i).pRPLUpwardRouting->getParentModule()->getSubmodule("icmpv6"))->getDAOStatistics(nodeStateList.at(i).numSentDAO, nodeStateList.at(i).numReceivedDAO);  //, nodeStateList.at(i).numSuppressedDAO);
+        numSentDAO += nodeStateList.at(i).numSentDAO;
+        numReceivedDAO += nodeStateList.at(i).numReceivedDAO;
+        //numSuppressedDAO += nodeStateList.at(i).numSuppressedDAO;
+
+        //Collects tables statistics
+
     }
 }
 
@@ -243,37 +304,6 @@ void StatisticCollector::handleMessage(cMessage* msg)
     }
 
     return;
-
-}
-
-void StatisticCollector::messageAction(messagesTypes type, MessageAction action){
-
-    if (type == DIO){
-        if (action == sent)
-            numSentDIO++;
-        else if (action == received)
-            numReceivedDIO++;
-        else if (action == suppressed)
-            numSuppressedDIO++;
-/*    }else if (type == DIS_UNICAST){
-        //Nothing, not imlemented
-*/
-    }else if (type == DIS_FLOOD){
-        if (action == sent)
-            numSentDIS++;
-        else if (action == received)
-            numReceivedDIS++;
-        else if (action == suppressed)
-            numSuppressedDIS++;
-    }else if (type == DAO){
-        if (action == sent)
-            numSentDAO++;
-        else if (action == received)
-            numReceivedDAO++;
-        else if (action == suppressed)
-            numSuppressedDAO++;
-    }
-
 }
 
 void StatisticCollector::calculateHopCount()
@@ -317,7 +347,7 @@ void StatisticCollector::calculateHopCount()
         if (prefParent != IPv6Address::UNSPECIFIED_ADDRESS){  //because root has not any prefparent
             if (mop == Storing_Mode_of_Operation_with_no_multicast_support){
                 hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(rplManager->getIndexFromLLAddress(prefParent))) = hopCountMat.at(nodeIndexToOrderedIndex(rplManager->getIndexFromLLAddress(prefParent))).at(nodeIndexToOrderedIndex(i)) = 1;  //DAO parent & preferred parent are alike. Upward & Downward adjacency.
-            }else if (mop == Non_Storing_Mode_of_Operation){
+            }else if ((mop == Non_Storing_Mode_of_Operation) || (mop == No_Downward_Routes_maintained_by_RPL)){
                 hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(rplManager->getIndexFromLLAddress(prefParent))) = 1;  // For a adjacency between node i and preferred parent. Upward adjacency.
             }
         }
@@ -328,7 +358,16 @@ void StatisticCollector::calculateHopCount()
 
 
     //Calcullate other elements of the hopCountArray
-    if (mop == Storing_Mode_of_Operation_with_no_multicast_support){
+
+    if (mop == No_Downward_Routes_maintained_by_RPL){
+        for (unsigned int i = 0; i < hopCountMat.size(); i++){ // If we had inserted the rank to hopCountMat, the first column and row have been filled already, so it could be "unsigned int i = 1";
+            for (unsigned int j = 0; j < hopCountMat.size(); j++){
+                if (hopCountMat.at(i).at(j) == -1){
+                    hopCountMat.at(i).at(j) = minHopCount (i, j);
+                }
+            }
+        }
+    }else if (mop == Storing_Mode_of_Operation_with_no_multicast_support){
         for (unsigned int i = 0; i < hopCountMat.size(); i++){ // If we had inserted the rank to hopCountMat, the first column and row have been filled already, so it could be "unsigned int i = 1";
             for (unsigned int j = i + 1; j < hopCountMat.size(); j++){
                 if (hopCountMat.at(i).at(j) == -1){
@@ -337,7 +376,7 @@ void StatisticCollector::calculateHopCount()
             }
         }
     }else if (mop == Non_Storing_Mode_of_Operation){
-        for (unsigned int i = 0; i < hopCountMat.size(); i++){ // The first column an row have been filled already.
+        for (unsigned int i = 0; i < hopCountMat.size(); i++){
             for (unsigned int j = 0; j < hopCountMat.size(); j++){
                 if (hopCountMat.at(i).at(j) == -1){
                     hopCountMat.at(i).at(j) = minHopCount (i, j);
@@ -370,7 +409,7 @@ int StatisticCollector::minHopCount(int nodei, int nodej)
     int firstCommonAncestor = -1;  // nodeIndexToOrderedIndex(sinkID); //We assume the first common ancestor is the root node. Then, we update it.
     int minHopCount = -1;  // hopCountMat.at(nodei).at(firstCommonAncestor) + hopCountMat.at(nodej).at(firstCommonAncestor);
     for (unsigned int i = 0; i < hopCountMat.size(); i++){
-        if ((mop == Storing_Mode_of_Operation_with_no_multicast_support) || (mop == Non_Storing_Mode_of_Operation)){
+        if ((mop == Storing_Mode_of_Operation_with_no_multicast_support) || (mop == Non_Storing_Mode_of_Operation) || (mop == No_Downward_Routes_maintained_by_RPL)){
             /* For Storing Mode, both the following approach is true
              * because storing mode potentially uses symmetric paths
              * in bidirectional communication.
@@ -395,7 +434,7 @@ void StatisticCollector::saveStatistics()
 {
 
     //Time statistics
-    FILE *convergenceTimeStart, *convergenceTimeEndUpward, *convergenceTimeEndDownward, *joiningTimeUpward, *joiningTimeDownward;
+    FILE *convergenceTimeStart, *convergenceTimeEndUpward, *convergenceTimeEndDownward,  *convergenceTimeDownward, *convergenceTimeUpward, *joiningTimeUpward, *joiningTimeDownward;
 
     convergenceTimeStart = fopen("convergenceTimeStart.txt", "a");
     fprintf(convergenceTimeStart, "%f\n", this->convergenceTimeStart.dbl());
@@ -405,50 +444,52 @@ void StatisticCollector::saveStatistics()
     fprintf(convergenceTimeEndUpward, "%f\n", this->convergenceTimeEndUpward.dbl());
     fclose(convergenceTimeEndUpward);
 
-    convergenceTimeEndDownward = fopen("01_convergenceTimeEndDownward.txt", "a");
-    fprintf(convergenceTimeEndDownward, "%f\n", this->convergenceTimeEndDownward.dbl());
-    fclose(convergenceTimeEndDownward);
-
     joiningTimeUpward = fopen("joiningTimeUpward.txt", "a");
     for (unsigned int i=0; i<nodeStateList.size(); i++){
         fprintf(joiningTimeUpward, "%f\n", nodeStateList.at(i).joiningTimeUpward.dbl());
     }
     fclose(joiningTimeUpward);
 
-    joiningTimeDownward = fopen("joiningTimeDownward.txt", "a");
-    for (unsigned int i=0; i<nodeStateList.size(); i++){
-        fprintf(joiningTimeDownward, "%f\n", nodeStateList.at(i).joiningTimeDownward.dbl());
+    convergenceTimeUpward = fopen("01_1_convergenceTimeUpward.txt", "a");
+    fprintf(convergenceTimeUpward, "%f\n", this->convergenceTimeEndUpward.dbl() - this->convergenceTimeStart.dbl());
+    fclose(convergenceTimeUpward);
+
+    if ((mop == Storing_Mode_of_Operation_with_no_multicast_support) || (mop == Non_Storing_Mode_of_Operation)){
+        convergenceTimeEndDownward = fopen("convergenceTimeEndDownward.txt", "a");
+        fprintf(convergenceTimeEndDownward, "%f\n", this->convergenceTimeEndDownward.dbl());
+        fclose(convergenceTimeEndDownward);
+
+        joiningTimeDownward = fopen("joiningTimeDownward.txt", "a");
+        for (unsigned int i=0; i<nodeStateList.size(); i++){
+            fprintf(joiningTimeDownward, "%f\n", nodeStateList.at(i).joiningTimeDownward.dbl());
+        }
+        fclose(joiningTimeDownward);
+
+        convergenceTimeDownward = fopen("01_2_convergenceTimeDownward.txt", "a");
+        fprintf(convergenceTimeDownward, "%f\n", this->convergenceTimeEndDownward.dbl() - this->convergenceTimeStart.dbl());
+        fclose(convergenceTimeDownward);
     }
-    fclose(joiningTimeDownward);
 
     //Message statistics
     FILE *averageSentDIO, *averageSentDIS, *averageSentDAO, *averageNumberOfMessages;
-    float averageDIO = 0, averageDIS = 0, averageDAO = 0;
+    double averageDIO = 0, averageDIS = 0, averageDAO = 0;
 
     averageSentDIO = fopen("averageSentDIO.txt", "a");
-    for (unsigned int i=0; i<nodeStateList.size(); i++){
-        averageDIO += numSentDIO;
-    }
-    averageDIO /= nodeStateList.size();
+    averageDIO = (double)(numSentDIO) / nodeStateList.size();
     fprintf(averageSentDIO, "%f\n", averageDIO);
     fclose(averageSentDIO);
 
     averageSentDIS = fopen("averageSentDIS.txt", "a");
-    for (unsigned int i=0; i<nodeStateList.size(); i++){
-        averageDIS += numSentDIS;
-    }
-    averageDIS /= nodeStateList.size();
+    averageDIS = (double)(numSentDIS) / nodeStateList.size();
     fprintf(averageSentDIS, "%f\n", averageDIS);
     fclose(averageSentDIS);
 
-    averageSentDAO = fopen("averageSentDAO.txt", "a");
-    for (unsigned int i=0; i<nodeStateList.size(); i++){
-        averageDAO += numSentDAO;
+    if ((mop == Storing_Mode_of_Operation_with_no_multicast_support) || (mop == Non_Storing_Mode_of_Operation)){
+        averageSentDAO = fopen("averageSentDAO.txt", "a");
+        averageDAO = (double)(numSentDAO) / nodeStateList.size();
+        fprintf(averageSentDAO, "%f\n", averageDAO);
+        fclose(averageSentDAO);
     }
-    averageDAO /= nodeStateList.size();
-    fprintf(averageSentDAO, "%f\n", averageDAO);
-    fclose(averageSentDAO);
-
 
     averageNumberOfMessages = fopen("02_averageNumberOfMessages.txt", "a");
     fprintf(averageNumberOfMessages, "%f\n", averageDIO + averageDIS + averageDAO);
@@ -502,7 +543,7 @@ void StatisticCollector::saveStatistics()
     fclose(averageNumberofTableEntriesFP);
 
     //Hop count statistics
-    if ((mop == Storing_Mode_of_Operation_with_no_multicast_support) || (mop == Non_Storing_Mode_of_Operation)){
+    if ((mop == Storing_Mode_of_Operation_with_no_multicast_support) || (mop == Non_Storing_Mode_of_Operation) || (mop == No_Downward_Routes_maintained_by_RPL)){
         calculateHopCount();
 
         FILE *numberofHopCountFP, *averageNumberofHopCountFP;
@@ -512,7 +553,7 @@ void StatisticCollector::saveStatistics()
         for (unsigned int i = 0; i < nodeStateList.size(); i++){
             for (unsigned int j = 0; j < nodeStateList.size(); j++){
                 fprintf(numberofHopCountFP, "%3d\t", hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(j)));  //hopCountMat must be converted from ordered to non-ordered
-                if (i != j){
+                if ((i != j) && (hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(j)) != -1)){
                     averageNumberofHopCount += hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(j));
                     numflows++; // Finally, numflows will be nodeStateList.size() ^ 2 - nodeStateList.size()
                 }

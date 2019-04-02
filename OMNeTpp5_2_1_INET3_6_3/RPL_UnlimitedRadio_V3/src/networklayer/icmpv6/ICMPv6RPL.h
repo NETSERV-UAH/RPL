@@ -79,8 +79,9 @@ protected:
     int numReceivedDIS;
     int numSentDIS;
     int numSuppressedDIS;
-
-
+    int numReceivedDAO;
+    int numSentDAO;
+    //int numSuppressedDAO;
 
     cModule *host;
 
@@ -99,10 +100,6 @@ protected:
     simtime_t DelayDAO;
     simtime_t defaultLifeTime;  // only used for DAO//
     simtime_t ROUTE_INFINITE_LIFETIME;//
-
-
-
-
 
 public:
     ICMPv6RPL()
@@ -130,6 +127,9 @@ public:
         , numReceivedDIS(0)
         , numSentDIS(0)
         , numSuppressedDIS(0)
+        , numReceivedDAO(0)
+        , numSentDAO(0)
+        //, numSuppressedDAO(0)
         , host(nullptr)
         , DISIntMin(0)
         , DISStartDelay(0)
@@ -210,6 +210,8 @@ public:
 
     virtual void DeleteDAOTimers();
 
+    virtual void getDAOStatistics(int &numSentDAO, int &numReceivedDAO) const;  //, int &numSuppressedDAO) const;
+
   protected:
     virtual void scheduleDAOlifetimer(simtime_t lifeTime);
     virtual void handleDAOTimer(cMessage* msg);
@@ -221,6 +223,8 @@ public:
     virtual void SetDISParameters(simtime_t dodagSartTime);
     virtual void scheduleNextDISTransmission();
     virtual void cancelAndDeleteDISTimer();
+
+    virtual void getDISStatistics(int &numSentDIS, int &numReceivedDIS, int &numSuppressedDIS) const;
 
   protected:
     virtual void handleDISTimer(cMessage* msg);

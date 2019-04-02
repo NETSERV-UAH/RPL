@@ -38,14 +38,14 @@ class RPLUpwardRouting;
 
 class StatisticCollector : public cSimpleModule
 {
-
+/*
     enum MessageAction{
         sent,
         received,
         suppressed
     };
 
-
+*/
     //ICMPv6RPL *icmpv6RPL;
     ManagerRPL *rplManager;
 
@@ -64,6 +64,16 @@ class StatisticCollector : public cSimpleModule
         bool isJoinDownward;
         simtime_t joiningTimeUpward; // By DIO
         simtime_t joiningTimeDownward;  //By DAO
+        int numSentDIO;
+        int numReceivedDIO;
+        int numSuppressedDIO;
+        int numSentDIS;
+        int numReceivedDIS;
+        int numSuppressedDIS;
+        int numSentDAO;
+        int numReceivedDAO;
+        //int numSuppressedDAO;
+
 
         NodeState()
             : host(nullptr)
@@ -78,6 +88,15 @@ class StatisticCollector : public cSimpleModule
             , isJoinDownward (false)
             , joiningTimeUpward (SIMTIME_ZERO)
             , joiningTimeDownward (SIMTIME_ZERO)
+            , numSentDIO(0)
+            , numReceivedDIO(0)
+            , numSuppressedDIO(0)
+            , numSentDIS(0)
+            , numReceivedDIS(0)
+            , numSuppressedDIS(0)
+            , numSentDAO(0)
+            , numReceivedDAO(0)
+            //, numSuppressedDAO(0)
             {};
 
     };
@@ -100,7 +119,7 @@ class StatisticCollector : public cSimpleModule
     int numSuppressedDIS;
     int numSentDAO;
     int numReceivedDAO;
-    int numSuppressedDAO;
+    //int numSuppressedDAO;
     float averageNumberofHopCount;
 
     int numberOfIterations;
@@ -148,7 +167,7 @@ public:
         , numSuppressedDIS(0)
         , numSentDAO(0)
         , numReceivedDAO(0)
-        , numSuppressedDAO(0)
+        //, numSuppressedDAO(0)
         , averageNumberofHopCount(0)
         , numberOfIterations(0)
         , numberOfGlogalRepaires(0)
@@ -198,7 +217,8 @@ public:
 
     virtual void updateRank(IPv6Address ip, int rank);
 
-    void messageAction(messagesTypes type, MessageAction action);
+    //void messageAction(messagesTypes type, MessageAction action);
+    virtual void collectOtherMetrics();
 
 
 

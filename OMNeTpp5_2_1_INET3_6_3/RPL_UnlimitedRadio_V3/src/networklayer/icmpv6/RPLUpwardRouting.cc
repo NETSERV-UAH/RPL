@@ -454,7 +454,6 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                }
                isJoinedFirstVersion = true; //for the first version
                isNodeJoined = true; //For each version
-               statisticCollector->nodeJoinedUpward(myLLNetwAddr, netwMsg->getArrivalTime());
                versionNember = netwMsg->getVersionNumber();
 
                DIO_CurIntsizeNext = DIOIntMin;
@@ -504,6 +503,7 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                host->getDisplayString().setTagArg("t", 0, buf1);
                icmpv6RPL->cancelAndDeleteDISTimer();
                scheduleNextDIOTransmission();
+               statisticCollector->nodeJoinedUpward(myLLNetwAddr, netwMsg->getArrivalTime());
             }else if(netwMsg->getVersionNumber() > versionNember) {
                 if (!neighbourDiscoveryRPL->addNeighborFromRPLMessage(ctrlInfo)){
                     throw cRuntimeError("RPLUpwardRouting::handleIncommingDIOMessage(): Neighbor can not be added!");
@@ -514,7 +514,6 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 DeleteDIOTimer();
                 versionNember = netwMsg->getVersionNumber();
                 //dtsnInstance ++; // added to setParametersBeforeGlobalRepair() // To inform the down stream nodes. dtsnInstance is accommodated in the DIO msg, so the down stream nodes find out that they must send a new DAO because of the global repair ...
-                statisticCollector->nodeJoinedUpward(myLLNetwAddr, netwMsg->getArrivalTime());
 
                 DIOIntDoubl = netwMsg->getNofDoub();
                 DIOIntMin = netwMsg->getIMin();
@@ -553,6 +552,7 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 host->getDisplayString().setTagArg("t", 0, buf1);
                 icmpv6RPL->cancelAndDeleteDISTimer();
                 scheduleNextDIOTransmission();
+                statisticCollector->nodeJoinedUpward(myLLNetwAddr, netwMsg->getArrivalTime());
             }else if((netwMsg->getRank() <= Rank) && (netwMsg->getVersionNumber() == versionNember)) {
                 if (!neighbourDiscoveryRPL->addNeighborFromRPLMessage(ctrlInfo)){
                     throw cRuntimeError("RPLUpwardRouting::handleIncommingDIOMessage(): Neighbor can not be added!");
@@ -755,6 +755,14 @@ IPv6Address RPLUpwardRouting::getMyGlobalNetwAddr() const
 int RPLUpwardRouting::getInterfaceID() const
 {
     return interfaceID;
+}
+
+void RPLUpwardRouting::getDIOStatistics(int &numSentDIO, int &numReceivedDIO, int &numSuppressedDIO) const
+{
+    numSentDIO = this->numSentDIO;
+    numReceivedDIO = this->numReceivedDIO;
+    numSuppressedDIO = this->numSuppressedDIO;
+
 }
 
 RPLUpwardRouting::~RPLUpwardRouting()

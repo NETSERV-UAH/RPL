@@ -283,7 +283,7 @@ public:
     virtual IPv6Address getMyLLNetwAddr() const;
     virtual IPv6Address getMyGlobalNetwAddr() const;
     virtual int getInterfaceID() const;
-
+    virtual void getDIOStatistics(int &numSentDIO, int &numReceivedDIO, int &numSuppressedDIO) const;
 };
 
 } // namespace rpl

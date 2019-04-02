@@ -203,6 +203,7 @@ void ICMPv6RPL::processIncommingRPLMessage(ICMPv6Message *icmpv6msg)
     }else if (dynamic_cast<ICMPv6DISMsg *>(icmpv6msg)){
         if ((mop == No_Downward_Routes_maintained_by_RPL) || (mop == Non_Storing_Mode_of_Operation) || (mop == Storing_Mode_of_Operation_with_no_multicast_support)){
             EV << "This node works in MOP#" << mop << ". Message is sent to processIncommingDISMessage() to process."<< endl;
+            numReceivedDIS++;
             processIncommingDISMessage(icmpv6msg);
         }
     }else if (dynamic_cast<ICMPv6DAOMsg *>(icmpv6msg)){
@@ -210,10 +211,12 @@ void ICMPv6RPL::processIncommingRPLMessage(ICMPv6Message *icmpv6msg)
             throw cRuntimeError("ICMPv6RPL::processIncommingRPLMessage(): This MOP(No_Downward_Routes_maintained_by_RPL MOP#%d) doesn't handle a DAO message.\n", (int) mop);
         if (mop == Non_Storing_Mode_of_Operation){
             EV << "This node works in MOP#" << mop << ". Message is sent to processIncommingNonStoringDAOMessage() to process."<< endl;
+            numReceivedDAO++;
             processIncommingNonStoringDAOMessage(icmpv6msg);
         }
         else if (mop == Storing_Mode_of_Operation_with_no_multicast_support){
             EV << "This node works in MOP#" << mop << ". Message is sent to processIncommingStoringDAOMessage() to process."<< endl;
+            numReceivedDAO++;
             processIncommingStoringDAOMessage(icmpv6msg);
         }else
             throw cRuntimeError("ICMPv6RPL::processIncommingRPLMessage(): unknown/unsupported Mode Of Operation (MOP#%d).\n", (int) mop);
@@ -243,7 +246,6 @@ void ICMPv6RPL::processIncommingDISMessage(ICMPv6Message *msg)
 
     if ((msg->getKind() == DIS_FLOOD) && (rplUpwardRouting->isNodeJoinedToDAG())){
         DIS_c++;
-        numReceivedDIS++;
         char buf2[255];
         sprintf(buf2, "A DIS message received from node %d!\nResetting Trickle timer!", ctrlInfo->getSrcAddr());
         host->bubble(buf2);
@@ -251,7 +253,6 @@ void ICMPv6RPL::processIncommingDISMessage(ICMPv6Message *msg)
         rplUpwardRouting->scheduleNextDIOTransmission();
     }else if ((msg->getKind() == DIS_FLOOD) && (!rplUpwardRouting->isNodeJoinedToDAG())){
         DIS_c++;
-        numReceivedDIS++;
         char buf2[255];
         sprintf(buf2, "A DIS message received from node %s!\nBut I am not a member of any DODAG!", ctrlInfo->getSrcAddr());
         host->bubble(buf2);
@@ -371,6 +372,14 @@ void ICMPv6RPL::handleDISTimer(cMessage* msg)
                 EV << "DIS is deleted. The node joined to DAG" << endl;
 
             }
+}
+
+void ICMPv6RPL::getDISStatistics(int &numSentDIS, int &numReceivedDIS, int &numSuppressedDIS) const
+{
+    numSentDIS = this->numSentDIS;
+    numReceivedDIS = this->numReceivedDIS;
+    numSuppressedDIS = this->numSuppressedDIS;
+
 }
 
 //////////// DAO Operations ////////////////////
@@ -700,6 +709,7 @@ void ICMPv6RPL::sendDAOMessage(IPv6Address prefix, simtime_t lifetime, IPv6Addre
 
         pkt->setControlInfo(ctrlInfo);
         send(pkt, "ipv6Out");
+        numSentDAO++;
     }else
         EV << "Cancel a generated DAO, there is no preferred parent." << endl;
 
@@ -821,7 +831,6 @@ void ICMPv6RPL::DeleteDAOTimers()
 
 }
 
-
 void ICMPv6RPL::handleDAOTimer(cMessage* msg)
 {
     EV << "->ICMPV6RPL::handleDAOTimer()" << endl;
@@ -847,6 +856,14 @@ void ICMPv6RPL::handleDAOTimer(cMessage* msg)
 
     }
     EV << "<-ICMPV6RPL::handleDAOTimer()" << endl;
+
+}
+
+void ICMPv6RPL::getDAOStatistics(int &numSentDAO, int &numReceivedDAO) const  //, int &numSuppressedDAO) const
+{
+    numSentDAO = this->numSentDAO;
+    numReceivedDAO = this->numReceivedDAO;
+    //numSuppressedDAO = this->numSuppressedDAO;
 
 }
 
