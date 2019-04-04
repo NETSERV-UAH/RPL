@@ -1,0 +1,29 @@
+
+Parser statistics:
+
+1.	Total simulations: 2
+2.	Total simulations conv: 2 ( 100.000% )
+3.	Total simulations no conv: 0 ( 0.000% )
+4.	Total simulations recovered: 0 ( 0.000% )
+5.	Total simulations no recovered: 0 ( 0.000% )
+
+
+-- Parser summary by seeds --
+
+|     Total simulations     |
+					123456	|
+					123457	|
+
+
+|  Total simulations Conv   |
+					123456	|
+					123457	|
+
+
+| Total simulations No Conv |
+
+
+|         Recovered         |
+
+
+|        No Recovered       |

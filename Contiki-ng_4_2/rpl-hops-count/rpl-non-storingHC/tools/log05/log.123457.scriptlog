@@ -1,0 +1,76 @@
+Random seed: 123457
+00:00.518	ID:2	[INFO: Main      ] Starting Contiki-NG-release/v4.2-166-ga66692d-dirty
+00:00.521	ID:2	[INFO: Main      ] - Routing: RPL Classic
+00:00.523	ID:2	[INFO: Main      ] - Net: sicslowpan
+00:00.526	ID:2	[INFO: Main      ] - MAC: CSMA
+00:00.529	ID:2	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.533	ID:2	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.535	ID:2	[INFO: Main      ] Node ID: 2
+00:00.540	ID:2	[INFO: Main      ] Link-layer address: 0012.7402.0002.0202
+00:00.551	ID:2	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7402:2:202
+00:00.555	ID:2	[INFO: Sky       ] CC2420 CCA threshold -45
+00:00.630	ID:4	[INFO: Main      ] Starting Contiki-NG-release/v4.2-166-ga66692d-dirty
+00:00.633	ID:4	[INFO: Main      ] - Routing: RPL Classic
+00:00.636	ID:4	[INFO: Main      ] - Net: sicslowpan
+00:00.638	ID:4	[INFO: Main      ] - MAC: CSMA
+00:00.641	ID:4	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.645	ID:4	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.647	ID:4	[INFO: Main      ] Node ID: 4
+00:00.652	ID:4	[INFO: Main      ] Link-layer address: 0012.7404.0004.0404
+00:00.663	ID:4	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7404:4:404
+00:00.664	ID:1	[INFO: Main      ] Starting Contiki-NG-release/v4.2-166-ga66692d-dirty
+00:00.667	ID:4	[INFO: Sky       ] CC2420 CCA threshold -45
+00:00.667	ID:1	[INFO: Main      ] - Routing: RPL Classic
+00:00.670	ID:1	[INFO: Main      ] - Net: sicslowpan
+00:00.672	ID:1	[INFO: Main      ] - MAC: CSMA
+00:00.675	ID:1	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.679	ID:1	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.681	ID:1	[INFO: Main      ] Node ID: 1
+00:00.686	ID:1	[INFO: Main      ] Link-layer address: 0012.7401.0001.0101
+00:00.697	ID:1	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7401:1:101
+00:00.701	ID:1	[INFO: Sky       ] CC2420 CCA threshold -45
+00:00.997	ID:5	[INFO: Main      ] Starting Contiki-NG-release/v4.2-166-ga66692d-dirty
+00:01.000	ID:5	[INFO: Main      ] - Routing: RPL Classic
+00:01.002	ID:5	[INFO: Main      ] - Net: sicslowpan
+00:01.005	ID:5	[INFO: Main      ] - MAC: CSMA
+00:01.008	ID:5	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:01.012	ID:5	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:01.014	ID:5	[INFO: Main      ] Node ID: 5
+00:01.019	ID:5	[INFO: Main      ] Link-layer address: 0012.7405.0005.0505
+00:01.030	ID:5	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7405:5:505
+00:01.034	ID:5	[INFO: Sky       ] CC2420 CCA threshold -45
+00:01.181	ID:3	[INFO: Main      ] Starting Contiki-NG-release/v4.2-166-ga66692d-dirty
+00:01.184	ID:3	[INFO: Main      ] - Routing: RPL Classic
+00:01.187	ID:3	[INFO: Main      ] - Net: sicslowpan
+00:01.189	ID:3	[INFO: Main      ] - MAC: CSMA
+00:01.192	ID:3	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:01.196	ID:3	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:01.198	ID:3	[INFO: Main      ] Node ID: 3
+00:01.203	ID:3	[INFO: Main      ] Link-layer address: 0012.7403.0003.0303
+00:01.214	ID:3	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7403:3:303
+00:01.218	ID:3	[INFO: Sky       ] CC2420 CCA threshold -45
+00:30.557	ID:2	M[2] has 1 routes
+00:30.566	ID:2	M[2]: fe80::212:7401:1:101 through fe80::212:7401:1:101
+00:30.580	ID:1	[INFO: App       ] Ip: fd00::212:7402:2:202 : 1
+00:31.036	ID:5	M[5] has 1 routes
+00:31.045	ID:5	M[5]: fe80::212:7401:1:101 through fe80::212:7401:1:101
+00:31.059	ID:1	[INFO: App       ] Ip: fd00::212:7405:5:505 : 1
+01:30.325	ID:5	M[5] has 1 routes
+01:30.334	ID:5	M[5]: fe80::212:7401:1:101 through fe80::212:7401:1:101
+01:30.356	ID:1	[INFO: App       ] Ip: fd00::212:7405:5:505 : 1
+01:30.372	ID:5	[INFO: App       ] M[5]-M[1]:1
+01:30.666	ID:2	M[2] has 1 routes
+01:30.675	ID:2	M[2]: fe80::212:7401:1:101 through fe80::212:7401:1:101
+01:30.690	ID:1	[INFO: App       ] Ip: fd00::212:7402:2:202 : 1
+01:30.737	ID:2	[INFO: App       ] M[2]-M[1]:1
+01:31.630	ID:4	M[4] has 1 routes
+01:31.639	ID:4	M[4]: fe80::212:7403:3:303 through fe80::212:7403:3:303
+01:31.729	ID:1	[INFO: App       ] Ip: fd00::212:7404:4:404 : 3
+01:31.866	ID:4	[INFO: App       ] M[4]-M[1]:3
+01:31.900	ID:3	M[3] has 1 routes
+01:31.910	ID:3	M[3]: fe80::212:7402:2:202 through fe80::212:7402:2:202
+01:31.979	ID:1	[INFO: App       ] Ip: fd00::212:7403:3:303 : 2
+01:32.069	ID:3	[INFO: App       ] M[3]-M[1]:2
+01:35.701	ID:1	Periodic Statistics: convergence time ended + hops
+TEST OK
+Test ended at simulation time: 40779354
