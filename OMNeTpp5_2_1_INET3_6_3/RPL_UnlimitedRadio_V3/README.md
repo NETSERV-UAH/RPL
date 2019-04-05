@@ -1,9 +1,6 @@
 # RPL
 
 
-# This simulation is not complete!
-
-
 Copyright (C) 2018 Elisa Rojas(1), Hedayat Hosseini(2), Carles Gomez(3);
 
                      (1) GIST, University of Alcala, Spain.
