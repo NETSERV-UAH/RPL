@@ -57,6 +57,7 @@
 #include "src/simulationManager/ManagerRPL.h"
 #include "src/networklayer/icmpv6/ParentTableRPL.h"
 #include "src/networklayer/icmpv6/IPv6NeighbourDiscoveryRPL.h"
+#include "src/networklayer/icmpv6/SourceRoutingTable.h"
 
 namespace rpl {
 using namespace inet;
@@ -78,6 +79,7 @@ protected:
     // environment
     IPv6NeighbourDiscoveryRPL *neighbourDiscoveryRPL;
     IPv6RoutingTable *routingTable;
+    SourceRoutingTable *sourceRoutingTable;
     IInterfaceTable *interfaceTable;
     ManagerRPL *pManagerRPL;
     StatisticCollector *statisticCollector;
@@ -171,6 +173,7 @@ public:
     RPLUpwardRouting()
         : neighbourDiscoveryRPL(nullptr)
         , routingTable(nullptr)
+        , sourceRoutingTable(nullptr)
         , interfaceTable (nullptr)
         , pManagerRPL (nullptr)
         , statisticCollector (nullptr)

@@ -64,6 +64,7 @@ void ICMPv6RPL::initialize(int stage)
         statisticCollector = check_and_cast<StatisticCollector *>(getSimulation()->getSystemModule()->getSubmodule("statisticCollector"));
         parentTableRPL = check_and_cast<ParentTableRPL *>(this->getParentModule()->getSubmodule("parentTableRPL"));
         routingTable = getModuleFromPar<IPv6RoutingTable>(par("routingTableModule"), this);
+        sourceRoutingTable = check_and_cast<SourceRoutingTable *>(this->getParentModule()->getSubmodule("sourceRoutingTable"));
         //interfaceTable = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
 
         EV << "The node works in MOP#" << mop << endl;
@@ -236,6 +237,15 @@ void ICMPv6RPL::handleSelfMsg(cMessage *msg){
             //handleGlobalRepairTimer(msg);
 }
 
+void ICMPv6RPL::resetStatistics()
+{
+    numReceivedDIS = 0;
+    numSentDIS = 0;
+    numSuppressedDIS = 0;
+    numReceivedDAO = 0;
+    numSentDAO = 0;
+    //numSuppressedDAO = 0;
+}
 //////////// DIS Operations ////////////////////
 void ICMPv6RPL::processIncommingDISMessage(ICMPv6Message *msg)
 {
@@ -437,7 +447,6 @@ void ICMPv6RPL::processIncommingStoringDAOMessage(ICMPv6Message *msg)
         EV << "No-Path DAO received from " << senderIPAddress <<" removes a route with the prefeix of " << prefix << endl;
         const IPv6Route *route = routingTable->doLongestPrefixMatch(prefix);
         if ((route) && (route->getNextHop() != IPv6Address::UNSPECIFIED_ADDRESS) && (route->getNextHop() == senderIPAddress) && (route->getPrefixLength() == prefixLen)){
-            //routingTable->deleteOnLinkPrefix(prefix, prefixLen);
             for (int i = 0; i < routingTable->getNumRoutes(); i++) {
                 IPv6Route *route2 = check_and_cast<IPv6Route *>(routingTable->getRoute(i));
                 if (route == route2){
@@ -617,12 +626,14 @@ void ICMPv6RPL::processIncommingNonStoringDAOMessage(ICMPv6Message *msg)
 
     if (lifeTime == ZERO_LIFETIME){ // && (flagK == 1)  //No-Path DAO  //FIXME: this situation must handle ACK message
         EV << "No-Path DAO received from originator " << prefix << " and previous hop " << senderIPAddress <<",  removes a route with the prefeix of " << prefix << " and the DAO parent of " << daoParent<< endl;
-        //routingTable->deleteSREntry(prefix, daoParent);
+        sourceRoutingTable->deleteRoute(prefix, prefixLen, daoParent);
         EV << "The SR entry :" << prefix << ", daoParent" << daoParent << " was deleted from the routing table.\n";
     }else{ //Adding/updateing a DAO (Downward) SR entry to the routing table
-        //routingTable->deleteSREntry(prefix, prefixLen);
-        EV << "The entry :" << prefix << ", daoParent" << senderIPAddress << " was deleted from the routing table.\n";
-        //routingTable->addSREntry(prefix, prefixLen, interfaceID, lifeTime);
+        /* sourceRoutingTable->addRoute() considers sourceRoutingTable->deleteRoute() before adding a new entry to the sr table.
+         * sourceRoutingTable->deleteRoute(prefix, prefixLen);
+         * EV << "The entry :" << prefix << ", daoParent" << senderIPAddress << " was deleted from the routing table.\n";
+         */
+        sourceRoutingTable->addRoute(prefix, prefixLen, daoParent, interfaceID, lifeTime);
         EV << "Added/updated SR entry to Routing Table: " << prefix << " daoParent -->" << daoParent << ", lifeTime -->" << lifeTime << "\n";
 
         checkConvergence = true;
@@ -869,8 +880,21 @@ void ICMPv6RPL::getDAOStatistics(int &numSentDAO, int &numReceivedDAO) const  //
 
 ICMPv6RPL::~ICMPv6RPL()
 {
-    DeleteDAOTimers();
-    cancelAndDelete(DISTimer);
+    //DeleteDAOTimers();
+    if (DAOTimer){
+        cancelAndDelete(DAOTimer);
+        DAOTimer = nullptr;
+    }
+
+    if (DAOLifeTimer){
+        cancelAndDelete(DAOLifeTimer);
+        DAOLifeTimer = nullptr;
+    }
+
+    if (DISTimer){
+        cancelAndDelete(DISTimer);
+        DISTimer = nullptr;
+    }
 
 }
 

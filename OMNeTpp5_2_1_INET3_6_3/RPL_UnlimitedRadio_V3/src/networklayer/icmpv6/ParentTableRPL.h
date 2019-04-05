@@ -27,9 +27,6 @@
 namespace rpl {
 using namespace inet;
 
-/**
- * This module handles the mapping between ports and MAC addresses. See the NED definition for details.
- */
 class ParentTableRPL : public cSimpleModule
 {
   protected:

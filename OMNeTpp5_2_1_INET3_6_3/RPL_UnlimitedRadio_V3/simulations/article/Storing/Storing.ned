@@ -19,7 +19,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package rpl.simulations.article;
+package rpl.simulations.article.Storing;
 
 import inet.networklayer.configurator.ipv6.FlatNetworkConfigurator6;
 //import inet.physicallayer.ieee802154.packetlevel.Ieee802154NarrowbandScalarRadioMedium;
@@ -55,7 +55,7 @@ network Net802154
         
         radioMedium: SimpleIdealRadioMedium {
             parameters:
-                @display("p=100,40");
+                @display("p=100,10");
         }
         host[numHosts]: RPLRouter {
             parameters:

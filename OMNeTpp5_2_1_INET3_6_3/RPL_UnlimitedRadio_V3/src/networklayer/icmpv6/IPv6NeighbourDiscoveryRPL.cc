@@ -284,6 +284,11 @@ void IPv6NeighbourDiscoveryRPL::handleMessage(cMessage *msg)
 }
 
 //EXTRA BEGIN
+/*int IPv6NeighbourDiscoveryRPL::getNumberOfNeighbores() const
+{
+    return neighbourCache.getNumberOfNeighbores();
+}*/
+
 IPv6NeighbourCacheRPL::Neighbour *IPv6NeighbourDiscoveryRPL::addNeighborFromRPLMessage(IPv6ControlInfo *ctrlInfo)
 {
     EV << "->IPv6NeighbourDiscoveryRPL::addNeighborFromRPLMessage()" << endl;  //EXTRA

@@ -206,13 +206,14 @@ void ManagerRPL::finish()
 
     std::string topoAddressInfo;
     FILE *destfp;
-    if((destfp=fopen("RPLNodeAddresses.txt","w"))!=nullptr)
+    if((destfp=fopen("RPLNodeAddresses.txt","a"))!=nullptr)
     {
         for (int i=0; i<wSNInfo.size(); i++){
-            topoAddressInfo = "\t" + wSNInfo.at(i).fullName + "\t" + wSNInfo.at(i).ipAddress.str() + wSNInfo.at(i).macAddress.str() + "\n";
-            fprintf(destfp, "%c%S", i, topoAddressInfo.c_str());
+            topoAddressInfo = "\t" + wSNInfo.at(i).fullName + "\t" + wSNInfo.at(i).ipAddress.str() + "\t" + wSNInfo.at(i).macAddress.str() + "\n";
+            fprintf(destfp, "%d%s", i, topoAddressInfo.c_str());
         }
     }
+    fprintf(destfp, "---------------------------------------------------------------------\n");
     fclose(destfp);
 
     EV << "<-ManagerRPL::finish()" << endl;

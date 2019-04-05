@@ -227,5 +227,18 @@ const char *IPv6NeighbourCacheRPL::stateName(ReachabilityState state)
     }
 }
 
+//EXTRA BEGIN
+int IPv6NeighbourCacheRPL::getNumberOfNeighbores() const
+{
+    return neighbourMap.size();
+}
+
+void IPv6NeighbourCacheRPL::clearTable()
+{
+    neighbourMap.clear();
+}
+//EXTRA END
+
+
 } // namespace rpl
 

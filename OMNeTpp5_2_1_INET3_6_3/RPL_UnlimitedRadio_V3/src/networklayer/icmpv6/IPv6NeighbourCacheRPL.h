@@ -216,6 +216,11 @@ class IPv6NeighbourCacheRPL
 
     /** Returns the name of the given state as string */
     static const char *stateName(ReachabilityState state);
+
+    //EXTRA BEGIN
+    virtual int getNumberOfNeighbores() const;
+    virtual void clearTable();
+    //EXTRA END
 };
 
 } // namespace rpl

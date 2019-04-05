@@ -454,6 +454,12 @@ protected:
     bool isWirelessInterface(const InterfaceEntry *ie);
     bool isWirelessAccessPoint(cModule *module);
 #endif /* WITH_xMIPv6 */
+
+//EXTRA BEGIN
+/*public:
+   virtual int getNumberOfNeighbores() const;*/
+//EXTRA END
+
 };
 
 } // namespace rpl

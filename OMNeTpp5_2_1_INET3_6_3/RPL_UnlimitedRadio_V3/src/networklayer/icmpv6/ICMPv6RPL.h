@@ -38,6 +38,7 @@
 #include "src/networklayer/icmpv6/RPLUpwardRouting.h" //EXTRA
 #include "src/networklayer/icmpv6/ParentTableRPL.h" //EXTRA
 #include "inet/networklayer/ipv6/IPv6RoutingTable.h" //EXTRA
+#include "src/networklayer/icmpv6/SourceRoutingTable.h" //EXTRA
 #include "inet/networklayer/contract/IInterfaceTable.h" //EXTRA
 #include "src/networklayer/icmpv6/IPv6NeighbourDiscoveryRPL.h"//EXTRA
 #include "src/statisticcollector/StatisticCollector.h"//EXTRA
@@ -69,6 +70,7 @@ protected:
     ParentTableRPL *parentTableRPL;
     //IInterfaceTable *interfaceTable;
     IPv6RoutingTable *routingTable;
+    SourceRoutingTable *sourceRoutingTable;
 
 
     int DIS_c;
@@ -116,6 +118,7 @@ public:
         , statisticCollector(nullptr)
         , parentTableRPL(nullptr)
         , routingTable(nullptr)
+        , sourceRoutingTable(nullptr)
         , DIS_c(0)
         , DIS_CurIntsizeNow(0)
         , DIS_CurIntsizeNext(0)
@@ -204,6 +207,8 @@ public:
     virtual void processIncommingNonStoringDAOMessage(ICMPv6Message *msg);
     virtual void processIncommingStoringDAOMessage(ICMPv6Message *icmpv6msg);
   public:
+    virtual void resetStatistics();
+
     virtual void sendDAOMessage(IPv6Address prefix, simtime_t lifetime, IPv6Address parent = IPv6Address::UNSPECIFIED_ADDRESS);
 
     virtual void scheduleNextDAOTransmission(simtime_t delay, simtime_t LifeTime);

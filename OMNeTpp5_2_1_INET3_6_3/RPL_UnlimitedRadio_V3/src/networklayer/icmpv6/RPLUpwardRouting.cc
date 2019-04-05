@@ -59,6 +59,7 @@ void RPLUpwardRouting::initialize(int stage)
         neighbourDiscoveryRPL = check_and_cast<IPv6NeighbourDiscoveryRPL *>(this->getParentModule()->getSubmodule("neighbourDiscovery"));
 
         routingTable = getModuleFromPar<IPv6RoutingTable>(par("routingTableModule"), this);
+        sourceRoutingTable = check_and_cast<SourceRoutingTable *>(this->getParentModule()->getSubmodule("sourceRoutingTable"));
 
         interfaceTable = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
         networkProtocol = getModuleFromPar<INetfilter>(par("networkProtocolModule"), this);
@@ -145,7 +146,16 @@ void RPLUpwardRouting::initialize(int stage)
         else if (myLLNetwAddr == IPv6Address::UNSPECIFIED_ADDRESS)
             throw cRuntimeError("RPLUpwardRouting::initialize: This node has not Link Local Address!");
         else
-            statisticCollector->registNode(host, this, parentTableRPL, routingTable, myLLNetwAddr, myGlobalNetwAddr);
+            statisticCollector->registNode(host, this, parentTableRPL, routingTable, sourceRoutingTable, myLLNetwAddr, myGlobalNetwAddr);
+
+        /*
+         * To delete
+         * aaaa:1:1::/64 --> if:wlan0 nexthop:<unspec> OWN_ADV_PREFIX
+         * and
+         * fe80::/10 --> if:wlan0 nexthop:<unspec> MANUAL
+         */
+        routingTable->deleteAllRoutes();
+
 
     }
      else if (stage == INITSTAGE_ROUTING_PROTOCOLS) {

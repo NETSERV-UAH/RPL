@@ -29,7 +29,9 @@
 //#include "src/networklayer/icmpv6/RPLUpwardRouting.h"
 #include "src/simulationManager/ManagerRPL.h"
 #include "src/networklayer/icmpv6/ParentTableRPL.h"
-#include "inet/networklayer/contract/IRoutingTable.h"
+//#include "inet/networklayer/contract/IRoutingTable.h"
+#include "inet/networklayer/ipv6/IPv6RoutingTable.h"
+#include "src/networklayer/icmpv6/SourceRoutingTable.h"
 
 namespace rpl {
 using namespace inet;
@@ -53,7 +55,9 @@ class StatisticCollector : public cSimpleModule
         cModule *host;
         RPLUpwardRouting *pRPLUpwardRouting;
         ParentTableRPL *parentTableRPL;
-        IRoutingTable *routingTable;
+        //IRoutingTable *routingTable;
+        IPv6RoutingTable *routingTable;
+        SourceRoutingTable *sourceRoutingTable;
         IPv6Address linklocalAddress;
         IPv6Address globalAddress;
         int nodeIndex; //According to RPL manager module
@@ -73,6 +77,10 @@ class StatisticCollector : public cSimpleModule
         int numSentDAO;
         int numReceivedDAO;
         //int numSuppressedDAO;
+        int numberOfNeighbors;
+        int numberOfParents;
+        int numberOfRoutes;
+        int numberOfSRRoutes;
 
 
         NodeState()
@@ -80,6 +88,7 @@ class StatisticCollector : public cSimpleModule
             , pRPLUpwardRouting (nullptr)
             , parentTableRPL (nullptr)
             , routingTable (nullptr)
+            , sourceRoutingTable(nullptr)
             , linklocalAddress (IPv6Address::UNSPECIFIED_ADDRESS)
             , globalAddress (IPv6Address::UNSPECIFIED_ADDRESS)
             , nodeIndex (-1)
@@ -97,6 +106,10 @@ class StatisticCollector : public cSimpleModule
             , numSentDAO(0)
             , numReceivedDAO(0)
             //, numSuppressedDAO(0)
+            , numberOfNeighbors(0)
+            , numberOfParents(0)
+            , numberOfRoutes(0)
+            , numberOfSRRoutes(0)
             {};
 
     };
@@ -120,11 +133,14 @@ class StatisticCollector : public cSimpleModule
     int numSentDAO;
     int numReceivedDAO;
     //int numSuppressedDAO;
+    int numberOfNeighbors;
+    int numberOfParents;
+    int numberOfRoutes;
+    int numberOfSRRoutes;
     float averageNumberofHopCount;
 
     int numberOfIterations;
     int numberOfGlogalRepaires; //Each Global Repair increments this variable.
-    int numberOfConvergedGlogalRepaires;
     cMessage* globalRepairTimer;
     simtime_t globalRepairInterval;
 
@@ -168,10 +184,13 @@ public:
         , numSentDAO(0)
         , numReceivedDAO(0)
         //, numSuppressedDAO(0)
+        , numberOfNeighbors(0)
+        , numberOfParents(0)
+        , numberOfRoutes(0)
+        , numberOfSRRoutes(0)
         , averageNumberofHopCount(0)
         , numberOfIterations(0)
         , numberOfGlogalRepaires(0)
-        , numberOfConvergedGlogalRepaires(0)
         , globalRepairTimer(nullptr)
         , globalRepairInterval(0)
         , numberOfDODAGformationNormal(0)
@@ -203,7 +222,7 @@ protected:
     virtual int minHopCount(int nodei, int nodej);
 
 public:
-    virtual void registNode(cModule *host, RPLUpwardRouting *pRPLUpwardRouting, ParentTableRPL *parentTableRPL, IRoutingTable *routingTable, IPv6Address linlklocalAddress, IPv6Address globalAddress);
+    virtual void registNode(cModule *host, RPLUpwardRouting *pRPLUpwardRouting, ParentTableRPL *parentTableRPL, IPv6RoutingTable *routingTable, SourceRoutingTable *sourceRoutingTable, IPv6Address linlklocalAddress, IPv6Address globalAddress);
 
     virtual void startStatistics(RPLMOP mop, IPv6Address sinkLLAddress, simtime_t time);
 
