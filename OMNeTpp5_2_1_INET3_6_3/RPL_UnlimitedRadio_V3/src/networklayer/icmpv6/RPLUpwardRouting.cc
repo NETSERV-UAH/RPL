@@ -91,6 +91,8 @@ void RPLUpwardRouting::initialize(int stage)
 
         NodeStartTime=par( "RPLStartTime" );
 
+        WATCH(Rank);
+
     }
     else if (stage == INITSTAGE_NETWORK_LAYER_3){
         int nInterfaces = interfaceTable->getNumInterfaces();
@@ -581,6 +583,7 @@ void RPLUpwardRouting::handleIncommingDIOMessage(cMessage* msg)
                 parentTableRPL->updateTable(ie, ctrlInfo->getSrcAddr(), netwMsg->getRank(), netwMsg->getDTSN());
                 PrParent = parentTableRPL->getPrefParentIPAddress();
                 Rank = parentTableRPL->getRank();
+                statisticCollector->updateRank(myLLNetwAddr, Rank);
                 updateRoutingTable(PrParent);
 
                 char buf2[255];

@@ -352,6 +352,25 @@ void StatisticCollector::calculateHopCount()
     //Sort map in increasing order of rank
     sort(mapping.begin(), mapping.end(), mapCompare);
 
+    //Print nodeStateList
+/*
+    FILE *nodeStateListInfo = fopen("nodeStateListInfo.txt", "a");
+    fprintf(nodeStateListInfo, "Array index\t Node index\tRank\n");
+    for (unsigned int i = 0; i < nodeStateList.size(); i++){
+        fprintf(nodeStateListInfo, "%11d\t%11d\t%4d\n", i, nodeStateList.at(i).nodeIndex, nodeStateList.at(i).rank);
+    }
+    fprintf(nodeStateListInfo, "---------------------------------------------------\n");
+    fclose(nodeStateListInfo);
+
+    //Print mapping
+    FILE *mappingInfo = fopen("mappingInfo.txt", "a");
+    fprintf(mappingInfo, "Ordered index\tOriginal Node index\tHopCount to root\n");
+    for (unsigned int i = 0; i < mapping.size(); i++){
+        fprintf(mappingInfo, "%13d\t%19d\t%16d\n", i, mapping.at(i).nodeIndex, mapping.at(i).rank);
+    }
+    fprintf(mappingInfo, "---------------------------------------------------\n");
+    fclose(mappingInfo);
+*/
     //Initialize hopCountMat
     hopCountMat.resize(nodeStateList.size());
     for (unsigned int i = 0; i < hopCountMat.size(); i++){
@@ -390,6 +409,19 @@ void StatisticCollector::calculateHopCount()
         }
     }
 
+    //Print IitialHopCountInfo
+/*
+    FILE *IitialHopCountInfo = fopen("IitialHopCountInfo.txt", "a");
+    for (unsigned int i = 0; i < hopCountMat.size(); i++){
+        for (unsigned int j = 0; j < hopCountMat.size(); j++){
+            //fprintf(IitialHopCountInfo, "%d\t", hopCountMat.at(i).at(j));  //Sorted mat
+            fprintf(IitialHopCountInfo, "%d\t", hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(j)));  //Original mat
+        }
+        fprintf(IitialHopCountInfo, "\n");
+    }
+    fprintf(IitialHopCountInfo, "---------------------------------------------------\n");
+    fclose(IitialHopCountInfo);
+*/
 
     //Calculate other elements of the hopCountArray
 
@@ -570,7 +602,8 @@ void StatisticCollector::saveStatistics()
         int numflows = 0;
         for (unsigned int i = 0; i < nodeStateList.size(); i++){
             for (unsigned int j = 0; j < nodeStateList.size(); j++){
-                fprintf(numberofHopCountFP, "%3d\t", hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(j)));  //hopCountMat must be converted from ordered to non-ordered
+                //fprintf(numberofHopCountFP, "%3d\t", hopCountMat.at(i).at(j));  //sorted hopCountMat
+                fprintf(numberofHopCountFP, "%3d\t", hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(j)));  //hopCountMat must be converted from ordered index to non-ordered/original one.
                 if ((i != j) && (hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(j)) != -1)){
                     averageNumberofHopCount += hopCountMat.at(nodeIndexToOrderedIndex(i)).at(nodeIndexToOrderedIndex(j));
                     numflows++; // Finally, numflows will be nodeStateList.size() ^ 2 - nodeStateList.size()

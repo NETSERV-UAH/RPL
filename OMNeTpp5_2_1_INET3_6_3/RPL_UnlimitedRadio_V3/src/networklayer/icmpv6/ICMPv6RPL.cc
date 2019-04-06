@@ -659,6 +659,8 @@ void ICMPv6RPL::processIncommingNonStoringDAOMessage(ICMPv6Message *msg)
 
 void ICMPv6RPL::sendDAOMessage(IPv6Address prefix, simtime_t lifetime, IPv6Address parent)
 {
+    Enter_Method("ICMPv6RPL::sendDAOMessage()");  //This method is called by the RLUpwardRouting module when a No-Path DAO is sent.
+
     EV << "->ICMPV6RPL::sendDAOMessage()" << endl;
 
     const IPv6NeighbourCacheRPL::Neighbour *neighbourEntry = parentTableRPL->getPrefParentNeighborCache();
