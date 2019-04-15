@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
 
             int fail_count = 0;
             int not_converged = 0;
+            int instability = 0;
             for (ok_count = 0; ok_count < num_ok_run_int && fail_count <= LOG_SCRIPT_SEARCH_MAX; seed_int++){
               sprintf(seed_str, "%d", seed_int);
               printf("Seed number: %s\n", seed_str);
@@ -88,14 +89,19 @@ int main(int argc, char *argv[])
                 int parser_result = log_file_parser(input_file_fp, destfile, seed_str);
                 if (parser_result == 1){
                     printf("Parser result: Converged. \n");
-                if (has_log)
-                    fprintf(parser_log_fp, "Parser result: Converged. \n\n");
+                    if (has_log)
+                      fprintf(parser_log_fp, "Parser result: Converged. \n\n");
                     ok_count++;
                 } else if (parser_result == 0){
                     printf("Parser result: Not converged. \n");
                     if (has_log)
                         fprintf(parser_log_fp, "Parser result: Not converged. \n\n");
                     not_converged++;
+                }else if (parser_result == -2){
+                  printf("Parser result: Instability. \n");
+                  if (has_log)
+                      fprintf(parser_log_fp, "Parser result: Instability. \n\n");
+                  instability++;
                 }else{
                     printf("Parser result: A file can not be opened!\n");
                     if (has_log)
@@ -112,17 +118,19 @@ int main(int argc, char *argv[])
 
             printf("number of converged: %d\n", ok_count);
             printf("number of not converged: %d\n", not_converged);
+            printf("number of Instability: %d\n", instability);
             fprintf(convergenceRate, "%f\n", (float)ok_count / (ok_count + not_converged));
             if (has_log){
               fprintf(parser_log_fp, "number of converged: %d\n", ok_count);
               fprintf(parser_log_fp, "number of not converged: %d\n", not_converged);
+              fprintf(parser_log_fp, "number of Instability: %d\n", instability);
             }
             fclose(parser_log_fp);
 
             log_file_order(base_name, aux_seed_int, seed_int - 1); //To order parsed and raw data
     }
 
-    
+
     return ok_count;
 }
 /*---------------------------------------------------------------------------*/
@@ -251,7 +259,9 @@ int log_file_parser(FILE *fp, char *destfile, char *seed){
              number_of_table_entries[i] = number_of_messages[i] = 0;
            }
 
+           unsigned int number_of_lines = 0;
            while ((fgets(line,200,fp)) && (convergence_time_end == 0)){
+                number_of_lines++;
                 for(i=0;i<CONDITION_MAX;i++)
                     check_condition[i]=0;
 
@@ -337,6 +347,11 @@ int log_file_parser(FILE *fp, char *destfile, char *seed){
                 }
 
            }//END while
+           if (number_of_lines == 0){   //If file is empty,
+              fprintf(destfp, "Log file was empty!\nInstable State\n");
+              fclose(destfp);
+              return -2;  // -2 is an error code to show Cooja Mote instablility states.
+           }
            fprintf(destfp, "Number of nodes:\t%d\n", node_id_max);
 
            fprintf(destfp, "convergence_time_start\t%ld\t(us)\n", convergence_time_start);
@@ -434,7 +449,7 @@ void log_file_order(char * base_name, int seed , int last_seed ){  //To order pa
   system("mkdir Cooja_logs");
   system("mkdir Raw_data");
   system("mkdir Parsed_data");
-  
+
   //To move the cooja logs
   for(int i = seed; i < last_seed + 1; i++){
     sprintf(aux_seed_str,"%d", i);
@@ -478,7 +493,7 @@ void log_file_order(char * base_name, int seed , int last_seed ){  //To order pa
         strcpy(command, "mv 05_NumberOfNeighbors.txt ./Parsed_data/");
         system(command);
         break;
-      case 6: 
+      case 6:
         strcpy(command, "mv 06_NumberOfParents.txt ./Parsed_data/");
         system(command);
         break;
@@ -507,7 +522,7 @@ void log_file_order(char * base_name, int seed , int last_seed ){  //To order pa
         system(command);
         break;
     }
-    
+
   }
 */
 
