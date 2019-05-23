@@ -1,14 +1,14 @@
 #!/bin/bash
 #The basename of the experiment
-BASENAME=log
+BASENAME=$1
 
 #The random seed to start from
-BASESEED=123456
+BASESEED=$2
 
 #The number of runs (with different seeds)
-RUNCOUNT=10
+RUNCOUNT=$3
 
-CONTIKI=/home/david/contiki-ng
+CONTIKI=$4
 
 NUM_NODES=(002 005 010 015 020 025 050 100 200)
 
