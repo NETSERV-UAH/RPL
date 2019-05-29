@@ -62,7 +62,7 @@
 /*---------------------------------------------------------------------------*/
 #define LOG_CONF_STATISTIC_DBG                           0
 /*---------------------------------------------------------------------------*/
-#define SIMULATIO_CONF_NUM_NODES						5 //5 //10 //15 //20 //25
+#define SIMULATIO_CONF_NUM_NODES	2
 /*---------------------------------------------------------------------------*/
 #define	RPL_CONF_MOP	RPL_MOP_STORING_NO_MULTICAST
 //#define	RPL_CONF_MOP	RPL_MOP_STORING_MULTICAST
