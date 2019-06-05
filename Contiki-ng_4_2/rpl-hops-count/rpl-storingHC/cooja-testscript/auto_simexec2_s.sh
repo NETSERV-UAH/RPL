@@ -10,12 +10,12 @@ BASESEED=123456
 
 #The number of runs (with different seeds)
 #RUNCOUNT=$3
-RUNCOUNT=1
+RUNCOUNT=2
 
 #CONTIKI=$4
 CONTIKI=../../../../../..
 
-NUM_NODES=(002) #(002 005 010 015 020 025 050 100 200)
+NUM_NODES=(100) #(002 005 010 015 020 025 050 100 200)
 
 
 mkdir "logs"

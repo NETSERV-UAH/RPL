@@ -27,7 +27,7 @@ if __name__ == "__main__":
         num_motes = int(sys.argv[1])
         code_dir = 'code'
         file = 'project-conf.h'
-        path = os.getcwd()+'/../sky-testscript/'+code_dir
+        path = os.getcwd()+'/../sky-testscript/'+code_dir    #To be adapted to both sky-testscript and cooja-testscript simulations
 
         try:
                 

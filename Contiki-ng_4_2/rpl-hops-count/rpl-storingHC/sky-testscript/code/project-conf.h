@@ -60,19 +60,18 @@
 //To assign a different seed to each mote
 #define LOG_CONF_different_seed	0
 /*---------------------------------------------------------------------------*/
-#define LOG_CONF_STATISTIC_DBG                           0
+#define LOG_CONF_STATISTIC_DBG                           1
 /*---------------------------------------------------------------------------*/
-#define SIMULATIO_CONF_NUM_NODES	2
+#define SIMULATIO_CONF_NUM_NODES			5 //2//10 //15 //20 //25 //50 //100 //200
 /*---------------------------------------------------------------------------*/
 #define	RPL_CONF_MOP	RPL_MOP_STORING_NO_MULTICAST
 //#define	RPL_CONF_MOP	RPL_MOP_STORING_MULTICAST
 //#define RPL_CONF_WITH_STORING 1
 /*---------------------------------------------------------------------------*/
-#define NETSTACK_MAX_ROUTE_ENTRIES 26
+#define NETSTACK_MAX_ROUTE_ENTRIES 50 //Sky Mote = 50, Cooja Mote = 200
 /*---------------------------------------------------------------------------*/
-#define NBR_TABLE_CONF_MAX_NEIGHBORS 26
+#define NBR_TABLE_CONF_MAX_NEIGHBORS 26 //Sky Mote = 26, Cooja Mote = 200
 /*---------------------------------------------------------------------------*/
-
 /*Var aux to count DIS,DIO,DAO*/
 extern int dis_storing_rpl;
 extern int dio_storing_rpl;

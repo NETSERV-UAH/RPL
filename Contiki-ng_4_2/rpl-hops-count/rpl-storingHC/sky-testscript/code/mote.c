@@ -22,12 +22,17 @@
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
 
+//RPL conf
+#define NODE_NOT_REACHABLE -1
 
-#ifdef SIMULATIO_CONF_NUM_NODES
-#define SIMULATIO_NUM_NODES SIMULATIO_CONF_NUM_NODES
-#else
-#define SIMULATIO_NUM_NODES 10000 //i.e. a big value
-#endif
+//UDP conf 
+#define UDP_CLIENT_PORT	7000
+#define UDP_SERVER_PORT	5000
+#define WITH_SERVER_REPLY  1
+
+//SENDING time conf
+#define START_INTERVAL		(15 * CLOCK_SECOND)
+#define SEND_INTERVAL		  (60 * CLOCK_SECOND)
 
 //to enable statistics log
 #ifdef LOG_CONF_STATISTIC_DBG
@@ -43,53 +48,42 @@
 #define LOG_different_seed 0
 #endif
 
+
+static struct simple_udp_connection udp_conn;
+
+
+ 
 /*---------------------------------------------------------------------------*/
 PROCESS(mote_process, "Mote");
 AUTOSTART_PROCESSES(&mote_process);
 /*---------------------------------------------------------------------------*/
-static void print_routing_table(){
-  /*  Aux.Vars  */
-  uip_ds6_route_t *r;
+static void
+udp_rx_callback(struct simple_udp_connection *c,
+         const uip_ipaddr_t *sender_addr,
+         uint16_t sender_port,
+         const uip_ipaddr_t *receiver_addr,
+         uint16_t receiver_port,
+         const uint8_t *data,
+         uint16_t datalen)
+{
+  //Nothing, will be used for hop count
 
-  printf("M[%d] has %d routes\n",node_id,uip_ds6_route_num_routes());
-
-  for(r = uip_ds6_route_head(); r != NULL; r = uip_ds6_route_next(r)) {
-    printf("M[%d]: ",node_id);
-    LOG_INFO_6ADDR(&r->ipaddr);
-    printf(" through ");
-    LOG_INFO_6ADDR(uip_ds6_route_nexthop(r));
-    printf("\n");
-  }   
 }
+
+
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(mote_process, ev, data)
 {
 #if LOG_different_seed == 1
 	random_init((unsigned short) node_id);
 #endif
-  static struct etimer periodic_timer;
-
 
   PROCESS_BEGIN();
 
-  etimer_set(&periodic_timer, CLOCK_SECOND*30 + node_id);
-  PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
 
-  print_routing_table();
+  /* Initialize UDP connection */
+  simple_udp_register(&udp_conn, UDP_CLIENT_PORT, NULL,UDP_SERVER_PORT, udp_rx_callback);
 
-  etimer_set(&periodic_timer, CLOCK_SECOND*3);
-  PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
-  print_routing_table();
-  
-  etimer_set(&periodic_timer, CLOCK_SECOND*3);
-  PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
-  print_routing_table();
-
-  if(node_id == SIMULATIO_NUM_NODES){
-    etimer_set(&periodic_timer, CLOCK_SECOND*10);
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
-    printf("Periodic Statistics: convergence time ended + hops\n");
-  }
   PROCESS_END();
 }
 /*---------------------------------------------------------------------------*/
