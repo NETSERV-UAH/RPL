@@ -68,6 +68,8 @@
 
 #if LOG_STATISTIC_DBG == 1
 #include "sys/node-id.h" //For node_id
+#include "net/ipv6/uiplib.h"  //for uiplib_ipaddr_print(addr)
+//#include "net/ipv6/uip-debug.h"  //for  PRINT6ADDR(addr)
 #endif
 //EXTRA END
 
@@ -233,6 +235,17 @@ uip_sr_update_node(void *graph, const uip_ipaddr_t *child, const uip_ipaddr_t *p
 
     //EXTRA BEGIN
 #if LOG_STATISTIC_DBG == 1
+
+	//For hopcount	
+  printf("Periodic Statistics: add/update SR-route to M[%d] child: ",node_id);
+  //LOG_INFO_6ADDR(ipaddr);
+	uiplib_ipaddr_print(child);
+  printf(" ,DAOparent: ");
+  //LOG_INFO_6ADDR(nexthop);
+	uiplib_ipaddr_print(parent);
+  printf("\n");
+
+	//for convergence time
 	printf("Periodic Statistics: M[%d] SR-Entries: %d [%u max]\n", node_id, num_nodes, UIP_SR_LINK_NUM);
 	//Check if the root node has an entry for each node in the routes (DAO of all node have been received by the root)?
 	if ((num_nodes == SIMULATIO_NUM_NODES) && (uip_sr_num_null_parents() == 1)){ //1: The root node has an null parent

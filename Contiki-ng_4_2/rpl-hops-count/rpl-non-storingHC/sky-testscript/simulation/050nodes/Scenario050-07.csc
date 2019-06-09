@@ -1083,17 +1083,15 @@
     org.contikios.cooja.plugins.ScriptRunner
     <plugin_config>
 <script>
-TIMEOUT(200000, log.log("Not converged\n")); 
-
-while(true){
-    
-    log.log(time + " ID:" +id+ " "+ msg + "\n");
-    if(msg.equals("Periodic Statistics: convergence time ended + hops"))
-        log.testOK();
-    YIELD();
+TIMEOUT(180000, log.log("Not converged\n"));
+while (true) {
+	log.log(time + " ID:" + id + " " + msg + "\n");
+	if (msg.equals("Periodic Statistics: convergence time ended"))
+		log.testOK();
+	YIELD();
 }
-
-log.testFailed();
+//log.testOK();
+log.testFailed(); /* Report test failure and quit */
 </script>
       <active>true</active>
     </plugin_config>

@@ -63,6 +63,8 @@
 
 #if LOG_STATISTIC_DBG == 1
 #include "sys/node-id.h" //For node_id
+#include "net/ipv6/uiplib.h"  //for uiplib_ipaddr_print(addr)
+//#include "net/ipv6/uip-debug.h"  //for  PRINT6ADDR(addr)
 #endif
 //EXTRA END
 
@@ -471,6 +473,16 @@ uip_ds6_route_add(const uip_ipaddr_t *ipaddr, uint8_t length,
 #if LOG_STATISTIC_DBG == 1
 	//printf("Periodic Statistics: M[%d] Routes [%u max]:%d\n", node_id, UIP_DS6_ROUTE_NB, num_routes); //For Python log parser
 	printf("Periodic Statistics: M[%d] Routes: %d [%u max]\n", node_id, num_routes, UIP_DS6_ROUTE_NB); //For C log parser
+
+	//For hopcount	
+  printf("Periodic Statistics: add route to M[%d] ",node_id);
+  //LOG_INFO_6ADDR(ipaddr);
+	uiplib_ipaddr_print(ipaddr);
+  printf(" through ");
+  //LOG_INFO_6ADDR(nexthop);
+	uiplib_ipaddr_print(ipaddr);
+  printf("\n");
+
 	//Check if the root node has an entry for each node in the routes (DAO of all node have been received by the root)?
 	if ((NETSTACK_ROUTING.node_is_root) && (num_routes == (SIMULATIO_NUM_NODES-1))){ //or if ((rpl_dag_root_is_root()) && (numroutes == (SIMULATIO_NUM_NODES-1))){ needs a decleration for rpl_dag_root_is_root()
 		printf("Periodic Statistics: convergence time ended\n");
@@ -566,6 +578,15 @@ uip_ds6_route_rm(uip_ds6_route_t *route)
 
     //EXTRA BEGIN
 	#if LOG_STATISTIC_DBG == 1
+	//For hopcount	
+  printf("Periodic Statistics: remove route from M[%d] ",node_id);
+  //LOG_INFO_6ADDR(&route->ipaddr);
+	uiplib_ipaddr_print(&route->ipaddr);
+  printf(" through ");
+  //LOG_INFO_6ADDR(uip_ds6_route_nexthop(route));
+	uiplib_ipaddr_print(uip_ds6_route_nexthop(route));
+  printf("\n");
+
 	//printf("Periodic Statistics: M[%d] Routes [%u max]:%d\n", node_id, UIP_DS6_ROUTE_NB, num_routes); //For Python log parser
 	printf("Periodic Statistics: M[%d] Routes: %d [%u max]\n", node_id, num_routes, UIP_DS6_ROUTE_NB); //For C log parser
 	#endif
@@ -638,11 +659,6 @@ uip_ds6_defrt_head(void)
   return list_head(defaultrouterlist);
 }
 /*---------------------------------------------------------------------------*/
-int uip_ds6_defrt_num_routes(void){
-
-  return list_length(defaultrouterlist);
-}
-/*---------------------------------------------------------------------------*/
 uip_ds6_defrt_t *
 uip_ds6_defrt_add(const uip_ipaddr_t *ipaddr, unsigned long interval)
 {
@@ -675,6 +691,13 @@ uip_ds6_defrt_add(const uip_ipaddr_t *ipaddr, unsigned long interval)
 
     //EXTRA BEGIN
 	#if LOG_STATISTIC_DBG == 1
+	//For hopcount	
+  printf("Periodic Statistics: add defaultroute to M[%d] root ",node_id);
+  printf(" through ");
+  //LOG_INFO_6ADDR(ipaddr);
+	uiplib_ipaddr_print(ipaddr);
+  printf("\n");
+
 	//To count default routes
 	int count_defrt = list_length(defaultrouterlist);
 	printf("Periodic Statistics: M[%d] Default routes: %d\n",node_id, count_defrt);
@@ -719,16 +742,28 @@ uip_ds6_defrt_rm(uip_ds6_defrt_t *defrt)
       d = list_item_next(d)) {
     if(d == defrt) {
       LOG_INFO("Removing default\n");
+
+    //EXTRA BEGIN
+		#if LOG_STATISTIC_DBG == 1
+		//For hopcount	
+  	printf("Periodic Statistics: remove defaultroute from M[%d] ",node_id);
+  	printf(" through ");
+  	//LOG_INFO_6ADDR(&defrt->ipaddr);
+		uiplib_ipaddr_print(&defrt->ipaddr);
+  	printf("\n");
+		#endif
+		//EXTRA END
+
       list_remove(defaultrouterlist, defrt);
       memb_free(&defaultroutermemb, defrt);
 
     //EXTRA BEGIN
-	#if LOG_STATISTIC_DBG == 1
-	//To count default routes
-	int count_defrt = list_length(defaultrouterlist);
-	printf("Periodic Statistics: M[%d] Default routes: %d\n",node_id, count_defrt);
-	#endif
-	//EXTRA END
+		#if LOG_STATISTIC_DBG == 1
+		//To count default routes
+		int count_defrt = list_length(defaultrouterlist);
+		printf("Periodic Statistics: M[%d] Default routes: %d\n",node_id, count_defrt);
+		#endif
+		//EXTRA END
 
       LOG_ANNOTATE("#L %u 0\n", defrt->ipaddr.u8[sizeof(uip_ipaddr_t) - 1]);
 #if UIP_DS6_NOTIFICATIONS

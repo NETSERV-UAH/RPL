@@ -18,7 +18,6 @@
 //It's necessary to include net_debug_lladdr_print() ( Hops to root count )
 #include "net/net-debug.h"
 
-
 //It's necessary to log our program
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
@@ -26,12 +25,13 @@
 //RPL conf
 #define NODE_NOT_REACHABLE -1
 
-
 //UDP conf 
 #define UDP_CLIENT_PORT	7000
 #define UDP_SERVER_PORT	5000
+#define WITH_SERVER_REPLY  1
 
 //SENDING time conf
+#define START_INTERVAL		(15 * CLOCK_SECOND)
 #define SEND_INTERVAL		  (60 * CLOCK_SECOND)
 
 //to enable statistics log
@@ -50,24 +50,7 @@
 
 
 static struct simple_udp_connection udp_conn;
-static int hops = NODE_NOT_REACHABLE;
-static bool shouldSend=true;
-/*---------------------------------------------------------------------------*/
-static void print_routing_table(){
-  /*  Aux.Vars  */
-  uip_ds6_defrt_t *d = NULL;
-  //int count_defrt = list_length(*(uip_ds6_defrt_head()));
 
-  printf("M[%d] has %d routes\n",node_id,uip_ds6_defrt_num_routes());
-
-  for(d = uip_ds6_defrt_head(); d != NULL; d = list_item_next(d)) {
-    printf("M[%d]: ",node_id);
-    LOG_INFO_6ADDR(&d->ipaddr);
-    printf(" through ");
-    LOG_INFO_6ADDR(&d->ipaddr);
-    printf("\n");
-  }
-}
 
  
 /*---------------------------------------------------------------------------*/
@@ -83,63 +66,24 @@ udp_rx_callback(struct simple_udp_connection *c,
          const uint8_t *data,
          uint16_t datalen)
 {
-  if(NETSTACK_ROUTING.node_is_reachable()){
-
-    /*  I/O hops */
-    hops = uip_ds6_if.cur_hop_limit - UIP_IP_BUF->ttl +1;
-    LOG_INFO("M[%d]-M[1]:%d\n",node_id,hops);
-
-    /*  Finish  */
-    shouldSend = false;
-
-  }else{
-    hops = -1;
-  }
+  //Nothing, will be used for hop count
 
 }
+
+
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(mote_process, ev, data)
 {
 #if LOG_different_seed == 1
 	random_init((unsigned short) node_id);
 #endif
-  /*  Var.aux */
-  static struct etimer periodic_timer; /* timer to wait until rpl conv  */
-  static char str[32]; /* msg to sink node */
-  uip_ipaddr_t dest_ipaddr; /*  ipaddr sink mote  */
 
-
-  /*  Bombardeo de sesiones UDP */
   PROCESS_BEGIN();
 
-  /*  30sec until RPL conv  */
-  etimer_set(&periodic_timer, CLOCK_SECOND * 30);
-  
+
   /* Initialize UDP connection */
   simple_udp_register(&udp_conn, UDP_CLIENT_PORT, NULL,UDP_SERVER_PORT, udp_rx_callback);
 
-  while(1) {
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer) );
-    /*  Check if this mote is reachable and get sink's ip */
-    if(NETSTACK_ROUTING.node_is_reachable() && NETSTACK_ROUTING.get_root_ipaddr(&dest_ipaddr) ) { 
-      if(shouldSend){
-        #if LOG_CONF_STATISTIC_DBG == 1
-          LOG_INFO("Mota[%d]: TX\n",node_id);
-        #endif   
-        snprintf(str, sizeof(str), "hello sink\n"); /*  Make msg */
-        simple_udp_sendto(&udp_conn, str, strlen(str), &dest_ipaddr); /*  Send it to sink mote  */
-        print_routing_table();
-      }
-      
-    } else {
-      #if LOG_CONF_STATISTIC_DBG == 1
-        LOG_INFO("Not reachable yet\n");
-      #endif   
-    }
-
-    /* Add some jitter */
-    etimer_set(&periodic_timer, SEND_INTERVAL - CLOCK_SECOND + (random_rand() % (2 * CLOCK_SECOND)));
-  }
   PROCESS_END();
 }
 /*---------------------------------------------------------------------------*/
