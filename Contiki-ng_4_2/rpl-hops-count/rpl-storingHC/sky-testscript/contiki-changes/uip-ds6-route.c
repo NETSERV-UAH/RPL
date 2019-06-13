@@ -480,7 +480,7 @@ uip_ds6_route_add(const uip_ipaddr_t *ipaddr, uint8_t length,
 	uiplib_ipaddr_print(ipaddr);
   printf(" through ");
   //LOG_INFO_6ADDR(nexthop);
-	uiplib_ipaddr_print(ipaddr);
+	uiplib_ipaddr_print(nexthop);
   printf("\n");
 
 	//Check if the root node has an entry for each node in the routes (DAO of all node have been received by the root)?
