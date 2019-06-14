@@ -9,6 +9,8 @@
  /*
   * The real node_id is started from 1 in Contiki-NG, but we suppose the node_id
   * is started from 0 because of the index of the array in the C language.
+  * Therefore, node_id = node_index + 1 in the code, and we used node_id 0 and
+  * node_index -1 for UNSPECIFIED_ADDRESS.
   */
 
 #include <stdio.h>
@@ -136,20 +138,20 @@ int remove_route(int node_id, char destination[40], char nexthop[40], int node_i
     return 0;
 }
 /*---------------------------------------------------------------------------*/
-int get_nexthop_id(int src_id, int dst_id, int node_id_max)
+int get_nexthop_index(int src_id, int dst_id, int node_id_max)
 {
   if ((src_id <= node_id_max) && (dst_id <= node_id_max)){
     return routing_table[src_id-1][dst_id-1];
   }else
-    return 0;
+    return -1;
 }
 /*---------------------------------------------------------------------------*/
-int get_default_nexthop_id(int src_id, int node_id_max)
+int get_default_nexthop_index(int src_id, int node_id_max)
 {
   if (src_id <= node_id_max){
     return default_routing_table[src_id-1];
   }else
-    return 0;
+    return -1;
 }
 /*---------------------------------------------------------------------------*/
 //Hop count calculation
@@ -169,23 +171,29 @@ fprintf(parsed_file_FP, "\n");
 
 for(unsigned int i=0; i<node_id_max; i++){
   fprintf(parsed_file_FP, "%u\t", i+1); //The left collumn of the table
+  for(unsigned int j=0; j<node_id_max; j++){
+    hopcount[i] = (int *)malloc(sizeof(int) * node_id_max);
+    hopcount[i][j] = -1;
+  }
 
-  hopcount[i] = (int *)malloc(sizeof(int) * node_id_max);
   for(unsigned int j=0; j<node_id_max; j++){
     int hopcountij = 0;
-    int nexthop_id = 0;
-    int src_id = i;
-    int dst_id = j;
+    int nexthop_index = -1;
+    int src_index = i;
+    int dst_index = j;
+    int intermediate_index = i; // Intermediate nodes between src and dst
 
     if (i != j){
       do{
-        //or if ((nexthop_id = get_nexthop_id(src_id, dst_id, node_id_max)) == 0)
-        if ((nexthop_id = get_nexthop_id(src_id, dst_id, node_id_max)-1) == -1)
-          nexthop_id = get_default_nexthop_id(src_id, node_id_max)-1;
-      }while((nexthop_id != dst_id) && (nexthop_id != -1) && (hopcountij < node_id_max));
-      //if node i(or src) couldn't reach node j(or dst)
-      if (nexthop_id != dst_id){   // if ((nexthop_id == -1) && (hopcount >= node_id_max))
-        fprintf (parsed_file_FP, "\nThere is not a route between the nodes %d and %d\n", src_id, dst_id);
+        //or if ((nexthop_index = get_nexthop_index(src_id, dst_id, node_id_max)) == -1)
+        if ((nexthop_index = get_nexthop_index(intermediate_index+1, dst_index+1, node_id_max)) == -1)
+          nexthop_index = get_default_nexthop_index(intermediate_index+1, node_id_max);
+        hopcountij++;
+        intermediate_index = nexthop_index;
+      }while((nexthop_index != dst_index) && (nexthop_index != -1) && (hopcountij < node_id_max)); //if hopcountij >= node_id_max, there is a loop. If nexthop_index == -1, there is not a next hop to reach the dst and the route is itercepted. If nexthop_index == dst_index, the packet is received by the dst.
+      //if node i(or src) couldn't reach node j(or dst) because of a loop or interception
+      if (nexthop_index != dst_index){   // if ((nexthop_index == -1) && (hopcount >= node_id_max))
+        fprintf (parsed_file_FP, "\nThere is not a route between the nodes %d and %d\n", src_index+1, dst_index+1);
         return Hopcount_Not_Calculated;
       }else{
         hopcount[i][j] = hopcountij;
@@ -266,7 +274,6 @@ fprintf(numberOfHops_FP, "%f\n", average_hop_count_all);
 #endif
 
 //Release memory
-//nodes array
   for (int i=0; i<node_id_max; i++)
     free(hopcount[i]);
   free(hopcount);
@@ -321,7 +328,7 @@ int log_file_parser(FILE *fp, char *parsed_file_name){
                 check_condition[2] = common_check && (strstr(line,"remove defaultroute from"));
 
                 check_condition[3] = common_check && (strstr(line,"add route to"));
-                check_condition[4] = common_check && (strstr(line,"delete route to"));
+                check_condition[4] = common_check && (strstr(line,"remove route from"));
 
                 check_condition[5] = common_check && (strstr(line,"convergence time ended"));
 
@@ -360,14 +367,14 @@ int log_file_parser(FILE *fp, char *parsed_file_name){
                   //printf("%d\t%s\t%s\n", node_id, destination, nextHop);
                   add_route(node_id, destination, nextHop, node_id_max);
                 }
-/*
+
                 if(check_condition[4]){ //delete route
                   int node_id;
                   char destination[40], nextHop[40];
                   sscanf(strstr(line,"M[") + strlen("M["), "%d] %s through %s", &node_id, destination, nextHop);
                   remove_route(node_id, destination, nextHop, node_id_max);
                 }
-*/
+
                 if(check_condition[5]){ //convergence time ended
                   converged = 1;
                   return_value = Simulation_Converged;
@@ -378,6 +385,7 @@ int log_file_parser(FILE *fp, char *parsed_file_name){
            fputs("---------------------------------------------------------------\n",parsed_file_FP);
 
            //print the node addresses
+           fprintf(parsed_file_FP, "Node Addresses\n");
            fprintf(parsed_file_FP, "Node id\tLink Local Address\tGlobal address\n");
            for (int i=0; i<node_id_max; i++){
              fprintf(parsed_file_FP, "%7d\t%18s\t%14s\n", i+1, address_map[i].linklocal, address_map[i].global);
@@ -385,6 +393,7 @@ int log_file_parser(FILE *fp, char *parsed_file_name){
            fputs("---------------------------------------------------------------\n",parsed_file_FP);
 
            //print the default routing tables
+           fprintf(parsed_file_FP, "Default Routing Tables\n");
            fprintf(parsed_file_FP, "Node id\tDefault Next Hop address(node id)\tDefault Next Hop address(Link Local)\n");
            for (int i=0; i<node_id_max; i++){
              char nexthop_linklocal_addr[40];
@@ -398,24 +407,25 @@ int log_file_parser(FILE *fp, char *parsed_file_name){
            fputs("---------------------------------------------------------------\n",parsed_file_FP);
 
            //print the routing tables
-           fprintf(parsed_file_FP, "Node id\tNext Hop address(node id)\tNext Hop address(Link Local)\n");
+           fprintf(parsed_file_FP, "Routing Tables\n");
+           fprintf(parsed_file_FP, "Node id:\t(Source id => Destination id through Next Hop address(node id) or Next Hop address(Link Local)\n");
            for (int i=0; i<node_id_max; i++){  //i :src index
-             fprintf(parsed_file_FP, "%7d", i+1);
+             fprintf(parsed_file_FP, "%7d:", i+1);
              for (int j=0; j<node_id_max; j++){ //j: dst index
-/*               char nexthop_linklocal_addr[40];
+               char nexthop_linklocal_addr[40];
                if (routing_table[i][j] != -1){ //routing_table[i][j]: includes the next hop for route i->j
                  strcpy(nexthop_linklocal_addr, address_map[routing_table[i][j]].linklocal);
                }else{
                  strcpy(nexthop_linklocal_addr, "UNSPECIFIED_ADDRESS");
                }
-              fprintf(parsed_file_FP, "\t%33d\t%36s", routing_table[i][j] + 1, nexthop_linklocal_addr);
-*/             fprintf(parsed_file_FP, "\t%33d", routing_table[i][j] + 1);}
+               fprintf(parsed_file_FP, "\t(%d => %d through %d or %s)", i+1, j+1, routing_table[i][j] + 1, nexthop_linklocal_addr);
+             }
              fprintf(parsed_file_FP, "\n");
            }
            fputs("---------------------------------------------------------------\n",parsed_file_FP);
 
            if (return_value == Simulation_Converged)
-             return 12;//calculate_hopcount(parsed_file_FP, numberOfHops_FP, node_id_max);
+             return_value = calculate_hopcount(parsed_file_FP, numberOfHops_FP, node_id_max);
            else
               return_value = Simulation_Not_Converged;
 
