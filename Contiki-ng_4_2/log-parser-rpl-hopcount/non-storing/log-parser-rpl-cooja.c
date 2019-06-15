@@ -3,7 +3,7 @@
  *                    (1) GIST, University of Alcala, Spain.
  *                    (2) CEIT, Amirkabir University of Technology (Tehran
  *                        Polytechnic), Iran.
- * To read and pars the RPL log file generated in Contiki-ng
+ * To read and pars the Non-Storing RPL log file generated in Contiki-ng
  */
 
  /*
@@ -19,7 +19,7 @@
 
 
 #define NODE_NUMBERS_MAX 500
-#define CONDITION_MAX 11
+#define CONDITION_MAX 5
 #define GLOBAL_STATISTICS 1  //To print a metric for all runs in a file
 
 enum Error_Type {
@@ -35,10 +35,22 @@ typedef struct{
   char linklocal[40];
   char global[40];
 } Map_Entry_t;
-Map_Entry_t address_map[NODE_NUMBERS_MAX]; //Index of the array reffers to node_id
+Map_Entry_t address_map[NODE_NUMBERS_MAX]; //Index of the array reffers to node_index or node_id - 1
 
 int default_routing_table[NODE_NUMBERS_MAX];
-int routing_table[NODE_NUMBERS_MAX][NODE_NUMBERS_MAX];
+/*
+ * Each node, i.e. node i in sr_table[i = (0:NODE_NUMBERS_MAX)][0:NODE_NUMBERS_MAX]
+ * , has a SR-Routing table, but the root node has entries in its
+ * SR-Routing tabls. Therefore, the components of sr_table[0][0:node_id_max]
+ * include data and other components include unused data, i.e, -1. These unused
+ * components are reserved for our future works.
+ *
+ * In sr_table[i=(0:NODE_NUMBERS_MAX)][j=(0:NODE_NUMBERS_MAX)], i is node_id,
+ * and j is the node_id of a child whose node_id is j. For example, if node 0
+ * is the root, and its SR-Routing Table includes an entry for child 2 and
+ * DAO-Parent 1, sr_table[0][2] = 1.
+ */
+int sr_table[NODE_NUMBERS_MAX][NODE_NUMBERS_MAX];
 
 int main(int argc, char *argv[])
 {
@@ -48,20 +60,36 @@ int main(int argc, char *argv[])
 
     printf("\nRPL Hopcount log parser 2019\n\n");
 
-    if (argc==1)
+    if (argc == 1)
     {
         fprintf(stderr,"\nNo log file introduced\n");
-    }
-    else{
+        return 1;
+    }else{
             if ((fp= fopen(*++argv,"r"))==NULL){
                 fprintf(stderr,"\nCan't open %s\n",*argv);
                 return 1;
             }else{
                 strcat(parsed_file_name,*argv);
-                if (log_file_parser(fp,parsed_file_name))
-                    printf("\nNew files were generated successfully.\n");
-                else
-                    printf("\nNew files are not generated successfully! please try again.\n");
+                Error_Type_t return_value = log_file_parser(fp,parsed_file_name);
+                if (return_value == File_Read_Error){
+                  printf("\nNew files are not generated successfully! please try again.\n");
+                  return 1;
+                }else{
+                  printf("\nNew files were generated successfully.\n");
+                  if(return_value == Simulation_Not_Converged){
+                    printf("\nThis simulation was not converged.\n");
+                    return 1;
+                  }else{
+                    printf("\nThis simulation was converged.\n");
+                    if (return_value == Hopcount_Not_Calculated){
+                      printf("\nHopcount was not calculated.\n");
+                      return 1;
+                    }else if (return_value == Hopcount_Calculated){
+                      printf("\nHopcount was calculated successfully.\n");
+                      return 0;  //test Ok
+                    }
+                  }
+                }
                 fclose(fp);
             }
 
@@ -112,12 +140,12 @@ int remove_default_route(int node_id, char nexthop[40], int node_id_max)
   }
 }
 /*---------------------------------------------------------------------------*/
-//destination is a global address, and nexthop is a link local addresses, and
-//the function conversts them to node_ids.
-int add_route(int node_id, char destination[40], char nexthop[40], int node_id_max)
+// child and dao_parent are global addresses, and the function conversts them
+// to node_ids.
+int update_sr_route(int node_id, char child[40], char dao_parent[40], int node_id_max)
 {
-  int nexthop_id = linklocal_addr_to_nodeid(nexthop, node_id_max);
-  int destination_id = global_addr_to_nodeid(destination, node_id_max);
+  int child_id = linklocal_addr_to_nodeid(child, node_id_max);
+  int dao_parent = global_addr_to_nodeid(dao_parent, node_id_max);
   if (routing_table[node_id-1][destination_id-1] == -1){
     routing_table[node_id-1][destination_id-1] = nexthop_id-1;
     return 1;
@@ -125,8 +153,6 @@ int add_route(int node_id, char destination[40], char nexthop[40], int node_id_m
     return 0;
 }
 /*---------------------------------------------------------------------------*/
-//destination is a global address, and nexthop is a link local addresses, and
-//the function conversts them to node_ids.
 int remove_route(int node_id, char destination[40], char nexthop[40], int node_id_max)
 {
   int nexthop_id = linklocal_addr_to_nodeid(nexthop, node_id_max);
@@ -152,6 +178,16 @@ int get_default_nexthop_index(int src_id, int node_id_max)
     return default_routing_table[src_id-1];
   }else
     return -1;
+}
+/*---------------------------------------------------------------------------*/
+void deallocate_hopcount_memory(int **hopcount, int node_id_max)
+{
+  for (int i=0; i<node_id_max; i++){
+    free(hopcount[i]);
+    hopcount[i] = NULL;
+  }
+  free(hopcount);
+  hopcount = NULL;
 }
 /*---------------------------------------------------------------------------*/
 //Hop count calculation
@@ -194,6 +230,7 @@ for(unsigned int i=0; i<node_id_max; i++){
       //if node i(or src) couldn't reach node j(or dst) because of a loop or interception
       if (nexthop_index != dst_index){   // if ((nexthop_index == -1) && (hopcount >= node_id_max))
         fprintf (parsed_file_FP, "\nThere is not a route between the nodes %d and %d\n", src_index+1, dst_index+1);
+        deallocate_hopcount_memory(hopcount, node_id_max);
         return Hopcount_Not_Calculated;
       }else{
         hopcount[i][j] = hopcountij;
@@ -274,9 +311,7 @@ fprintf(numberOfHops_FP, "%f\n", average_hop_count_all);
 #endif
 
 //Release memory
-  for (int i=0; i<node_id_max; i++)
-    free(hopcount[i]);
-  free(hopcount);
+deallocate_hopcount_memory(hopcount, node_id_max);
 
   return Hopcount_Calculated;
 }
@@ -302,6 +337,11 @@ int log_file_parser(FILE *fp, char *parsed_file_name){
     FILE *parsed_file_FP;
     if((parsed_file_FP=fopen(parsed_file_name,"w"))==NULL){
        fprintf(stderr,"\nCan't open destination file (%s)\n",parsed_file_name);
+
+       #if GLOBAL_STATISTICS == 1
+       fclose(numberOfHops_FP);
+       #endif
+
        return File_Read_Error;
 
        }else{
@@ -327,10 +367,9 @@ int log_file_parser(FILE *fp, char *parsed_file_name){
                 check_condition[1] = common_check && (strstr(line,"add defaultroute to"));
                 check_condition[2] = common_check && (strstr(line,"remove defaultroute from"));
 
-                check_condition[3] = common_check && (strstr(line,"add route to"));
-                check_condition[4] = common_check && (strstr(line,"remove route from"));
+                check_condition[3] = common_check && (strstr(line,"add/update SR-route to"));
 
-                check_condition[5] = common_check && (strstr(line,"convergence time ended"));
+                check_condition[4] = common_check && (strstr(line,"convergence time ended"));
 
                 if(check_condition[0]){ //link-local IPv6 address
                   int node_id;
@@ -342,40 +381,25 @@ int log_file_parser(FILE *fp, char *parsed_file_name){
                   sscanf(strstr(line,"link-local IPv6 address: fe80") + strlen("link-local IPv6 address: fe80"), "%s", addr_suffix);
                   strcpy(address_map[node_id-1].global, "fd00");
                   strcat(address_map[node_id-1].global, addr_suffix);
-                }
-
-                if(check_condition[1]){ //add defaultroute
+                }else if(check_condition[1]){ //add defaultroute
                   int node_id;
                   char nextHop[40];
                   sscanf(strstr(line,"M[") + strlen("M["), "%d", &node_id);
                   sscanf(strstr(line,"through") + strlen("through"), "%s", nextHop);
                   add_default_route(node_id, nextHop, node_id_max);
-                }
-
-                if(check_condition[2]){ //remove defaultroute
+                }else if(check_condition[2]){ //remove defaultroute
                   int node_id;
                   char nextHop[40];
                   sscanf(strstr(line,"M[") + strlen("M["), "%d", &node_id);
                   sscanf(strstr(line,"through") + strlen("through"), "%s", nextHop);
                   remove_default_route(node_id, nextHop, node_id_max);
-                }
-
-                if(check_condition[3]){ //add route
+                }else if(check_condition[3]){ //add or update SR route
                   int node_id;
-                  char destination[40], nextHop[40];
-                  sscanf(strstr(line,"M[") + strlen("M["), "%d] %s through %s", &node_id, destination, nextHop);
+                  char child[40], dao_parent[40];
+                  sscanf(strstr(line,"M[") + strlen("M["), "%d] child: %s ,DAOparent: %s", &node_id, child, dao_parent);
                   //printf("%d\t%s\t%s\n", node_id, destination, nextHop);
-                  add_route(node_id, destination, nextHop, node_id_max);
-                }
-
-                if(check_condition[4]){ //delete route
-                  int node_id;
-                  char destination[40], nextHop[40];
-                  sscanf(strstr(line,"M[") + strlen("M["), "%d] %s through %s", &node_id, destination, nextHop);
-                  remove_route(node_id, destination, nextHop, node_id_max);
-                }
-
-                if(check_condition[5]){ //convergence time ended
+                  update_sr_route(node_id, child, dao_parent, node_id_max);
+                }else if(check_condition[4]){ //convergence time ended
                   converged = 1;
                   return_value = Simulation_Converged;
                 }
@@ -426,8 +450,10 @@ int log_file_parser(FILE *fp, char *parsed_file_name){
 
            if (return_value == Simulation_Converged)
              return_value = calculate_hopcount(parsed_file_FP, numberOfHops_FP, node_id_max);
-           else
-              return_value = Simulation_Not_Converged;
+           else{
+             fprintf(parsed_file_FP, "This simulation was not converged!\n");
+             return_value = Simulation_Not_Converged;
+           }
 
            fclose(parsed_file_FP);
            fclose(numberOfHops_FP);
