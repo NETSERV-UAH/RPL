@@ -21,6 +21,7 @@
 #define NODE_NUMBERS_MAX 500
 #define CONDITION_MAX 5
 #define GLOBAL_STATISTICS 1  //To print a metric for all runs in a file
+#define ROOT_ID 1
 
 enum Error_Type {
   File_Read_Error = 0,
@@ -39,16 +40,17 @@ Map_Entry_t address_map[NODE_NUMBERS_MAX]; //Index of the array reffers to node_
 
 int default_routing_table[NODE_NUMBERS_MAX];
 /*
- * Each node, i.e. node i in sr_table[i = (0:NODE_NUMBERS_MAX)][0:NODE_NUMBERS_MAX]
- * , has a SR-Routing table, but the root node has entries in its
- * SR-Routing tabls. Therefore, the components of sr_table[0][0:node_id_max]
- * include data and other components include unused data, i.e, -1. These unused
- * components are reserved for our future works.
+ * In sr_table[i = (0:NODE_NUMBERS_MAX)][0:NODE_NUMBERS_MAX]
+ * , each node, indicated by node_index i, has a SR-Routing table, but
+ * the root node has entries in its SR-Routing tabls. Therefore, the components
+ * of sr_table[0][0:node_id_max] include data, and other components include
+ * unused data, i.e, -1. These unused components are reserved for our future
+ * works.
  *
- * In sr_table[i=(0:NODE_NUMBERS_MAX)][j=(0:NODE_NUMBERS_MAX)], i is node_id,
- * and j is the node_id of a child whose node_id is j. For example, if node 0
- * is the root, and its SR-Routing Table includes an entry for child 2 and
- * DAO-Parent 1, sr_table[0][2] = 1.
+ * In sr_table[i=(0:NODE_NUMBERS_MAX)][j=(0:NODE_NUMBERS_MAX)], i reffers to
+ * a node which is the owner of the routing table, and j is a child whose
+ * node_index is j. For example, if node 0 is the root, and its SR-Routing Table
+ * includes an entry for child 2 and DAO-Parent 1, sr_table[0][2] = 1.
  */
 int sr_table[NODE_NUMBERS_MAX][NODE_NUMBERS_MAX];
 
@@ -144,32 +146,15 @@ int remove_default_route(int node_id, char nexthop[40], int node_id_max)
 // to node_ids.
 int update_sr_route(int node_id, char child[40], char dao_parent[40], int node_id_max)
 {
-  int child_id = linklocal_addr_to_nodeid(child, node_id_max);
-  int dao_parent = global_addr_to_nodeid(dao_parent, node_id_max);
-  if (routing_table[node_id-1][destination_id-1] == -1){
-    routing_table[node_id-1][destination_id-1] = nexthop_id-1;
-    return 1;
-  }else
-    return 0;
-}
-/*---------------------------------------------------------------------------*/
-int remove_route(int node_id, char destination[40], char nexthop[40], int node_id_max)
-{
-  int nexthop_id = linklocal_addr_to_nodeid(nexthop, node_id_max);
-  int destination_id = global_addr_to_nodeid(destination, node_id_max);
-  if (routing_table[node_id-1][destination_id-1] == nexthop_id-1){
-    routing_table[node_id-1][destination_id-1] = -1;
-    return 1;
-  }else
-    return 0;
-}
-/*---------------------------------------------------------------------------*/
-int get_nexthop_index(int src_id, int dst_id, int node_id_max)
-{
-  if ((src_id <= node_id_max) && (dst_id <= node_id_max)){
-    return routing_table[src_id-1][dst_id-1];
-  }else
-    return -1;
+  int return_value;
+  int child_id = global_addr_to_nodeid(child, node_id_max);
+  int dao_parent_id = global_addr_to_nodeid(dao_parent, node_id_max);
+  if (sr_table[node_id-1][child_id-1] == -1)
+    return_value = 0; //Add new entry
+  else
+    return_value = 1; //Update an entry
+  sr_table[node_id-1][child_id-1] = dao_parent_id-1;
+  return return_value;
 }
 /*---------------------------------------------------------------------------*/
 int get_default_nexthop_index(int src_id, int node_id_max)
@@ -178,6 +163,36 @@ int get_default_nexthop_index(int src_id, int node_id_max)
     return default_routing_table[src_id-1];
   }else
     return -1;
+}
+/*---------------------------------------------------------------------------*/
+int get_DAOparent_index(int src_id, int child_id, int node_id_max)
+{
+  if ((src_id <= node_id_max) && (child_id <= node_id_max)){
+    return sr_table[src_id-1][child_id-1];
+  }else
+    return -1;
+}
+/*---------------------------------------------------------------------------*/
+/*
+ * Create a Source Routing header for a route from src/root to dst_id
+ * Return value: if there is a route, it returns the number of hops in the route;
+ * Otherwise, it returns 0.
+ */
+int generate_sr_header(int src_id, int dst_id, int node_id_max)
+{
+  int hopcount = 0;
+
+  if ((src_id <= node_id_max) && (dst_id <= node_id_max)){
+    int child_index = dst_id -1;
+    while ((child_index != src_id-1) && ((child_index = get_DAOparent_index(src_id, child_index, node_id_max)) != -1) && (hopcount < node_id_max)){  //if hopcountij >= node_id_max, there is a loop. If nexthop_index == -1, there is not a next hop to reach the dst and the route is itercepted. If nexthop_index == dst_index, the packet is received by the dst.
+      hopcount++;
+    }
+    //if node child_index couldn't reach node dst_index because of a loop or interception
+    if (child_index != src_id-1){   // if ((child_index != -1) || (hopcount >= node_id_max))
+      return 0;
+
+  }
+  return hopcount;
 }
 /*---------------------------------------------------------------------------*/
 void deallocate_hopcount_memory(int **hopcount, int node_id_max)
@@ -205,40 +220,49 @@ for(unsigned int i=0; i<node_id_max; i++){
 }
 fprintf(parsed_file_FP, "\n");
 
-for(unsigned int i=0; i<node_id_max; i++){
-  fprintf(parsed_file_FP, "%u\t", i+1); //The left collumn of the table
-  for(unsigned int j=0; j<node_id_max; j++){
-    hopcount[i] = (int *)malloc(sizeof(int) * node_id_max);
-    hopcount[i][j] = -1;
+for(unsigned int src_index=0; src_index<node_id_max; src_index++){
+  fprintf(parsed_file_FP, "%u\t", src_index+1); //The left collumn of the table
+  for(unsigned int dst_index=0; dst_index<node_id_max; dst_index++){
+    hopcount[src_index] = (int *)malloc(sizeof(int) * node_id_max);
+    hopcount[src_index][dst_index] = -1;
   }
 
-  for(unsigned int j=0; j<node_id_max; j++){
+  for(unsigned int dst_index=0; dst_index<node_id_max; dst_index++){
     int hopcountij = 0;
     int nexthop_index = -1;
-    int src_index = i;
-    int dst_index = j;
-    int intermediate_index = i; // Intermediate nodes between src and dst
+    int intermediate_index = src_index; // Intermediate nodes between src and dst
 
-    if (i != j){
-      do{
-        //or if ((nexthop_index = get_nexthop_index(src_id, dst_id, node_id_max)) == -1)
-        if ((nexthop_index = get_nexthop_index(intermediate_index+1, dst_index+1, node_id_max)) == -1)
-          nexthop_index = get_default_nexthop_index(intermediate_index+1, node_id_max);
+    if (src_index != dst_index){
+      //Upward routing
+      while((nexthop_index != dst_index) && (nexthop_index != ROOT_ID -1) && ((nexthop_index = get_default_nexthop_index(nexthop_index+1, node_id_max)) != -1) && (hopcountij < node_id_max)){ //if hopcountij >= node_id_max, there is a loop. If nexthop_index == -1, there is not a next hop to reach the dst and the route is itercepted. If nexthop_index == dst_index, the packet is received by the dst. If nexthop_index == root_index, the packet is received by the root.
+        hopcountij++;
+      }
+
+/*      //Upward routing
+      while((intermediate_index != dst_index) && (intermediate_index != ROOT_ID -1) && ((nexthop_index = get_default_nexthop_index(intermediate_index+1, node_id_max)) != -1) && (hopcountij < node_id_max)){ //if hopcountij >= node_id_max, there is a loop. If nexthop_index == -1, there is not a next hop to reach the dst and the route is itercepted. If nexthop_index == dst_index, the packet is received by the dst. If nexthop_index == root_index, the packet is received by the root.
         hopcountij++;
         intermediate_index = nexthop_index;
-      }while((nexthop_index != dst_index) && (nexthop_index != -1) && (hopcountij < node_id_max)); //if hopcountij >= node_id_max, there is a loop. If nexthop_index == -1, there is not a next hop to reach the dst and the route is itercepted. If nexthop_index == dst_index, the packet is received by the dst.
-      //if node i(or src) couldn't reach node j(or dst) because of a loop or interception
-      if (nexthop_index != dst_index){   // if ((nexthop_index == -1) && (hopcount >= node_id_max))
-        fprintf (parsed_file_FP, "\nThere is not a route between the nodes %d and %d\n", src_index+1, dst_index+1);
-        deallocate_hopcount_memory(hopcount, node_id_max);
-        return Hopcount_Not_Calculated;
-      }else{
-        hopcount[i][j] = hopcountij;
-        fprintf(parsed_file_FP, "(%d)\t", hopcount[i][j]);
       }
+*/
+      if ((nexthop_index == -1) || (hopcountij >= node_id_max)){ //if intercept or loop
+        deallocate_hopcount_memory(hopcount, node_id_max);
+        return Hopcount_Not_Calculated; // Default Route/Upward Route error
+      }else if (nexthop_index != dst_index){
+        int hopcount_downward = generate_sr_header(ROOT_ID, dst_index + 1, node_id_max);
+        if (hopcount_downward > 0)
+          hopcountij += hopcount_downward;
+        else{
+          deallocate_hopcount_memory(hopcount, node_id_max);
+          return Hopcount_Not_Calculated; // SR Route/Downward Route error
+        }
+      }
+
+      hopcount[src_index][dst_index] = hopcountij;
+      fprintf(parsed_file_FP, "(%d)\t", hopcount[src_index][dst_index]);
+
     }else{
-      hopcount[i][j] = 0;
-      fprintf(parsed_file_FP, "(%d)\t", hopcount[i][j]);
+      hopcount[src_index][dst_index] = 0;
+      fprintf(parsed_file_FP, "(%d)\t", hopcount[src_index][dst_index]);
     }
   }
   fprintf(parsed_file_FP, "\n");
@@ -354,7 +378,7 @@ int log_file_parser(FILE *fp, char *parsed_file_name){
              address_map[i].linklocal[0] = '\0';
              address_map[i].global[0] = '\0';
              for (int j=0; j<NODE_NUMBERS_MAX; j++){
-               routing_table[i][j] = -1; //-1 means UNSPECIFIED_ADDRESS
+               sr_table[i][j] = -1; //-1 means UNSPECIFIED_ADDRESS
              }
            }
 
@@ -431,13 +455,13 @@ int log_file_parser(FILE *fp, char *parsed_file_name){
            fputs("---------------------------------------------------------------\n",parsed_file_FP);
 
            //print the routing tables
-           fprintf(parsed_file_FP, "Routing Tables\n");
-           fprintf(parsed_file_FP, "Node id:\t(Source id => Destination id through Next Hop address(node id) or Next Hop address(Link Local)\n");
+           fprintf(parsed_file_FP, "Source Routing Tables\n");
+           fprintf(parsed_file_FP, "Node id:\t(Child (node id Global Address) through DAO Parent(node id or Global Address))\n");
            for (int i=0; i<node_id_max; i++){  //i :src index
              fprintf(parsed_file_FP, "%7d:", i+1);
              for (int j=0; j<node_id_max; j++){ //j: dst index
                char nexthop_linklocal_addr[40];
-               if (routing_table[i][j] != -1){ //routing_table[i][j]: includes the next hop for route i->j
+               if (sr_table[i][j] != -1){ //sr_table[i][j]: includes the DAO parent for child j in node i
                  strcpy(nexthop_linklocal_addr, address_map[routing_table[i][j]].linklocal);
                }else{
                  strcpy(nexthop_linklocal_addr, "UNSPECIFIED_ADDRESS");

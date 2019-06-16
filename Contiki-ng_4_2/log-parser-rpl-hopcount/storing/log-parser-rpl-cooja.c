@@ -195,21 +195,19 @@ for(unsigned int i=0; i<node_id_max; i++){
 }
 fprintf(parsed_file_FP, "\n");
 
-for(unsigned int i=0; i<node_id_max; i++){
-  fprintf(parsed_file_FP, "%u\t", i+1); //The left collumn of the table
-  for(unsigned int j=0; j<node_id_max; j++){
-    hopcount[i] = (int *)malloc(sizeof(int) * node_id_max);
-    hopcount[i][j] = -1;
+for(unsigned int src_index=0; src_index<node_id_max; src_index++){
+  fprintf(parsed_file_FP, "%u\t", src_index+1); //The left collumn of the table
+  for(unsigned int dst_index=0; dst_index<node_id_max; dst_index++){
+    hopcount[src_index] = (int *)malloc(sizeof(int) * node_id_max);
+    hopcount[src_index][dst_index] = -1;
   }
 
-  for(unsigned int j=0; j<node_id_max; j++){
+  for(unsigned int dst_index=0; dst_index<node_id_max; dst_index++){
     int hopcountij = 0;
     int nexthop_index = -1;
-    int src_index = i;
-    int dst_index = j;
-    int intermediate_index = i; // Intermediate nodes between src and dst
+    int intermediate_index = src_index; // Intermediate nodes between src and dst
 
-    if (i != j){
+    if (src_index != dst_index){
       do{
         //or if ((nexthop_index = get_nexthop_index(src_id, dst_id, node_id_max)) == -1)
         if ((nexthop_index = get_nexthop_index(intermediate_index+1, dst_index+1, node_id_max)) == -1)
@@ -217,18 +215,18 @@ for(unsigned int i=0; i<node_id_max; i++){
         hopcountij++;
         intermediate_index = nexthop_index;
       }while((nexthop_index != dst_index) && (nexthop_index != -1) && (hopcountij < node_id_max)); //if hopcountij >= node_id_max, there is a loop. If nexthop_index == -1, there is not a next hop to reach the dst and the route is itercepted. If nexthop_index == dst_index, the packet is received by the dst.
-      //if node i(or src) couldn't reach node j(or dst) because of a loop or interception
-      if (nexthop_index != dst_index){   // if ((nexthop_index == -1) && (hopcount >= node_id_max))
+      //if node src_index couldn't reach node dst_index because of a loop or interception
+      if (nexthop_index != dst_index){   // if ((nexthop_index == -1) || (hopcount >= node_id_max))
         fprintf (parsed_file_FP, "\nThere is not a route between the nodes %d and %d\n", src_index+1, dst_index+1);
         deallocate_hopcount_memory(hopcount, node_id_max);
         return Hopcount_Not_Calculated;
       }else{
-        hopcount[i][j] = hopcountij;
-        fprintf(parsed_file_FP, "(%d)\t", hopcount[i][j]);
+        hopcount[src_index][dst_index] = hopcountij;
+        fprintf(parsed_file_FP, "(%d)\t", hopcount[src_index][dst_index]);
       }
     }else{
-      hopcount[i][j] = 0;
-      fprintf(parsed_file_FP, "(%d)\t", hopcount[i][j]);
+      hopcount[src_index][dst_index] = 0;
+      fprintf(parsed_file_FP, "(%d)\t", hopcount[src_index][dst_index]);
     }
   }
   fprintf(parsed_file_FP, "\n");
