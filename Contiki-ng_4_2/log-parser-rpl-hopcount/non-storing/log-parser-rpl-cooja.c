@@ -159,7 +159,7 @@ int update_sr_route(int node_id, char child[40], char dao_parent[40], int node_i
 /*---------------------------------------------------------------------------*/
 int get_default_nexthop_index(int src_id, int node_id_max)
 {
-  if (src_id <= node_id_max){
+  if ((src_id > 0) && (src_id <= node_id_max)){
     return default_routing_table[src_id-1];
   }else
     return -1;
@@ -167,7 +167,7 @@ int get_default_nexthop_index(int src_id, int node_id_max)
 /*---------------------------------------------------------------------------*/
 int get_DAOparent_index(int src_id, int child_id, int node_id_max)
 {
-  if ((src_id <= node_id_max) && (child_id <= node_id_max)){
+  if (((src_id > 0) && (src_id <= node_id_max)) && ((child_id > 0) && (child_id <= node_id_max))){
     return sr_table[src_id-1][child_id-1];
   }else
     return -1;
@@ -182,14 +182,18 @@ int generate_sr_header(int src_id, int dst_id, int node_id_max)
 {
   int hopcount = 0;
 
-  if ((src_id <= node_id_max) && (dst_id <= node_id_max)){
+  if (((src_id > 0) && (src_id <= node_id_max)) && ((dst_id > 0) && (dst_id <= node_id_max))){
     int child_index = dst_id -1;
-    while ((child_index != src_id-1) && ((child_index = get_DAOparent_index(src_id, child_index, node_id_max)) != -1) && (hopcount < node_id_max)){  //if hopcountij >= node_id_max, there is a loop. If nexthop_index == -1, there is not a next hop to reach the dst and the route is itercepted. If nexthop_index == dst_index, the packet is received by the dst.
+    //printf("--------\nsrc %d, dst %d\nchild : %d\n", src_id, dst_id, child_index+1);
+    while ((child_index != src_id-1) && ((child_index = get_DAOparent_index(src_id, child_index+1, node_id_max)) != -1) && (hopcount < node_id_max)){  //if hopcountij >= node_id_max, there is a loop. If nexthop_index == -1, there is not a next hop to reach the dst and the route is itercepted. If nexthop_index == dst_index, the packet is received by the dst.
+      //printf("child : %d\n", child_index+1);
       hopcount++;
     }
+    //printf("hopcount = %d\n", hopcount);
     //if node child_index couldn't reach node dst_index because of a loop or interception
     if (child_index != src_id-1){   // if ((child_index != -1) || (hopcount >= node_id_max))
       return 0;
+    }
 
   }
   return hopcount;
@@ -229,29 +233,31 @@ for(unsigned int src_index=0; src_index<node_id_max; src_index++){
 
   for(unsigned int dst_index=0; dst_index<node_id_max; dst_index++){
     int hopcountij = 0;
-    int nexthop_index = -1;
-    int intermediate_index = src_index; // Intermediate nodes between src and dst
-
+    int nexthop_index = src_index;
     if (src_index != dst_index){
+
       //Upward routing
       while((nexthop_index != dst_index) && (nexthop_index != ROOT_ID -1) && ((nexthop_index = get_default_nexthop_index(nexthop_index+1, node_id_max)) != -1) && (hopcountij < node_id_max)){ //if hopcountij >= node_id_max, there is a loop. If nexthop_index == -1, there is not a next hop to reach the dst and the route is itercepted. If nexthop_index == dst_index, the packet is received by the dst. If nexthop_index == root_index, the packet is received by the root.
         hopcountij++;
       }
-
-/*      //Upward routing
+/*
+      //Upward routing
+      int intermediate_index = src_index; // Intermediate nodes between src and dst
       while((intermediate_index != dst_index) && (intermediate_index != ROOT_ID -1) && ((nexthop_index = get_default_nexthop_index(intermediate_index+1, node_id_max)) != -1) && (hopcountij < node_id_max)){ //if hopcountij >= node_id_max, there is a loop. If nexthop_index == -1, there is not a next hop to reach the dst and the route is itercepted. If nexthop_index == dst_index, the packet is received by the dst. If nexthop_index == root_index, the packet is received by the root.
         hopcountij++;
         intermediate_index = nexthop_index;
       }
 */
-      if ((nexthop_index == -1) || (hopcountij >= node_id_max)){ //if intercept or loop
+      if ((nexthop_index == -1) || (hopcountij >= node_id_max)){ //if interception or loop
+        fprintf(parsed_file_FP, "\nDefault Route/Upward Route error(src: %d, dst: %d).\n", src_index+1, dst_index+1);
         deallocate_hopcount_memory(hopcount, node_id_max);
         return Hopcount_Not_Calculated; // Default Route/Upward Route error
       }else if (nexthop_index != dst_index){
-        int hopcount_downward = generate_sr_header(ROOT_ID, dst_index + 1, node_id_max);
+        int hopcount_downward = generate_sr_header(ROOT_ID, dst_index + 1, node_id_max); //Downward Routing
         if (hopcount_downward > 0)
           hopcountij += hopcount_downward;
         else{
+          fprintf(parsed_file_FP, "\nSR Route/Downward Route error(src: %d, dst: %d).\n", src_index+1, dst_index+1);
           deallocate_hopcount_memory(hopcount, node_id_max);
           return Hopcount_Not_Calculated; // SR Route/Downward Route error
         }
@@ -454,19 +460,19 @@ int log_file_parser(FILE *fp, char *parsed_file_name){
            }
            fputs("---------------------------------------------------------------\n",parsed_file_FP);
 
-           //print the routing tables
+           //print the Source routing tables
            fprintf(parsed_file_FP, "Source Routing Tables\n");
-           fprintf(parsed_file_FP, "Node id:\t(Child (node id Global Address) through DAO Parent(node id or Global Address))\n");
-           for (int i=0; i<node_id_max; i++){  //i :src index
+           fprintf(parsed_file_FP, "Node id:\t(Child: (node id or Global Address), DAO Parent: (node id or Global Address))\n");
+           for (int i=0; i<node_id_max; i++){  //i :node index
              fprintf(parsed_file_FP, "%7d:", i+1);
-             for (int j=0; j<node_id_max; j++){ //j: dst index
-               char nexthop_linklocal_addr[40];
+             for (int j=0; j<node_id_max; j++){ //j: child index
+               char dao_parent_global_addr[40];
                if (sr_table[i][j] != -1){ //sr_table[i][j]: includes the DAO parent for child j in node i
-                 strcpy(nexthop_linklocal_addr, address_map[routing_table[i][j]].linklocal);
+                 strcpy(dao_parent_global_addr, address_map[sr_table[i][j]].global);
                }else{
-                 strcpy(nexthop_linklocal_addr, "UNSPECIFIED_ADDRESS");
+                 strcpy(dao_parent_global_addr, "UNSPECIFIED_ADDRESS");
                }
-               fprintf(parsed_file_FP, "\t(%d => %d through %d or %s)", i+1, j+1, routing_table[i][j] + 1, nexthop_linklocal_addr);
+               fprintf(parsed_file_FP, "\t(Child: (%d or %s), DAO Parent: (%d or %s))", j+1, address_map[j].global, sr_table[i][j] + 1, dao_parent_global_addr);
              }
              fprintf(parsed_file_FP, "\n");
            }

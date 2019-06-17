@@ -156,7 +156,7 @@ int remove_route(int node_id, char destination[40], char nexthop[40], int node_i
 /*---------------------------------------------------------------------------*/
 int get_nexthop_index(int src_id, int dst_id, int node_id_max)
 {
-  if ((src_id <= node_id_max) && (dst_id <= node_id_max)){
+  if (((src_id > 0) && (src_id <= node_id_max)) && ((dst_id > 0) && (dst_id <= node_id_max))){
     return routing_table[src_id-1][dst_id-1];
   }else
     return -1;
@@ -164,7 +164,7 @@ int get_nexthop_index(int src_id, int dst_id, int node_id_max)
 /*---------------------------------------------------------------------------*/
 int get_default_nexthop_index(int src_id, int node_id_max)
 {
-  if (src_id <= node_id_max){
+  if ((src_id > 0) && (src_id <= node_id_max)){
     return default_routing_table[src_id-1];
   }else
     return -1;
