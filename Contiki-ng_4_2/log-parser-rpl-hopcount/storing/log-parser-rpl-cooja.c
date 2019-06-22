@@ -46,34 +46,34 @@ int main(int argc, char *argv[])
     FILE *fp;
     char parsed_file_name[50] = "output_file_";
 
-    printf("\nRPL Hopcount log parser 2019\n\n");
+    //printf("\nRPL Hopcount log parser 2019\n\n");
 
     if (argc == 1)
     {
-        fprintf(stderr,"\nNo log file introduced\n");
+        //fprintf(stderr,"\nNo log file introduced\n");
         return 1;
     }else{
             if ((fp= fopen(*++argv,"r"))==NULL){
-                fprintf(stderr,"\nCan't open %s\n",*argv);
-                return 1;
+                //fprintf(stderr,"\nCan't open %s\n",*argv);
+                return 2;
             }else{
                 strcat(parsed_file_name,*argv);
                 Error_Type_t return_value = log_file_parser(fp,parsed_file_name);
                 if (return_value == File_Read_Error){
-                  printf("\nNew files are not generated successfully! please try again.\n");
-                  return 1;
+                  //printf("\nNew files are not generated successfully! please try again.\n");
+                  return 3;
                 }else{
-                  printf("\nNew files were generated successfully.\n");
+                  //printf("\nNew files were generated successfully.\n");
                   if(return_value == Simulation_Not_Converged){
-                    printf("\nThis simulation was not converged.\n");
-                    return 1;
+                    //printf("\nThis simulation was not converged.\n");
+                    return 4;
                   }else{
-                    printf("\nThis simulation was converged.\n");
+                    //printf("\nThis simulation was converged.\n");
                     if (return_value == Hopcount_Not_Calculated){
-                      printf("\nHopcount was not calculated.\n");
-                      return 1;
+                      //printf("\nHopcount was not calculated.\n");
+                      return 5;
                     }else if (return_value == Hopcount_Calculated){
-                      printf("\nHopcount was calculated successfully.\n");
+                      //printf("\nHopcount was calculated successfully.\n");
                       return 0;  //test Ok
                     }
                   }
@@ -315,7 +315,7 @@ int log_file_parser(FILE *fp, char *parsed_file_name){
 #if GLOBAL_STATISTICS == 1
 
      FILE *numberOfHops_FP;
-     if((numberOfHops_FP=fopen("numberOfHops.txt","a"))==NULL){
+     if((numberOfHops_FP=fopen("../numberOfHops.txt","a"))==NULL){
         fprintf(stderr,"\nCan't open destination file (numberOfHops.txt)\n");
         return File_Read_Error;
      }
