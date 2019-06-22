@@ -250,7 +250,7 @@
 TIMEOUT(180000, log.log("Not converged\n"));
 while (true) {
 	log.log(time + " ID:" + id + " " + msg + "\n");
-	if (msg.equals("Periodic Statistics: convergence time ended + hops"))
+	if (msg.equals("Periodic Statistics: convergence time ended"))
 		log.testOK();
 	YIELD();
 }
