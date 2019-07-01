@@ -88,8 +88,8 @@ for (( SEED=$BASESEED; OKCOUNT<$RUNCOUNT; SEED++ )); do
 		then
 			OKCOUNT+=1
 			echo "Test ok!"
-			mv output_file_$BASENAME.$SEED.scriptlog ./Parsed_data
 		fi
+		mv output_file_$BASENAME.$SEED.scriptlog ./Parsed_data
 #EXTRA END
 	else
 		#EXTRA BEGIN

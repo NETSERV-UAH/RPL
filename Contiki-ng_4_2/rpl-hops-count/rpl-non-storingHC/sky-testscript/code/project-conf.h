@@ -62,13 +62,16 @@
 /*---------------------------------------------------------------------------*/
 #define LOG_CONF_STATISTIC_DBG                           1
 /*---------------------------------------------------------------------------*/
-#define SIMULATIO_CONF_NUM_NODES			5 //2 //5 //10 //15 //20 //25 //50 //100 //200
+//2 //5 //10 //15 //20 //25 //50 //100 //200
+#define SIMULATIO_CONF_NUM_NODES	100
 /*---------------------------------------------------------------------------*/
 #define RPL_CONF_MOP 	RPL_MOP_NON_STORING
 /*---------------------------------------------------------------------------*/
-#define NETSTACK_MAX_ROUTE_ENTRIES 100 //Sky Mote = 100, Cooja Mote = 200
+//Sky Mote = 100, Cooja Mote = 200
+#define NETSTACK_MAX_ROUTE_ENTRIES	200
 /*---------------------------------------------------------------------------*/
-#define NBR_TABLE_CONF_MAX_NEIGHBORS 26 //Sky Mote = 26, Cooja Mote = 200
+//Sky Mote = 26, Cooja Mote = 200
+#define NBR_TABLE_CONF_MAX_NEIGHBORS	200
 /*---------------------------------------------------------------------------*/
 /*Var aux to count DIS,DIO,DAO*/
 extern int dis_storing_rpl;

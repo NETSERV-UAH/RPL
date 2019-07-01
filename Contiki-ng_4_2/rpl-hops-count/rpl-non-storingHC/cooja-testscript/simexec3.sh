@@ -25,6 +25,8 @@ declare -i OKCOUNT=0
 FAILSEEDS=
 
 #EXTRA BEGIN
+# A list of seeds for which the hopcount is not calculated
+NOTCALCULATEDSEEDS=
 #for (( SEED=$BASESEED; SEED<$(($BASESEED+$RUNCOUNT)); SEED++ )); do
 for (( SEED=$BASESEED; OKCOUNT<$RUNCOUNT; SEED++ )); do
 #EXTRA END
@@ -84,6 +86,7 @@ for (( SEED=$BASESEED; OKCOUNT<$RUNCOUNT; SEED++ )); do
 		then
 			echo "Test failed; Hopcount can't be calculated!"
 			FAILSEEDS+=" $SEED"
+			NOTCALCULATEDSEEDS+=" $SEED"
 		elif [ $RETURN_VAL -eq 0 ]
 		then
 			OKCOUNT+=1
@@ -110,8 +113,7 @@ if [ $TESTCOUNT -ne $OKCOUNT ] ; then
 	# At least one test failed
 	# EXTRA BEGIN	
 	#printf "%-40s TEST FAIL  %3d/%d -- failed seeds:%s\n" "$BASENAME" "$OKCOUNT" "$TESTCOUNT" "$FAILSEEDS" > $BASENAME.testlog;
-	printf "%-40s TEST OK    %3d/%d\n" "$BASENAME" "$OKCOUNT" "$TESTCOUNT" > $BASENAME.testlog;
-	printf "%-40s TEST FAIL  -- failed seeds:%s\n" "$BASENAME" "$FAILSEEDS" > $BASENAME.testlog;
+	printf "%-40s\n TEST OK    %3d/%d\nTEST FAIL  -- failed seeds:%s\nHopcount failed seeds:%s" "$BASENAME" "$OKCOUNT" "$TESTCOUNT" "$FAILSEEDS" "$NOTCALCULATEDSEEDS"> $BASENAME.testlog;
 	#EXTRA END
 else
 	printf "%-40s TEST OK    %3d/%d\n" "$BASENAME" "$OKCOUNT" "$TESTCOUNT" > $BASENAME.testlog;
