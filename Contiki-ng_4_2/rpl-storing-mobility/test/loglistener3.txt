@@ -1,0 +1,77 @@
+00:00.514	ID:2	[INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+00:00.517	ID:2	[INFO: Main      ] - Routing: RPL Classic
+00:00.519	ID:2	[INFO: Main      ] - Net: sicslowpan
+00:00.521	ID:2	[INFO: Main      ] - MAC: CSMA
+00:00.525	ID:2	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.528	ID:2	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.530	ID:2	[INFO: Main      ] Node ID: 2
+00:00.536	ID:2	[INFO: Main      ] Link-layer address: 0012.7402.0002.0202
+00:00.547	ID:2	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7402:2:202
+00:00.550	ID:2	[INFO: Sky       ] CC2420 CCA threshold -45
+00:00.660	ID:1	[INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+00:00.663	ID:1	[INFO: Main      ] - Routing: RPL Classic
+00:00.665	ID:1	[INFO: Main      ] - Net: sicslowpan
+00:00.667	ID:1	[INFO: Main      ] - MAC: CSMA
+00:00.671	ID:1	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.674	ID:1	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.676	ID:1	[INFO: Main      ] Node ID: 1
+00:00.682	ID:1	[INFO: Main      ] Link-layer address: 0012.7401.0001.0101
+00:00.693	ID:1	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7401:1:101
+00:00.696	ID:1	[INFO: Sky       ] CC2420 CCA threshold -45
+00:00.699	ID:1	Periodic Statistics: Number of nodes: 3
+00:00.702	ID:1	Periodic Statistics: convergence time started
+00:01.177	ID:3	[INFO: Main      ] Starting Contiki-NG-release/v4.2-129-g4928a5e-dirty
+00:01.180	ID:3	[INFO: Main      ] - Routing: RPL Classic
+00:01.182	ID:3	[INFO: Main      ] - Net: sicslowpan
+00:01.185	ID:3	[INFO: Main      ] - MAC: CSMA
+00:01.188	ID:3	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:01.192	ID:3	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:01.194	ID:3	[INFO: Main      ] Node ID: 3
+00:01.199	ID:3	[INFO: Main      ] Link-layer address: 0012.7403.0003.0303
+00:01.210	ID:3	[INFO: Main      ] Tentative link-local IPv6 address: fe80::212:7403:3:303
+00:01.214	ID:3	[INFO: Sky       ] CC2420 CCA threshold -45
+00:03.954	ID:1	Periodic Statistics: M[1] | DIO: 1
+00:04.005	ID:3	Periodic Statistics: M[3] Neighbors: 1 [10 max]
+00:04.005	ID:2	Periodic Statistics: M[2] Neighbors: 1 [10 max]
+00:04.010	ID:3	Periodic Statistics: M[3] Parents: 1 [10 max]
+00:04.010	ID:2	Periodic Statistics: M[2] Parents: 1 [10 max]
+00:04.020	ID:3	Periodic Statistics: add defaultroute to M[3] root  through fe80::212:7401:1:101
+00:04.020	ID:2	Periodic Statistics: add defaultroute to M[2] root  through fe80::212:7401:1:101
+00:04.023	ID:3	Periodic Statistics: M[3] Default routes: 1
+00:04.023	ID:2	Periodic Statistics: M[2] Default routes: 1
+00:07.098	ID:2	Periodic Statistics: M[2] | DAO: 1
+00:07.105	ID:3	Periodic Statistics: M[3] | DAO: 1
+00:07.124	ID:1	Periodic Statistics: M[1] Neighbors: 1 [10 max]
+00:07.128	ID:1	Periodic Statistics: M[1] Routes: 1 [10 max]
+00:07.139	ID:1	Periodic Statistics: add route to M[1] fd00::212:7402:2:202 through fe80::212:7402:2:202
+00:07.260	ID:3	Periodic Statistics: M[3] | DIO: 1
+00:07.261	ID:2	Periodic Statistics: M[2] | DIO: 1
+00:07.309	ID:2	Periodic Statistics: M[2] Neighbors: 2 [10 max]
+00:07.315	ID:2	Periodic Statistics: M[2] Parents: 2 [10 max]
+00:07.338	ID:3	Periodic Statistics: M[3] Neighbors: 2 [10 max]
+00:07.344	ID:3	Periodic Statistics: M[3] Parents: 2 [10 max]
+00:08.659	ID:3	Periodic Statistics: M[3] | DIO: 2
+00:10.956	ID:3	Periodic Statistics: M[3] | DIO: 3
+00:11.665	ID:1	Periodic Statistics: M[1] | DIO: 2
+00:12.410	ID:2	Periodic Statistics: M[2] | DIO: 2
+00:13.066	ID:2	Periodic Statistics: M[2] | DIO: 3
+00:13.105	ID:3	Periodic Statistics: M[3] | DIO: 4
+00:13.761	ID:2	Periodic Statistics: M[2] | DIO: 4
+00:13.949	ID:3	Periodic Statistics: M[3] | DIO: 5
+00:14.209	ID:3	Periodic Statistics: remove defaultroute from M[3]  through fe80::212:7401:1:101
+00:14.212	ID:3	Periodic Statistics: M[3] Default routes: 0
+00:14.221	ID:3	Periodic Statistics: add defaultroute to M[3] root  through fe80::212:7402:2:202
+00:14.224	ID:3	Periodic Statistics: M[3] Default routes: 1
+00:14.227	ID:3	Periodic Statistics: M[3] | DAO: 2
+00:16.480	ID:2	Periodic Statistics: M[2] | DAO: 2
+00:17.323	ID:3	Periodic Statistics: M[3] | DAO: 3
+00:17.372	ID:2	Periodic Statistics: M[2] Routes: 1 [10 max]
+00:17.384	ID:2	Periodic Statistics: add route to M[2] fd00::212:7403:3:303 through fe80::212:7403:3:303
+00:17.435	ID:1	Periodic Statistics: M[1] Routes: 2 [10 max]
+00:17.446	ID:1	Periodic Statistics: add route to M[1] fd00::212:7403:3:303 through fe80::212:7402:2:202
+00:17.449	ID:1	Periodic Statistics: convergence time ended
+00:17.612	ID:3	Periodic Statistics: M[3] | DIO: 6
+00:18.279	ID:2	Periodic Statistics: M[2] | DIO: 5
+00:22.829	ID:1	Periodic Statistics: M[1] | DIO: 3
+00:23.432	ID:3	Periodic Statistics: M[3] | DIO: 7
+00:23.492	ID:1	Periodic Statistics: M[1] Neighbors: 2 [10 max]
